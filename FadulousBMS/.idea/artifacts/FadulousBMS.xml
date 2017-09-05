@@ -1,0 +1,21 @@
+<component name="ArtifactManager">
+  <artifact type="javafx" build-on-make="true" name="FadulousBMS">
+    <output-path>$PROJECT_DIR$/out/artifacts/FadulousBMS</output-path>
+    <properties id="javafx-properties">
+      <options>
+        <option name="appClass" value="fadulousbms.FadulousBMS" />
+        <option name="description" value="Airotek Business Management System" />
+        <option name="htmlPlaceholderId" value="" />
+        <option name="title" value="Airotek BMS" />
+        <option name="vendor" value="Airotek" />
+        <option name="version" value="0.0.1" />
+      </options>
+    </properties>
+    <root id="root">
+      <element id="archive" name="FadulousBMS.jar">
+        <element id="module-output" name="FadulousBMS" />
+      </element>
+      <element id="artifact" artifact-name="BMSPreloader" />
+    </root>
+  </artifact>
+</component>

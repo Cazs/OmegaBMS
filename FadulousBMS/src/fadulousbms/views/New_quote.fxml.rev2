@@ -1,0 +1,255 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.lang.*?>
+<?import javafx.scene.control.cell.*?>
+<?import javafx.scene.text.*?>
+<?import javafx.geometry.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.control.cell.*?>
+
+<VBox minWidth="400.0" prefWidth="800.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="fadulousbms.controllers.NewQuoteController">
+   <children>
+      <HBox alignment="CENTER_LEFT" VBox.vgrow="NEVER">
+         <children>
+            <MenuBar prefHeight="35.0" HBox.hgrow="ALWAYS">
+              <menus>
+                <Menu mnemonicParsing="false" text="File">
+                  <items>
+                    <MenuItem mnemonicParsing="false" onAction="#newQuoteItem" text="New quote item" />
+                        <MenuItem mnemonicParsing="false" text="Close" />
+                  </items>
+                </Menu>
+                <Menu mnemonicParsing="false" text="Edit">
+                  <items>
+                    <MenuItem mnemonicParsing="false" text="Delete" />
+                  </items>
+                </Menu>
+                <Menu mnemonicParsing="false" text="Help">
+                  <items>
+                    <MenuItem mnemonicParsing="false" text="About" />
+                  </items>
+                </Menu>
+              </menus>
+            </MenuBar>
+            <Button id="btnApply" defaultButton="true" ellipsisString="x" layoutX="10.0" layoutY="10.0" minWidth="70.0" mnemonicParsing="false" onMouseClicked="#apply" prefHeight="35.0" stylesheets="@../styles/home.css" text="Apply">
+               <HBox.margin>
+                  <Insets right="5.0" />
+               </HBox.margin>
+            </Button>
+            <Button fx:id="btnBack" ellipsisString="x" mnemonicParsing="false" onMouseClicked="#previousScreen" prefHeight="35.0" styleClass="btnBack" stylesheets="@../styles/home.css" text="&lt; Back" />
+         </children>
+      </HBox>
+      <SplitPane dividerPositions="0.4" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" VBox.vgrow="ALWAYS">
+        <items>
+            <GridPane hgap="10.0" vgap="10.0">
+              <columnConstraints>
+                <ColumnConstraints halignment="LEFT" hgrow="ALWAYS" maxWidth="1.7976931348623157E308" />
+                <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" maxWidth="1.7976931348623157E308" />
+              </columnConstraints>
+              <rowConstraints>
+                  <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                  <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                  <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                  <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                  <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                  <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+              </rowConstraints>
+               <children>
+                  <Label text="Company" GridPane.rowIndex="1" />
+                  <Label alignment="CENTER" contentDisplay="CENTER" text="Contact Person" GridPane.rowIndex="2" />
+                  <Label text="Cell Number" GridPane.rowIndex="3" />
+                  <TextField fx:id="txtCompany" GridPane.columnIndex="1" GridPane.hgrow="ALWAYS" GridPane.rowIndex="1" GridPane.valignment="CENTER" GridPane.vgrow="ALWAYS" />
+                  <TextField fx:id="txtContactPerson" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.hgrow="ALWAYS" GridPane.rowIndex="2" GridPane.valignment="CENTER" GridPane.vgrow="ALWAYS" />
+                  <TextField fx:id="txtCell" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.hgrow="ALWAYS" GridPane.rowIndex="3" GridPane.valignment="CENTER" GridPane.vgrow="ALWAYS" />
+                  <TextField fx:id="txtTel" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.hgrow="ALWAYS" GridPane.rowIndex="4" GridPane.valignment="CENTER" GridPane.vgrow="ALWAYS" />
+                  <TextField fx:id="txtFax" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.hgrow="ALWAYS" GridPane.rowIndex="5" GridPane.valignment="CENTER" GridPane.vgrow="ALWAYS" />
+                  <TextField fx:id="txtEmail" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.hgrow="ALWAYS" GridPane.rowIndex="6" GridPane.valignment="CENTER" GridPane.vgrow="ALWAYS" />
+                  <Label text="Tel Number" GridPane.rowIndex="4" />
+                  <Label text="eMail Address" GridPane.rowIndex="6" />
+                  <Label text="Site name" GridPane.rowIndex="7" />
+                  <TextField fx:id="txtSite" GridPane.columnIndex="1" GridPane.rowIndex="7" />
+                  <Label text="Fax Number" GridPane.rowIndex="5" />
+                  <Label text="Client details" GridPane.columnSpan="2" GridPane.halignment="CENTER" GridPane.hgrow="ALWAYS" GridPane.valignment="CENTER" GridPane.vgrow="ALWAYS">
+                     <font>
+                        <Font name="System Bold" size="17.0" />
+                     </font>
+                  </Label>
+               </children>
+               <padding>
+                  <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
+               </padding>
+            </GridPane>
+            <GridPane alignment="CENTER" hgap="10.0" vgap="10.0">
+              <columnConstraints>
+                <ColumnConstraints halignment="LEFT" hgrow="ALWAYS" maxWidth="1.7976931348623157E308" />
+                <ColumnConstraints halignment="CENTER" hgrow="ALWAYS" maxWidth="1.7976931348623157E308" />
+              </columnConstraints>
+              <rowConstraints>
+                  <RowConstraints minHeight="10.0" prefHeight="30.0" valignment="CENTER" vgrow="ALWAYS" />
+                <RowConstraints minHeight="10.0" prefHeight="30.0" valignment="CENTER" vgrow="ALWAYS" />
+                <RowConstraints minHeight="10.0" prefHeight="30.0" valignment="CENTER" vgrow="ALWAYS" />
+                <RowConstraints minHeight="10.0" prefHeight="30.0" valignment="CENTER" vgrow="ALWAYS" />
+                  <RowConstraints minHeight="10.0" prefHeight="30.0" valignment="CENTER" vgrow="ALWAYS" />
+                  <RowConstraints minHeight="10.0" prefHeight="30.0" valignment="CENTER" vgrow="ALWAYS" />
+                  <RowConstraints minHeight="10.0" prefHeight="30.0" valignment="CENTER" vgrow="ALWAYS" />
+                  <RowConstraints minHeight="10.0" prefHeight="30.0" valignment="CENTER" vgrow="ALWAYS" />
+                  <RowConstraints minHeight="10.0" prefHeight="30.0" valignment="CENTER" vgrow="ALWAYS" />
+              </rowConstraints>
+               <children>
+                  <Label text="Quote Number" GridPane.rowIndex="1" />
+                  <Label text="Date Generated" GridPane.rowIndex="2" />
+                  <Label alignment="CENTER_RIGHT" contentDisplay="CENTER" text="Sale Consultants" GridPane.columnSpan="2" GridPane.halignment="CENTER" GridPane.hgrow="ALWAYS" GridPane.rowIndex="3" GridPane.valignment="CENTER" GridPane.vgrow="ALWAYS">
+                     <font>
+                        <Font name="System Bold" size="17.0" />
+                     </font></Label>
+                  <TextField disable="true" editable="false" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.hgrow="ALWAYS" GridPane.rowIndex="1" GridPane.valignment="CENTER" GridPane.vgrow="ALWAYS">
+                     <GridPane.margin>
+                        <Insets />
+                     </GridPane.margin>
+                  </TextField>
+                  <HBox prefHeight="100.0" prefWidth="200.0" GridPane.columnSpan="2147483647" GridPane.rowIndex="4">
+                     <children>
+                        <Label text="Name:">
+                           <HBox.margin>
+                              <Insets left="5.0" right="5.0" />
+                           </HBox.margin></Label>
+                        <TextField prefWidth="90.0" HBox.hgrow="ALWAYS" />
+                        <Label layoutX="10.0" layoutY="10.0" text="Cell No.:">
+                           <HBox.margin>
+                              <Insets left="5.0" right="5.0" />
+                           </HBox.margin></Label>
+                        <TextField layoutX="35.0" layoutY="10.0" prefWidth="90.0" HBox.hgrow="ALWAYS" />
+                        <Label layoutX="115.0" layoutY="10.0" text="eMail:">
+                           <HBox.margin>
+                              <Insets left="5.0" right="5.0" />
+                           </HBox.margin></Label>
+                        <TextField layoutX="121.0" layoutY="10.0" prefWidth="90.0" HBox.hgrow="ALWAYS" />
+                     </children>
+                  </HBox>
+                  <HBox layoutX="10.0" layoutY="288.0" prefHeight="100.0" prefWidth="200.0" GridPane.columnSpan="2147483647" GridPane.rowIndex="5">
+                     <children>
+                        <Label text="Name:">
+                           <HBox.margin>
+                              <Insets left="5.0" right="5.0" />
+                           </HBox.margin></Label>
+                        <TextField prefWidth="90.0" HBox.hgrow="ALWAYS" />
+                        <Label layoutX="10.0" layoutY="10.0" text="Cell No.:">
+                           <HBox.margin>
+                              <Insets left="5.0" right="5.0" />
+                           </HBox.margin></Label>
+                        <TextField layoutX="35.0" layoutY="10.0" prefWidth="90.0" HBox.hgrow="ALWAYS" />
+                        <Label layoutX="115.0" layoutY="10.0" text="eMail:">
+                           <HBox.margin>
+                              <Insets left="5.0" right="5.0" />
+                           </HBox.margin></Label>
+                        <TextField layoutX="121.0" layoutY="10.0" prefWidth="90.0" HBox.hgrow="ALWAYS" />
+                     </children>
+                  </HBox>
+                  <HBox layoutX="10.0" layoutY="318.0" prefHeight="100.0" prefWidth="200.0" GridPane.columnSpan="2147483647" GridPane.rowIndex="6">
+                     <children>
+                        <Label text="Name:">
+                           <HBox.margin>
+                              <Insets left="5.0" right="5.0" />
+                           </HBox.margin></Label>
+                        <TextField prefWidth="90.0" HBox.hgrow="ALWAYS" />
+                        <Label layoutX="10.0" layoutY="10.0" text="Cell No.:">
+                           <HBox.margin>
+                              <Insets left="5.0" right="5.0" />
+                           </HBox.margin></Label>
+                        <TextField layoutX="35.0" layoutY="10.0" prefWidth="90.0" HBox.hgrow="ALWAYS" />
+                        <Label layoutX="115.0" layoutY="10.0" text="eMail:">
+                           <HBox.margin>
+                              <Insets left="5.0" right="5.0" />
+                           </HBox.margin></Label>
+                        <TextField layoutX="121.0" layoutY="10.0" prefWidth="90.0" HBox.hgrow="ALWAYS" />
+                     </children>
+                  </HBox>
+                  <Label nodeOrientation="LEFT_TO_RIGHT" text="Total (including VAT)" GridPane.halignment="CENTER" GridPane.hgrow="ALWAYS" GridPane.rowIndex="7" GridPane.valignment="CENTER" GridPane.vgrow="ALWAYS" />
+                  <TextField alignment="CENTER" disable="true" editable="false" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.hgrow="ALWAYS" GridPane.rowIndex="7" GridPane.valignment="CENTER" GridPane.vgrow="ALWAYS" />
+                  <TextField fx:id="txtDateGenerated" disable="true" editable="false" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.hgrow="ALWAYS" GridPane.rowIndex="2" GridPane.valignment="CENTER" GridPane.vgrow="ALWAYS" />
+                  <Label text="Quote details" GridPane.columnSpan="2147483647" GridPane.halignment="CENTER" GridPane.hgrow="ALWAYS" GridPane.valignment="CENTER" GridPane.vgrow="ALWAYS">
+                     <font>
+                        <Font name="System Bold" size="17.0" />
+                     </font>
+                  </Label>
+               </children>
+               <padding>
+                  <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
+               </padding>
+            </GridPane>
+        </items>
+      </SplitPane>
+       <TableView fx:id="tblQuoteItems" editable="true" prefHeight="200.0" prefWidth="200.0" tableMenuButtonVisible="true">
+           <columns>
+               <TableColumn fx:id="colItemNumber" prefWidth="75.0" text="Item">
+                   <cellValueFactory>
+                       <PropertyValueFactory property="item_number" />
+                   </cellValueFactory>
+               </TableColumn>
+               <TableColumn fx:id="colDescription" minWidth="50.0" prefWidth="200.0" text="Equipment Description">
+                   <cellValueFactory>
+                       <PropertyValueFactory property="equipment_description" />
+                   </cellValueFactory>
+                   <cellFactory>
+                       <TextFieldTableCell fx:factory="forTableColumn" />
+                   </cellFactory>
+               </TableColumn>
+               <TableColumn fx:id="colUnit" prefWidth="40.0" text="Unit">
+                   <cellValueFactory>
+                       <PropertyValueFactory property="unit" />
+                   </cellValueFactory>
+                   <cellFactory>
+                       <TextFieldTableCell fx:factory="forTableColumn" />
+                   </cellFactory>
+               </TableColumn>
+               <TableColumn fx:id="colQuantity" maxWidth="1.7976931348623157E308" text="Quantity">
+                   <cellValueFactory>
+                       <PropertyValueFactory property="quantity" />
+                   </cellValueFactory>
+                   <cellFactory>
+                       <TextFieldTableCell fx:factory="forTableColumn" />
+                   </cellFactory>
+               </TableColumn>
+               <TableColumn fx:id="colRate" maxWidth="1.7976931348623157E308" prefWidth="100.0" text="Rate">
+                   <cellValueFactory>
+                       <PropertyValueFactory property="rate" />
+                   </cellValueFactory>
+                   <cellFactory>
+                       <TextFieldTableCell fx:factory="forTableColumn" />
+                   </cellFactory>
+               </TableColumn>
+               <TableColumn fx:id="colLabour" maxWidth="1.7976931348623157E308" prefWidth="100.0" text="Labour">
+                   <cellValueFactory>
+                       <PropertyValueFactory property="labour" />
+                   </cellValueFactory>
+                   <cellFactory>
+                       <TextFieldTableCell fx:factory="forTableColumn" />
+                   </cellFactory>
+               </TableColumn>
+               <TableColumn fx:id="colValue" maxWidth="1.7976931348623157E308" prefWidth="100.0" text="Value">
+                   <cellValueFactory>
+                       <PropertyValueFactory property="value" />
+                   </cellValueFactory>
+                   <cellFactory>
+                       <TextFieldTableCell fx:factory="forTableColumn" />
+                   </cellFactory>
+               </TableColumn>
+               <TableColumn fx:id="colMarkup" maxWidth="1.7976931348623157E308" prefWidth="100.0" text="Markup">
+                   <cellValueFactory>
+                       <PropertyValueFactory property="markup" />
+                   </cellValueFactory>
+                   <cellFactory>
+                       <TextFieldTableCell fx:factory="forTableColumn" />
+                   </cellFactory>
+               </TableColumn>
+               <TableColumn fx:id="colAction" maxWidth="1.7976931348623157E308" prefWidth="100.0" text="Action">
+                  
+               </TableColumn>
+           </columns>
+       </TableView>
+   </children>
+</VBox>

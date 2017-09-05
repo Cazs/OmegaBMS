@@ -1,0 +1,1 @@
+curl -X POST -d job_name=client_abc_job -d job_description=desc -d client_id=abc123 -d client_rep_id=123abc -d date_logged=1481542622 -d date_assigned=1481568935 -d date_started=1481622593 -d date_ended=1481709401 -d invoice_id=none -d job_completed=false --header "Cookie: fZHs8DFQECXU4pzZ" http://localhost:9000/api/job/update/584effe38e69cf4a55c4a7eb

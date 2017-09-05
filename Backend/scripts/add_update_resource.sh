@@ -1,0 +1,1 @@
+curl -X POST -d resource_name="Toyota Hilux" -d resource_type="Vehicle" -d resource_description="2015 model, 5lt, 30000km" -d resource_value=300000 -d date_acquired=1447970400 --header "Cookie: DM8Y1Ikd15n8vxo6" http://localhost:9000/api/resource/add

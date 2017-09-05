@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="module_fadulousbms" default="compile.module.fadulousbms">
+  <dirname property="module.fadulousbms.basedir" file="${ant.file.module_fadulousbms}"/>
+  
+  <property name="module.jdk.home.fadulousbms" value="${project.jdk.home}"/>
+  <property name="module.jdk.bin.fadulousbms" value="${project.jdk.bin}"/>
+  <property name="module.jdk.classpath.fadulousbms" value="${project.jdk.classpath}"/>
+  
+  <property name="compiler.args.fadulousbms" value="-encoding UTF-8 -source 8 -target 8 ${compiler.args}"/>
+  
+  <property name="fadulousbms.output.dir" value="${module.fadulousbms.basedir}/out/production/FadulousBMS"/>
+  <property name="fadulousbms.testoutput.dir" value="${module.fadulousbms.basedir}/out/test/FadulousBMS"/>
+  
+  <path id="fadulousbms.module.bootclasspath">
+    <!-- Paths to be included in compilation bootclasspath -->
+  </path>
+  
+  <path id="fadulousbms.module.production.classpath">
+    <path refid="${module.jdk.classpath.fadulousbms}"/>
+    <path refid="library.gson-2.8.0.classpath"/>
+    <path refid="library.pdfbox-app-2.0.4.classpath"/>
+    <path refid="library.pdfrenderer-0.9.1.classpath"/>
+  </path>
+  
+  <path id="fadulousbms.runtime.production.module.classpath">
+    <pathelement location="${fadulousbms.output.dir}"/>
+    <path refid="library.gson-2.8.0.classpath"/>
+    <path refid="library.pdfbox-app-2.0.4.classpath"/>
+    <path refid="library.pdfrenderer-0.9.1.classpath"/>
+  </path>
+  
+  <path id="fadulousbms.module.classpath">
+    <path refid="${module.jdk.classpath.fadulousbms}"/>
+    <pathelement location="${fadulousbms.output.dir}"/>
+    <path refid="library.gson-2.8.0.classpath"/>
+    <path refid="library.pdfbox-app-2.0.4.classpath"/>
+    <path refid="library.pdfrenderer-0.9.1.classpath"/>
+  </path>
+  
+  <path id="fadulousbms.runtime.module.classpath">
+    <pathelement location="${fadulousbms.testoutput.dir}"/>
+    <pathelement location="${fadulousbms.output.dir}"/>
+    <path refid="library.gson-2.8.0.classpath"/>
+    <path refid="library.pdfbox-app-2.0.4.classpath"/>
+    <path refid="library.pdfrenderer-0.9.1.classpath"/>
+  </path>
+  
+  
+  <patternset id="excluded.from.module.fadulousbms">
+    <patternset refid="ignored.files"/>
+  </patternset>
+  
+  <patternset id="excluded.from.compilation.fadulousbms">
+    <patternset refid="excluded.from.module.fadulousbms"/>
+  </patternset>
+  
+  <path id="fadulousbms.module.sourcepath">
+    <dirset dir="${module.fadulousbms.basedir}">
+      <include name="src"/>
+    </dirset>
+  </path>
+  
+  
+  <target name="compile.module.fadulousbms" depends="compile.module.fadulousbms.production,compile.module.fadulousbms.tests" description="Compile module FadulousBMS"/>
+  
+  <target name="compile.module.fadulousbms.production" depends="register.custom.compilers" description="Compile module FadulousBMS; production classes">
+    <mkdir dir="${fadulousbms.output.dir}"/>
+    <javac2 destdir="${fadulousbms.output.dir}" debug="${compiler.debug}" nowarn="${compiler.generate.no.warnings}" memorymaximumsize="${compiler.max.memory}" fork="true" executable="${module.jdk.bin.fadulousbms}/javac">
+      <compilerarg line="${compiler.args.fadulousbms}"/>
+      <bootclasspath refid="fadulousbms.module.bootclasspath"/>
+      <classpath refid="fadulousbms.module.production.classpath"/>
+      <src refid="fadulousbms.module.sourcepath"/>
+      <patternset refid="excluded.from.compilation.fadulousbms"/>
+    </javac2>
+    
+    <copy todir="${fadulousbms.output.dir}">
+      <fileset dir="${module.fadulousbms.basedir}/src">
+        <patternset refid="compiler.resources"/>
+        <type type="file"/>
+      </fileset>
+    </copy>
+  </target>
+  
+  <target name="compile.module.fadulousbms.tests" depends="register.custom.compilers,compile.module.fadulousbms.production" description="compile module FadulousBMS; test classes" unless="skip.tests"/>
+  
+  <target name="clean.module.fadulousbms" description="cleanup module">
+    <delete dir="${fadulousbms.output.dir}"/>
+    <delete dir="${fadulousbms.testoutput.dir}"/>
+  </target>
+</project>

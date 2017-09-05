@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.*?>
+<?import javafx.scene.control.*?>
+<?import java.lang.*?>
+<?import javafx.scene.layout.*?>
+
+<BorderPane prefHeight="200.0" prefWidth="320.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="fadulousbms.controllers.LoginController">
+   <center>
+      <VBox prefHeight="200.0" prefWidth="100.0" BorderPane.alignment="CENTER">
+         <children>
+            <HBox alignment="CENTER" onMouseClicked="#login" prefHeight="100.0" prefWidth="200.0">
+               <children>
+                  <Label text="Username" />
+                  <TextField fx:id="txtUsr">
+                     <HBox.margin>
+                        <Insets left="20.0" />
+                     </HBox.margin></TextField>
+               </children>
+            </HBox>
+            <HBox alignment="CENTER" layoutX="10.0" layoutY="10.0" prefHeight="100.0" prefWidth="200.0">
+               <children>
+                  <Label text="Password" />
+                  <TextField fx:id="txtPwd">
+                     <HBox.margin>
+                        <Insets left="20.0" />
+                     </HBox.margin></TextField>
+               </children>
+            </HBox>
+            <BorderPane>
+               <center>
+                  <Button mnemonicParsing="false" onMouseClicked="#login" prefHeight="60.0" prefWidth="120.0" text="Login" BorderPane.alignment="CENTER">
+                     <BorderPane.margin>
+                        <Insets bottom="20.0" />
+                     </BorderPane.margin></Button>
+               </center>
+            </BorderPane>
+         </children>
+      </VBox>
+   </center>
+</BorderPane>

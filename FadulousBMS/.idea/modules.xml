@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ProjectModuleManager">
+    <modules>
+      <module fileurl="file://$PROJECT_DIR$/BMSPreloader/BMSPreloader.iml" filepath="$PROJECT_DIR$/BMSPreloader/BMSPreloader.iml" />
+      <module fileurl="file://$PROJECT_DIR$/FadulousBMS.iml" filepath="$PROJECT_DIR$/FadulousBMS.iml" />
+    </modules>
+  </component>
+</project>

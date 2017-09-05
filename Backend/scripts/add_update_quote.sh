@@ -1,0 +1,1 @@
+curl -X POST -d quote_name="Mistubishi Superair 3000" -d issued_by_org=58510af6747dc24dc6cb1fe1 -d recv_by_org=internal -d total_value=0 -d markup=30 -d labour=5000 -d tax=16 -d date_generated=1481811858 --header "Cookie: qocJSegBIBMfdXGO" http://localhost:9000/api/quote/update/5852af6967b18d65041b6516

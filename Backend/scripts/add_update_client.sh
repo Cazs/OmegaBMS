@@ -1,0 +1,1 @@
+curl -X POST -d client_name="Omega Fire and Security" -d physical_address=phys_addr -d postal_address=post_addr -d te -d other=null --header "Cookie: jU6tsUJDyfhpYftA" http://localhost:9000/api/client/update/584ff07a13b7b7182b75596c

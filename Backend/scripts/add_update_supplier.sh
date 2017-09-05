@@ -1,0 +1,1 @@
+curl -X POST -d supplier_name=Mitsubishi -d physical_address="3010 Mitsubishi drive" -d postal_address="PO Box 42" -d tel=0112358 -d speciality="Air conditioning systems" -d active=true -d date_partnered=1481705405 -d website="www.mitsubishi.co.za" -d contact_email="support@mitsubishi.co.za" -d other=none --header "Cookie: hf6QzODpaCUFfwDO" http://localhost:9000/api/supplier/add

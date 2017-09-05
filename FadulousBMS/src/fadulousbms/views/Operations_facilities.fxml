@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.image.*?>
+<?import javafx.scene.text.*?>
+<?import javafx.geometry.*?>
+<?import java.lang.*?>
+<?import java.util.*?>
+<?import javafx.scene.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<BorderPane stylesheets="@../styles/home.css" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="fadulousbms.controllers.FacilitiesController">
+   <top>
+      <BorderPane prefHeight="100.0" styleClass="nav" BorderPane.alignment="CENTER">
+         <top>
+            <Label text="Airotek BMS" BorderPane.alignment="CENTER">
+               <font>
+                  <Font size="38.0" />
+               </font>
+            </Label>
+         </top>
+         <left>
+            <HBox alignment="CENTER_LEFT" BorderPane.alignment="CENTER">
+               <children>
+                  <ImageView fx:id="img_profile" fitHeight="60.0" fitWidth="60.0" pickOnBounds="true" preserveRatio="true" />
+                  <Label fx:id="user_name">
+                     <font>
+                        <Font size="20.0" />
+                     </font>
+                  </Label>
+               </children>
+            </HBox>
+         </left>
+         <right>
+            <HBox alignment="CENTER_RIGHT" BorderPane.alignment="CENTER">
+               <children>
+                  <Button alignment="CENTER" contentDisplay="CENTER" mnemonicParsing="false" onMouseClicked="#showMain" text="Home" HBox.hgrow="ALWAYS">
+                     <HBox.margin>
+                        <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
+                     </HBox.margin>
+                  </Button>
+                  <Button mnemonicParsing="false" onMouseClicked="#showLogin" text="Login" HBox.hgrow="ALWAYS">
+                     <HBox.margin>
+                        <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
+                     </HBox.margin>
+                  </Button>
+               </children>
+            </HBox>
+         </right>
+      </BorderPane>
+   </top>
+   <center>
+      <BorderPane BorderPane.alignment="CENTER">
+         <bottom>
+            <HBox alignment="CENTER" BorderPane.alignment="CENTER">
+               <children>
+                  <Button alignment="CENTER" contentDisplay="CENTER" defaultButton="true" mnemonicParsing="false" onMouseClicked="#productionClick" prefHeight="100.0" prefWidth="100.0" style="-fx-border-radius: 20;" styleClass="sys-nav-btn" stylesheets="@../styles/home.css" text="Production" HBox.hgrow="ALWAYS">
+                     <HBox.margin>
+                        <Insets bottom="20.0" left="20.0" right="20.0" top="20.0" />
+                     </HBox.margin>
+                  </Button>
+                  <Button mnemonicParsing="false" onMouseClicked="#salesClick" prefHeight="100.0" prefWidth="100.0" styleClass="sys-nav-btn" text="Sales">
+                     <HBox.margin>
+                        <Insets bottom="20.0" left="20.0" right="20.0" top="20.0" />
+                     </HBox.margin>
+                  </Button>
+                  <Button mnemonicParsing="false" onMouseClicked="#facilitiesClick" prefHeight="100.0" prefWidth="100.0" styleClass="sys-nav-btn" text="Facilities">
+                     <HBox.margin>
+                        <Insets bottom="20.0" left="20.0" right="20.0" top="20.0" />
+                     </HBox.margin>
+                  </Button>
+               </children>
+               <BorderPane.margin>
+                  <Insets top="20.0" />
+               </BorderPane.margin>
+            </HBox>
+         </bottom>
+         <center>
+            <GridPane alignment="CENTER" hgap="5.0" vgap="5.0" BorderPane.alignment="CENTER">
+               <columnConstraints>
+                  <ColumnConstraints hgrow="SOMETIMES" maxWidth="241.0" minWidth="10.0" prefWidth="215.0" />
+               </columnConstraints>
+               <rowConstraints>
+                  <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+               </rowConstraints>
+               <children>
+                  <Button alignment="CENTER" contentDisplay="CENTER" minHeight="90.0" minWidth="90.0" mnemonicParsing="false" onMouseClicked="#assetsClick" styleClass="sys-btn" text="Assets" GridPane.halignment="CENTER" />
+               </children>
+            </GridPane>
+         </center>
+      </BorderPane>
+   </center>
+</BorderPane>

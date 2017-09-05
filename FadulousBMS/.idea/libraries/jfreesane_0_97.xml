@@ -1,0 +1,9 @@
+<component name="libraryTable">
+  <library name="jfreesane-0.97">
+    <CLASSES>
+      <root url="jar://$PROJECT_DIR$/lib/jfreesane-0.97.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES />
+  </library>
+</component>

@@ -1,0 +1,1 @@
+curl -X POST -d employee_id=585007030431031da0ac2427 -d client_id=584ff07a13b7b7182b75596c  -d date_assigned=1481623678 --header "Cookie: xuD2GFemeKSSVF0B" http://localhost:9000/api/client_employee/add
