@@ -8,49 +8,11 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="1759104d-ca59-43ad-8fd3-b410531d2d73" name="Default" comment="">
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/fadulousbms/controllers/LoadingController.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/fadulousbms/controllers/NewGenericQuoteController.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/fadulousbms/controllers/ViewGenericQuoteController.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/fadulousbms/model/GenericQuote.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/fadulousbms/model/GenericQuoteItem.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/bin/quote_597ef9149114363af3000b0a.pdf" afterPath="$PROJECT_DIR$/bin/quote_597ef9149114363af3000b0a.pdf" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/bin/quote_598455ce6252e117f9be354c.pdf" afterPath="$PROJECT_DIR$/bin/quote_598455ce6252e117f9be354c.pdf" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/out/artifacts/BMSPreloader/BMSPreloader.jar" afterPath="$PROJECT_DIR$/out/artifacts/BMSPreloader/BMSPreloader.jar" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/out/artifacts/FadulousBMS/BMSPreloader.jar" afterPath="$PROJECT_DIR$/out/artifacts/FadulousBMS/BMSPreloader.jar" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/out/artifacts/FadulousBMS/FadulousBMS.jar" afterPath="$PROJECT_DIR$/out/artifacts/FadulousBMS/FadulousBMS.jar" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/out/production/FadulousBMS/fadulousbms/FadulousBMS.class" afterPath="$PROJECT_DIR$/out/production/FadulousBMS/fadulousbms/FadulousBMS.class" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/out/production/FadulousBMS/fadulousbms/controllers/OperationsController.class" afterPath="$PROJECT_DIR$/out/production/FadulousBMS/fadulousbms/controllers/OperationsController.class" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/out/production/FadulousBMS/fadulousbms/controllers/QuotesController$1$1.class" afterPath="$PROJECT_DIR$/out/production/FadulousBMS/fadulousbms/controllers/QuotesController$1$1.class" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/out/production/FadulousBMS/fadulousbms/controllers/QuotesController$1.class" afterPath="$PROJECT_DIR$/out/production/FadulousBMS/fadulousbms/controllers/QuotesController$1.class" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/out/production/FadulousBMS/fadulousbms/controllers/QuotesController.class" afterPath="$PROJECT_DIR$/out/production/FadulousBMS/fadulousbms/controllers/QuotesController.class" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/out/production/FadulousBMS/fadulousbms/controllers/ViewQuoteController.class" afterPath="$PROJECT_DIR$/out/production/FadulousBMS/fadulousbms/controllers/ViewQuoteController.class" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/out/production/FadulousBMS/fadulousbms/managers/QuoteManager.class" afterPath="$PROJECT_DIR$/out/production/FadulousBMS/fadulousbms/managers/QuoteManager.class" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/out/production/FadulousBMS/fadulousbms/managers/ScreenManager.class" afterPath="$PROJECT_DIR$/out/production/FadulousBMS/fadulousbms/managers/ScreenManager.class" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/out/production/FadulousBMS/fadulousbms/model/CustomTableViewControls.class" afterPath="$PROJECT_DIR$/out/production/FadulousBMS/fadulousbms/model/CustomTableViewControls.class" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/out/production/FadulousBMS/fadulousbms/model/Job.class" afterPath="$PROJECT_DIR$/out/production/FadulousBMS/fadulousbms/model/Job.class" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/out/production/FadulousBMS/fadulousbms/model/Screens.class" afterPath="$PROJECT_DIR$/out/production/FadulousBMS/fadulousbms/model/Screens.class" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../Backend/app.js" afterPath="$PROJECT_DIR$/../Backend/app.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../Backend/models/jobs/job_employees.js" afterPath="$PROJECT_DIR$/../Backend/models/jobs/job_employees.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../Backend/models/jobs/jobs.js" afterPath="$PROJECT_DIR$/../Backend/models/jobs/jobs.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../Backend/models/quotes/quotes.js" afterPath="$PROJECT_DIR$/../Backend/models/quotes/quotes.js" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../old git" afterPath="$PROJECT_DIR$/../old git" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/out/artifacts/FadulousBMS/FadulousBMS.jnlp" afterPath="$PROJECT_DIR$/out/artifacts/FadulousBMS/FadulousBMS.jnlp" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/out/production/FadulousBMS/fadulousbms/views/Operations_sales.fxml" afterPath="$PROJECT_DIR$/out/production/FadulousBMS/fadulousbms/views/Operations_sales.fxml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/out/production/FadulousBMS/fadulousbms/views/Quotes.fxml" afterPath="$PROJECT_DIR$/out/production/FadulousBMS/fadulousbms/views/Quotes.fxml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/out/production/FadulousBMS/fadulousbms/views/View_quote.fxml" afterPath="$PROJECT_DIR$/out/production/FadulousBMS/fadulousbms/views/View_quote.fxml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/fadulousbms/FadulousBMS.java" afterPath="$PROJECT_DIR$/src/fadulousbms/FadulousBMS.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/fadulousbms/controllers/NewQuoteController.java" afterPath="$PROJECT_DIR$/src/fadulousbms/controllers/NewQuoteController.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/fadulousbms/controllers/OperationsController.java" afterPath="$PROJECT_DIR$/src/fadulousbms/controllers/OperationsController.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/fadulousbms/controllers/QuotesController.java" afterPath="$PROJECT_DIR$/src/fadulousbms/controllers/QuotesController.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/fadulousbms/controllers/ViewQuoteController.java" afterPath="$PROJECT_DIR$/src/fadulousbms/controllers/ViewQuoteController.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/fadulousbms/managers/QuoteManager.java" afterPath="$PROJECT_DIR$/src/fadulousbms/managers/QuoteManager.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/fadulousbms/managers/ScreenManager.java" afterPath="$PROJECT_DIR$/src/fadulousbms/managers/ScreenManager.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/fadulousbms/model/CustomTableViewControls.java" afterPath="$PROJECT_DIR$/src/fadulousbms/model/CustomTableViewControls.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/fadulousbms/model/Job.java" afterPath="$PROJECT_DIR$/src/fadulousbms/model/Job.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/fadulousbms/model/QuoteItem.java" afterPath="$PROJECT_DIR$/src/fadulousbms/model/QuoteItem.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/fadulousbms/model/Screens.java" afterPath="$PROJECT_DIR$/src/fadulousbms/model/Screens.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/fadulousbms/views/Operations.fxml" afterPath="$PROJECT_DIR$/src/fadulousbms/views/Operations.fxml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/fadulousbms/views/Operations_sales.fxml" afterPath="$PROJECT_DIR$/src/fadulousbms/views/Operations_sales.fxml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/fadulousbms/views/Quotes.fxml" afterPath="$PROJECT_DIR$/src/fadulousbms/views/Quotes.fxml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/fadulousbms/views/View_quote.fxml" afterPath="$PROJECT_DIR$/src/fadulousbms/views/View_quote.fxml" />
     </list>
     <ignored path="$PROJECT_DIR$/out/" />
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
@@ -72,46 +34,6 @@
   </component>
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
-      <file leaf-file-name="QuoteManager.java" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/fadulousbms/managers/QuoteManager.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="954">
-              <caret line="146" column="28" lean-forward="false" selection-start-line="146" selection-start-column="28" selection-end-line="146" selection-end-column="28" />
-              <folding>
-                <element signature="docComment;class#QuoteManager#0" expanded="false" />
-                <element signature="method#QuoteManager#0;class#QuoteManager#0" expanded="false" />
-                <element signature="method#initialize#0;class#QuoteManager#0" expanded="false" />
-                <element signature="method#setSelectedQuote#0;class#QuoteManager#0" expanded="false" />
-                <element signature="method#setSelectedQuote#1;class#QuoteManager#0" expanded="false" />
-                <element signature="method#getSelectedQuote#0;class#QuoteManager#0" expanded="false" />
-                <element signature="method#setSelectedGenericQuote#0;class#QuoteManager#0" expanded="false" />
-                <element signature="method#setSelectedGenericQuote#1;class#QuoteManager#0" expanded="false" />
-                <element signature="method#getSelectedGenericQuote#0;class#QuoteManager#0" expanded="false" />
-                <element signature="method#computeQuoteTotal#0;class#QuoteManager#0" expanded="false" />
-                <element signature="method#updateQuote#0;class#QuoteManager#0" expanded="false" />
-                <element signature="method#updateQuote#1;class#QuoteManager#0" expanded="false" />
-                <element signature="method#updateQuoteItems#0;class#QuoteManager#0" expanded="false" />
-                <element signature="e#23440#23456#0" expanded="false" />
-                <element signature="method#createQuoteItem#0;class#QuoteManager#0" expanded="false" />
-                <element signature="e#25181#25222#0" expanded="false" />
-                <element signature="method#createQuoteItem#1;class#QuoteManager#0" expanded="false" />
-                <element signature="e#26538#26579#0" expanded="false" />
-                <element signature="method#updateQuoteItem#0;class#QuoteManager#0" expanded="false" />
-                <element signature="method#updateQuoteReps#0;class#QuoteManager#0" expanded="false" />
-                <element signature="e#29882#29897#0" expanded="false" />
-                <element signature="method#createQuoteRep#0;class#QuoteManager#0" expanded="false" />
-                <element signature="e#31212#31253#0" expanded="false" />
-                <element signature="method#updateGenericQuote#0;class#QuoteManager#0" expanded="false" />
-                <element signature="method#updateGenericQuoteItem#0;class#QuoteManager#0" expanded="false" />
-                <element signature="method#createGenericQuoteItem#0;class#QuoteManager#0" expanded="false" />
-                <element signature="method#createGenericQuoteItem#1;class#QuoteManager#0" expanded="false" />
-                <element signature="e#40839#40880#0" expanded="false" />
-                <element signature="method#newWindow#0;class#QuoteManager#0" expanded="false" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
       <file leaf-file-name="FadulousBMS.java" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/fadulousbms/FadulousBMS.java">
           <provider selected="true" editor-type-id="text-editor">
@@ -142,11 +64,11 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="OperationsController.java" pinned="false" current-in-tab="true">
+      <file leaf-file-name="OperationsController.java" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/fadulousbms/controllers/OperationsController.java">
           <provider selected="true" editor-type-id="text-editor">
             <state relative-caret-position="130">
-              <caret line="163" column="76" lean-forward="true" selection-start-line="163" selection-start-column="76" selection-end-line="163" selection-end-column="76" />
+              <caret line="163" column="76" lean-forward="false" selection-start-line="163" selection-start-column="76" selection-end-line="163" selection-end-column="76" />
               <folding>
                 <element signature="method#initialize#0;class#OperationsController#0" expanded="false" />
                 <element signature="method#setParent#0;class#OperationsController#0" expanded="false" />
@@ -160,18 +82,22 @@
           </provider>
         </entry>
       </file>
+      <file leaf-file-name="CreateAccountController.java" pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/src/fadulousbms/controllers/CreateAccountController.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="145">
+              <caret line="203" column="32" lean-forward="true" selection-start-line="203" selection-start-column="32" selection-end-line="203" selection-end-column="32" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
       <file leaf-file-name="Screens.java" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/fadulousbms/model/Screens.java">
           <provider selected="true" editor-type-id="text-editor">
             <state relative-caret-position="198">
               <caret line="15" column="34" lean-forward="false" selection-start-line="15" selection-start-column="34" selection-end-line="15" selection-end-column="34" />
-              <folding>
-                <element signature="e#0#1156#0" expanded="false" />
-                <element signature="e#1047#1048#0" expanded="false" />
-                <element signature="e#1083#1084#0" expanded="false" />
-                <element signature="e#1124#1125#0" expanded="false" />
-                <element signature="e#1153#1154#0" expanded="false" />
-              </folding>
+              <folding />
             </state>
           </provider>
         </entry>
@@ -399,6 +325,8 @@
       <foldersAlwaysOnTop value="true" />
     </navigator>
     <panes>
+      <pane id="PackagesPane" />
+      <pane id="Scratches" />
       <pane id="ProjectPane">
         <subPane>
           <PATH>
@@ -475,9 +403,7 @@
           </PATH>
         </subPane>
       </pane>
-      <pane id="PackagesPane" />
       <pane id="Scope" />
-      <pane id="Scratches" />
     </panes>
   </component>
   <component name="PropertiesComponent">
@@ -485,7 +411,7 @@
     <property name="project.structure.last.edited" value="Libraries" />
     <property name="project.structure.proportion" value="0.15" />
     <property name="project.structure.side.proportion" value="0.2" />
-    <property name="last_opened_file_path" value="$PROJECT_DIR$/../../../pdf-renderer" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$" />
     <property name="GenerateAntBuildDialog.enableUiFormCompile" value="true" />
     <property name="GenerateAntBuildDialog.forceTargetJdk" value="true" />
     <property name="GenerateAntBuildDialog.backupFiles" value="true" />
@@ -776,7 +702,7 @@
       <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32888147" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Capture Tool" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Designer" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
-      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.284522" sideWeight="0.4888889" order="0" side_tool="false" content_ui="combo" />
+      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.28907436" sideWeight="0.4888889" order="0" side_tool="false" content_ui="combo" />
       <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.24962063" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Ant Build" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.24962063" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="UI Designer" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
@@ -837,13 +763,6 @@
     <option name="FILTER_TARGETS" value="false" />
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/src/fadulousbms/model/InvoiceResource.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="273">
-          <caret line="89" column="4" lean-forward="false" selection-start-line="89" selection-start-column="4" selection-end-line="89" selection-end-column="4" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/fadulousbms/model/QuoteResource.java">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="221">
@@ -1239,9 +1158,16 @@
         <state relative-caret-position="954">
           <caret line="146" column="28" lean-forward="false" selection-start-line="146" selection-start-column="28" selection-end-line="146" selection-end-column="28" />
           <folding>
+            <element signature="imports" expanded="false" />
             <element signature="docComment;class#QuoteManager#0" expanded="false" />
             <element signature="method#QuoteManager#0;class#QuoteManager#0" expanded="false" />
+            <element signature="e#1057#1058#0" expanded="false" />
+            <element signature="e#1093#1094#0" expanded="false" />
             <element signature="method#initialize#0;class#QuoteManager#0" expanded="false" />
+            <element signature="e#3022#3023#0" expanded="false" />
+            <element signature="e#3051#3052#0" expanded="false" />
+            <element signature="e#3103#3104#0" expanded="false" />
+            <element signature="e#3140#3141#0" expanded="false" />
             <element signature="method#setSelectedQuote#0;class#QuoteManager#0" expanded="false" />
             <element signature="method#setSelectedQuote#1;class#QuoteManager#0" expanded="false" />
             <element signature="method#getSelectedQuote#0;class#QuoteManager#0" expanded="false" />
@@ -1299,7 +1225,7 @@
     <entry file="file://$PROJECT_DIR$/src/fadulousbms/controllers/OperationsController.java">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="130">
-          <caret line="163" column="76" lean-forward="true" selection-start-line="163" selection-start-column="76" selection-end-line="163" selection-end-column="76" />
+          <caret line="163" column="76" lean-forward="false" selection-start-line="163" selection-start-column="76" selection-end-line="163" selection-end-column="76" />
           <folding>
             <element signature="method#initialize#0;class#OperationsController#0" expanded="false" />
             <element signature="method#setParent#0;class#OperationsController#0" expanded="false" />
@@ -1316,13 +1242,7 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="198">
           <caret line="15" column="34" lean-forward="false" selection-start-line="15" selection-start-column="34" selection-end-line="15" selection-end-column="34" />
-          <folding>
-            <element signature="e#0#1156#0" expanded="false" />
-            <element signature="e#1047#1048#0" expanded="false" />
-            <element signature="e#1083#1084#0" expanded="false" />
-            <element signature="e#1124#1125#0" expanded="false" />
-            <element signature="e#1153#1154#0" expanded="false" />
-          </folding>
+          <folding />
         </state>
       </provider>
     </entry>
@@ -1397,6 +1317,14 @@
             <element signature="e#15280#15281#0" expanded="true" />
             <element signature="e#15348#15349#0" expanded="true" />
           </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/fadulousbms/controllers/CreateAccountController.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="145">
+          <caret line="203" column="32" lean-forward="true" selection-start-line="203" selection-start-column="32" selection-end-line="203" selection-end-column="32" />
+          <folding />
         </state>
       </provider>
     </entry>
