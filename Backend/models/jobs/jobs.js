@@ -77,6 +77,8 @@ const jobSchema = mongoose.Schema(
           }
           console.log('successfully updated job_count to %s', counter.count);
         });
+        //update timestamp
+        counters.timestamp('jobs_timestamp');
       });
     });
   }
@@ -96,7 +98,21 @@ const jobSchema = mongoose.Schema(
   {
     console.log('attempting to update job[%s].\n', job_id);
     var query = {_id: job_id};
-    Job.findOneAndUpdate(query, job, {}, callback);
+    Job.findOneAndUpdate(query, job, {}, function(error, res_obj)
+    {
+      if(error)
+      {
+        console.log(error);
+        if(callback)
+          callback(error);
+        return;
+      }
+      console.log('successfully updated job.')
+      if(callback)
+        callback(error, res_obj);
+      //update timestamp
+      counters.timestamp('jobs_timestamp');
+    });
   }
 
   module.exports.remove = function(job_id, callback)

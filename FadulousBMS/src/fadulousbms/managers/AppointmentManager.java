@@ -32,7 +32,7 @@ import java.util.ArrayList;
 /**
  * Created by ghost on 2017/02/24.
  */
-public class AppointmentManager implements BusinessObjectManager
+public class AppointmentManager extends BusinessObjectManager
 {
     private TableView tblAppointment;
     private FileMetadata[] documents;
@@ -81,7 +81,6 @@ public class AppointmentManager implements BusinessObjectManager
         }
     }
 
-    @Override
     public void newWindow()
     {
         SessionManager smgr = SessionManager.getInstance();

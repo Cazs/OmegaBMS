@@ -4,6 +4,7 @@ import fadulousbms.auxilary.IO;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 
+import java.io.Serializable;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.util.ArrayList;
@@ -11,7 +12,7 @@ import java.util.ArrayList;
 /**
  * Created by ghost on 2017/01/21.
  */
-public class QuoteItem implements BusinessObject
+public class QuoteItem implements BusinessObject, Serializable
 {
     private String _id;
     private int item_number;

@@ -1,5 +1,6 @@
 var mongoose = require('mongoose');
 var access_levels = require('../system/access_levels.js');
+var counters = require('../system/counters.js');
 
 var supplierSchema = mongoose.Schema(
   {
@@ -16,6 +17,10 @@ var supplierSchema = mongoose.Schema(
       required:true
     },
     tel:{
+      type:String,
+      required:true
+    },
+    fax:{
       type:String,
       required:true
     },
@@ -62,13 +67,43 @@ var supplierSchema = mongoose.Schema(
 
   module.exports.add = function (supplier, callback)
   {
-    Suppliers.create(supplier, callback);
+    console.log('attempting to create new supplier.');
+    Suppliers.create(supplier, function(error, res_obj)
+    {
+      if(error)
+      {
+        console.log(error);
+        if(callback)
+          callback(error);
+        return;
+      }
+      console.log('successfully created new supplier.')
+      if(callback)
+        callback(error, res_obj);
+      //update timestamp
+      counters.timestamp('suppliers_timestamp');
+    });
   };
 
   module.exports.update = function (supplier_id, supplier, callback)
   {
+    console.log('attempting to update supplier [%s].', supplier_id);
     var query = {_id :supplier_id};
-    Suppliers.findOneAndUpdate(query, supplier, {}, callback);
+    Suppliers.findOneAndUpdate(query, supplier, {}, function(error, res_obj)
+    {
+      if(error)
+      {
+        console.log(error);
+        if(callback)
+          callback(error);
+        return;
+      }
+      console.log('successfully updated supplier.')
+      if(callback)
+        callback(error, res_obj);
+      //update timestamp
+      counters.timestamp('suppliers_timestamp');
+    });
   };
 
   module.exports.isValid = function(supplier)

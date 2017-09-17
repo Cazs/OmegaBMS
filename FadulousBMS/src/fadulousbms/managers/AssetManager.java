@@ -32,7 +32,7 @@ import java.util.ArrayList;
 /**
  * Created by ghost on 2017/02/01.
  */
-public class AssetManager implements BusinessObjectManager
+public class AssetManager extends BusinessObjectManager
 {
     private Asset[] assets;
     private TableView tblAssets;
@@ -95,7 +95,6 @@ public class AssetManager implements BusinessObjectManager
         }
     }
 
-    @Override
     public void newWindow()
     {
         SessionManager smgr = SessionManager.getInstance();

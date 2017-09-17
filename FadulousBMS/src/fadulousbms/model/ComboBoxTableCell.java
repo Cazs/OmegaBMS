@@ -74,7 +74,8 @@ public class ComboBoxTableCell extends TableCell<BusinessObject, String>
             if(selected_pos<business_objects.length)
             {
                 updateItem(business_objects[selected_pos].get_id(), false);
-                commitEdit(business_objects[selected_pos].get_id());
+                if(oldValue!=null)
+                    commitEdit(business_objects[selected_pos].get_id());
                 //IO.log(TAG, IO.TAG_INFO, "selected: " + business_objects[selected_pos]);
             }
             else IO.log(TAG, IO.TAG_ERROR, "selection index out of bounds.");
@@ -134,7 +135,8 @@ public class ComboBoxTableCell extends TableCell<BusinessObject, String>
             if(selected_pos>=0 && selected_pos<business_objects.length)
             {
                 updateItem(business_objects[selected_pos].get_id(), business_objects[selected_pos].get_id()==null);
-                commitEdit(business_objects[selected_pos].get_id());
+                if(oldValue!=null)
+                    commitEdit(business_objects[selected_pos].get_id());
                 //IO.log(TAG, IO.TAG_INFO, "selected: " + business_objects[selected_pos]);
             }else IO.log(TAG, IO.TAG_ERROR, "index out of bounds.");
         });
@@ -202,7 +204,7 @@ public class ComboBoxTableCell extends TableCell<BusinessObject, String>
     {
         super.updateItem(selected_id, empty);
         BusinessObject tbl_row_businessObject;
-        if(selected_id==null)
+        if(selected_id==null && !empty)
         {
             if (getTableRow() != null)
             {
@@ -220,7 +222,7 @@ public class ComboBoxTableCell extends TableCell<BusinessObject, String>
                             {
                                 String obj_json = RemoteComms.sendGetRequest(url, headers);
 
-                                System.out.println(obj_json);
+                                //System.out.println(obj_json);
                                 if (obj_json != null)
                                 {
                                     Gson gson = new GsonBuilder().create();

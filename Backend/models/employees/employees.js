@@ -84,14 +84,14 @@ module.exports.add = function(employee, callback)
       if(employee.access_level>access_levels.ADMIN)//creating super user account
       {
         //check if super user account exists
-        Employees.findOne({access_level:3}, function(err, db_employee)
+        Employees.findOne({access_level:3}, function(err, employee)
         {
           if(err)
           {
             callback(err);
             return;
           }
-          if(db_employee)
+          if(employee)
           {
             callback(new Error('super user account already exists.'));
             return;
@@ -99,7 +99,6 @@ module.exports.add = function(employee, callback)
           //set date_joined & active status - vericodes
           //creating super user account
           console.log('info: creating a super user account.');
-          Employees.create(employee, callback);
         });
       }else{
         //set date_joined & active status - vericodes

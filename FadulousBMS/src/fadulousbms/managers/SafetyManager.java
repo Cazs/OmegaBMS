@@ -30,7 +30,7 @@ import java.util.ArrayList;
 /**
  * Created by ghost on 2017/02/24.
  */
-public class SafetyManager implements BusinessObjectManager
+public class SafetyManager extends BusinessObjectManager
 {
     private TableView tblSafety;
     private static FileMetadata[] documents;
@@ -110,7 +110,6 @@ public class SafetyManager implements BusinessObjectManager
         }
     }
 
-    @Override
     public void newWindow()
     {
         listSafetyDocuments(documents, null);

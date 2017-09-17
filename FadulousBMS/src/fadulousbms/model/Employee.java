@@ -9,6 +9,7 @@ import fadulousbms.auxilary.IO;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 
+import java.io.Serializable;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 
@@ -16,7 +17,7 @@ import java.net.URLEncoder;
  *
  * @author ghost
  */
-public class Employee implements BusinessObject
+public class Employee implements BusinessObject, Serializable
 {
     /*private Occupation current_occupation;
     private Job current_job;

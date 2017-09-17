@@ -192,7 +192,7 @@ public class NewQuoteController implements Initializable, Screen
         //Populate fields
         if(QuoteManager.getInstance().fromGeneric())
         {
-            GenericQuote quote = QuoteManager.getInstance().getSelectedGenericQuote();
+            GenericQuote quote = GenericQuoteManager.getInstance().getSelectedGenericQuote();
             if(quote!=null)
             {
                 txtRequest.setText(quote.getRequest());

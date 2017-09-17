@@ -9,10 +9,7 @@ import fadulousbms.auxilary.IO;
 import fadulousbms.auxilary.RemoteComms;
 import fadulousbms.auxilary.Screen;
 import fadulousbms.auxilary.Validators;
-import fadulousbms.managers.QuoteManager;
-import fadulousbms.managers.ResourceManager;
-import fadulousbms.managers.ScreenManager;
-import fadulousbms.managers.SessionManager;
+import fadulousbms.managers.*;
 import fadulousbms.model.*;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -60,7 +57,7 @@ public class ViewGenericQuoteController implements Initializable, Screen
     {
         QuoteManager.getInstance().initialize(screen_mgr);
 
-        GenericQuote quote = QuoteManager.getInstance().getSelectedGenericQuote();
+        GenericQuote quote = GenericQuoteManager.getInstance().getSelectedGenericQuote();
         if(quote!=null)
         {
             //populate fields
@@ -253,7 +250,7 @@ public class ViewGenericQuoteController implements Initializable, Screen
         }
 
         //prepare quote parameters
-        GenericQuote quote = QuoteManager.getInstance().getSelectedGenericQuote();//new GenericQuote();
+        GenericQuote quote = GenericQuoteManager.getInstance().getSelectedGenericQuote();//new GenericQuote();
         if(quote==null)
         {
             IO.logAndAlert("Generic Quote Error", "Please select a valid generic quote.", IO.TAG_ERROR);
@@ -304,7 +301,7 @@ public class ViewGenericQuoteController implements Initializable, Screen
                     if(connection!=null)
                         connection.disconnect();
 
-                    if(QuoteManager.getInstance().updateGenericQuote(quote, items))
+                    if(GenericQuoteManager.getInstance().updateGenericQuote(quote, items))
                     {
                         //TODO:set selected quote
                         //QuoteManager.getInstance().loadDataFromServer();

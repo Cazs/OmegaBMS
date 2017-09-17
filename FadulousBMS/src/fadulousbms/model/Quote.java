@@ -5,6 +5,7 @@ import fadulousbms.auxilary.IO;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 
+import java.io.Serializable;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.util.ArrayList;
@@ -12,7 +13,7 @@ import java.util.ArrayList;
 /**
  * Created by ghost on 2017/01/21.
  */
-public class Quote implements BusinessObject
+public class Quote implements BusinessObject, Serializable
 {
     private String _id;
     private String client_id;
@@ -176,6 +177,8 @@ public class Quote implements BusinessObject
     public void setCreator(Employee creator_employee)
     {
         this.creator_employee = creator_employee;
+        if(creator_employee!=null)
+            setCreator(creator_employee.toString());
     }
 
     private StringProperty revisionProperty(){return new SimpleStringProperty(String.valueOf(revision));}

@@ -32,7 +32,7 @@ import java.util.ArrayList;
 /**
  * Created by ghost on 2017/02/24.
  */
-public class InspectionManager implements BusinessObjectManager
+public class InspectionManager extends BusinessObjectManager
 {
     private TableView tblInspection;
     private FileMetadata[] documents;
@@ -81,7 +81,6 @@ public class InspectionManager implements BusinessObjectManager
         }
     }
 
-    @Override
     public void newWindow()
     {
         SessionManager smgr = SessionManager.getInstance();

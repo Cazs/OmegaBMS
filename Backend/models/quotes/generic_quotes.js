@@ -64,7 +64,21 @@ module.exports.ACCESS_MODE = access_levels.NORMAL;//Required access level to exe
 module.exports.add = function(quote, callback)
 {
   console.log('attempting to create a new generic quote.');
-  Quotes.create(quote, callback);
+  Quotes.create(quote, function(error, res_obj)
+  {
+    if(error)
+    {
+      console.log(error);
+      if(callback)
+        callback(error);
+      return;
+    }
+    console.log('successfully created new generic quote.')
+    if(callback)
+      callback(error, res_obj);
+    //update timestamp
+    counters.timestamp('generic_quotes_timestamp');
+  });
 }
 
 module.exports.get = function(quote_id, callback)
@@ -89,7 +103,21 @@ module.exports.update = function(record_id, quote, callback)
       callback(err);
       return;
     }
-    Quotes.findOneAndUpdate(query, quote, {}, callback);
+    Quotes.findOneAndUpdate(query, quote, {}, function(error, res_obj)
+    {
+      if(error)
+      {
+        console.log(error);
+        if(callback)
+          callback(error);
+        return;
+      }
+      console.log('successfully updated generic quote.')
+      if(callback)
+        callback(error, res_obj);
+      //update timestamp
+      counters.timestamp('generic_quotes_timestamp');
+    });
     //backup old quote
     /*var obj = new Object(q);
     obj.quote_id = record_id;

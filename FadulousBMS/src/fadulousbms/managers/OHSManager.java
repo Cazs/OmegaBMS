@@ -32,7 +32,7 @@ import java.util.ArrayList;
 /**
  * Created by ghost on 2017/02/24.
  */
-public class OHSManager implements BusinessObjectManager
+public class OHSManager extends BusinessObjectManager
 {
     private TableView tblOHS;
     private FileMetadata[] documents;
@@ -81,7 +81,6 @@ public class OHSManager implements BusinessObjectManager
         }
     }
 
-    @Override
     public void newWindow()
     {
         SessionManager smgr = SessionManager.getInstance();

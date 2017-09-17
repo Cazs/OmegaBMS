@@ -2,13 +2,10 @@ package fadulousbms.managers;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import fadulousbms.auxilary.Globals;
-import fadulousbms.auxilary.IO;
-import fadulousbms.auxilary.Validators;
+import fadulousbms.auxilary.*;
 import fadulousbms.controllers.HomescreenController;
 import fadulousbms.controllers.OperationsController;
 import fadulousbms.model.CustomTableViewControls;
-import fadulousbms.auxilary.RemoteComms;
 import fadulousbms.model.BusinessObject;
 import fadulousbms.model.Client;
 import fadulousbms.model.Job;
@@ -38,13 +35,17 @@ import java.util.logging.Logger;
 /**
  * Created by ghost on 2017/01/11.
  */
-public class ClientManager implements BusinessObjectManager
+public class ClientManager extends BusinessObjectManager
 {
     private Client[] clients;
+    private Client selected;
     private TableView tblClients;
     private Gson gson;
     private static ClientManager clientManager = new ClientManager();
     public static final String TAG = "ClientManager";
+    public static final String ROOT_PATH = "cache/clients/";
+    public String filename = "";
+    private long timestamp;
 
     private ClientManager()
     {
@@ -56,6 +57,16 @@ public class ClientManager implements BusinessObjectManager
     }
 
     public Client[] getClients(){return clients;}
+
+    public void setSelected(Client client)
+    {
+        this.selected=client;
+    }
+
+    public Client getSelected()
+    {
+        return this.selected;
+    }
 
     @Override
     public void initialize(ScreenManager screenManager)
@@ -76,116 +87,41 @@ public class ClientManager implements BusinessObjectManager
                     ArrayList<AbstractMap.SimpleEntry<String,String>> headers = new ArrayList<>();
                     headers.add(new AbstractMap.SimpleEntry<>("Cookie", smgr.getActive().getSessionId()));
 
-                    String clients_json = RemoteComms.sendGetRequest("/api/clients", headers);
-                    clients = gson.fromJson(clients_json, Client[].class);
-                }else{
-                    JOptionPane.showMessageDialog(null, "Active session has expired.", "Session Expired", JOptionPane.ERROR_MESSAGE);
-                }
-            }else{
-                JOptionPane.showMessageDialog(null, "No active sessions.", "Session Expired", JOptionPane.ERROR_MESSAGE);
-            }
+                    //Get Timestamp
+                    String timestamp_json = RemoteComms.sendGetRequest("/api/timestamp/clients_timestamp", headers);
+                    Counters cntr_timestamp = gson.fromJson(timestamp_json, Counters.class);
+                    if(cntr_timestamp!=null)
+                    {
+                        timestamp = cntr_timestamp.getCount();
+                        filename = "clients_"+timestamp+".dat";
+                        IO.log(this.getClass().getName(), IO.TAG_INFO, "Server Timestamp: "+timestamp);
+                    }else {
+                        IO.logAndAlert(this.getClass().getName(), "could not get valid timestamp", IO.TAG_ERROR);
+                        return;
+                    }
+
+                    if(!isSerialized(ROOT_PATH+filename))
+                    {
+                        String clients_json = RemoteComms.sendGetRequest("/api/clients", headers);
+                        clients = gson.fromJson(clients_json, Client[].class);
+
+                        IO.log(getClass().getName(), IO.TAG_INFO, "reloaded collection of clients.");
+                        this.serialize(ROOT_PATH+filename, clients);
+                    }else{
+                        IO.log(this.getClass().getName(), IO.TAG_INFO, "binary object ["+ROOT_PATH+filename+"] on local disk is already up-to-date.");
+                        clients = (Client[]) this.deserialize(ROOT_PATH+filename);
+                    }
+                }else JOptionPane.showMessageDialog(null, "Active session has expired.", "Session Expired", JOptionPane.ERROR_MESSAGE);
+            }else JOptionPane.showMessageDialog(null, "No active sessions.", "Session Expired", JOptionPane.ERROR_MESSAGE);
         }catch (MalformedURLException ex)
+        {
+            IO.log(TAG, IO.TAG_ERROR, ex.getMessage());
+        } catch (ClassNotFoundException ex)
         {
             IO.log(TAG, IO.TAG_ERROR, ex.getMessage());
         }catch (IOException ex)
         {
             IO.log(TAG, IO.TAG_ERROR, ex.getMessage());
-        }
-    }
-
-    @Override
-    public void newWindow()
-    {
-        SessionManager smgr = SessionManager.getInstance();
-        if(smgr.getActive()!=null)
-        {
-            if(!smgr.getActive().isExpired())
-            {
-                Stage stage = new Stage();
-                stage.setTitle(Globals.APP_NAME.getValue() + " - Clients");
-                stage.setMinWidth(320);
-                stage.setMinHeight(340);
-                //stage.setAlwaysOnTop(true);
-
-                tblClients = new TableView();
-                tblClients.setEditable(true);
-
-                TableColumn<Job, String> client_id = new TableColumn<>("Client ID");
-                client_id.setMinWidth(100);
-                client_id.setCellValueFactory(new PropertyValueFactory<>("short_id"));
-
-                TableColumn<BusinessObject, String> client_name = new TableColumn("Client name");
-                CustomTableViewControls.makeEditableTableColumn(client_name, TextFieldTableCell.forTableColumn(), 215, "client_name", "/api/client");
-                /*job_description.setMinWidth(130);
-                job_description.setCellValueFactory(new PropertyValueFactory<>("job_description"));*/
-
-
-                TableColumn<BusinessObject, String> client_physical_address = new TableColumn("Physical address");
-                CustomTableViewControls.makeEditableTableColumn(client_physical_address, TextFieldTableCell.forTableColumn(), 215, "physical_address", "/api/client");
-                //client_name.setMinWidth(100);
-                //client_name.setCellValueFactory(new PropertyValueFactory<>("client_id"));
-
-                TableColumn<BusinessObject, String> client_postal_address = new TableColumn("Postal Address");
-                CustomTableViewControls.makeEditableTableColumn(client_postal_address, TextFieldTableCell.forTableColumn(), 100, "postal_address", "/api/client");
-
-                TableColumn<BusinessObject, String> client_tel = new TableColumn("Tel Number");
-                CustomTableViewControls.makeEditableTableColumn(client_tel, TextFieldTableCell.forTableColumn(), 100, "tel", "/api/client");
-
-                TableColumn<BusinessObject, String> client_fax = new TableColumn("Fax Number");
-                CustomTableViewControls.makeEditableTableColumn(client_fax, TextFieldTableCell.forTableColumn(), 100, "fax", "/api/client");
-
-                TableColumn client_active = new TableColumn("Active");
-                //supplier_active.setCellFactory(CheckBoxTableCell.forTableColumn(supplier_active));
-                CustomTableViewControls.makeCheckboxedTableColumn(client_active, CheckBoxTableCell.forTableColumn(client_active), 60, "active", "/api/client");
-
-                TableColumn<BusinessObject, Long> client_date_partnered = new TableColumn("Date partnered");
-                CustomTableViewControls.makeDatePickerTableColumn(client_date_partnered, "date_partnered", "/api/client");
-
-                TableColumn<BusinessObject, String> client_website = new TableColumn("Website");
-                CustomTableViewControls.makeEditableTableColumn(client_website, TextFieldTableCell.forTableColumn(), 100, "website", "/api/client");
-
-                TableColumn<BusinessObject, String> client_other = new TableColumn("Other");
-                CustomTableViewControls.makeEditableTableColumn(client_other, TextFieldTableCell.forTableColumn(), 100, "other", "/api/client");
-
-
-                ObservableList<Client> lst_clients = FXCollections.observableArrayList();
-                lst_clients.addAll(clients);
-
-                tblClients.setItems(lst_clients);
-                tblClients.getColumns().addAll(client_id, client_name, client_physical_address,
-                        client_postal_address, client_tel, client_fax, client_active,
-                        client_date_partnered, client_website, client_other);
-
-                MenuBar menu_bar = new MenuBar();
-                Menu file = new Menu("File");
-                Menu edit = new Menu("Edit");
-
-                MenuItem new_client = new MenuItem("New client");
-                new_client.setOnAction(event -> handleNewClient(stage));
-                MenuItem save = new MenuItem("Save");
-                MenuItem print = new MenuItem("Print");
-
-                file.getItems().addAll(new_client, save, print);
-
-                menu_bar.getMenus().addAll(file, edit);
-
-                BorderPane border_pane = new BorderPane();
-                border_pane.setTop(menu_bar);
-                border_pane.setCenter(tblClients);
-
-                stage.onHidingProperty().addListener((observable, oldValue, newValue) ->
-                        loadDataFromServer());
-
-                Scene scene = new Scene(border_pane);
-                stage.setScene(scene);
-                stage.show();
-                stage.centerOnScreen();
-                stage.setResizable(true);
-            }else{
-                JOptionPane.showMessageDialog(null, "Active session has expired.", "Session Expired", JOptionPane.ERROR_MESSAGE);
-            }
-        }else{
-            JOptionPane.showMessageDialog(null, "No active sessions.", "Session Expired", JOptionPane.ERROR_MESSAGE);
         }
     }
 

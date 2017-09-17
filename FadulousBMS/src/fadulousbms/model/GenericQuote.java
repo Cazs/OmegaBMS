@@ -5,6 +5,7 @@ import fadulousbms.auxilary.IO;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 
+import java.io.Serializable;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.util.ArrayList;
@@ -12,7 +13,7 @@ import java.util.ArrayList;
 /**
  * Created by ghost on 2017/01/21.
  */
-public class GenericQuote implements BusinessObject
+public class GenericQuote implements BusinessObject, Serializable
 {
     private String _id;
     private String client;
@@ -29,9 +30,8 @@ public class GenericQuote implements BusinessObject
     private Employee creator_employee;
     private GenericQuoteItem[] resources;
     public static double VAT = 14.0;
-
     private boolean marked;
-    public static final String TAG = "Quote";
+    public static final String TAG = "GenericQuote";
 
     public StringProperty idProperty(){return new SimpleStringProperty(_id);}
 
@@ -223,6 +223,8 @@ public class GenericQuote implements BusinessObject
     public void setCreator(Employee creator_employee)
     {
         this.creator_employee = creator_employee;
+        if(creator_employee!=null)
+            setCreator(creator_employee.toString());
     }
 
     public GenericQuoteItem[] getResources()

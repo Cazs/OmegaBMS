@@ -31,7 +31,7 @@ import java.util.ArrayList;
 /**
  * Created by ghost on 2017/01/27.
  */
-public class InvoiceManager implements BusinessObjectManager
+public class InvoiceManager extends BusinessObjectManager
 {
     private Invoice[] invoices= null;
     private Client[] clients = null;
@@ -243,7 +243,6 @@ public class InvoiceManager implements BusinessObjectManager
         }
     }
 
-    @Override
     public void newWindow()
     {
         SessionManager smgr = SessionManager.getInstance();

@@ -59,11 +59,11 @@ public class OperationsController implements Initializable, Screen
         {
             if (!SessionManager.getInstance().getActive().isExpired())
             {
-                JobManager.getInstance().initialize(screen_mgr);
-                SupplierManager.getInstance().initialize(screen_mgr);
-                ClientManager.getInstance().initialize(screen_mgr);
-                ResourceManager.getInstance().initialize(screen_mgr);
-                SaleManager.getInstance().initialize(screen_mgr);
+                //JobManager.getInstance().initialize(screen_mgr);
+                //SupplierManager.getInstance().initialize(screen_mgr);
+                //ClientManager.getInstance().initialize(screen_mgr);
+                //ResourceManager.getInstance().initialize(screen_mgr);
+                //SaleManager.getInstance().initialize(screen_mgr);
 
                 /*try
                 {*/
@@ -224,7 +224,7 @@ public class OperationsController implements Initializable, Screen
     //Production click event handlers
     public void suppliersClick()
     {
-        SupplierManager.getInstance().newWindow();
+        screen_mgr.setScreen(Screens.SUPPLIERS.getScreen());
     }
 
     public void jobsClick()
@@ -234,8 +234,8 @@ public class OperationsController implements Initializable, Screen
 
     public void clientsClick()
     {
-        ClientManager.getInstance().newWindow();
+        screen_mgr.setScreen(Screens.CLIENTS.getScreen());
     }
 
-    public void resourcesClick(){ResourceManager.getInstance().newWindow();}
+    public void resourcesClick(){screen_mgr.setScreen(Screens.RESOURCES.getScreen());}
 }

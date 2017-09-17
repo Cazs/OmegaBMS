@@ -4,13 +4,14 @@ import fadulousbms.auxilary.IO;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 
+import java.io.Serializable;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 
 /**
  * Created by ghost on 2017/02/24.
  */
-public class FileMetadata implements BusinessObject
+public class FileMetadata implements BusinessObject, Serializable
 {
     private String _id;
     private double index;

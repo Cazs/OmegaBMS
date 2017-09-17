@@ -29,11 +29,14 @@ public enum Screens
     VIEW_GENERIC_QUOTE("View_generic_quote.fxml"),
     SALES("Sales.fxml"),
     JOBS("Jobs.fxml"),
-    VIEW_JOB("View_job.fxml");
+    VIEW_JOB("View_job.fxml"),
+    CLIENTS("Clients.fxml"),
+    SUPPLIERS("Suppliers.fxml"),
+    RESOURCES("Stock.fxml");
 
     private String screen;
     
-    private Screens(String screen){
+    Screens(String screen){
         this.screen = screen;
     }
     

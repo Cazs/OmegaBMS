@@ -9,6 +9,7 @@ import fadulousbms.auxilary.IO;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 
+import java.io.Serializable;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 
@@ -16,7 +17,7 @@ import java.net.URLEncoder;
  *
  * @author ghost
  */
-public class Resource implements BusinessObject
+public class Resource implements BusinessObject, Serializable
 {
     private String _id;
     private String resource_name;
@@ -243,10 +244,10 @@ public class Resource implements BusinessObject
                     date_exhausted = Long.parseLong(String.valueOf(val));
                     break;
                 case "quantity":
-                    quantity = Long.parseLong(String.valueOf(quantity));
+                    quantity = Long.parseLong(String.valueOf(val));
                     break;
                 case "unit":
-                    unit = String.valueOf(unit);
+                    unit = String.valueOf(val);
                     break;
                 case "other":
                     other = (String)val;

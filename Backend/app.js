@@ -64,6 +64,22 @@ app.get('/',function(req, res)
   res.setHeader("Content-Type","text/plain");
   res.end("Invalid request, please use /api/*.");
 });
+
+app.get('/api/timestamp/:object_id', function(req, res)
+{
+  get(req, res, counters, function(err, obj)
+  {
+    if(err)
+    {
+      errorAndCloseConnection(res, 500, errors.INTERNAL_ERR);
+      logServerError(err);
+      return;
+    }
+    console.log('user with session_id [%s] requested timestamp [%s].', req.headers.cookie, req.params.object_id);
+    res.json(obj);
+  });
+});
+
 /**** Quotes route handlers ****/
 app.get('/api/quote/:object_id',function(req, res)
 {
@@ -1556,8 +1572,14 @@ createCounter = function(counter_name)
   });
 }
 
+//Init Counters & Timestamps
 createCounter('job_count');
 createCounter('quote_count');
+createCounter('quotes_timestamp');
+createCounter('jobs_timestamp');
+createCounter('suppliers_timestamp');
+createCounter('resources_timestamp');
+createCounter('clients_timestamp');
 
 app.listen(PORT);
 console.log('..::%s server is now running at localhost on port %s::..',APP_NAME, PORT);

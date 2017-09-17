@@ -9,6 +9,7 @@ import fadulousbms.auxilary.IO;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 
+import java.io.Serializable;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 
@@ -16,7 +17,7 @@ import java.net.URLEncoder;
  *
  * @author ghost
  */
-public class Client implements BusinessObject
+public class Client implements BusinessObject, Serializable
 {
     private String _id;//Client id
     private String client_name;

@@ -194,7 +194,7 @@ public class RemoteComms
             }else return null;
         }
 
-        IO.log(TAG, IO.TAG_INFO, String.format("POST %s HTTP/1.1\nHost: %s\n", function, host));
+        IO.log(TAG, IO.TAG_INFO, String.format("POST %s HTTP/1.1\nHost: %s", function, host));
 
         //Write to server
         OutputStream os = httpConn.getOutputStream();
@@ -230,7 +230,7 @@ public class RemoteComms
         httpConn.setDoInput(true);
         httpConn.setDoOutput(true);
 
-        IO.log(TAG, IO.TAG_INFO, String.format("POST %s HTTP/1.1\nHost: %s\n", function, host));
+        IO.log(TAG, IO.TAG_INFO, String.format("POST %s HTTP/1.1\nHost: %s", function, host));
 
         //Write to server
         OutputStream os = httpConn.getOutputStream();
@@ -299,7 +299,7 @@ public class RemoteComms
         httpConn.setDoInput(true);
         httpConn.setDoOutput(true);
 
-        IO.log(TAG, IO.TAG_INFO, String.format("POST %s HTTP/1.1\nHost: %s\n", endpoint, host));
+        IO.log(TAG, IO.TAG_INFO, String.format("POST %s HTTP/1.1\nHost: %s", endpoint, host));
 
         //Write to server
         OutputStream os = httpConn.getOutputStream();

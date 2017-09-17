@@ -1,0 +1,227 @@
+/*
+ * To change this license header, choose License Headers in Project Properties.
+ * To change this template file, choose Tools | Templates
+ * and open the template in the editor.
+ */
+package fadulousbms.controllers;
+
+import fadulousbms.auxilary.Globals;
+import fadulousbms.auxilary.IO;
+import fadulousbms.auxilary.Screen;
+import fadulousbms.managers.ResourceManager;
+import fadulousbms.managers.ScreenManager;
+import fadulousbms.managers.SessionManager;
+import fadulousbms.managers.SupplierManager;
+import fadulousbms.model.*;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
+import javafx.embed.swing.SwingFXUtils;
+import javafx.fxml.FXML;
+import javafx.fxml.Initializable;
+import javafx.scene.Group;
+import javafx.scene.Scene;
+import javafx.scene.control.*;
+import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.control.cell.TextFieldTableCell;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
+import javafx.scene.layout.HBox;
+import javafx.scene.layout.Priority;
+import javafx.stage.Stage;
+import javafx.util.Callback;
+
+import java.io.IOException;
+import java.net.URL;
+import java.util.ResourceBundle;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
+/**
+ * views Controller class
+ *
+ * @author ghost
+ */
+public class ResourcesController implements Initializable, Screen
+{
+    @FXML
+    private ImageView img_profile;
+    @FXML
+    private Label user_name;
+    private ScreenManager   screen_mgr;
+    @FXML
+    private TableView<Resource> tblResources;
+    @FXML
+    private TableColumn colId,colName,colSerial,colType,colDescription,colValue,colUnit,
+                        colQuantity,colDateAcquired,colDateExhausted,colOther,colAction;
+
+    @Override
+    public void refresh()
+    {
+        ResourceManager.getInstance().initialize(screen_mgr);
+
+        //Set Employee name
+        Employee e = SessionManager.getInstance().getActiveEmployee();
+        if(e!=null)
+            user_name.setText(e.toString());
+        else IO.log(getClass().getName(), IO.TAG_ERROR, "No active sessions.");
+        //Set Employee profile photo
+        //Set default profile photo
+        if(HomescreenController.defaultProfileImage!=null)
+        {
+            Image image = SwingFXUtils.toFXImage(HomescreenController.defaultProfileImage, null);
+            img_profile.setImage(image);
+        }else IO.log(getClass().getName(), "default profile image is null.", IO.TAG_ERROR);
+
+        colId.setMinWidth(100);
+        colId.setCellValueFactory(new PropertyValueFactory<>("_id"));
+        CustomTableViewControls.makeEditableTableColumn(colName, TextFieldTableCell.forTableColumn(), 215, "resource_name", "/api/resource");
+        CustomTableViewControls.makeEditableTableColumn(colSerial, TextFieldTableCell.forTableColumn(), 215, "resource_serial", "/api/resource");
+        CustomTableViewControls.makeEditableTableColumn(colType, TextFieldTableCell.forTableColumn(), 215, "resource_type", "/api/resource");
+        CustomTableViewControls.makeEditableTableColumn(colDescription, TextFieldTableCell.forTableColumn(), 215, "resource_description", "/api/resource");
+        CustomTableViewControls.makeEditableTableColumn(colValue, TextFieldTableCell.forTableColumn(), 215, "resource_value", "/api/resource");
+        CustomTableViewControls.makeEditableTableColumn(colUnit, TextFieldTableCell.forTableColumn(), 100, "unit", "/api/resource");
+        CustomTableViewControls.makeEditableTableColumn(colQuantity, TextFieldTableCell.forTableColumn(), 215, "quantity", "/api/resource");
+        CustomTableViewControls.makeLabelledDatePickerTableColumn(colDateAcquired, "date_acquired", "/api/resource");
+        CustomTableViewControls.makeLabelledDatePickerTableColumn(colDateExhausted, "date_exhausted", "/api/resource");
+        CustomTableViewControls.makeEditableTableColumn(colOther, TextFieldTableCell.forTableColumn(), 215, "extra", "/api/resource");
+
+        ObservableList<Resource> lst_resources = FXCollections.observableArrayList();
+        lst_resources.addAll(ResourceManager.getInstance().getResources());
+        tblResources.setItems(lst_resources);
+
+        Callback<TableColumn<Resource, String>, TableCell<Resource, String>> cellFactory
+                =
+                new Callback<TableColumn<Resource, String>, TableCell<Resource, String>>()
+                {
+                    @Override
+                    public TableCell call(final TableColumn<Resource, String> param)
+                    {
+                        final TableCell<Resource, String> cell = new TableCell<Resource, String>()
+                        {
+                            final Button btnView = new Button("View");
+                            final Button btnRemove = new Button("Delete");
+
+                            @Override
+                            public void updateItem(String item, boolean empty)
+                            {
+                                super.updateItem(item, empty);
+                                btnView.getStylesheets().add(this.getClass().getResource("../styles/home.css").toExternalForm());
+                                btnView.getStyleClass().add("btnApply");
+                                btnView.setMinWidth(100);
+                                btnView.setMinHeight(35);
+                                HBox.setHgrow(btnView, Priority.ALWAYS);
+
+                                btnRemove.getStylesheets().add(this.getClass().getResource("../styles/home.css").toExternalForm());
+                                btnRemove.getStyleClass().add("btnBack");
+                                btnRemove.setMinWidth(100);
+                                btnRemove.setMinHeight(35);
+                                HBox.setHgrow(btnRemove, Priority.ALWAYS);
+
+                                if (empty)
+                                {
+                                    setGraphic(null);
+                                    setText(null);
+                                } else
+                                {
+                                    HBox hBox = new HBox(btnView, btnRemove);
+                                    Resource resource = getTableView().getItems().get(getIndex());
+
+                                    btnView.setOnAction(event ->
+                                    {
+                                        //System.out.println("Successfully added material quote number " + quoteItem.getItem_number());
+                                        ResourceManager.getInstance().setSelected(resource);
+                                        screen_mgr.setScreen(Screens.VIEW_JOB.getScreen());
+                                    });
+
+                                    btnRemove.setOnAction(event ->
+                                    {
+                                        //Quote quote = getTableView().getItems().get(getIndex());
+                                        getTableView().getItems().remove(resource);
+                                        getTableView().refresh();
+                                        //TODO: remove from server
+                                        //IO.log(getClass().getName(), IO.TAG_INFO, "successfully removed quote: " + quote.get_id());
+                                    });
+
+                                    hBox.setFillHeight(true);
+                                    HBox.setHgrow(hBox, Priority.ALWAYS);
+                                    hBox.setSpacing(5);
+                                    setGraphic(hBox);
+                                    setText(null);
+                                }
+                            }
+                        };
+                        return cell;
+                    }
+                };
+
+        colAction.setCellValueFactory(new PropertyValueFactory<>(""));
+        colAction.setCellFactory(cellFactory);
+
+        tblResources.getSelectionModel().selectedIndexProperty().addListener((observable, oldValue, newValue) ->
+                ResourceManager.getInstance().setSelected(tblResources.getSelectionModel().getSelectedItem()));
+    }
+
+    @FXML
+    public void showMain()
+    {
+        screen_mgr.setScreen(Screens.HOME.getScreen());
+    }
+
+    @FXML
+    public void showLogin()
+    {
+        try
+        {
+            Stage stage = new Stage();
+            stage.setTitle("Login to " + Globals.APP_NAME);
+            stage.setMinWidth(320);
+            stage.setMinHeight(280);
+            //stage.setAlwaysOnTop(true);
+
+            ScreenManager login_screen_mgr = new ScreenManager();
+            login_screen_mgr.loadScreen(Screens.LOGIN.getScreen(), getClass().getResource("../views/"+Screens.LOGIN.getScreen()));
+            login_screen_mgr.setScreen(Screens.LOGIN.getScreen());
+
+            Group root = new Group();
+            root.getChildren().add(login_screen_mgr);
+            Scene scene = new Scene(root);
+
+            stage.setScene(scene);
+            stage.show();
+            stage.centerOnScreen();
+            stage.setResizable(false);
+
+            //When the login screen is being dismissed set the user's first and last name
+            stage.setOnHiding(event ->
+            {
+                Employee e = SessionManager.getInstance().getActiveEmployee();
+                if(e!=null)
+                    user_name.setText(e.toString());
+            });
+
+        } catch (IOException ex)
+        {
+            Logger.getLogger(HomescreenController.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+
+    /**
+     * Initializes the controller class.
+     */
+    @Override
+    public void initialize(URL url, ResourceBundle rb) 
+    {
+    }
+
+    @FXML
+    public void previousScreen()
+    {
+        screen_mgr.setScreen(Screens.OPERATIONS.getScreen());
+    }
+
+    @Override
+    public void setParent(ScreenManager mgr)
+    {
+        screen_mgr = mgr;
+    }
+}

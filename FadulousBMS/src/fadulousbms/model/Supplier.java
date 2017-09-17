@@ -4,19 +4,21 @@ import fadulousbms.auxilary.IO;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 
+import java.io.Serializable;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 
 /**
  * Created by ghost on 2017/01/03.
  */
-public class Supplier implements BusinessObject
+public class Supplier implements BusinessObject, Serializable
 {
     private String _id;
     private String supplier_name;
     private String physical_address;
     private String postal_address;
     private String tel;
+    private String fax;
     private String speciality;
     private boolean active;
     private long date_partnered;
@@ -101,6 +103,18 @@ public class Supplier implements BusinessObject
     public void setTel(String tel)
     {
         this.tel = tel;
+    }
+
+    public StringProperty faxProperty(){return new SimpleStringProperty(fax);}
+
+    public String getFax()
+    {
+        return fax;
+    }
+
+    public void setFax(String fax)
+    {
+        this.fax = fax;
     }
 
     public StringProperty specialityProperty(){return new SimpleStringProperty(speciality);}
@@ -194,6 +208,9 @@ public class Supplier implements BusinessObject
                 case "tel":
                     tel = (String)val;
                     break;
+                case "fax":
+                    fax = (String)val;
+                    break;
                 case "speciality":
                     speciality = (String)val;
                     break;
@@ -235,6 +252,8 @@ public class Supplier implements BusinessObject
                 return postal_address;
             case "tel":
                 return tel;
+            case "fax":
+                return fax;
             case "speciality":
                 return speciality;
             case "active":
@@ -274,6 +293,8 @@ public class Supplier implements BusinessObject
                     + URLEncoder.encode(postal_address, "UTF-8") + "&");
             result.append(URLEncoder.encode("tel","UTF-8") + "="
                     + URLEncoder.encode(tel, "UTF-8") + "&");
+            result.append(URLEncoder.encode("fax","UTF-8") + "="
+                    + URLEncoder.encode(fax, "UTF-8") + "&");
             result.append(URLEncoder.encode("speciality","UTF-8") + "="
                     + URLEncoder.encode(speciality, "UTF-8") + "&");
             result.append(URLEncoder.encode("active","UTF-8") + "="

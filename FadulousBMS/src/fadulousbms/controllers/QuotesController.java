@@ -83,6 +83,7 @@ public class QuotesController implements Initializable, Screen
         }else IO.log(getClass().getName(), "default profile image is null.", IO.TAG_ERROR);
 
         QuoteManager.getInstance().initialize(screen_mgr);
+        GenericQuoteManager.getInstance().initialize(screen_mgr);
 
         colId.setCellValueFactory(new PropertyValueFactory<>("_id"));
         CustomTableViewControls.makeComboBoxTableColumn(colClient, ClientManager.getInstance().getClients(), "client_id", "client_name", "/api/quote", 180);
@@ -240,7 +241,7 @@ public class QuotesController implements Initializable, Screen
                                     btnView.setOnAction(event ->
                                     {
                                         GenericQuote quote = getTableView().getItems().get(getIndex());
-                                        QuoteManager.getInstance().setSelectedGenericQuote(quote);
+                                        GenericQuoteManager.getInstance().setSelectedGenericQuote(quote);
                                         screen_mgr.setScreen(Screens.VIEW_GENERIC_QUOTE.getScreen());
                                     });
 
@@ -256,7 +257,7 @@ public class QuotesController implements Initializable, Screen
                                     btnQuote.setOnAction(event -> {
                                         QuoteManager.getInstance().setFromGeneric(true);
                                         GenericQuote quote = getTableView().getItems().get(getIndex());
-                                        QuoteManager.getInstance().setSelectedGenericQuote(quote);
+                                        GenericQuoteManager.getInstance().setSelectedGenericQuote(quote);
                                         screen_mgr.setScreen(Screens.NEW_QUOTE.getScreen());
                                         /*try
                                         {
@@ -285,11 +286,11 @@ public class QuotesController implements Initializable, Screen
         tblQuotes.getSelectionModel().selectedIndexProperty().addListener((observable, oldValue, newValue) ->
                 QuoteManager.getInstance().setSelectedQuote(tblQuotes.getSelectionModel().getSelectedItem()));
         tblGenericQuotes.getSelectionModel().selectedIndexProperty().addListener((observable, oldValue, newValue) ->
-                QuoteManager.getInstance().setSelectedGenericQuote(tblGenericQuotes.getSelectionModel().getSelectedItem()));
+                GenericQuoteManager.getInstance().setSelectedGenericQuote(tblGenericQuotes.getSelectionModel().getSelectedItem()));
 
 
         tblQuotes.setItems(FXCollections.observableArrayList(QuoteManager.getInstance().getQuotes()));
-        tblGenericQuotes.setItems(FXCollections.observableArrayList(QuoteManager.getInstance().getGenericQuotes()));
+        tblGenericQuotes.setItems(FXCollections.observableArrayList(GenericQuoteManager.getInstance().getGenericQuotes()));
         /*try
         {
             BufferedImage bufferedImage;

@@ -285,7 +285,7 @@ public class NewGenericQuoteController implements Initializable, Screen
                         params.add(new AbstractMap.SimpleEntry<>("quantity", quoteItem.getQuantity()));
                         params.add(new AbstractMap.SimpleEntry<>("additional_costs", quoteItem.getAdditional_costs()));*/
                         quoteItem.setQuote_id(response);
-                        added_all_quote_items = QuoteManager.getInstance().createGenericQuoteItem(response, quoteItem, headers);
+                        added_all_quote_items = GenericQuoteManager.getInstance().createGenericQuoteItem(response, quoteItem, headers);
                     }
                     if(added_all_quote_items)
                     {

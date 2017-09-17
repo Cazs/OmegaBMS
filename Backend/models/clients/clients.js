@@ -1,5 +1,6 @@
 const mongoose = require('mongoose');
 var access_levels = require('../system/access_levels.js');
+var counters = require('../system/counters.js');
 
 const clientSchema = mongoose.Schema(
   {
@@ -46,26 +47,56 @@ const Client = module.exports = mongoose.model('clients',clientSchema);
 
 module.exports.ACCESS_MODE = access_levels.NORMAL;//Required access level to execute these methods
 
-module.exports.add = function(client,callback)
+module.exports.add = function(client, callback)
 {
-  Client.create(client,callback);
+  console.log('attempting to create new client.');
+  Client.create(client, function(error, res_obj)
+  {
+    if(error)
+    {
+      console.log(error);
+      if(callback)
+        callback(error);
+      return;
+    }
+    console.log('successfully created new client.')
+    if(callback)
+      callback(error, res_obj);
+    //update timestamp
+    counters.timestamp('clients_timestamp');
+  });
 }
 
 module.exports.get = function(client_id,callback)
 {
-  var query = {_id:client_id};
-  return Client.findOne(query,callback);
+  var query = {_id: client_id};
+  Client.findOne(query, callback);
 }
 
 module.exports.getAll = function(callback)
 {
-  return Client.find({},callback);
+  return Client.find({}, callback);
 }
 
-module.exports.update = function(client_id,client,callback)
+module.exports.update = function(client_id, client, callback)
 {
-  var query = {_id:client_id};
-  return Client.findOneAndUpdate(query,client,{},callback);
+  console.log('attempting to update client [%s].', client_id);
+  var query = {_id: client_id};
+  Client.findOneAndUpdate(query, client, {}, function(error, res_obj)
+  {
+    if(error)
+    {
+      console.log(error);
+      if(callback)
+        callback(error);
+      return;
+    }
+    console.log('successfully updated client.')
+    if(callback)
+      callback(error, res_obj);
+    //update timestamp
+    counters.timestamp('clients_timestamp');
+  });
 }
 
 module.exports.isValid = function(client)

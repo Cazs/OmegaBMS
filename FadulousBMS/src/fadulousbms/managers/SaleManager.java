@@ -39,7 +39,7 @@ import java.util.logging.Logger;
 /**
  * Created by ghost on 2017/01/18.
  */
-public class SaleManager implements BusinessObjectManager
+public class SaleManager extends BusinessObjectManager
 {
     private Sale[] sales= null;
     private Client[] clients = null;
@@ -128,7 +128,6 @@ public class SaleManager implements BusinessObjectManager
         }
     }
 
-    @Override
     public void newWindow()
     {
     }

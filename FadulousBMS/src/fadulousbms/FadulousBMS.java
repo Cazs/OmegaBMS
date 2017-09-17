@@ -118,6 +118,9 @@ public class FadulousBMS extends Application
         screen_mgr.loadScreen(Screens.NEW_GENERIC_QUOTE.getScreen(),getClass().getResource("views/"+Screens.NEW_GENERIC_QUOTE.getScreen()));
         screen_mgr.loadScreen(Screens.VIEW_GENERIC_QUOTE.getScreen(),getClass().getResource("views/"+Screens.VIEW_GENERIC_QUOTE.getScreen()));
         screen_mgr.loadScreen(Screens.VIEW_GENERIC_QUOTE.getScreen(),getClass().getResource("views/"+Screens.VIEW_GENERIC_QUOTE.getScreen()));
+        screen_mgr.loadScreen(Screens.CLIENTS.getScreen(),getClass().getResource("views/"+Screens.CLIENTS.getScreen()));
+        screen_mgr.loadScreen(Screens.SUPPLIERS.getScreen(),getClass().getResource("views/"+Screens.SUPPLIERS.getScreen()));
+        screen_mgr.loadScreen(Screens.RESOURCES.getScreen(),getClass().getResource("views/"+Screens.RESOURCES.getScreen()));
 
         if(screen_mgr.loadScreen(Screens.HOME.getScreen(),getClass().getResource("views/"+Screens.HOME.getScreen())))
         {

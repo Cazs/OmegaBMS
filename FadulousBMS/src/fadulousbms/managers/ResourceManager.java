@@ -3,10 +3,7 @@ package fadulousbms.managers;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonSyntaxException;
-import fadulousbms.auxilary.Globals;
-import fadulousbms.auxilary.IO;
-import fadulousbms.auxilary.RemoteComms;
-import fadulousbms.auxilary.Validators;
+import fadulousbms.auxilary.*;
 import fadulousbms.controllers.HomescreenController;
 import fadulousbms.controllers.OperationsController;
 import fadulousbms.model.*;
@@ -38,15 +35,19 @@ import java.util.logging.Logger;
 /**
  * Created by ghost on 2017/01/13.
  */
-public class ResourceManager implements BusinessObjectManager
+public class ResourceManager extends BusinessObjectManager
 {
     private Resource[] resources;
+    private Resource selected;
     private TableView tblResources;
     private Gson gson;
     private static ResourceManager resource_manager = new ResourceManager();
     //public static final String[] RESOURCE_TYPES = {"VEHICLE", "EQUIPMENT"};
     public static ResourceType[] resource_types;
     public static final String TAG = "ResourceManager";
+    public static final String ROOT_PATH = "cache/resources/";
+    public String filename = "";
+    private long timestamp;
 
     private ResourceManager()
     {
@@ -55,6 +56,26 @@ public class ResourceManager implements BusinessObjectManager
     public static ResourceManager getInstance()
     {
         return resource_manager;
+    }
+
+    public Resource[] getResources()
+    {
+        return resources;
+    }
+
+    public ResourceType[] getResourceTypes()
+    {
+        return resource_types;
+    }
+
+    public void setSelected(Resource resource)
+    {
+        this.selected=resource;
+    }
+
+    public Resource getSelected()
+    {
+        return this.selected;
     }
 
     @Override
@@ -76,128 +97,48 @@ public class ResourceManager implements BusinessObjectManager
                     ArrayList<AbstractMap.SimpleEntry<String, String>> headers = new ArrayList<>();
                     headers.add(new AbstractMap.SimpleEntry<>("Cookie", smgr.getActive().getSessionId()));
 
-                    String resources_json = RemoteComms.sendGetRequest("/api/resources", headers);
-                    resources = gson.fromJson(resources_json, Resource[].class);
+                    //Get Timestamp
+                    String timestamp_json = RemoteComms.sendGetRequest("/api/timestamp/resources_timestamp", headers);
+                    Counters cntr_timestamp = gson.fromJson(timestamp_json, Counters.class);
+                    if(cntr_timestamp!=null)
+                    {
+                        timestamp = cntr_timestamp.getCount();
+                        filename = "resources_"+timestamp+".dat";
+                        IO.log(this.getClass().getName(), IO.TAG_INFO, "Server Timestamp: "+timestamp);
+                    }else {
+                        IO.logAndAlert(this.getClass().getName(), "could not get valid timestamp", IO.TAG_ERROR);
+                        return;
+                    }
 
-                    String resource_types_json = RemoteComms.sendGetRequest("/api/resource/types", headers);
-                    resource_types = gson.fromJson(resource_types_json, ResourceType[].class);
+                    if(!isSerialized(ROOT_PATH+filename))
+                    {
+                        String resources_json = RemoteComms.sendGetRequest("/api/resources", headers);
+                        resources = gson.fromJson(resources_json, Resource[].class);
+
+                        String resource_types_json = RemoteComms.sendGetRequest("/api/resource/types", headers);
+                        resource_types = gson.fromJson(resource_types_json, ResourceType[].class);
+
+                        IO.log(getClass().getName(), IO.TAG_INFO, "reloaded collection of clients.");
+                        this.serialize(ROOT_PATH+filename, resources);
+                    }else{
+                        IO.log(this.getClass().getName(), IO.TAG_INFO, "binary object ["+ROOT_PATH+filename+"] on local disk is already up-to-date.");
+                        resources = (Resource[]) this.deserialize(ROOT_PATH+filename);
+                    }
                 } else IO.logAndAlert("Session Expired", "Active session has expired.", IO.TAG_ERROR);
             } else IO.logAndAlert("Session Expired", "No active sessions.", IO.TAG_ERROR);
         }catch (JsonSyntaxException ex)
         {
-            IO.logAndAlert(TAG, ex.getMessage(), IO.TAG_ERROR);
+            IO.log(TAG, IO.TAG_ERROR, ex.getMessage());
         }catch (MalformedURLException ex)
         {
-            IO.logAndAlert(TAG, ex.getMessage(), IO.TAG_ERROR);
+            IO.log(TAG, IO.TAG_ERROR, ex.getMessage());
+        } catch (ClassNotFoundException ex)
+        {
+            IO.log(TAG, IO.TAG_ERROR, ex.getMessage());
         }catch (IOException ex)
         {
-            IO.logAndAlert(TAG, ex.getMessage(), IO.TAG_ERROR);
+            IO.log(TAG, IO.TAG_ERROR, ex.getMessage());
         }
-    }
-
-    public Resource[] getResources()
-    {
-        return resources;
-    }
-
-    public ResourceType[] getResourceTypes()
-    {
-        return resource_types;
-    }
-
-    @Override
-    public void newWindow()
-    {
-        SessionManager smgr = SessionManager.getInstance();
-        if(smgr.getActive()!=null)
-        {
-            if(!smgr.getActive().isExpired())
-            {
-                Stage stage = new Stage();
-                stage.setTitle(Globals.APP_NAME.getValue() + " - Resources");
-                stage.setMinWidth(320);
-                stage.setMinHeight(340);
-                //stage.setAlwaysOnTop(true);
-
-                tblResources = new TableView();
-                tblResources.setEditable(true);
-
-                TableColumn<BusinessObject, String> resource_id = new TableColumn<>("Resource ID");
-                resource_id.setMinWidth(80);
-                resource_id.setCellValueFactory(new PropertyValueFactory<>("short_id"));
-
-                TableColumn<BusinessObject, String> resource_name = new TableColumn("Resource name");
-                CustomTableViewControls.makeEditableTableColumn(resource_name, TextFieldTableCell.forTableColumn(), 80, "resource_name", "/api/resource");
-
-                TableColumn<BusinessObject, String> resource_description = new TableColumn("Resource description");
-                CustomTableViewControls.makeEditableTableColumn(resource_description, TextFieldTableCell.forTableColumn(), 80, "resource_description", "/api/resource");
-
-                TableColumn<BusinessObject, String> resource_serial = new TableColumn("Resource Serial/Model");
-                CustomTableViewControls.makeEditableTableColumn(resource_serial, TextFieldTableCell.forTableColumn(), 80, "resource_serial", "/api/resource");
-
-                TableColumn<BusinessObject, String> resource_type = new TableColumn("Resource type");
-                CustomTableViewControls.makeComboBoxTableColumn(resource_type, resource_types, "resource_type", "type_name", "/api/resource", 100);
-
-                TableColumn<BusinessObject, String> resource_value = new TableColumn("Resource value[before markup]");
-                CustomTableViewControls.makeEditableTableColumn(resource_value, TextFieldTableCell.forTableColumn(), 80, "resource_value", "/api/resource");
-
-                TableColumn<BusinessObject, String> quantity = new TableColumn("Quantity");
-                CustomTableViewControls.makeEditableTableColumn(quantity, TextFieldTableCell.forTableColumn(), 80, "quantity", "/api/resource");
-
-                TableColumn<BusinessObject, String> unit = new TableColumn("Unit");
-                CustomTableViewControls.makeEditableTableColumn(unit, TextFieldTableCell.forTableColumn(), 80, "unit", "/api/resource");
-
-                TableColumn<BusinessObject, String> labour = new TableColumn("Labour");
-                CustomTableViewControls.makeEditableTableColumn(labour, TextFieldTableCell.forTableColumn(), 80, "labour", "/api/resource");
-
-                TableColumn<BusinessObject, String> markup = new TableColumn("Markup");
-                CustomTableViewControls.makeEditableTableColumn(markup, TextFieldTableCell.forTableColumn(), 80, "markup", "/api/resource");
-
-                TableColumn<BusinessObject, Long> date_acquired = new TableColumn("Date acquired");
-                CustomTableViewControls.makeDatePickerTableColumn(date_acquired, "date_acquired", "/api/resource");
-
-                TableColumn<BusinessObject, Long> date_exhausted = new TableColumn("Date exhausted");
-                CustomTableViewControls.makeDatePickerTableColumn(date_exhausted, "date_exhausted", "/api/resource");
-
-                TableColumn<BusinessObject, String> other = new TableColumn("Other");
-                CustomTableViewControls.makeEditableTableColumn(other, TextFieldTableCell.forTableColumn(), 80, "other", "/api/resource");
-
-                ObservableList<Resource> lst_resources = FXCollections.observableArrayList();
-                lst_resources.addAll(resources);
-
-                tblResources.setItems(lst_resources);
-                tblResources.getColumns().addAll(resource_id, resource_name, resource_serial, resource_description, resource_type,
-                        resource_value, labour, quantity, unit, markup, date_acquired, date_exhausted, other);
-
-                MenuBar menu_bar = new MenuBar();
-                Menu file = new Menu("File");
-                Menu edit = new Menu("Edit");
-
-                MenuItem new_resource = new MenuItem("New resource");
-                MenuItem new_resource_type = new MenuItem("New resource type");
-                new_resource.setOnAction(event -> handleNewResource(stage));
-                new_resource_type.setOnAction(event -> handleNewResourceType(stage));
-                MenuItem save = new MenuItem("Save");
-                MenuItem print = new MenuItem("Print");
-
-                file.getItems().addAll(new_resource, new_resource_type, save, print);
-
-                menu_bar.getMenus().addAll(file, edit);
-
-                BorderPane border_pane = new BorderPane();
-                border_pane.setTop(menu_bar);
-                border_pane.setCenter(tblResources);
-
-                stage.onHidingProperty().addListener((observable, oldValue, newValue) ->
-                        loadDataFromServer());
-
-                Scene scene = new Scene(border_pane);
-                stage.setScene(scene);
-                stage.show();
-                stage.centerOnScreen();
-                stage.setResizable(true);
-            }else IO.showMessage("Session Expired", "Active session has expired.", IO.TAG_ERROR);
-        }else IO.showMessage("Session Expired", "No active sessions.", IO.TAG_ERROR);
     }
 
     public void handleNewResource(Stage parentStage)

@@ -31,7 +31,7 @@ import java.util.ArrayList;
 /**
  * Created by ghost on 2017/01/11.
  */
-public class EmployeeManager implements BusinessObjectManager
+public class EmployeeManager extends BusinessObjectManager
 {
     private Employee[] employees;
     private Gson gson;
@@ -39,12 +39,6 @@ public class EmployeeManager implements BusinessObjectManager
 
     private EmployeeManager()
     {
-    }
-
-    @Override
-    public void newWindow()
-    {
-
     }
 
     public Employee[] getEmployees(){return this.employees;}

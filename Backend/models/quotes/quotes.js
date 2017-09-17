@@ -1,5 +1,6 @@
 var mongoose = require('mongoose');
 var access_levels = require('../system/access_levels.js');
+var counters = require('../system/counters.js');
 
 const quoteSchema = mongoose.Schema(
 {
@@ -54,8 +55,22 @@ module.exports.ACCESS_MODE = access_levels.NORMAL;//Required access level to exe
 
 module.exports.add = function(quote, callback)
 {
-  console.log('attempting to create a new quote.\n');
-  Quotes.create(quote, callback);
+  console.log('attempting to create a new quote.');
+  Quotes.create(quote, function(error, res_obj)
+  {
+    if(error)
+    {
+      console.log(error);
+      if(callback)
+        callback(error);
+      return;
+    }
+    console.log('successfully created new quote.')
+    if(callback)
+      callback(error, res_obj);
+    //update timestamp
+    counters.timestamp('quotes_timestamp');
+  });
 }
 
 module.exports.get = function(quote_id, callback)
@@ -73,14 +88,22 @@ module.exports.update = function(record_id, quote, callback)
 {
   var query = {_id:record_id};
   console.log('attempting to update quote[%s].', record_id);
-  Quotes.find(query, function(err, q)
+
+  Quotes.findOneAndUpdate(query, quote, {}, function(error, res_obj)
   {
-    if(err)
+    if(error)
     {
-      callback(err);
+      console.log(error);
+      if(callback)
+        callback(error);
       return;
     }
-    Quotes.findOneAndUpdate(query, quote, {}, callback);
+    console.log('successfully updated quote.')
+    if(callback)
+      callback(error, res_obj);
+    //update timestamp
+    counters.timestamp('quotes_timestamp');
+  });
     //backup old quote
     /*var obj = new Object(q);
     obj.quote_id = record_id;
@@ -99,8 +122,7 @@ module.exports.update = function(record_id, quote, callback)
       quote.revision=rev;
       Quotes.findOneAndUpdate(query, quote, {}, callback);
     });*/
-  });
-}
+};
 
 module.exports.isValid = function(quote)
 {

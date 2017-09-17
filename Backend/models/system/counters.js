@@ -87,6 +87,21 @@ module.exports.update = function(counter_name, counter, callback)
   Counter.findOneAndUpdate(query, counter, {}, callback);
 }
 
+module.exports.timestamp = function(counter_name)
+{
+  var timestamp = Math.floor(new Date().getTime());
+  var counter = {'counter_name': counter_name, 'count': timestamp};
+  this.update(counter_name, counter, function(upd_err, res_counter)
+  {
+    if(upd_err)
+    {
+      console.log(upd_err);
+      return;
+    }
+    console.log('successfully updated counter [%s] to %s.', counter_name, timestamp);
+  });
+}
+
 module.exports.isValid = function(counter)
 {
   console.log('validating counter:\n%s', JSON.stringify(counter));
@@ -101,7 +116,7 @@ module.exports.isValid = function(counter)
 
   console.log('valid counter.');
 
-    return true;
+  return true;
 }
 
 isNullOrEmpty = function(obj)

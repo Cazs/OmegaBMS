@@ -1,5 +1,6 @@
 const mongoose = require('mongoose');
 var access_levels = require('../system/access_levels.js');
+var counters = require('../system/counters.js');
 
 const resourceSchema = mongoose.Schema(
   {
@@ -52,7 +53,22 @@ module.exports.ACCESS_MODE = access_levels.NORMAL;//Required access level to exe
 
 module.exports.add = function (resource, callback)
 {
-  Resources.create(resource, callback);
+  console.log('attempting to create new resource.');
+  Resources.create(resource, function(error, res_obj)
+  {
+    if(error)
+    {
+      console.log(error);
+      if(callback)
+        callback(error);
+      return;
+    }
+    console.log('successfully created new resource.')
+    if(callback)
+      callback(error, res_obj);
+    //update timestamp
+    counters.timestamp('resources_timestamp');
+  });
 };
 
 module.exports.get = function (resource_id, callback)
@@ -68,8 +84,24 @@ module.exports.getAll = function (callback)
 
 module.exports.update = function (resource_id, resource, callback)
 {
+  console.log('attempting to update resource [%s].', resource_id);
+  console.log('\resource object: %s\n', JSON.stringify(resource));
   var query = {_id :resource_id};
-  Resources.findOneAndUpdate(query, resource, {}, callback);
+  Resources.findOneAndUpdate(query, resource, {}, function(error, res_obj)
+  {
+    if(error)
+    {
+      console.log(error);
+      if(callback)
+        callback(error);
+      return;
+    }
+    console.log('successfully updated resource.')
+    if(callback)
+      callback(error, res_obj);
+    //update timestamp
+    counters.timestamp('resources_timestamp');
+  });
 };
 
 module.exports.isValid = function(resource)

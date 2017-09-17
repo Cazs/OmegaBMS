@@ -2,15 +2,10 @@ package fadulousbms.managers;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import fadulousbms.auxilary.Globals;
-import fadulousbms.auxilary.IO;
+import fadulousbms.auxilary.*;
 import fadulousbms.controllers.HomescreenController;
 import fadulousbms.controllers.OperationsController;
-import fadulousbms.model.CustomTableViewControls;
-import fadulousbms.auxilary.RemoteComms;
-import fadulousbms.auxilary.Validators;
-import fadulousbms.model.BusinessObject;
-import fadulousbms.model.Supplier;
+import fadulousbms.model.*;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.scene.Scene;
@@ -37,13 +32,17 @@ import java.util.logging.Logger;
 /**
  * Created by ghost on 2017/01/11.
  */
-public class SupplierManager implements BusinessObjectManager
+public class SupplierManager extends BusinessObjectManager
 {
     private Gson gson;
     private Supplier[] suppliers;
+    private Supplier selected;
     private TableView tblSuppliers;
     private static SupplierManager supplierManager = new SupplierManager();
     public static final String TAG = "SupplierManager";
+    public static final String ROOT_PATH = "cache/suppliers/";
+    public String filename = "";
+    private long timestamp;
 
     private SupplierManager()
     {
@@ -54,13 +53,24 @@ public class SupplierManager implements BusinessObjectManager
         return supplierManager;
     }
 
+    public Supplier[] getSuppliers(){return suppliers;}
+
+    public void setSelected(Supplier supplier)
+    {
+        this.selected=supplier;
+    }
+
+    public Supplier getSelected()
+    {
+        return this.selected;
+    }
+
     @Override
     public void initialize(ScreenManager screenManager)
     {
         loadDataFromServer();
     }
 
-    @Override
     public void newWindow()
     {
         SessionManager smgr = SessionManager.getInstance();
@@ -331,15 +341,36 @@ public class SupplierManager implements BusinessObjectManager
                     ArrayList<AbstractMap.SimpleEntry<String,String>> headers = new ArrayList<>();
                     headers.add(new AbstractMap.SimpleEntry<>("Cookie", smgr.getActive().getSessionId()));
 
-                    String suppliers_json = RemoteComms.sendGetRequest("/api/suppliers", headers);
-                    suppliers = gson.fromJson(suppliers_json, Supplier[].class);
-                }else{
-                    JOptionPane.showMessageDialog(null, "Active session has expired.", "Session Expired", JOptionPane.ERROR_MESSAGE);
-                }
-            }else{
-                JOptionPane.showMessageDialog(null, "No active sessions.", "Session Expired", JOptionPane.ERROR_MESSAGE);
-            }
+                    //Get Timestamp
+                    String timestamp_json = RemoteComms.sendGetRequest("/api/timestamp/suppliers_timestamp", headers);
+                    Counters cntr_timestamp = gson.fromJson(timestamp_json, Counters.class);
+                    if(cntr_timestamp!=null)
+                    {
+                        timestamp = cntr_timestamp.getCount();
+                        filename = "suppliers_"+timestamp+".dat";
+                        IO.log(this.getClass().getName(), IO.TAG_INFO, "Server Timestamp: "+timestamp);
+                    }else {
+                        IO.logAndAlert(this.getClass().getName(), "could not get valid timestamp", IO.TAG_ERROR);
+                        return;
+                    }
+
+                    if(!isSerialized(ROOT_PATH+filename))
+                    {
+                        String suppliers_json = RemoteComms.sendGetRequest("/api/suppliers", headers);
+                        suppliers = gson.fromJson(suppliers_json, Supplier[].class);
+
+                        IO.log(getClass().getName(), IO.TAG_INFO, "reloaded collection of suppliers.");
+                        this.serialize(ROOT_PATH+filename, suppliers);
+                    }else{
+                        IO.log(this.getClass().getName(), IO.TAG_INFO, "binary object ["+ROOT_PATH+filename+"] on local disk is already up-to-date.");
+                        suppliers = (Supplier[]) this.deserialize(ROOT_PATH+filename);
+                    }
+                }else JOptionPane.showMessageDialog(null, "Active session has expired.", "Session Expired", JOptionPane.ERROR_MESSAGE);
+            }else JOptionPane.showMessageDialog(null, "No active sessions.", "Session Expired", JOptionPane.ERROR_MESSAGE);
         }catch (MalformedURLException ex)
+        {
+            IO.log(TAG, IO.TAG_ERROR, ex.getMessage());
+        } catch (ClassNotFoundException ex)
         {
             IO.log(TAG, IO.TAG_ERROR, ex.getMessage());
         }catch (IOException ex)
