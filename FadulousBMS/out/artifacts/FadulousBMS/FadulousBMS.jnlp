@@ -9,7 +9,7 @@
   <resources>
     <j2se version="1.6+" href="http://java.sun.com/products/autodl/j2se"/>
     <jar href="BMSPreloader.jar" size="1083" download="eager" />
-    <jar href="FadulousBMS.jar" size="633838" download="eager" />
+    <jar href="FadulousBMS.jar" size="633613" download="eager" />
   </resources>
   <jfx:javafx-desc  width="600" height="400" main-class="fadulousbms.FadulousBMS"  name="FadulousBMS" />
   <update check="background"/>

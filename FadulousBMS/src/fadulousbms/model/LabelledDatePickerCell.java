@@ -33,17 +33,12 @@ public class LabelledDatePickerCell extends TableCell<BusinessObject, Long>
         //datePicker.setEditable(editable);
         datePicker.setDisable(!editable);
 
-        datePicker.setOnAction(event ->
+        datePicker.valueProperty().addListener((observable, oldVal, newVal)->
         {
-            if(editable)
-            {
-                if (!isEmpty())
-                {
-                    commitEdit(datePicker.getValue().atStartOfDay(ZoneId.systemDefault()).toEpochSecond());
-                    updateItem(datePicker.getValue().atStartOfDay(ZoneId.systemDefault()).toEpochSecond(), isEmpty());
-                }
-            }
-            System.err.println("event type:" + event.getEventType().getName());
+            //System.out.println("\noldVal: " + oldVal + ", newVal: " + newVal + ", isShowing? " + datePicker.isShowing() + ", isFocused?" + datePicker.isFocused() + "\n");
+            updateItem(datePicker.getValue().atStartOfDay(ZoneId.systemDefault()).toEpochSecond(), isEmpty());
+            if(datePicker.isFocused() || datePicker.isShowing())
+                commitEdit(datePicker.getValue().atStartOfDay(ZoneId.systemDefault()).toEpochSecond());
         });
 
 
@@ -71,55 +66,13 @@ public class LabelledDatePickerCell extends TableCell<BusinessObject, Long>
         formatter = new SimpleDateFormat("yyyy-MM-dd");
         datePicker = new DatePicker();
 
-        datePicker.setOnAction(event ->
+        datePicker.valueProperty().addListener((observable, oldVal, newVal)->
         {
-            if(!isEmpty())
-            {
+            //System.out.println("\noldVal: " + oldVal + ", newVal: " + newVal + ", isShowing? " + datePicker.isShowing() + ", isFocused?" + datePicker.isFocused() + "\n");
+            updateItem(datePicker.getValue().atStartOfDay(ZoneId.systemDefault()).toEpochSecond(), isEmpty());
+            if(datePicker.isFocused() || datePicker.isShowing())
                 commitEdit(datePicker.getValue().atStartOfDay(ZoneId.systemDefault()).toEpochSecond());
-                updateItem(datePicker.getValue().atStartOfDay(ZoneId.systemDefault()).toEpochSecond(), isEmpty());
-            }
         });
-        /*datePicker.addEventFilter( EventType.ROOT, event ->
-        {
-            //System.out.println("DatepickerCell event!");
-            /*if (event.getCode() == KeyEvent.VK_ENTER || event.getKeyCode() == KeyEvent.VK_TAB)
-            {
-                datePicker.setValue(datePicker.getConverter().fromString(datePicker.getEditor().getText()));
-                commitEdit(datePicker.getValue().atStartOfDay(ZoneId.systemDefault()).toEpochSecond());
-            }
-            if (event.getKeyCode() == KeyEvent.VK_ESCAPE)
-            {
-                cancelEdit();
-            }
-        });*/
-
-
-        /*datePicker.setDayCellFactory(picker ->
-        {
-            DateCell cell = new DateCell();
-            cell.addEventFilter(MouseEvent.MOUSE_CLICKED, event ->
-            {
-                datePicker.setValue(cell.getItem());
-                if (event.getClickCount() == 2)
-                {
-                    datePicker.hide();
-                    //commitEdit(MonthDay.from(cell.getItem()));
-                }
-                event.consume();
-            });
-            /*cell.addEventFilter(KeyEvent.KEY_PRESSED, event ->
-            {
-                System.out.println(datePicker.getValue());
-                /*if (event.get == KeyCode.ENTER) {
-                    commitEdit(MonthDay.from(datePicker.getValue()));
-                }*
-            });*
-            return cell ;
-        });*/
-
-        /*contentDisplayProperty().bind(Bindings.when(editingProperty())
-                .then(ContentDisplay.CENTER)
-                .otherwise(ContentDisplay.TEXT_ONLY));*/
     }
 
     @Override

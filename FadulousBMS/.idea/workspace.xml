@@ -8,133 +8,23 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="1759104d-ca59-43ad-8fd3-b410531d2d73" name="Default" comment="">
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/fadulousbms/controllers/ResourcesController.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/fadulousbms/controllers/SuppliersController.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/fadulousbms/views/Stock.fxml" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/fadulousbms/views/Suppliers.fxml" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/cache/resources/resources_0.dat" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/cache/resources/resources_1505642760555.dat" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/cache/resources/resources_1505643344192.dat" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/cache/resources/resources_1505644539300.dat" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/cache/resources/resources_1505644903980.dat" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/cache/resources/resources_1505644991031.dat" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/cache/suppliers/suppliers_1505584206450.dat" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/cache/suppliers/suppliers_1505585043630.dat" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/cache/suppliers/suppliers_1505586121493.dat" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/cache/suppliers/suppliers_1505638253625.dat" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/cache/suppliers/suppliers_1505638494049.dat" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/cache/suppliers/suppliers_1505638560117.dat" afterPath="" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/out/artifacts/FadulousBMS/FadulousBMS.jar" afterPath="$PROJECT_DIR$/out/artifacts/FadulousBMS/FadulousBMS.jar" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/out/production/FadulousBMS/fadulousbms/FadulousBMS.class" afterPath="$PROJECT_DIR$/out/production/FadulousBMS/fadulousbms/FadulousBMS.class" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/out/production/FadulousBMS/fadulousbms/auxilary/RemoteComms.class" afterPath="$PROJECT_DIR$/out/production/FadulousBMS/fadulousbms/auxilary/RemoteComms.class" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/out/production/FadulousBMS/fadulousbms/controllers/NewGenericQuoteController.class" afterPath="$PROJECT_DIR$/out/production/FadulousBMS/fadulousbms/controllers/NewGenericQuoteController.class" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/out/production/FadulousBMS/fadulousbms/controllers/NewQuoteController.class" afterPath="$PROJECT_DIR$/out/production/FadulousBMS/fadulousbms/controllers/NewQuoteController.class" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/out/production/FadulousBMS/fadulousbms/controllers/OperationsController.class" afterPath="$PROJECT_DIR$/out/production/FadulousBMS/fadulousbms/controllers/OperationsController.class" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/out/production/FadulousBMS/fadulousbms/controllers/QuotesController$1$1.class" afterPath="$PROJECT_DIR$/out/production/FadulousBMS/fadulousbms/controllers/QuotesController$1$1.class" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/out/production/FadulousBMS/fadulousbms/controllers/QuotesController$1.class" afterPath="$PROJECT_DIR$/out/production/FadulousBMS/fadulousbms/controllers/QuotesController$1.class" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/out/production/FadulousBMS/fadulousbms/controllers/QuotesController$2$1.class" afterPath="$PROJECT_DIR$/out/production/FadulousBMS/fadulousbms/controllers/QuotesController$2$1.class" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/out/production/FadulousBMS/fadulousbms/controllers/QuotesController$2.class" afterPath="$PROJECT_DIR$/out/production/FadulousBMS/fadulousbms/controllers/QuotesController$2.class" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/out/production/FadulousBMS/fadulousbms/controllers/QuotesController.class" afterPath="$PROJECT_DIR$/out/production/FadulousBMS/fadulousbms/controllers/QuotesController.class" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/out/production/FadulousBMS/fadulousbms/controllers/ViewGenericQuoteController$1$1.class" afterPath="$PROJECT_DIR$/out/production/FadulousBMS/fadulousbms/controllers/ViewGenericQuoteController$1$1.class" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/out/production/FadulousBMS/fadulousbms/controllers/ViewGenericQuoteController$1.class" afterPath="$PROJECT_DIR$/out/production/FadulousBMS/fadulousbms/controllers/ViewGenericQuoteController$1.class" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/out/production/FadulousBMS/fadulousbms/controllers/ViewGenericQuoteController.class" afterPath="$PROJECT_DIR$/out/production/FadulousBMS/fadulousbms/controllers/ViewGenericQuoteController.class" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/out/production/FadulousBMS/fadulousbms/managers/AppointmentManager.class" afterPath="$PROJECT_DIR$/out/production/FadulousBMS/fadulousbms/managers/AppointmentManager.class" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/out/production/FadulousBMS/fadulousbms/managers/AssetManager$1$1.class" afterPath="$PROJECT_DIR$/out/production/FadulousBMS/fadulousbms/managers/AssetManager$1$1.class" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/out/production/FadulousBMS/fadulousbms/managers/AssetManager$1.class" afterPath="$PROJECT_DIR$/out/production/FadulousBMS/fadulousbms/managers/AssetManager$1.class" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/out/production/FadulousBMS/fadulousbms/managers/AssetManager$2.class" afterPath="$PROJECT_DIR$/out/production/FadulousBMS/fadulousbms/managers/AssetManager$2.class" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/out/production/FadulousBMS/fadulousbms/managers/AssetManager.class" afterPath="$PROJECT_DIR$/out/production/FadulousBMS/fadulousbms/managers/AssetManager.class" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/out/production/FadulousBMS/fadulousbms/managers/BusinessObjectManager.class" afterPath="$PROJECT_DIR$/out/production/FadulousBMS/fadulousbms/managers/BusinessObjectManager.class" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/out/production/FadulousBMS/fadulousbms/managers/ClientManager.class" afterPath="$PROJECT_DIR$/out/production/FadulousBMS/fadulousbms/managers/ClientManager.class" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/out/production/FadulousBMS/fadulousbms/managers/EmployeeManager.class" afterPath="$PROJECT_DIR$/out/production/FadulousBMS/fadulousbms/managers/EmployeeManager.class" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/out/production/FadulousBMS/fadulousbms/managers/InspectionManager.class" afterPath="$PROJECT_DIR$/out/production/FadulousBMS/fadulousbms/managers/InspectionManager.class" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/out/production/FadulousBMS/fadulousbms/managers/InvoiceManager$1$1.class" afterPath="$PROJECT_DIR$/out/production/FadulousBMS/fadulousbms/managers/InvoiceManager$1$1.class" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/out/production/FadulousBMS/fadulousbms/managers/InvoiceManager$1.class" afterPath="$PROJECT_DIR$/out/production/FadulousBMS/fadulousbms/managers/InvoiceManager$1.class" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/out/production/FadulousBMS/fadulousbms/managers/InvoiceManager$2.class" afterPath="$PROJECT_DIR$/out/production/FadulousBMS/fadulousbms/managers/InvoiceManager$2.class" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/out/production/FadulousBMS/fadulousbms/managers/InvoiceManager$3$1.class" afterPath="$PROJECT_DIR$/out/production/FadulousBMS/fadulousbms/managers/InvoiceManager$3$1.class" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/out/production/FadulousBMS/fadulousbms/managers/InvoiceManager$3.class" afterPath="$PROJECT_DIR$/out/production/FadulousBMS/fadulousbms/managers/InvoiceManager$3.class" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/out/production/FadulousBMS/fadulousbms/managers/InvoiceManager$4.class" afterPath="$PROJECT_DIR$/out/production/FadulousBMS/fadulousbms/managers/InvoiceManager$4.class" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/out/production/FadulousBMS/fadulousbms/managers/InvoiceManager$5$1.class" afterPath="$PROJECT_DIR$/out/production/FadulousBMS/fadulousbms/managers/InvoiceManager$5$1.class" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/out/production/FadulousBMS/fadulousbms/managers/InvoiceManager$5.class" afterPath="$PROJECT_DIR$/out/production/FadulousBMS/fadulousbms/managers/InvoiceManager$5.class" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/out/production/FadulousBMS/fadulousbms/managers/InvoiceManager$6.class" afterPath="$PROJECT_DIR$/out/production/FadulousBMS/fadulousbms/managers/InvoiceManager$6.class" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/out/production/FadulousBMS/fadulousbms/managers/InvoiceManager$7$1.class" afterPath="$PROJECT_DIR$/out/production/FadulousBMS/fadulousbms/managers/InvoiceManager$7$1.class" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/out/production/FadulousBMS/fadulousbms/managers/InvoiceManager$7.class" afterPath="$PROJECT_DIR$/out/production/FadulousBMS/fadulousbms/managers/InvoiceManager$7.class" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/out/production/FadulousBMS/fadulousbms/managers/InvoiceManager$8.class" afterPath="$PROJECT_DIR$/out/production/FadulousBMS/fadulousbms/managers/InvoiceManager$8.class" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/out/production/FadulousBMS/fadulousbms/managers/InvoiceManager.class" afterPath="$PROJECT_DIR$/out/production/FadulousBMS/fadulousbms/managers/InvoiceManager.class" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/out/production/FadulousBMS/fadulousbms/managers/JobManager$1$1.class" afterPath="$PROJECT_DIR$/out/production/FadulousBMS/fadulousbms/managers/JobManager$1$1.class" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/out/production/FadulousBMS/fadulousbms/managers/JobManager$1.class" afterPath="$PROJECT_DIR$/out/production/FadulousBMS/fadulousbms/managers/JobManager$1.class" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/out/production/FadulousBMS/fadulousbms/managers/JobManager$2.class" afterPath="$PROJECT_DIR$/out/production/FadulousBMS/fadulousbms/managers/JobManager$2.class" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/out/production/FadulousBMS/fadulousbms/managers/JobManager$3$1.class" afterPath="$PROJECT_DIR$/out/production/FadulousBMS/fadulousbms/managers/JobManager$3$1.class" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/out/production/FadulousBMS/fadulousbms/managers/JobManager$3.class" afterPath="$PROJECT_DIR$/out/production/FadulousBMS/fadulousbms/managers/JobManager$3.class" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/out/production/FadulousBMS/fadulousbms/managers/JobManager$4.class" afterPath="$PROJECT_DIR$/out/production/FadulousBMS/fadulousbms/managers/JobManager$4.class" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/out/production/FadulousBMS/fadulousbms/managers/JobManager$JobSafetyCatalogue.class" afterPath="$PROJECT_DIR$/out/production/FadulousBMS/fadulousbms/managers/JobManager$JobSafetyCatalogue.class" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/out/production/FadulousBMS/fadulousbms/managers/JobManager.class" afterPath="$PROJECT_DIR$/out/production/FadulousBMS/fadulousbms/managers/JobManager.class" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/out/production/FadulousBMS/fadulousbms/managers/OHSManager.class" afterPath="$PROJECT_DIR$/out/production/FadulousBMS/fadulousbms/managers/OHSManager.class" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/out/production/FadulousBMS/fadulousbms/managers/QuoteManager.class" afterPath="$PROJECT_DIR$/out/production/FadulousBMS/fadulousbms/managers/QuoteManager.class" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/out/production/FadulousBMS/fadulousbms/managers/ResourceManager$1$1.class" afterPath="$PROJECT_DIR$/out/production/FadulousBMS/fadulousbms/managers/ResourceManager$1$1.class" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/out/production/FadulousBMS/fadulousbms/managers/ResourceManager$1.class" afterPath="$PROJECT_DIR$/out/production/FadulousBMS/fadulousbms/managers/ResourceManager$1.class" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/out/production/FadulousBMS/fadulousbms/managers/ResourceManager$2.class" afterPath="$PROJECT_DIR$/out/production/FadulousBMS/fadulousbms/managers/ResourceManager$2.class" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/out/production/FadulousBMS/fadulousbms/managers/ResourceManager.class" afterPath="$PROJECT_DIR$/out/production/FadulousBMS/fadulousbms/managers/ResourceManager.class" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/out/production/FadulousBMS/fadulousbms/managers/RiskAssessmentManager.class" afterPath="$PROJECT_DIR$/out/production/FadulousBMS/fadulousbms/managers/RiskAssessmentManager.class" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/out/production/FadulousBMS/fadulousbms/managers/SafetyManager$1$1.class" afterPath="$PROJECT_DIR$/out/production/FadulousBMS/fadulousbms/managers/SafetyManager$1$1.class" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/out/production/FadulousBMS/fadulousbms/managers/SafetyManager$1.class" afterPath="$PROJECT_DIR$/out/production/FadulousBMS/fadulousbms/managers/SafetyManager$1.class" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/out/production/FadulousBMS/fadulousbms/managers/SafetyManager$2.class" afterPath="$PROJECT_DIR$/out/production/FadulousBMS/fadulousbms/managers/SafetyManager$2.class" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/out/production/FadulousBMS/fadulousbms/managers/SafetyManager.class" afterPath="$PROJECT_DIR$/out/production/FadulousBMS/fadulousbms/managers/SafetyManager.class" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/out/production/FadulousBMS/fadulousbms/managers/SaleManager$1$1.class" afterPath="$PROJECT_DIR$/out/production/FadulousBMS/fadulousbms/managers/SaleManager$1$1.class" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/out/production/FadulousBMS/fadulousbms/managers/SaleManager$1.class" afterPath="$PROJECT_DIR$/out/production/FadulousBMS/fadulousbms/managers/SaleManager$1.class" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/out/production/FadulousBMS/fadulousbms/managers/SaleManager$2.class" afterPath="$PROJECT_DIR$/out/production/FadulousBMS/fadulousbms/managers/SaleManager$2.class" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/out/production/FadulousBMS/fadulousbms/managers/SaleManager$3$1.class" afterPath="$PROJECT_DIR$/out/production/FadulousBMS/fadulousbms/managers/SaleManager$3$1.class" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/out/production/FadulousBMS/fadulousbms/managers/SaleManager$3.class" afterPath="$PROJECT_DIR$/out/production/FadulousBMS/fadulousbms/managers/SaleManager$3.class" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/out/production/FadulousBMS/fadulousbms/managers/SaleManager$4.class" afterPath="$PROJECT_DIR$/out/production/FadulousBMS/fadulousbms/managers/SaleManager$4.class" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/out/production/FadulousBMS/fadulousbms/managers/SaleManager$5$1.class" afterPath="$PROJECT_DIR$/out/production/FadulousBMS/fadulousbms/managers/SaleManager$5$1.class" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/out/production/FadulousBMS/fadulousbms/managers/SaleManager$5.class" afterPath="$PROJECT_DIR$/out/production/FadulousBMS/fadulousbms/managers/SaleManager$5.class" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/out/production/FadulousBMS/fadulousbms/managers/SaleManager$6.class" afterPath="$PROJECT_DIR$/out/production/FadulousBMS/fadulousbms/managers/SaleManager$6.class" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/out/production/FadulousBMS/fadulousbms/managers/SaleManager.class" afterPath="$PROJECT_DIR$/out/production/FadulousBMS/fadulousbms/managers/SaleManager.class" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/out/production/FadulousBMS/fadulousbms/managers/SupplierManager.class" afterPath="$PROJECT_DIR$/out/production/FadulousBMS/fadulousbms/managers/SupplierManager.class" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/out/production/FadulousBMS/fadulousbms/model/Client.class" afterPath="$PROJECT_DIR$/out/production/FadulousBMS/fadulousbms/model/Client.class" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/out/production/FadulousBMS/fadulousbms/model/ComboBoxTableCell.class" afterPath="$PROJECT_DIR$/out/production/FadulousBMS/fadulousbms/model/ComboBoxTableCell.class" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/out/production/FadulousBMS/fadulousbms/model/Employee.class" afterPath="$PROJECT_DIR$/out/production/FadulousBMS/fadulousbms/model/Employee.class" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/out/production/FadulousBMS/fadulousbms/model/FileMetadata.class" afterPath="$PROJECT_DIR$/out/production/FadulousBMS/fadulousbms/model/FileMetadata.class" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/out/production/FadulousBMS/fadulousbms/model/GenericQuote.class" afterPath="$PROJECT_DIR$/out/production/FadulousBMS/fadulousbms/model/GenericQuote.class" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/out/production/FadulousBMS/fadulousbms/model/GenericQuoteItem.class" afterPath="$PROJECT_DIR$/out/production/FadulousBMS/fadulousbms/model/GenericQuoteItem.class" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/out/production/FadulousBMS/fadulousbms/model/Job.class" afterPath="$PROJECT_DIR$/out/production/FadulousBMS/fadulousbms/model/Job.class" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/out/production/FadulousBMS/fadulousbms/model/Quote.class" afterPath="$PROJECT_DIR$/out/production/FadulousBMS/fadulousbms/model/Quote.class" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/out/production/FadulousBMS/fadulousbms/model/QuoteItem.class" afterPath="$PROJECT_DIR$/out/production/FadulousBMS/fadulousbms/model/QuoteItem.class" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/out/production/FadulousBMS/fadulousbms/model/Resource.class" afterPath="$PROJECT_DIR$/out/production/FadulousBMS/fadulousbms/model/Resource.class" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/out/production/FadulousBMS/fadulousbms/model/Screens.class" afterPath="$PROJECT_DIR$/out/production/FadulousBMS/fadulousbms/model/Screens.class" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/out/production/FadulousBMS/fadulousbms/model/Supplier.class" afterPath="$PROJECT_DIR$/out/production/FadulousBMS/fadulousbms/model/Supplier.class" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../Backend/app.js" afterPath="$PROJECT_DIR$/../Backend/app.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../Backend/models/clients/clients.js" afterPath="$PROJECT_DIR$/../Backend/models/clients/clients.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../Backend/models/employees/employees.js" afterPath="$PROJECT_DIR$/../Backend/models/employees/employees.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../Backend/models/jobs/jobs.js" afterPath="$PROJECT_DIR$/../Backend/models/jobs/jobs.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../Backend/models/quotes/generic_quotes.js" afterPath="$PROJECT_DIR$/../Backend/models/quotes/generic_quotes.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../Backend/models/quotes/quotes.js" afterPath="$PROJECT_DIR$/../Backend/models/quotes/quotes.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../Backend/models/resources/resources.js" afterPath="$PROJECT_DIR$/../Backend/models/resources/resources.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../Backend/models/suppliers/suppliers.js" afterPath="$PROJECT_DIR$/../Backend/models/suppliers/suppliers.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../Backend/models/system/counters.js" afterPath="$PROJECT_DIR$/../Backend/models/system/counters.js" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/out/production/FadulousBMS/fadulousbms/model/LabelledDatePickerCell.class" afterPath="$PROJECT_DIR$/out/production/FadulousBMS/fadulousbms/model/LabelledDatePickerCell.class" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/out/artifacts/FadulousBMS/FadulousBMS.jnlp" afterPath="$PROJECT_DIR$/out/artifacts/FadulousBMS/FadulousBMS.jnlp" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/fadulousbms/FadulousBMS.java" afterPath="$PROJECT_DIR$/src/fadulousbms/FadulousBMS.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/fadulousbms/auxilary/RemoteComms.java" afterPath="$PROJECT_DIR$/src/fadulousbms/auxilary/RemoteComms.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/fadulousbms/controllers/NewGenericQuoteController.java" afterPath="$PROJECT_DIR$/src/fadulousbms/controllers/NewGenericQuoteController.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/fadulousbms/controllers/NewQuoteController.java" afterPath="$PROJECT_DIR$/src/fadulousbms/controllers/NewQuoteController.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/fadulousbms/controllers/OperationsController.java" afterPath="$PROJECT_DIR$/src/fadulousbms/controllers/OperationsController.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/fadulousbms/controllers/QuotesController.java" afterPath="$PROJECT_DIR$/src/fadulousbms/controllers/QuotesController.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/fadulousbms/controllers/ViewGenericQuoteController.java" afterPath="$PROJECT_DIR$/src/fadulousbms/controllers/ViewGenericQuoteController.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/fadulousbms/managers/AppointmentManager.java" afterPath="$PROJECT_DIR$/src/fadulousbms/managers/AppointmentManager.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/fadulousbms/managers/AssetManager.java" afterPath="$PROJECT_DIR$/src/fadulousbms/managers/AssetManager.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/fadulousbms/managers/BusinessObjectManager.java" afterPath="$PROJECT_DIR$/src/fadulousbms/managers/BusinessObjectManager.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/fadulousbms/managers/ClientManager.java" afterPath="$PROJECT_DIR$/src/fadulousbms/managers/ClientManager.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/fadulousbms/managers/EmployeeManager.java" afterPath="$PROJECT_DIR$/src/fadulousbms/managers/EmployeeManager.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/fadulousbms/managers/InspectionManager.java" afterPath="$PROJECT_DIR$/src/fadulousbms/managers/InspectionManager.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/fadulousbms/managers/InvoiceManager.java" afterPath="$PROJECT_DIR$/src/fadulousbms/managers/InvoiceManager.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/fadulousbms/managers/JobManager.java" afterPath="$PROJECT_DIR$/src/fadulousbms/managers/JobManager.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/fadulousbms/managers/OHSManager.java" afterPath="$PROJECT_DIR$/src/fadulousbms/managers/OHSManager.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/fadulousbms/managers/QuoteManager.java" afterPath="$PROJECT_DIR$/src/fadulousbms/managers/QuoteManager.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/fadulousbms/managers/ResourceManager.java" afterPath="$PROJECT_DIR$/src/fadulousbms/managers/ResourceManager.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/fadulousbms/managers/RiskAssessmentManager.java" afterPath="$PROJECT_DIR$/src/fadulousbms/managers/RiskAssessmentManager.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/fadulousbms/managers/SafetyManager.java" afterPath="$PROJECT_DIR$/src/fadulousbms/managers/SafetyManager.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/fadulousbms/managers/SaleManager.java" afterPath="$PROJECT_DIR$/src/fadulousbms/managers/SaleManager.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/fadulousbms/managers/SupplierManager.java" afterPath="$PROJECT_DIR$/src/fadulousbms/managers/SupplierManager.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/fadulousbms/model/Client.java" afterPath="$PROJECT_DIR$/src/fadulousbms/model/Client.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/fadulousbms/model/ComboBoxTableCell.java" afterPath="$PROJECT_DIR$/src/fadulousbms/model/ComboBoxTableCell.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/fadulousbms/model/Employee.java" afterPath="$PROJECT_DIR$/src/fadulousbms/model/Employee.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/fadulousbms/model/FileMetadata.java" afterPath="$PROJECT_DIR$/src/fadulousbms/model/FileMetadata.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/fadulousbms/model/GenericQuote.java" afterPath="$PROJECT_DIR$/src/fadulousbms/model/GenericQuote.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/fadulousbms/model/GenericQuoteItem.java" afterPath="$PROJECT_DIR$/src/fadulousbms/model/GenericQuoteItem.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/fadulousbms/model/Job.java" afterPath="$PROJECT_DIR$/src/fadulousbms/model/Job.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/fadulousbms/model/Quote.java" afterPath="$PROJECT_DIR$/src/fadulousbms/model/Quote.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/fadulousbms/model/QuoteItem.java" afterPath="$PROJECT_DIR$/src/fadulousbms/model/QuoteItem.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/fadulousbms/model/Resource.java" afterPath="$PROJECT_DIR$/src/fadulousbms/model/Resource.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/fadulousbms/model/Screens.java" afterPath="$PROJECT_DIR$/src/fadulousbms/model/Screens.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/fadulousbms/model/Supplier.java" afterPath="$PROJECT_DIR$/src/fadulousbms/model/Supplier.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/fadulousbms/model/LabelledDatePickerCell.java" afterPath="$PROJECT_DIR$/src/fadulousbms/model/LabelledDatePickerCell.java" />
     </list>
     <ignored path="$PROJECT_DIR$/out/" />
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
@@ -192,8 +82,8 @@
       <file leaf-file-name="ResourcesController.java" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/fadulousbms/controllers/ResourcesController.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="162">
-              <caret line="81" column="42" lean-forward="false" selection-start-line="81" selection-start-column="42" selection-end-line="81" selection-end-column="42" />
+            <state relative-caret-position="198">
+              <caret line="83" column="48" lean-forward="false" selection-start-line="83" selection-start-column="48" selection-end-line="83" selection-end-column="48" />
               <folding>
                 <element signature="class#4283:7744" expanded="false" />
                 <element signature="method#showLogin#0;class#ResourcesController#0" expanded="false" />
@@ -205,8 +95,8 @@
       <file leaf-file-name="CustomTableViewControls.java" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/fadulousbms/model/CustomTableViewControls.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="-460">
-              <caret line="89" column="48" lean-forward="false" selection-start-line="89" selection-start-column="48" selection-end-line="89" selection-end-column="48" />
+            <state relative-caret-position="178">
+              <caret line="89" column="50" lean-forward="false" selection-start-line="89" selection-start-column="50" selection-end-line="89" selection-end-column="50" />
               <folding>
                 <element signature="method#makeComboBoxTableColumn#0;class#CustomTableViewControls#0" expanded="false" />
                 <element signature="method#makeComboBoxTableColumn#1;class#CustomTableViewControls#0" expanded="false" />
@@ -231,9 +121,14 @@
       <file leaf-file-name="LabelledDatePickerCell.java" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/src/fadulousbms/model/LabelledDatePickerCell.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="169">
-              <caret line="74" column="9" lean-forward="false" selection-start-line="74" selection-start-column="9" selection-end-line="74" selection-end-column="9" />
-              <folding />
+            <state relative-caret-position="217">
+              <caret line="74" column="11" lean-forward="false" selection-start-line="74" selection-start-column="11" selection-end-line="74" selection-end-column="11" />
+              <folding>
+                <element signature="method#LabelledDatePickerCell#0;class#LabelledDatePickerCell#0" expanded="false" />
+                <element signature="method#commitEdit#0;class#LabelledDatePickerCell#0" expanded="false" />
+                <element signature="method#updateItem#0;class#LabelledDatePickerCell#0" expanded="false" />
+                <element signature="method#startEdit#0;class#LabelledDatePickerCell#0" expanded="false" />
+              </folding>
             </state>
           </provider>
         </entry>
@@ -282,7 +177,7 @@
         <entry file="file://$PROJECT_DIR$/src/fadulousbms/managers/SupplierManager.java">
           <provider selected="true" editor-type-id="text-editor">
             <state relative-caret-position="128">
-              <caret line="65" column="5" lean-forward="true" selection-start-line="55" selection-start-column="4" selection-end-line="65" selection-end-column="5" />
+              <caret line="65" column="5" lean-forward="false" selection-start-line="55" selection-start-column="4" selection-end-line="65" selection-end-column="5" />
               <folding>
                 <element signature="method#newWindow#0;class#SupplierManager#0" expanded="false" />
                 <element signature="method#handleNewSupplier#0;class#SupplierManager#0" expanded="false" />
@@ -793,7 +688,7 @@
   </component>
   <component name="ToolWindowManager">
     <frame x="1366" y="0" width="1366" height="768" extended-state="6" />
-    <editor active="true" />
+    <editor active="false" />
     <layout>
       <window_info id="Palette" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32888147" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
@@ -804,7 +699,7 @@
       <window_info id="Capture Analysis" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
       <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.38564274" sideWeight="0.5030349" order="7" side_tool="true" content_ui="tabs" />
       <window_info id="Maven Projects" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="9" side_tool="false" content_ui="tabs" />
-      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.39776358" sideWeight="0.4969651" order="2" side_tool="false" content_ui="tabs" />
+      <window_info id="Run" active="true" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.39776358" sideWeight="0.4969651" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32888147" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Properties" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
       <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32888147" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
@@ -1301,7 +1196,7 @@
     <entry file="file://$PROJECT_DIR$/src/fadulousbms/managers/SupplierManager.java">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="128">
-          <caret line="65" column="5" lean-forward="true" selection-start-line="55" selection-start-column="4" selection-end-line="65" selection-end-column="5" />
+          <caret line="65" column="5" lean-forward="false" selection-start-line="55" selection-start-column="4" selection-end-line="65" selection-end-column="5" />
           <folding>
             <element signature="method#newWindow#0;class#SupplierManager#0" expanded="false" />
             <element signature="method#handleNewSupplier#0;class#SupplierManager#0" expanded="false" />
@@ -1360,17 +1255,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/fadulousbms/controllers/ResourcesController.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="162">
-          <caret line="81" column="42" lean-forward="false" selection-start-line="81" selection-start-column="42" selection-end-line="81" selection-end-column="42" />
-          <folding>
-            <element signature="class#4283:7744" expanded="false" />
-            <element signature="method#showLogin#0;class#ResourcesController#0" expanded="false" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/fadulousbms/auxilary/RemoteComms.java">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="-47">
@@ -1389,10 +1273,21 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/src/fadulousbms/controllers/ResourcesController.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="198">
+          <caret line="83" column="48" lean-forward="false" selection-start-line="83" selection-start-column="48" selection-end-line="83" selection-end-column="48" />
+          <folding>
+            <element signature="class#4283:7744" expanded="false" />
+            <element signature="method#showLogin#0;class#ResourcesController#0" expanded="false" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/src/fadulousbms/model/CustomTableViewControls.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-460">
-          <caret line="89" column="48" lean-forward="false" selection-start-line="89" selection-start-column="48" selection-end-line="89" selection-end-column="48" />
+        <state relative-caret-position="178">
+          <caret line="89" column="50" lean-forward="false" selection-start-line="89" selection-start-column="50" selection-end-line="89" selection-end-column="50" />
           <folding>
             <element signature="method#makeComboBoxTableColumn#0;class#CustomTableViewControls#0" expanded="false" />
             <element signature="method#makeComboBoxTableColumn#1;class#CustomTableViewControls#0" expanded="false" />
@@ -1415,9 +1310,14 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/src/fadulousbms/model/LabelledDatePickerCell.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="169">
-          <caret line="74" column="9" lean-forward="false" selection-start-line="74" selection-start-column="9" selection-end-line="74" selection-end-column="9" />
-          <folding />
+        <state relative-caret-position="217">
+          <caret line="74" column="11" lean-forward="false" selection-start-line="74" selection-start-column="11" selection-end-line="74" selection-end-column="11" />
+          <folding>
+            <element signature="method#LabelledDatePickerCell#0;class#LabelledDatePickerCell#0" expanded="false" />
+            <element signature="method#commitEdit#0;class#LabelledDatePickerCell#0" expanded="false" />
+            <element signature="method#updateItem#0;class#LabelledDatePickerCell#0" expanded="false" />
+            <element signature="method#startEdit#0;class#LabelledDatePickerCell#0" expanded="false" />
+          </folding>
         </state>
       </provider>
     </entry>
