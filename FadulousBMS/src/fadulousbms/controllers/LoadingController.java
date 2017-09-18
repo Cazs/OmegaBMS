@@ -36,7 +36,7 @@ import java.util.ResourceBundle;
  *
  * @author ghost
  */
-public class LoadingController implements Initializable, Screen
+public class LoadingController extends Screen implements Initializable
 {
     private ScreenManager screen_mgr;
 

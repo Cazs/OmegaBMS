@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.scene.shape.*?>
 <?import java.lang.*?>
 <?import javafx.geometry.*?>
 <?import javafx.scene.control.*?>
@@ -22,7 +23,7 @@
    <center>
       <StackPane BorderPane.alignment="CENTER">
          <children>
-            <BorderPane maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" styleClass="sys-body-production" StackPane.alignment="CENTER">
+            <BorderPane maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" styleClass="sys-body" StackPane.alignment="CENTER">
                <StackPane.margin>
                   <Insets />
                </StackPane.margin>
@@ -41,15 +42,7 @@
                         <Insets bottom="40.0" left="40.0" right="40.0" top="40.0" />
                      </BorderPane.margin>
                      <children>
-                        <BorderPane onMouseClicked="#resourcesClick" prefHeight="200.0" prefWidth="200.0" styleClass="sys-btn" GridPane.columnIndex="1" GridPane.rowIndex="1">
-                           <center>
-                              <Label maxHeight="-Infinity" minWidth="-Infinity" text="Stock" BorderPane.alignment="CENTER">
-                                 <font>
-                                    <Font size="30.0" />
-                                 </font></Label>
-                           </center>
-                        </BorderPane>
-                        <BorderPane onMouseClicked="#suppliersClick" prefHeight="200.0" prefWidth="200.0" styleClass="sys-btn" GridPane.columnIndex="1">
+                        <BorderPane onMouseClicked="#suppliersClick" prefHeight="200.0" prefWidth="200.0" styleClass="sys-btn" GridPane.columnIndex="1" GridPane.rowIndex="1">
                            <center>
                               <Label text="Suppliers" BorderPane.alignment="CENTER">
                                  <font>
@@ -60,7 +53,7 @@
                         </BorderPane>
                         <BorderPane fx:id="btnOperations" onMouseClicked="#jobsClick" prefHeight="200.0" prefWidth="200.0" styleClass="sys-btn">
                            <center>
-                              <Label alignment="CENTER" contentDisplay="CENTER" text="Job Logs" BorderPane.alignment="CENTER">
+                              <Label alignment="CENTER" contentDisplay="CENTER" prefHeight="35.0" prefWidth="127.0" text="Job Logs" BorderPane.alignment="CENTER">
                                  <font>
                                     <Font size="30.0" />
                                  </font>
@@ -76,7 +69,7 @@
                               </Label>
                            </center>
                         </BorderPane>
-                        <BorderPane prefHeight="200.0" prefWidth="200.0" styleClass="sys-btn" GridPane.rowIndex="2">
+                        <BorderPane prefHeight="200.0" prefWidth="200.0" styleClass="sys-btn" GridPane.columnIndex="1" GridPane.rowIndex="2">
                            <center>
                               <Label text="Reports" BorderPane.alignment="CENTER">
                                  <font>
@@ -85,9 +78,18 @@
                               </Label>
                            </center>
                         </BorderPane>
-                        <BorderPane prefHeight="200.0" prefWidth="200.0" styleClass="sys-btn" GridPane.columnIndex="1" GridPane.rowIndex="2">
+                        <BorderPane prefHeight="200.0" prefWidth="200.0" styleClass="sys-btn" GridPane.columnIndex="1">
                            <center>
-                              <Label BorderPane.alignment="CENTER">
+                              <Label text="Job Planner" BorderPane.alignment="CENTER">
+                                 <font>
+                                    <Font size="31.0" />
+                                 </font>
+                              </Label>
+                           </center>
+                        </BorderPane>
+                        <BorderPane layoutX="305.0" layoutY="177.0" prefHeight="200.0" prefWidth="200.0" styleClass="sys-btn" GridPane.rowIndex="2">
+                           <center>
+                              <Label text="Project Plan" BorderPane.alignment="CENTER">
                                  <font>
                                     <Font size="31.0" />
                                  </font>
@@ -105,7 +107,7 @@
       </StackPane>
    </center>
    <top>
-      <BorderPane styleClass="sys-nav-production" BorderPane.alignment="CENTER">
+      <BorderPane styleClass="sys-nav" BorderPane.alignment="CENTER">
          <top>
             <Label text="Airotek BMS" BorderPane.alignment="CENTER">
                <font>
@@ -162,33 +164,48 @@
       </BorderPane>
    </top>
    <bottom>
-      <HBox alignment="CENTER" styleClass="sys-footer" BorderPane.alignment="CENTER">
+      <VBox BorderPane.alignment="CENTER">
          <children>
-            <Button alignment="CENTER" contentDisplay="CENTER" defaultButton="true" mnemonicParsing="false" onMouseClicked="#productionClick" prefHeight="100.0" prefWidth="100.0" style="-fx-border-radius: 20;" styleClass="sys-btn" stylesheets="@../styles/home.css" text="Production" HBox.hgrow="ALWAYS">
-               <HBox.margin>
-                  <Insets bottom="20.0" left="20.0" right="20.0" top="20.0" />
-               </HBox.margin>
-               <font>
-                  <Font size="14.0" />
-               </font>
-            </Button>
-            <Button mnemonicParsing="false" onMouseClicked="#salesClick" prefHeight="100.0" prefWidth="100.0" styleClass="sys-btn" text="Sales">
-               <HBox.margin>
-                  <Insets bottom="20.0" left="20.0" right="20.0" top="20.0" />
-               </HBox.margin>
-               <font>
-                  <Font size="20.0" />
-               </font>
-            </Button>
-            <Button mnemonicParsing="false" onMouseClicked="#facilitiesClick" prefHeight="100.0" prefWidth="100.0" styleClass="sys-btn" text="Facilities">
-               <HBox.margin>
-                  <Insets bottom="20.0" left="20.0" right="20.0" top="20.0" />
-               </HBox.margin>
-               <font>
-                  <Font size="17.0" />
-               </font>
-            </Button>
+            <HBox alignment="CENTER" styleClass="sys-footer">
+               <children>
+                  <Button alignment="CENTER" contentDisplay="CENTER" defaultButton="true" mnemonicParsing="false" onMouseClicked="#productionClick" prefHeight="100.0" prefWidth="100.0" style="-fx-border-radius: 20;" styleClass="sys-btn" stylesheets="@../styles/home.css" text="Production" HBox.hgrow="ALWAYS">
+                     <HBox.margin>
+                        <Insets bottom="20.0" left="20.0" right="20.0" top="20.0" />
+                     </HBox.margin>
+                     <font>
+                        <Font size="14.0" />
+                     </font>
+                  </Button>
+                  <Button mnemonicParsing="false" onMouseClicked="#salesClick" prefHeight="100.0" prefWidth="100.0" styleClass="sys-btn" text="Sales">
+                     <HBox.margin>
+                        <Insets bottom="20.0" left="20.0" right="20.0" top="20.0" />
+                     </HBox.margin>
+                     <font>
+                        <Font size="20.0" />
+                     </font>
+                  </Button>
+                  <Button mnemonicParsing="false" onMouseClicked="#resourcesClick" prefHeight="100.0" prefWidth="100.0" styleClass="sys-btn" text="Materials">
+                     <HBox.margin>
+                        <Insets bottom="20.0" left="20.0" right="20.0" top="20.0" />
+                     </HBox.margin>
+                     <font>
+                        <Font size="16.0" />
+                     </font>
+                  </Button>
+               </children>
+            </HBox>
+            <HBox>
+               <children>
+                  <Label text="Server Status:" />
+                  <Circle fx:id="shpServerStatus" fill="DODGERBLUE" radius="7.0" stroke="BLACK" strokeType="INSIDE" />
+                  <Label fx:id="lblOutput" text="console output">
+                     <HBox.margin>
+                        <Insets left="10.0" />
+                     </HBox.margin>
+                  </Label>
+               </children>
+            </HBox>
          </children>
-      </HBox>
+      </VBox>
    </bottom>
 </BorderPane>

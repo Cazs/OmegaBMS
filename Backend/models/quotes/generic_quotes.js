@@ -1,5 +1,6 @@
 var mongoose = require('mongoose');
 var access_levels = require('../system/access_levels.js');
+var counters = require('../system/counters.js');
 
 const quoteSchema = mongoose.Schema(
 {

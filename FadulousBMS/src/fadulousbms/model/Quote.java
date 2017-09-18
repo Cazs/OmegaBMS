@@ -421,4 +421,10 @@ public class Quote implements BusinessObject, Serializable
         }
         return null;
     }
+
+    @Override
+    public String toString()
+    {
+        return this._id;
+    }
 }

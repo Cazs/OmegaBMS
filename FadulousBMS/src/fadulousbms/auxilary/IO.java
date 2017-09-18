@@ -3,6 +3,7 @@ package fadulousbms.auxilary;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonSyntaxException;
+import fadulousbms.managers.ScreenManager;
 import fadulousbms.managers.SessionManager;
 import fadulousbms.model.FileMetadata;
 import fadulousbms.model.Message;
@@ -18,14 +19,38 @@ import java.util.ArrayList;
  */
 public class IO
 {
+
     public static final String TAG_INFO = "info";
     public static final String TAG_WARN = "warning";
     public static final String TAG_ERROR = "error";
     private static final String TAG = "IO";
+    private static IO io = new IO();
+    private static ScreenManager screenManager;
 
+
+    private IO()
+    {
+    }
+
+    public static IO getInstance(){return io;}
+
+    public void init(ScreenManager screenManager)
+    {
+        this.screenManager = screenManager;
+    }
 
     public static void log(String src, String tag, String msg)
     {
+        if(screenManager!=null)
+        {
+            Screen current_screen = screenManager.getFocused();
+            if(current_screen!=null)
+            {
+                if (src.contains("."))
+                    current_screen.refreshStatusBar(src.substring(src.lastIndexOf(".") + 1) + "> " + tag + ":: " + msg);
+                else current_screen.refreshStatusBar(src + "> " + tag + ":: " + msg);
+            }else System.err.println(getInstance().getClass().getName() + "> error: focused screen is null.");
+        }
         switch (tag.toLowerCase())
         {
             case TAG_INFO:

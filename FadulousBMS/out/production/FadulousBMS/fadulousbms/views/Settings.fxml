@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.scene.shape.*?>
 <?import java.lang.*?>
 <?import javafx.geometry.*?>
 <?import javafx.scene.control.*?>
@@ -22,7 +23,7 @@
    <center>
       <StackPane BorderPane.alignment="CENTER">
          <children>
-            <BorderPane maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" styleClass="sys-body-settings" StackPane.alignment="CENTER">
+            <BorderPane maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" styleClass="sys-body" StackPane.alignment="CENTER">
                <StackPane.margin>
                   <Insets />
                </StackPane.margin>
@@ -46,7 +47,7 @@
                         </BorderPane>
                         <HBox alignment="CENTER" prefHeight="100.0" prefWidth="200.0">
                            <children>
-                              <Label text="Server IP:" />
+                              <Label text="Server IP:" textFill="WHITE" />
                               <TextField fx:id="txtIP" minWidth="300.0">
                                  <HBox.margin>
                                     <Insets left="20.0" />
@@ -56,7 +57,7 @@
                         </HBox>
                         <HBox alignment="CENTER" layoutX="10.0" layoutY="10.0" prefHeight="100.0" prefWidth="200.0">
                            <children>
-                              <Label text="Server Port" />
+                              <Label text="Server Port" textFill="#f8f8f8" />
                               <TextField fx:id="txtPort" minWidth="300.0">
                                  <HBox.margin>
                                     <Insets left="20.0" />
@@ -124,4 +125,17 @@
          </bottom>
       </BorderPane>
    </top>
+   <bottom>
+      <HBox BorderPane.alignment="CENTER">
+         <children>
+            <Label text="Server Status:" />
+            <Circle fx:id="shpServerStatus" fill="DODGERBLUE" radius="7.0" stroke="BLACK" strokeType="INSIDE" />
+            <Label fx:id="lblOutput" text="console output">
+               <HBox.margin>
+                  <Insets left="10.0" />
+               </HBox.margin>
+            </Label>
+         </children>
+      </HBox>
+   </bottom>
 </BorderPane>

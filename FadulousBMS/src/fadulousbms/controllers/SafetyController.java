@@ -35,7 +35,7 @@ import java.util.logging.Logger;
  *
  * @author ghost
  */
-public class SafetyController implements Initializable, Screen
+public class SafetyController extends Screen implements Initializable
 {
     private ScreenManager screen_mgr;
     @FXML

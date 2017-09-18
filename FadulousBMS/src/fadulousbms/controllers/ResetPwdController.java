@@ -39,22 +39,17 @@ import java.util.ResourceBundle;
  *
  * @author ghost
  */
-public class ResetPwdController implements Initializable, Screen
+public class ResetPwdController extends Screen implements Initializable
 {
     @FXML
     private TextField txtUsr,txtPwd,txtCode;
-    @FXML
-    private ImageView img_profile;
-    @FXML
-    private final Label user_name = new Label();
-    private ScreenManager screen_mgr;
 
     @Override
     public void refresh()
     {
         Employee e = SessionManager.getInstance().getActiveEmployee();
         if(e!=null)
-            user_name.setText(e.getFirstname() + " " + e.getLastname());
+            this.getUserNameLabel().setText(e.getFirstname() + " " + e.getLastname());
         else IO.log(getClass().getName(), IO.TAG_ERROR, "No active sessions.");
     }
 
@@ -73,7 +68,7 @@ public class ResetPwdController implements Initializable, Screen
             BufferedImage bufferedImage;
             bufferedImage = ImageIO.read(new File("images/profile.png"));
             Image image = SwingFXUtils.toFXImage(bufferedImage, null);
-            img_profile.setImage(image);
+            this.getProfileImageView().setImage(image);
 
             /*for(int i=0;i<30;i++)
                 news_feed_tiles.getChildren().add(createTile());*/
@@ -81,18 +76,6 @@ public class ResetPwdController implements Initializable, Screen
         {
             IO.log(getClass().getName(), IO.TAG_ERROR, ex.getMessage());
         }
-    }
-
-    @Override
-    public void setParent(ScreenManager mgr) 
-    {
-        screen_mgr = mgr;
-    }
-
-    @FXML
-    public void showMain()
-    {
-        screen_mgr.setScreen(Screens.HOME.getScreen());
     }
 
     @FXML
@@ -134,11 +117,5 @@ public class ResetPwdController implements Initializable, Screen
         {
             IO.logAndAlert("Password Reset Error", e.getMessage(), IO.TAG_ERROR);
         }
-    }
-
-    @FXML
-    public void login()
-    {
-        screen_mgr.setScreen(Screens.RESET_PWD.getScreen());
     }
 }

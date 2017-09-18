@@ -26,12 +26,12 @@ public abstract class BusinessObjectManager
         {
             if (fpath.mkdirs())
             {
-                IO.log(QuoteManager.getInstance().getClass().getName(), IO.TAG_INFO,"successfully created new directory["+path+"].");
+                IO.log(getClass().getName(), IO.TAG_INFO,"successfully created new directory["+path+"].");
             } else {
-                IO.log(QuoteManager.getInstance().getClass().getName(), IO.TAG_ERROR,"could not create new directory["+path+"].");
+                IO.log(getClass().getName(), IO.TAG_ERROR,"could not create new directory["+path+"].");
                 return;
             }
-        }else IO.log(QuoteManager.getInstance().getClass().getName(), IO.TAG_INFO, "directory["+path+"] already exists.");
+        }else IO.log(getClass().getName(), IO.TAG_INFO, "directory["+path+"] already exists.");
 
         File file = new File(file_path);
         if(!file.exists())
@@ -40,8 +40,8 @@ public abstract class BusinessObjectManager
             out.writeObject(obj);
             out.flush();
             out.close();
-            IO.log(QuoteManager.getInstance().getClass().getName(), IO.TAG_INFO, "successfully serialized file["+file.getAbsolutePath()+"] to disk.");
-        }else IO.log(QuoteManager.getInstance().getClass().getName(), IO.TAG_INFO, "file["+file.getAbsolutePath()+"] is already up-to-date.");
+            IO.log(getClass().getName(), IO.TAG_INFO, "successfully serialized file["+file.getAbsolutePath()+"] to disk.");
+        }else IO.log(getClass().getName(), IO.TAG_INFO, "file["+file.getAbsolutePath()+"] is already up-to-date.");
     }
 
     public Object deserialize(String path) throws IOException, ClassNotFoundException
@@ -49,8 +49,7 @@ public abstract class BusinessObjectManager
         ObjectInputStream in = new ObjectInputStream(new FileInputStream(new File(path)));
         Object obj = in.readObject();
         in.close();
-        IO.log(GenericQuoteManager.getInstance().getClass().getName(), IO.TAG_INFO, "successfully deserialized file ["+path+"].");
+        IO.log(getClass().getName(), IO.TAG_INFO, "successfully deserialized file ["+path+"].");
         return obj;
     }
-    //void newWindow();
 }

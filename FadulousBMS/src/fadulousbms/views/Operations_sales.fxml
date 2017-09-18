@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.scene.shape.*?>
 <?import java.lang.*?>
 <?import javafx.scene.effect.*?>
 <?import javafx.geometry.*?>
@@ -12,7 +13,7 @@
    <center>
       <StackPane BorderPane.alignment="CENTER">
          <children>
-            <BorderPane maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" style="-fx-background-color: linear-gradient(#8E4BA6 1%, #D4D4D4 100%);" styleClass="sys-body" StackPane.alignment="CENTER">
+            <BorderPane maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" styleClass="sys-body" StackPane.alignment="CENTER">
                <StackPane.margin>
                   <Insets />
                </StackPane.margin>
@@ -25,39 +26,29 @@
                     <rowConstraints>
                       <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
                       <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-                      <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
                     </rowConstraints>
                      <BorderPane.margin>
                         <Insets bottom="40.0" left="40.0" right="40.0" top="40.0" />
                      </BorderPane.margin>
                      <children>
-                        <BorderPane minWidth="150.0" styleClass="sys-btn" GridPane.columnIndex="1" GridPane.rowIndex="1">
+                        <BorderPane minWidth="150.0" onMouseClicked="#pendingQuotesClick" styleClass="sys-btn" GridPane.columnIndex="1">
                            <center>
-                              <Label alignment="CENTER" text="Tender Returnable" BorderPane.alignment="CENTER">
+                              <Label alignment="CENTER" text="Pending Quotes" BorderPane.alignment="CENTER">
                                  <font>
                                     <Font size="24.0" />
                                  </font></Label>
                            </center>
                         </BorderPane>
-                        <BorderPane minWidth="150.0" styleClass="sys-btn" GridPane.columnIndex="1">
+                        <BorderPane minWidth="150.0" onMouseClicked="#rejectedQuotesClick" styleClass="sys-btn" GridPane.rowIndex="1">
                            <center>
-                              <Label text="Sales Report" textAlignment="CENTER" BorderPane.alignment="CENTER">
+                              <Label text="Rejected Quotes" textAlignment="CENTER" BorderPane.alignment="CENTER">
                                  <font>
-                                    <Font size="28.0" />
+                                    <Font size="25.0" />
                                  </font>
                               </Label>
                            </center>
                         </BorderPane>
-                        <BorderPane fx:id="btnSales" minWidth="150.0" onMouseClicked="#showSalesClick" style="-fx-effect: dropshadow( three-pass-box , rgba(0,0,0,0.7) , 15, 0.0 , 0 , 10 );" styleClass="sys-btn">
-                           <center>
-                              <Label alignment="CENTER" contentDisplay="CENTER" text="Sales" BorderPane.alignment="CENTER">
-                                 <font>
-                                    <Font size="28.0" />
-                                 </font>
-                              </Label>
-                           </center>
-                        </BorderPane>
-                        <BorderPane minWidth="150.0" onMouseClicked="#quotesClick" styleClass="sys-btn" GridPane.rowIndex="1">
+                        <BorderPane minWidth="150.0" onMouseClicked="#quotesClick" styleClass="sys-btn">
                            <center>
                               <Label text="Quotes" BorderPane.alignment="CENTER">
                                  <font>
@@ -66,16 +57,7 @@
                               </Label>
                            </center>
                         </BorderPane>
-                        <BorderPane minWidth="150.0" onMouseClicked="#invoicesClick" styleClass="sys-btn" GridPane.rowIndex="2">
-                           <center>
-                              <Label text="Invoices" BorderPane.alignment="CENTER">
-                                 <font>
-                                    <Font size="28.0" />
-                                 </font>
-                              </Label>
-                           </center>
-                        </BorderPane>
-                        <BorderPane minWidth="150.0" styleClass="sys-btn" GridPane.columnIndex="1" GridPane.rowIndex="2">
+                        <BorderPane minWidth="150.0" styleClass="sys-btn" GridPane.columnIndex="1" GridPane.rowIndex="1">
                            <center>
                               <Label BorderPane.alignment="CENTER">
                                  <font>
@@ -106,7 +88,7 @@
                               <Insets bottom="20.0" left="20.0" right="20.0" top="20.0" />
                            </HBox.margin>
                         </Button>
-                        <Button mnemonicParsing="false" onMouseClicked="#facilitiesClick" prefHeight="100.0" prefWidth="100.0" styleClass="sys-btn" text="Facilities">
+                        <Button mnemonicParsing="false" onMouseClicked="#resourcesClick" prefHeight="100.0" prefWidth="100.0" styleClass="sys-btn" text="Materials">
                            <HBox.margin>
                               <Insets bottom="20.0" left="20.0" right="20.0" top="20.0" />
                            </HBox.margin>
@@ -175,4 +157,17 @@
          </bottom>
       </BorderPane>
    </top>
+   <bottom>
+      <HBox BorderPane.alignment="CENTER">
+         <children>
+            <Label text="Server Status:" />
+            <Circle fx:id="shpServerStatus" fill="DODGERBLUE" radius="7.0" stroke="BLACK" strokeType="INSIDE" />
+            <Label fx:id="lblOutput" text="console output">
+               <HBox.margin>
+                  <Insets left="10.0" />
+               </HBox.margin>
+            </Label>
+         </children>
+      </HBox>
+   </bottom>
 </BorderPane>

@@ -5,49 +5,34 @@
  */
 package fadulousbms.controllers;
 
-import fadulousbms.auxilary.Globals;
 import fadulousbms.auxilary.IO;
 import fadulousbms.auxilary.Screen;
 import fadulousbms.managers.ResourceManager;
 import fadulousbms.managers.ScreenManager;
 import fadulousbms.managers.SessionManager;
-import fadulousbms.managers.SupplierManager;
 import fadulousbms.model.*;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.embed.swing.SwingFXUtils;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
-import javafx.scene.Group;
-import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.control.cell.TextFieldTableCell;
 import javafx.scene.image.Image;
-import javafx.scene.image.ImageView;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
-import javafx.stage.Stage;
 import javafx.util.Callback;
-
-import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 /**
  * views Controller class
  *
  * @author ghost
  */
-public class ResourcesController implements Initializable, Screen
+public class ResourcesController extends Screen implements Initializable
 {
-    @FXML
-    private ImageView img_profile;
-    @FXML
-    private Label user_name;
-    private ScreenManager   screen_mgr;
     @FXML
     private TableView<Resource> tblResources;
     @FXML
@@ -57,19 +42,19 @@ public class ResourcesController implements Initializable, Screen
     @Override
     public void refresh()
     {
-        ResourceManager.getInstance().initialize(screen_mgr);
+        ResourceManager.getInstance().initialize(this.getScreenManager());
 
         //Set Employee name
         Employee e = SessionManager.getInstance().getActiveEmployee();
         if(e!=null)
-            user_name.setText(e.toString());
+            this.getUserNameLabel().setText(e.toString());
         else IO.log(getClass().getName(), IO.TAG_ERROR, "No active sessions.");
         //Set Employee profile photo
         //Set default profile photo
         if(HomescreenController.defaultProfileImage!=null)
         {
             Image image = SwingFXUtils.toFXImage(HomescreenController.defaultProfileImage, null);
-            img_profile.setImage(image);
+            this.getProfileImageView().setImage(image);
         }else IO.log(getClass().getName(), "default profile image is null.", IO.TAG_ERROR);
 
         colId.setMinWidth(100);
@@ -89,6 +74,7 @@ public class ResourcesController implements Initializable, Screen
         lst_resources.addAll(ResourceManager.getInstance().getResources());
         tblResources.setItems(lst_resources);
 
+        final ScreenManager screenManager = this.getScreenManager();
         Callback<TableColumn<Resource, String>, TableCell<Resource, String>> cellFactory
                 =
                 new Callback<TableColumn<Resource, String>, TableCell<Resource, String>>()
@@ -130,7 +116,7 @@ public class ResourcesController implements Initializable, Screen
                                     {
                                         //System.out.println("Successfully added material quote number " + quoteItem.getItem_number());
                                         ResourceManager.getInstance().setSelected(resource);
-                                        screen_mgr.setScreen(Screens.VIEW_JOB.getScreen());
+                                        //screenManager.setScreen(Screens.VIEW_JOB.getScreen());
                                     });
 
                                     btnRemove.setOnAction(event ->
@@ -161,67 +147,11 @@ public class ResourcesController implements Initializable, Screen
                 ResourceManager.getInstance().setSelected(tblResources.getSelectionModel().getSelectedItem()));
     }
 
-    @FXML
-    public void showMain()
-    {
-        screen_mgr.setScreen(Screens.HOME.getScreen());
-    }
-
-    @FXML
-    public void showLogin()
-    {
-        try
-        {
-            Stage stage = new Stage();
-            stage.setTitle("Login to " + Globals.APP_NAME);
-            stage.setMinWidth(320);
-            stage.setMinHeight(280);
-            //stage.setAlwaysOnTop(true);
-
-            ScreenManager login_screen_mgr = new ScreenManager();
-            login_screen_mgr.loadScreen(Screens.LOGIN.getScreen(), getClass().getResource("../views/"+Screens.LOGIN.getScreen()));
-            login_screen_mgr.setScreen(Screens.LOGIN.getScreen());
-
-            Group root = new Group();
-            root.getChildren().add(login_screen_mgr);
-            Scene scene = new Scene(root);
-
-            stage.setScene(scene);
-            stage.show();
-            stage.centerOnScreen();
-            stage.setResizable(false);
-
-            //When the login screen is being dismissed set the user's first and last name
-            stage.setOnHiding(event ->
-            {
-                Employee e = SessionManager.getInstance().getActiveEmployee();
-                if(e!=null)
-                    user_name.setText(e.toString());
-            });
-
-        } catch (IOException ex)
-        {
-            Logger.getLogger(HomescreenController.class.getName()).log(Level.SEVERE, null, ex);
-        }
-    }
-
     /**
      * Initializes the controller class.
      */
     @Override
     public void initialize(URL url, ResourceBundle rb) 
     {
-    }
-
-    @FXML
-    public void previousScreen()
-    {
-        screen_mgr.setScreen(Screens.OPERATIONS.getScreen());
-    }
-
-    @Override
-    public void setParent(ScreenManager mgr)
-    {
-        screen_mgr = mgr;
     }
 }

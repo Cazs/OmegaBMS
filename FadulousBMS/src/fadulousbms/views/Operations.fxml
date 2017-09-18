@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.scene.shape.*?>
 <?import java.lang.*?>
 <?import javafx.geometry.*?>
 <?import javafx.scene.control.*?>
@@ -22,7 +23,7 @@
    <center>
       <StackPane BorderPane.alignment="CENTER">
          <children>
-            <BorderPane maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" styleClass="sys-body-production" StackPane.alignment="CENTER">
+            <BorderPane maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" styleClass="sys-body" StackPane.alignment="CENTER">
                <StackPane.margin>
                   <Insets />
                </StackPane.margin>
@@ -59,9 +60,9 @@
                               </Label>
                            </center>
                         </BorderPane>
-                        <BorderPane minHeight="100.0" onMouseClicked="#facilitiesClick" prefHeight="200.0" prefWidth="200.0" styleClass="sys-btn" GridPane.rowIndex="1">
+                        <BorderPane minHeight="100.0" onMouseClicked="#resourcesClick" prefHeight="200.0" prefWidth="200.0" styleClass="sys-btn" GridPane.rowIndex="1">
                            <center>
-                              <Label text="Facilities" BorderPane.alignment="CENTER">
+                              <Label text="Materials" BorderPane.alignment="CENTER">
                                  <font>
                                     <Font size="30.0" />
                                  </font>
@@ -94,7 +95,7 @@
       </StackPane>
    </center>
    <top>
-      <BorderPane styleClass="sys-nav-production" BorderPane.alignment="CENTER">
+      <BorderPane styleClass="sys-nav" BorderPane.alignment="CENTER">
          <top>
             <Label text="Airotek BMS" BorderPane.alignment="CENTER">
                <font>
@@ -145,4 +146,17 @@
          </bottom>
       </BorderPane>
    </top>
+   <bottom>
+      <HBox BorderPane.alignment="CENTER">
+         <children>
+            <Label text="Server Status:" />
+            <Circle fx:id="shpServerStatus" fill="DODGERBLUE" radius="7.0" stroke="BLACK" strokeType="INSIDE" />
+            <Label fx:id="lblOutput" text="console output">
+               <HBox.margin>
+                  <Insets left="10.0" />
+               </HBox.margin>
+            </Label>
+         </children>
+      </HBox>
+   </bottom>
 </BorderPane>

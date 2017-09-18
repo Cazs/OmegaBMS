@@ -31,7 +31,7 @@ import java.util.*;
  *
  * @author ghost
  */
-public class NewGenericQuoteController implements Initializable, Screen
+public class NewGenericQuoteController extends Screen implements Initializable
 {
     private ScreenManager screen_mgr;
     private boolean itemsModified;

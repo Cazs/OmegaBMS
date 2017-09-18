@@ -74,7 +74,7 @@ public class ComboBoxTableCell extends TableCell<BusinessObject, String>
             if(selected_pos<business_objects.length)
             {
                 updateItem(business_objects[selected_pos].get_id(), false);
-                if(oldValue!=null)
+                if(comboBox.isShowing() || comboBox.isFocused() && oldValue!=null)
                     commitEdit(business_objects[selected_pos].get_id());
                 //IO.log(TAG, IO.TAG_INFO, "selected: " + business_objects[selected_pos]);
             }
@@ -135,7 +135,7 @@ public class ComboBoxTableCell extends TableCell<BusinessObject, String>
             if(selected_pos>=0 && selected_pos<business_objects.length)
             {
                 updateItem(business_objects[selected_pos].get_id(), business_objects[selected_pos].get_id()==null);
-                if(oldValue!=null)
+                if(comboBox.isShowing() || comboBox.isFocused() && oldValue!=null)
                     commitEdit(business_objects[selected_pos].get_id());
                 //IO.log(TAG, IO.TAG_INFO, "selected: " + business_objects[selected_pos]);
             }else IO.log(TAG, IO.TAG_ERROR, "index out of bounds.");

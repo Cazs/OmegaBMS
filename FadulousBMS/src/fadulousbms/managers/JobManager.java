@@ -189,11 +189,10 @@ public class JobManager extends BusinessObjectManager
 
     public void setSelectedJob(Job job)
     {
-        if(job!=null)
-        {
-            this.selected_job = job;
+        this.selected_job = job;
+        if(selected_job!=null)
             IO.log(getClass().getName(), IO.TAG_INFO, "set selected job to: " + job);
-        }else IO.log(getClass().getName(), IO.TAG_ERROR, "job to be set as selected is null.");
+        //}else IO.log(getClass().getName(), IO.TAG_ERROR, "job to be set as selected is null.");
     }
 
     public void nullifySelected()

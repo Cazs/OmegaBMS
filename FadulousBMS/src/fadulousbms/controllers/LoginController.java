@@ -42,24 +42,19 @@ import javax.swing.JOptionPane;
  *
  * @author ghost
  */
-public class LoginController implements Initializable, Screen 
+public class LoginController extends Screen implements Initializable
 {
     @FXML
     private TextField txtUsr = new TextField();
     @FXML
     private TextField txtPwd = new TextField();
-    private ScreenManager screen_mgr;
-    @FXML
-    private ImageView img_profile;
-    @FXML
-    private final Label user_name = new Label();
 
     @Override
     public void refresh()
     {
         Employee e = SessionManager.getInstance().getActiveEmployee();
         if(e!=null)
-            user_name.setText(e.getFirstname() + " " + e.getLastname());
+            this.getUserNameLabel().setText(e.getFirstname() + " " + e.getLastname());
         else IO.log(getClass().getName(), IO.TAG_ERROR, "No active sessions.");
     }
 
@@ -78,7 +73,7 @@ public class LoginController implements Initializable, Screen
             BufferedImage bufferedImage;
             bufferedImage = ImageIO.read(new File("images/profile.png"));
             Image image = SwingFXUtils.toFXImage(bufferedImage, null);
-            img_profile.setImage(image);
+            this.getProfileImageView().setImage(image);
 
             /*for(int i=0;i<30;i++)
                 news_feed_tiles.getChildren().add(createTile());*/
@@ -88,26 +83,19 @@ public class LoginController implements Initializable, Screen
         }
     }
 
-    @Override
-    public void setParent(ScreenManager mgr) 
-    {
-        screen_mgr = mgr;
-    }
-
     @FXML
-    public void showMain()
+    public void resetPassword()
     {
-        screen_mgr.setScreen(Screens.HOME.getScreen());
+        try
+        {
+            if(this.getScreenManager().loadScreen(Screens.RESET_PWD.getScreen(),getClass().getResource("../views/"+Screens.RESET_PWD.getScreen())))
+                this.getScreenManager().setScreen(Screens.RESET_PWD.getScreen());
+            else IO.log(getClass().getName(), IO.TAG_ERROR, "could not load password reset screen.");
+        } catch (IOException e)
+        {
+            IO.log(getClass().getName(), IO.TAG_ERROR, e.getMessage());
+        }
     }
-
-    @FXML
-    public void createAccount()
-    {
-        screen_mgr.setScreen(Screens.CREATE_ACCOUNT.getScreen());
-    }
-
-    @FXML
-    public void resetPassword(){screen_mgr.setScreen(Screens.RESET_PWD.getScreen());}
 
     @FXML
     public void login()
@@ -123,11 +111,9 @@ public class LoginController implements Initializable, Screen
                     SessionManager ssn_mgr = SessionManager.getInstance();
                     ssn_mgr.addSession(session);
 
-                    //screen_mgr.getScreen(Screens.LOGIN.getScreen()).getParent()=null;
-                    //Stage stage = (Stage)txtUsr.getScene().getWindow();
-                    screen_mgr.removeScreen(screen_mgr.getScreen(Screens.LOGIN.getScreen()));
-                    screen_mgr.setScreen(Screens.HOME.getScreen());
-                    //stage.close();
+                    if(this.getScreenManager().loadScreen(Screens.HOME.getScreen(),getClass().getResource("../views/"+Screens.HOME.getScreen())))
+                        this.getScreenManager().setScreen(Screens.HOME.getScreen());
+                    else IO.log(getClass().getName(), IO.TAG_ERROR, "could not load home screen.");
                 }catch(ConnectException ex)
                 {
                     JOptionPane.showMessageDialog(null, ex.getMessage() + ", \nis the server up? are you connected to the network?", "Login failure", JOptionPane.ERROR_MESSAGE);
@@ -136,7 +122,6 @@ public class LoginController implements Initializable, Screen
                 {
                     JOptionPane.showMessageDialog(null, ex.getMessage(), "Login failure", JOptionPane.ERROR_MESSAGE);
                     IO.log(getClass().getName(), IO.TAG_ERROR, ex.getMessage());
-                    //Logger.getLogger(LoginController.class.getName()).log(Level.SEVERE, null, ex);
                 }
             }else{
                 JOptionPane.showMessageDialog(null, "Invalid entry.", "Login failure", JOptionPane.ERROR_MESSAGE);
@@ -145,8 +130,6 @@ public class LoginController implements Initializable, Screen
         } catch (IOException ex) 
         {
             IO.logAndAlert(getClass().getName(), ex.getMessage(), IO.TAG_ERROR);
-            //Logger.getLogger(LoginController.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
-    
 }

@@ -39,13 +39,8 @@ import java.util.logging.Logger;
  *
  * @author ghost
  */
-public class JobsController implements Initializable, Screen
+public class JobsController extends Screen implements Initializable
 {
-    @FXML
-    private ImageView img_profile;
-    @FXML
-    private Label user_name;
-    private ScreenManager   screen_mgr;
     @FXML
     private TableView<Job>    tblJobs;
     @FXML
@@ -59,18 +54,17 @@ public class JobsController implements Initializable, Screen
         //Set Employee name
         Employee e = SessionManager.getInstance().getActiveEmployee();
         if(e!=null)
-            user_name.setText(e.toString());
+            this.getUserNameLabel().setText(e.toString());
         else IO.log(getClass().getName(), IO.TAG_ERROR, "No active sessions.");
         //Set Employee profile photo
         //Set default profile photo
         if(HomescreenController.defaultProfileImage!=null)
         {
             Image image = SwingFXUtils.toFXImage(HomescreenController.defaultProfileImage, null);
-            img_profile.setImage(image);
+            this.getProfileImageView().setImage(image);
         }else IO.log(getClass().getName(), "default profile image is null.", IO.TAG_ERROR);
 
-
-        JobManager.getInstance().initialize(screen_mgr);
+        JobManager.getInstance().initialize(this.getScreenManager());
 
         colJobNum.setMinWidth(100);
         colJobNum.setCellValueFactory(new PropertyValueFactory<>("job_number"));
@@ -100,6 +94,7 @@ public class JobsController implements Initializable, Screen
         lst_jobs.addAll(JobManager.getInstance().getJobs());
         tblJobs.setItems(lst_jobs);
 
+        final ScreenManager screenManager = this.getScreenManager();
         Callback<TableColumn<Job, String>, TableCell<Job, String>> cellFactory
                 =
                 new Callback<TableColumn<Job, String>, TableCell<Job, String>>()
@@ -146,9 +141,16 @@ public class JobsController implements Initializable, Screen
 
                                     btnView.setOnAction(event ->
                                     {
-                                        //System.out.println("Successfully added material quote number " + quoteItem.getItem_number());
                                         JobManager.getInstance().setSelectedJob(getTableView().getItems().get(getIndex()));
-                                        screen_mgr.setScreen(Screens.VIEW_JOB.getScreen());
+                                        try
+                                        {
+                                            if(screenManager.loadScreen(Screens.VIEW_JOB.getScreen(),getClass().getResource("../views/"+Screens.VIEW_JOB.getScreen())))
+                                                screenManager.setScreen(Screens.VIEW_JOB.getScreen());
+                                            else IO.log(getClass().getName(), IO.TAG_ERROR, "could not load jobs viewer screen.");
+                                        } catch (IOException e)
+                                        {
+                                            IO.log(getClass().getName(), IO.TAG_ERROR, e.getMessage());
+                                        }
                                     });
 
                                     btnRemove.setOnAction(event ->
@@ -179,84 +181,6 @@ public class JobsController implements Initializable, Screen
 
         tblJobs.getSelectionModel().selectedIndexProperty().addListener((observable, oldValue, newValue) ->
                 JobManager.getInstance().setSelectedJob(tblJobs.getSelectionModel().getSelectedItem()));
-        /*try
-        {
-            BufferedImage bufferedImage;
-            bufferedImage = ImageIO.read(new File("images/profile.png"));
-            Image image = SwingFXUtils.toFXImage(bufferedImage, null);
-            img_profile.setImage(image);
-
-            if(SessionManager.getInstance().getActive()!=null)
-            {
-                if(!SessionManager.getInstance().getActive().isExpired())
-                {
-                    ArrayList<AbstractMap.SimpleEntry<String, String>> headers = new ArrayList<>();
-                    headers.add(new AbstractMap.SimpleEntry<>("Cookie",
-                            SessionManager.getInstance().getActive().getSessionId()));
-
-                    byte[] file = RemoteComms.sendFileRequest("logo", headers);
-                    ByteArrayInputStream bis = new ByteArrayInputStream(file);
-                    BufferedImage buff_img = ImageIO.read(bis);
-                    Image img = SwingFXUtils.toFXImage(buff_img, null);
-
-                    img_logo.setImage(img);
-                }else IO.showMessage("Session Expired", "Active session has expired.", IO.TAG_ERROR);
-            }else IO.showMessage("Session Expired", "No active sessions.", IO.TAG_ERROR);
-            /*for(int i=0;i<30;i++)
-                news_feed_tiles.getChildren().add(createTile());*
-        }catch (IOException ex)
-        {
-            IO.log(getClass().getName(), IO.TAG_ERROR, ex.getMessage());
-        }
-
-        Employee e = SessionManager.getInstance().getActiveEmployee();
-        if(e!=null)
-            user_name.setText(e.getFirstname() + " " + e.getLastname());
-        else IO.log(getClass().getName(), IO.TAG_ERROR, "No active sessions.");*/
-    }
-
-    @FXML
-    public void showMain()
-    {
-        screen_mgr.setScreen(Screens.HOME.getScreen());
-    }
-
-    @FXML
-    public void showLogin()
-    {
-        try
-        {
-            Stage stage = new Stage();
-            stage.setTitle("Login to BMS Engine");
-            stage.setMinWidth(320);
-            stage.setMinHeight(280);
-            //stage.setAlwaysOnTop(true);
-
-            ScreenManager login_screen_mgr = new ScreenManager();
-            login_screen_mgr.loadScreen(Screens.LOGIN.getScreen(), getClass().getResource("../views/"+Screens.LOGIN.getScreen()));
-            login_screen_mgr.setScreen(Screens.LOGIN.getScreen());
-
-            Group root = new Group();
-            root.getChildren().add(login_screen_mgr);
-            Scene scene = new Scene(root);
-
-            stage.setScene(scene);
-            stage.show();
-            stage.centerOnScreen();
-            stage.setResizable(false);
-
-            //When the login screen is being dismissed set the user's first and last name
-            stage.setOnHiding(event ->
-            {
-                Employee e = SessionManager.getInstance().getActiveEmployee();
-                if(e!=null)
-                    user_name.setText(e.toString());
-            });
-
-        } catch (IOException ex)
-        {
-            Logger.getLogger(HomescreenController.class.getName()).log(Level.SEVERE, null, ex);
-        }
     }
 
     /**
@@ -321,24 +245,5 @@ public class JobsController implements Initializable, Screen
                 };
 
         colAction.setCellFactory(cellFactory);*/
-    }
-
-    @FXML
-    public void newQuote()
-    {
-        QuoteManager.getInstance().nullifySelected();
-        screen_mgr.setScreen(Screens.NEW_QUOTE.getScreen());
-    }
-
-    @FXML
-    public void previousScreen()
-    {
-        screen_mgr.setScreen(Screens.OPERATIONS.getScreen());
-    }
-
-    @Override
-    public void setParent(ScreenManager mgr)
-    {
-        screen_mgr = mgr;
     }
 }

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import java.lang.*?>
+<?import javafx.scene.shape.*?>
 <?import javafx.scene.control.cell.*?>
 <?import javafx.scene.text.*?>
 <?import javafx.geometry.*?>
@@ -36,11 +36,6 @@
             <Button alignment="CENTER" contentDisplay="CENTER" defaultButton="true" ellipsisString="x" layoutX="10.0" layoutY="10.0" minHeight="35.0" minWidth="70.0" mnemonicParsing="false" onMouseClicked="#apply" styleClass="btnAdd" stylesheets="@../styles/home.css" text="Create Quote">
                <HBox.margin>
                   <Insets left="5.0" right="5.0" />
-               </HBox.margin>
-            </Button>
-            <Button minHeight="35.0" minWidth="100.0" mnemonicParsing="false" onMouseClicked="#createSale" styleClass="btnAdd" stylesheets="@../styles/home.css" text="Create Sale">
-               <HBox.margin>
-                  <Insets right="5.0" />
                </HBox.margin>
             </Button>
             <Button fx:id="btnBack" ellipsisString="x" minHeight="35.0" minWidth="70.0" mnemonicParsing="false" onMouseClicked="#previousScreen" styleClass="btnBack" stylesheets="@../styles/home.css" text="Back" />
@@ -242,5 +237,16 @@
                </TableColumn>
            </columns>
        </TableView>
+      <HBox>
+         <children>
+            <Label text="Server Status:" />
+            <Circle fx:id="shpServerStatus" fill="DODGERBLUE" radius="7.0" stroke="BLACK" strokeType="INSIDE" />
+            <Label fx:id="lblOutput" text="console output">
+               <HBox.margin>
+                  <Insets left="10.0" />
+               </HBox.margin>
+            </Label>
+         </children>
+      </HBox>
    </children>
 </VBox>

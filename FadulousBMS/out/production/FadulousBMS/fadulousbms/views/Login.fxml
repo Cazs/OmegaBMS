@@ -1,28 +1,18 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import java.lang.*?>
+<?import javafx.scene.shape.*?>
 <?import javafx.geometry.*?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.image.*?>
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.text.*?>
-<?import javafx.geometry.Insets?>
-<?import javafx.scene.control.Button?>
-<?import javafx.scene.control.Label?>
-<?import javafx.scene.image.ImageView?>
-<?import javafx.scene.layout.BorderPane?>
-<?import javafx.scene.layout.ColumnConstraints?>
-<?import javafx.scene.layout.GridPane?>
-<?import javafx.scene.layout.HBox?>
-<?import javafx.scene.layout.RowConstraints?>
-<?import javafx.scene.layout.StackPane?>
-<?import javafx.scene.text.Font?>
 
 <BorderPane maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="600.0" minWidth="650.0" styleClass="border-pane" stylesheets="@../styles/home.css" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="fadulousbms.controllers.LoginController">
    <center>
       <StackPane BorderPane.alignment="CENTER">
          <children>
-            <BorderPane maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" StackPane.alignment="CENTER">
+            <BorderPane maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" styleClass="sys-body" StackPane.alignment="CENTER">
                <StackPane.margin>
                   <Insets />
                </StackPane.margin>
@@ -38,9 +28,15 @@
                       <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
                     </rowConstraints>
                      <children>
-                        <Label text="Username/eMail" />
+                        <Label text="Username/eMail" textFill="#e1e1e1">
+                           <font>
+                              <Font size="15.0" />
+                           </font></Label>
                         <TextField fx:id="txtUsr" minWidth="300.0" GridPane.columnIndex="1" />
-                        <Label text="Password" GridPane.rowIndex="1" />
+                        <Label text="Password" textFill="#f8f4f4" GridPane.rowIndex="1">
+                           <font>
+                              <Font size="17.0" />
+                           </font></Label>
                         <HBox alignment="CENTER" GridPane.columnIndex="1" GridPane.rowIndex="1">
                            <children>
                               <PasswordField fx:id="txtPwd" minWidth="230.0" HBox.hgrow="ALWAYS">
@@ -70,6 +66,9 @@
                                  <HBox.margin>
                                     <Insets left="20.0" />
                                  </HBox.margin>
+                                 <font>
+                                    <Font size="14.0" />
+                                 </font>
                               </Hyperlink>
                            </children>
                         </HBox>
@@ -84,7 +83,7 @@
       </StackPane>
    </center>
    <top>
-      <BorderPane styleClass="nav" BorderPane.alignment="CENTER">
+      <BorderPane styleClass="sys-nav" BorderPane.alignment="CENTER">
          <top>
             <Label text="Airotek BMS" BorderPane.alignment="CENTER">
                <font>
@@ -93,7 +92,7 @@
             </Label>
          </top>
          <bottom>
-            <BorderPane style="-fx-border-color: #343434; -fx-border-insets: -50 -10 0 -10;" BorderPane.alignment="CENTER">
+            <BorderPane BorderPane.alignment="CENTER">
                <left>
                   <HBox alignment="CENTER_LEFT" BorderPane.alignment="CENTER">
                      <children>
@@ -119,7 +118,7 @@
                <right>
                   <HBox alignment="CENTER_RIGHT" prefHeight="100.0" prefWidth="200.0" BorderPane.alignment="CENTER">
                      <children>
-                        <Button fx:id="btnHome" mnemonicParsing="false" onMouseClicked="#showMain" text="Home" />
+                        <Button fx:id="btnHome" mnemonicParsing="false" onMouseClicked="#showMain" styleClass="btnDefault" text="Home" />
                      </children>
                   </HBox>
                </right>
@@ -127,4 +126,17 @@
          </bottom>
       </BorderPane>
    </top>
+   <bottom>
+      <HBox BorderPane.alignment="CENTER">
+         <children>
+            <Label text="Server Status: " />
+            <Circle fx:id="shpServerStatus" fill="DODGERBLUE" radius="7.0" stroke="BLACK" strokeType="INSIDE" />
+            <Label fx:id="lblOutput" text="console output">
+               <HBox.margin>
+                  <Insets left="10.0" />
+               </HBox.margin>
+            </Label>
+         </children>
+      </HBox>
+   </bottom>
 </BorderPane>

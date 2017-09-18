@@ -428,6 +428,12 @@ public class Job implements BusinessObject, Serializable
         }
         return null;
     }
+
+    @Override
+    public String toString()
+    {
+        return "Job #"+job_number;
+    }
     /*public Employee[] getAssignedEmployees() 
     {
         return assigned_employees;

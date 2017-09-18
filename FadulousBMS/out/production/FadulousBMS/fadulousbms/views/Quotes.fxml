@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.scene.shape.*?>
 <?import javafx.scene.effect.*?>
 <?import javafx.geometry.*?>
 <?import javafx.scene.image.*?>
@@ -43,7 +44,7 @@
                <center>
                   <VBox alignment="CENTER" BorderPane.alignment="CENTER">
                      <children>
-                        <Label text="QUOTES">
+                        <Label text="Accepted Quotes">
                            <font>
                               <Font size="24.0" />
                            </font>
@@ -90,152 +91,72 @@
             </Label>
          </top>
       </BorderPane>
-      <SplitPane dividerPositions="0.5" orientation="VERTICAL" VBox.vgrow="ALWAYS">
-        <items>
-            <VBox prefHeight="200.0" prefWidth="100.0">
-               <children>
-                  <BorderPane maxHeight="40.0">
-                     <center>
-                        <Label alignment="CENTER" contentDisplay="CENTER" maxHeight="40.0" text="Accepted Quotes" BorderPane.alignment="CENTER">
-                           <font>
-                              <Font size="20.0" />
-                           </font>
-                        </Label>
-                     </center>
-                  </BorderPane>
-                  <TableView fx:id="tblQuotes" editable="true" tableMenuButtonVisible="true" VBox.vgrow="ALWAYS">
-                    <columns>
-                      <TableColumn fx:id="colId" maxWidth="1.7976931348623157E308" minWidth="80.0" prefWidth="-1.0" text="Quote ID" visible="false">
-                          <cellValueFactory>
-                              <PropertyValueFactory property="_id" />
-                          </cellValueFactory>
-                      </TableColumn>
-                      <TableColumn fx:id="colClient" maxWidth="1.7976931348623157E308" minWidth="180.0" prefWidth="-1.0" text="Client">
-                          <cellValueFactory>
-                              <PropertyValueFactory property="client_id" />
-                          </cellValueFactory>
-                      </TableColumn>
-                        <TableColumn fx:id="colRequest" maxWidth="1.7976931348623157E308" minWidth="250.0" prefWidth="-1.0" text="Request">
-                            <cellValueFactory>
-                                <PropertyValueFactory property="request" />
-                            </cellValueFactory>
-                        </TableColumn>
-                        <TableColumn fx:id="colSitename" maxWidth="1.7976931348623157E308" minWidth="150.0" prefWidth="-1.0" text="Sitename">
-                            <cellValueFactory>
-                                <PropertyValueFactory property="sitename" />
-                            </cellValueFactory>
-                        </TableColumn>
-                        <TableColumn fx:id="colContactPerson" maxWidth="1.7976931348623157E308" minWidth="150.0" prefWidth="-1.0" text="Contact Person">
-                            <cellValueFactory>
-                                <PropertyValueFactory property="contact_person_id" />
-                            </cellValueFactory>
-                        </TableColumn>
-                        <TableColumn fx:id="colDateGenerated" editable="false" maxWidth="1.7976931348623157E308" minWidth="150.0" prefWidth="-1.0" text="Date Logged">
-                            <cellValueFactory>
-                                <PropertyValueFactory property="date_generated" />
-                            </cellValueFactory>
-                        </TableColumn>
-                        <TableColumn fx:id="colStatus" prefWidth="75.0" text="Status" visible="false">
-                            <cellValueFactory>
-                                <PropertyValueFactory property="status" />
-                            </cellValueFactory>
-                        </TableColumn>
-                        <TableColumn fx:id="colCreator" maxWidth="1.7976931348623157E308" minWidth="150.0" prefWidth="-1.0" text="Creator" />
-                        <TableColumn fx:id="colTotal" maxWidth="1.7976931348623157E308" minWidth="150.0" prefWidth="-1.0" text="Total" />
-                        <TableColumn fx:id="colRevision" maxWidth="1.7976931348623157E308" minWidth="80.0" prefWidth="-1.0" text="Revision" visible="false" />
-                        <TableColumn fx:id="colExtra" maxWidth="1.7976931348623157E308" minWidth="80.0" prefWidth="-1.0" text="Extra" visible="false">
-                            <cellValueFactory>
-                                <PropertyValueFactory property="extra" />
-                            </cellValueFactory>
-                        </TableColumn>
-                        <TableColumn fx:id="colAction" maxWidth="1.7976931348623157E308" minWidth="220.0" prefWidth="-1.0" text="Action">
-                           <cellValueFactory>
-                              <PropertyValueFactory property="extra" />
-                           </cellValueFactory>
-                        </TableColumn>
-                    </columns>
-                  </TableView>
-               </children>
-            </VBox>
-            <VBox prefHeight="200.0" prefWidth="100.0" style="-fx-background-color: #7A7A7A;">
-               <children>
-                  <BorderPane maxHeight="40.0">
-                     <center>
-                        <Label alignment="CENTER" contentDisplay="CENTER" maxHeight="40.0" text="Pending Quotes" BorderPane.alignment="CENTER">
-                           <font>
-                              <Font size="20.0" />
-                           </font>
-                        </Label>
-                     </center>
-                  </BorderPane>
-                  <TableView fx:id="tblGenericQuotes" editable="true" tableMenuButtonVisible="true" VBox.vgrow="ALWAYS">
-                     <columns>
-                        <TableColumn fx:id="colGenericQuoteNumber" maxWidth="1.7976931348623157E308" minWidth="80.0" prefWidth="-1.0" text="Quote Number" visible="false">
-                           <cellValueFactory>
-                              <PropertyValueFactory property="_id" />
-                           </cellValueFactory>
-                        </TableColumn>
-                        <TableColumn fx:id="colGenericQuoteClient" maxWidth="1.7976931348623157E308" minWidth="180.0" prefWidth="-1.0" text="Client">
-                           <cellValueFactory>
-                              <PropertyValueFactory property="client" />
-                           </cellValueFactory>
-                        </TableColumn>
-                        <TableColumn fx:id="colGenericQuoteRequest" maxWidth="1.7976931348623157E308" minWidth="250.0" prefWidth="-1.0" text="Request">
-                           <cellValueFactory>
-                              <PropertyValueFactory property="request" />
-                           </cellValueFactory>
-                        </TableColumn>
-                        <TableColumn fx:id="colGenericQuoteSitename" maxWidth="1.7976931348623157E308" minWidth="150.0" prefWidth="-1.0" text="Sitename">
-                           <cellValueFactory>
-                              <PropertyValueFactory property="sitename" />
-                           </cellValueFactory>
-                        </TableColumn>
-                        <TableColumn fx:id="colGenericQuoteContact" maxWidth="1.7976931348623157E308" minWidth="150.0" prefWidth="-1.0" text="Contact Person">
-                           <cellValueFactory>
-                              <PropertyValueFactory property="contact_person" />
-                           </cellValueFactory>
-                        </TableColumn>
-                         <TableColumn fx:id="colCell" maxWidth="1.7976931348623157E308" minWidth="150.0" prefWidth="-1.0" text="Cell" visible="false">
-                             <cellValueFactory>
-                                 <PropertyValueFactory property="cell" />
-                             </cellValueFactory>
-                         </TableColumn>
-                         <TableColumn fx:id="colTel" maxWidth="1.7976931348623157E308" minWidth="150.0" prefWidth="-1.0" text="Tel" visible="false">
-                             <cellValueFactory>
-                                 <PropertyValueFactory property="tel" />
-                             </cellValueFactory>
-                         </TableColumn>
-                         <TableColumn fx:id="colEmail" maxWidth="1.7976931348623157E308" minWidth="150.0" prefWidth="-1.0" text="eMail" visible="false">
-                             <cellValueFactory>
-                                 <PropertyValueFactory property="email" />
-                             </cellValueFactory>
-                         </TableColumn>
-                        <TableColumn fx:id="colGenericQuoteDate" editable="false" maxWidth="1.7976931348623157E308" minWidth="150.0" prefWidth="-1.0" text="Date Logged">
-                           <cellValueFactory>
-                              <PropertyValueFactory property="date_generated" />
-                           </cellValueFactory>
-                        </TableColumn>
-                        <TableColumn fx:id="colGenericQuoteStatus" prefWidth="75.0" text="Status" visible="false">
-                           <cellValueFactory>
-                              <PropertyValueFactory property="status" />
-                           </cellValueFactory>
-                        </TableColumn>
-                        <TableColumn fx:id="colGenericQuoteCreator" maxWidth="1.7976931348623157E308" minWidth="150.0" prefWidth="-1.0" text="Creator" />
-                        <TableColumn fx:id="colGenericQuoteExtra" maxWidth="1.7976931348623157E308" minWidth="80.0" prefWidth="-1.0" text="Extra" visible="false">
-                           <cellValueFactory>
-                              <PropertyValueFactory property="extra" />
-                           </cellValueFactory>
-                        </TableColumn>
-                        <TableColumn fx:id="colGenericQuoteAction" maxWidth="1.7976931348623157E308" minWidth="220.0" prefWidth="-1.0" text="Action">
-                           <cellValueFactory>
-                              <PropertyValueFactory property="extra" />
-                           </cellValueFactory>
-                        </TableColumn>
-                     </columns>
-                  </TableView>
-               </children>
-            </VBox>
-        </items>
-      </SplitPane>
+      <VBox VBox.vgrow="ALWAYS">
+         <children>
+            <TableView fx:id="tblQuotes" editable="true" tableMenuButtonVisible="true" VBox.vgrow="ALWAYS">
+              <columns>
+                <TableColumn fx:id="colId" maxWidth="1.7976931348623157E308" minWidth="80.0" prefWidth="-1.0" text="Quote ID" visible="false">
+                    <cellValueFactory>
+                        <PropertyValueFactory property="_id" />
+                    </cellValueFactory>
+                </TableColumn>
+                <TableColumn fx:id="colClient" maxWidth="1.7976931348623157E308" minWidth="180.0" prefWidth="-1.0" text="Client">
+                    <cellValueFactory>
+                        <PropertyValueFactory property="client_id" />
+                    </cellValueFactory>
+                </TableColumn>
+                  <TableColumn fx:id="colRequest" maxWidth="1.7976931348623157E308" minWidth="250.0" prefWidth="-1.0" text="Request">
+                      <cellValueFactory>
+                          <PropertyValueFactory property="request" />
+                      </cellValueFactory>
+                  </TableColumn>
+                  <TableColumn fx:id="colSitename" maxWidth="1.7976931348623157E308" minWidth="150.0" prefWidth="-1.0" text="Sitename">
+                      <cellValueFactory>
+                          <PropertyValueFactory property="sitename" />
+                      </cellValueFactory>
+                  </TableColumn>
+                  <TableColumn fx:id="colContactPerson" maxWidth="1.7976931348623157E308" minWidth="150.0" prefWidth="-1.0" text="Contact Person">
+                      <cellValueFactory>
+                          <PropertyValueFactory property="contact_person_id" />
+                      </cellValueFactory>
+                  </TableColumn>
+                  <TableColumn fx:id="colDateGenerated" editable="false" maxWidth="1.7976931348623157E308" minWidth="150.0" prefWidth="-1.0" text="Date Logged">
+                      <cellValueFactory>
+                          <PropertyValueFactory property="date_generated" />
+                      </cellValueFactory>
+                  </TableColumn>
+                  <TableColumn fx:id="colStatus" prefWidth="75.0" text="Status" visible="false">
+                      <cellValueFactory>
+                          <PropertyValueFactory property="status" />
+                      </cellValueFactory>
+                  </TableColumn>
+                  <TableColumn fx:id="colCreator" maxWidth="1.7976931348623157E308" minWidth="150.0" prefWidth="-1.0" text="Creator" />
+                  <TableColumn fx:id="colTotal" maxWidth="1.7976931348623157E308" minWidth="150.0" prefWidth="-1.0" text="Total" />
+                  <TableColumn fx:id="colRevision" maxWidth="1.7976931348623157E308" minWidth="80.0" prefWidth="-1.0" text="Revision" visible="false" />
+                  <TableColumn fx:id="colExtra" maxWidth="1.7976931348623157E308" minWidth="80.0" prefWidth="-1.0" text="Extra" visible="false">
+                      <cellValueFactory>
+                          <PropertyValueFactory property="extra" />
+                      </cellValueFactory>
+                  </TableColumn>
+                  <TableColumn fx:id="colAction" maxWidth="1.7976931348623157E308" minWidth="220.0" prefWidth="-1.0" text="Action">
+                     <cellValueFactory>
+                        <PropertyValueFactory property="extra" />
+                     </cellValueFactory>
+                  </TableColumn>
+              </columns>
+            </TableView>
+         </children>
+      </VBox>
+      <HBox>
+         <children>
+            <Label text="Server Status:" />
+            <Circle fx:id="shpServerStatus" fill="DODGERBLUE" radius="7.0" stroke="BLACK" strokeType="INSIDE" />
+            <Label fx:id="lblOutput" text="console output">
+               <HBox.margin>
+                  <Insets left="10.0" />
+               </HBox.margin>
+            </Label>
+         </children>
+      </HBox>
    </children>
 </VBox>

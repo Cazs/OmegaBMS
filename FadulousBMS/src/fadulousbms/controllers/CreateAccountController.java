@@ -34,40 +34,26 @@ import java.util.ResourceBundle;
  *
  * @author ghost
  */
-public class CreateAccountController implements Initializable, Screen
+public class CreateAccountController extends Screen implements Initializable
 {
-    private ScreenManager screen_mgr;
-    @FXML
-    private ImageView img_profile;
-    @FXML
-    private final Label user_name = new Label();
     @FXML
     private TextField txtUsername;// = new TextField();
-
     @FXML
     private TextField txtPassword;// = new TextField();
-
     @FXML
     private TextField txtFirstname;// = new TextField();
-
     @FXML
     private TextField txtLastname;// = new TextField();
-
     @FXML
     private ComboBox cbxSex, cbxAccessLevel;// = new ComboBox();
-
     @FXML
     private TextField txtEmail;// = new TextField();
-
     @FXML
     private TextField txtTelephone;// = new TextField();
-
     @FXML
     private TextField txtCellphone;// = new TextField();
-
     @FXML
     private TextArea txtOther;// = new TextArea();
-
     private String[] access_levels = {"NONE", "NORMAL", "ADMIN", "SUPER"};
 
     @Override
@@ -75,7 +61,7 @@ public class CreateAccountController implements Initializable, Screen
     {
         Employee e = SessionManager.getInstance().getActiveEmployee();
         if(e!=null)
-            user_name.setText(e.getFirstname() + " " + e.getLastname());
+            this.getUserNameLabel().setText(e.getFirstname() + " " + e.getLastname());
         else IO.log(getClass().getName(), IO.TAG_ERROR, "No active sessions.");
 
         cbxAccessLevel.setItems(FXCollections.observableArrayList(access_levels));
@@ -92,66 +78,15 @@ public class CreateAccountController implements Initializable, Screen
             BufferedImage bufferedImage;
             bufferedImage = ImageIO.read(new File("images/profile.png"));
             Image image = SwingFXUtils.toFXImage(bufferedImage, null);
-            img_profile.setImage(image);
+            this.getProfileImageView().setImage(image);
         }catch (IOException ex)
         {
             IO.log(getClass().getName(), IO.TAG_ERROR, ex.getMessage());
         }
-    }    
-
-    @Override
-    public void setParent(ScreenManager mgr) 
-    {
-        screen_mgr = mgr;
-    }
-
-    public void showLogin()
-    {
-        /*try
-        {
-            Stage stage = new Stage();
-            //stage.setAlwaysOnTop(true);
-            stage.setTitle("Login to BMS Engine");
-            stage.setMinWidth(320);
-            stage.setMinHeight(280);
-            stage.setAlwaysOnTop(true);
-
-            ScreenManager login_screen_mgr = new ScreenManager();
-
-            login_screen_mgr.loadScreen(Screens.LOGIN.getScreen(), getClass().getResource("../../views/"+Screens.LOGIN.getScreen()));
-            */
-        screen_mgr.setScreen(Screens.LOGIN.getScreen());
-
-            /*Group root = new Group();
-            root.getChildren().add(screen_mgr);
-            Scene scene = new Scene(root);
-
-            stage.setScene(scene);
-            stage.show();
-            stage.centerOnScreen();
-            stage.setResizable(false);
-
-            //When the login screen is being dismissed set the user's first and last name
-            stage.setOnHiding(event ->
-            {
-                Employee e = SessionManager.getInstance().getActiveEmployee();
-                if(e!=null)
-                    user_name.setText(e.getFirstname() + " " + e.getLastname());
-            });*/
-
-        /*} catch (IOException ex)
-        {
-            Logger.getLogger(HomescreenController.class.getName()).log(Level.SEVERE, null, ex);
-        }*/
     }
 
     @FXML
-    public void showMain()
-    {
-        screen_mgr.setScreen(Screens.HOME.getScreen());
-    }
-
-    public void createAccount() throws IOException
+    public void createAccountSubmit()
     {
         int sex_index = cbxSex.getSelectionModel().selectedIndexProperty().get();
 
@@ -198,13 +133,20 @@ public class CreateAccountController implements Initializable, Screen
                 if(txtOther.getText()!=null)
                     params.add(new AbstractMap.SimpleEntry<>("other", txtOther.getText()));
 
-                HttpURLConnection connection = RemoteComms.postData("/api/employee/add", params, null);
-                if(connection.getResponseCode()==HttpURLConnection.HTTP_OK)
+                try
                 {
-                    IO.logAndAlert("Account Creation Success", IO.readStream(connection.getInputStream()), IO.TAG_INFO);
-                }else IO.logAndAlert("Account Creation Failure", IO.readStream(connection.getErrorStream()), IO.TAG_ERROR);
+                    HttpURLConnection connection = RemoteComms.postData("/api/employee/add", params, null);
+                    if (connection.getResponseCode() == HttpURLConnection.HTTP_OK)
+                    {
+                        IO.logAndAlert("Account Creation Success", IO.readStream(connection.getInputStream()), IO.TAG_INFO);
+                    } else
+                        IO.logAndAlert("Account Creation Failure", IO.readStream(connection.getErrorStream()), IO.TAG_ERROR);
 
-                connection.disconnect();
+                    connection.disconnect();
+                }catch (IOException e)
+                {
+                    IO.log(getClass().getName(), IO.TAG_ERROR, e.getMessage());
+                }
             }
         }
     }

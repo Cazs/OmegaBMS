@@ -55,20 +55,10 @@ import javax.swing.*;
  *
  * @author ghost
  */
-public class HomescreenController implements Initializable, Screen
+public class HomescreenController extends Screen implements Initializable
 {
-    //@FXML
-    //TilePane news_feed_tiles; //= new TilePane();
-    @FXML
-    private BorderPane btnOperations;
-    private ScreenManager screen_mgr;
-    @FXML
-    private ImageView img_profile;// = new ImageView();
-    @FXML
-    private Label user_name;
     @FXML
     private Button btnCreateAccount;
-    public static BufferedImage defaultProfileImage;
 
     private ColorAdjust colorAdjust = new ColorAdjust();
 
@@ -78,7 +68,7 @@ public class HomescreenController implements Initializable, Screen
         Employee e = SessionManager.getInstance().getActiveEmployee();
         if(e!=null)
         {
-            user_name.setText(e.getFirstname() + " " + e.getLastname());
+            this.getUserNameLabel().setText(e.getFirstname() + " " + e.getLastname());
             if(e.getAccessLevel() >= AccessLevels.ADMIN.getLevel())
             {
                 IO.log(getClass().getName(), IO.TAG_INFO, "enabling account creation button.");
@@ -87,7 +77,7 @@ public class HomescreenController implements Initializable, Screen
         }
         else IO.log(getClass().getName(), IO.TAG_ERROR, "No active sessions.");
     }
-    
+
     /**
      * Initializes the controller class.
      */
@@ -98,14 +88,10 @@ public class HomescreenController implements Initializable, Screen
         {
             defaultProfileImage = ImageIO.read(new File("images/profile.png"));
             Image image = SwingFXUtils.toFXImage(defaultProfileImage, null);
-            img_profile.setImage(image);
+            this.getProfileImageView().setImage(image);
             //img_profile.setImage(new Image("dist/profile.png"));
             colorAdjust.setBrightness(0.0);
-            //btnOperations.setEffect(colorAdjust);
 
-            /*for(int i=0;i<30;i++)
-                news_feed_tiles.getChildren().add(createTile());*/
-            //Set current logged in employee
             refresh();
         }catch (IOException ex)
         {
@@ -134,9 +120,9 @@ public class HomescreenController implements Initializable, Screen
             {
                 try
                 {
-                    screen_mgr.loadScreen(Screens.OPERATIONS.getScreen(),
+                    this.getScreenManager().loadScreen(Screens.OPERATIONS.getScreen(),
                             HomescreenController.class.getResource("../views/" + Screens.OPERATIONS.getScreen()));
-                    screen_mgr.setScreen(Screens.OPERATIONS.getScreen());
+                    this.getScreenManager().setScreen(Screens.OPERATIONS.getScreen());
                 } catch (IOException ex)
                 {
                     Logger.getLogger(HomescreenController.class.getName()).log(Level.SEVERE, null, ex);
@@ -159,9 +145,9 @@ public class HomescreenController implements Initializable, Screen
             {
                 try
                 {
-                    screen_mgr.loadScreen(Screens.SAFETY.getScreen(),
+                    this.getScreenManager().loadScreen(Screens.SAFETY.getScreen(),
                             HomescreenController.class.getResource("../views/" + Screens.SAFETY.getScreen()));
-                    screen_mgr.setScreen(Screens.SAFETY.getScreen());
+                    this.getScreenManager().setScreen(Screens.SAFETY.getScreen());
                 } catch (IOException ex)
                 {
                     Logger.getLogger(HomescreenController.class.getName()).log(Level.SEVERE, null, ex);
@@ -215,80 +201,17 @@ public class HomescreenController implements Initializable, Screen
         fadeOutTimeline.play();
     }
 
-    @Override
-    public void setParent(ScreenManager mgr) 
-    {
-        screen_mgr = mgr;
-    }
-
-    public void showLogin()
-    {
-        /*try
-        {
-            Stage stage = new Stage();
-            //stage.setAlwaysOnTop(true);
-            stage.setTitle("Login to BMS Engine");
-            stage.setMinWidth(320);
-            stage.setMinHeight(280);
-            stage.setAlwaysOnTop(true);
-            
-            ScreenManager login_screen_mgr = new ScreenManager();
-            
-            login_screen_mgr.loadScreen(Screens.LOGIN.getScreen(), getClass().getResource("../../views/"+Screens.LOGIN.getScreen()));
-            */
-            screen_mgr.setScreen(Screens.LOGIN.getScreen());
-            
-            /*Group root = new Group();
-            root.getChildren().add(screen_mgr);
-            Scene scene = new Scene(root);
-            
-            stage.setScene(scene);
-            stage.show();
-            stage.centerOnScreen();
-            stage.setResizable(false);
-            
-            //When the login screen is being dismissed set the user's first and last name
-            stage.setOnHiding(event ->
-            {
-                Employee e = SessionManager.getInstance().getActiveEmployee();
-                if(e!=null)
-                    user_name.setText(e.getFirstname() + " " + e.getLastname());
-            });*/
-            
-        /*} catch (IOException ex) 
-        {
-            Logger.getLogger(HomescreenController.class.getName()).log(Level.SEVERE, null, ex);
-        }*/
-    }
-
-    public void showRegistrationForm()
-    {
-        screen_mgr.setScreen(Screens.CREATE_ACCOUNT.getScreen());
-        /*if (SessionManager.getInstance().getActive() != null)
-        {
-            if (!SessionManager.getInstance().getActive().isExpired())
-            {
-                try
-                {
-                    screen_mgr.loadScreen(Screens.CREATE_ACCOUNT.getScreen(),
-                            HomescreenController.class.getResource("../views/" + Screens.CREATE_ACCOUNT.getScreen()));
-                    screen_mgr.setScreen(Screens.CREATE_ACCOUNT.getScreen());
-                } catch (IOException ex)
-                {
-                    IO.logAndAlert(getClass().getName(), ex.getMessage(), IO.TAG_ERROR);
-                }
-            }else{
-                JOptionPane.showMessageDialog(null, "No active sessions!", "Session expired", JOptionPane.ERROR_MESSAGE);
-                return;
-            }
-        }else{
-            JOptionPane.showMessageDialog(null, "No active sessions!", "Session expired", JOptionPane.ERROR_MESSAGE);
-            return;
-        }*/
-    }
     @FXML
     public void showSettings()
     {
-        screen_mgr.setScreen(Screens.SETTINGS.getScreen());
+        try
+        {
+            if(this.getScreenManager().loadScreen(Screens.SETTINGS.getScreen(),getClass().getResource("../views/"+Screens.SETTINGS.getScreen())))
+                this.getScreenManager().setScreen(Screens.SETTINGS.getScreen());
+            else IO.log(getClass().getName(), IO.TAG_ERROR, "could not load settings screen.");
+        } catch (IOException e)
+        {
+            IO.log(getClass().getName(), IO.TAG_ERROR, e.getMessage());
+        }
     }
 }

@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.scene.shape.*?>
 <?import java.lang.*?>
 <?import javafx.scene.control.cell.*?>
 <?import javafx.scene.text.*?>
@@ -164,5 +165,16 @@
                 <TableColumn fx:id="colAction" maxWidth="1.7976931348623157E308" minWidth="100.0" prefWidth="-1.0" text="Action" />
             </columns>
         </TableView>
+      <HBox>
+         <children>
+            <Label text="Server Status:" />
+            <Circle fx:id="shpServerStatus" fill="DODGERBLUE" radius="7.0" stroke="BLACK" strokeType="INSIDE" />
+            <Label fx:id="lblOutput" text="console output">
+               <HBox.margin>
+                  <Insets left="10.0" />
+               </HBox.margin>
+            </Label>
+         </children>
+      </HBox>
     </children>
 </VBox>

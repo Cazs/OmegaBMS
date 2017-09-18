@@ -35,9 +35,8 @@ import java.util.ResourceBundle;
  *
  * @author ghost
  */
-public class ViewJobController implements Initializable, Screen
+public class ViewJobController extends Screen implements Initializable
 {
-    private ScreenManager screen_mgr;
     private boolean itemsModified;
 
     @FXML
@@ -58,9 +57,8 @@ public class ViewJobController implements Initializable, Screen
     @Override
     public void refresh()
     {
-        QuoteManager.getInstance().initialize(screen_mgr);
-        ResourceManager.getInstance().initialize(screen_mgr);
-        SaleManager.getInstance().initialize(screen_mgr);
+        QuoteManager.getInstance().initialize(this.getScreenManager());
+        ResourceManager.getInstance().initialize(this.getScreenManager());
 
         tblEmployees.getItems().clear();
         //tblQuoteItems.getItems().clear();
@@ -349,36 +347,6 @@ public class ViewJobController implements Initializable, Screen
                 }
             }else IO.showMessage("Session Expired", "Active session has expired.", IO.TAG_ERROR);
         }else IO.showMessage("Session Expired", "No active sessions.", IO.TAG_ERROR);
-    }
-
-    @FXML
-    public void previousScreen()
-    {
-        if(itemsModified)
-        {
-            int response = JOptionPane.showConfirmDialog(null, "You have unsaved changes to the quote's items, would you like to save them?");
-
-            if(response == JOptionPane.OK_OPTION)
-            {
-                update();
-            }else{
-                screen_mgr.setScreen(Screens.JOBS.getScreen());
-            }
-        }else{
-            screen_mgr.setScreen(Screens.JOBS.getScreen());
-        }
-    }
-
-    @Override
-    public void setParent(ScreenManager mgr) 
-    {
-        screen_mgr = mgr;
-    }
-
-    @FXML
-    public void showMain()
-    {
-        screen_mgr.setScreen(Screens.HOME.getScreen());
     }
 
     class ComboBoxTableCell extends TableCell<BusinessObject, String>

@@ -36,7 +36,7 @@ import java.util.*;
  *
  * @author ghost
  */
-public class NewQuoteController implements Initializable, Screen
+public class NewQuoteController extends Screen implements Initializable
 {
     private ScreenManager screen_mgr;
     private boolean itemsModified;
@@ -830,79 +830,6 @@ public class NewQuoteController implements Initializable, Screen
         {
             IO.logAndAlert(getClass().getName(), e.getMessage(), IO.TAG_ERROR);
         }
-    }
-
-    @FXML
-    public void createSale()
-    {
-        SessionManager smgr = SessionManager.getInstance();
-        if(smgr.getActive()!=null)
-        {
-            if(!smgr.getActive().isExpired())
-            {
-                //Update Quote if already been added
-                if(txtQuoteId.getText()!=null)
-                {
-                    if(!txtQuoteId.getText().isEmpty())
-                    {
-                        cbxClients.getStylesheets().add(this.getClass().getResource("../styles/home.css").toExternalForm());
-                        if(cbxClients.getValue()==null)
-                        {
-                            cbxClients.getStyleClass().remove("form-control-default");
-                            cbxClients.getStyleClass().add("control-input-error");
-                            return;
-                        }else{
-                            cbxClients.getStyleClass().remove("control-input-error");
-                            cbxClients.getStyleClass().add("form-control-default");
-                        }
-
-                        cbxContactPerson.getStylesheets().add(this.getClass().getResource("../styles/home.css").toExternalForm());
-                        if(cbxContactPerson.getValue()==null)
-                        {
-                            cbxContactPerson.getStyleClass().remove("form-control-default");
-                            cbxContactPerson.getStyleClass().add("control-input-error");
-                            return;
-                        }else{
-                            cbxContactPerson.getStyleClass().remove("control-input-error");
-                            cbxContactPerson.getStyleClass().add("form-control-default");
-                        }
-                        if(!Validators.isValidNode(txtSite, txtSite.getText(), 1, ".+"))
-                        {
-                            txtSite.getStylesheets().add(this.getClass().getResource("../styles/home.css").toExternalForm());
-                            return;
-                        }
-                        //
-                        List<QuoteItem> quoteItems = tblQuoteItems.getItems();
-
-                        if(quoteItems==null)
-                        {
-                            IO.logAndAlert("Cannot Create Sale", "Can't create sale because this quote items list is null.", IO.TAG_ERROR);
-                            return;
-                        }
-                        if(quoteItems.size()<=0)
-                        {
-                            IO.logAndAlert("Cannot Create Sale", "Can't create sale because this quote has no items/resources", IO.TAG_ERROR);
-                            return;
-                        }
-
-                        List<Employee> quoteReps = tblSaleReps.getItems();
-                        if(quoteReps==null)
-                        {
-                            IO.logAndAlert("Cannot Create Sale", "Can't create sale because this quote has no representatives.", IO.TAG_ERROR);
-                            return;
-                        }
-                        if(quoteReps.size()<=0)
-                        {
-                            IO.logAndAlert("Cannot Create Sale", "Can't create sale because this quote has no representatives", IO.TAG_ERROR);
-                            return;
-                        }
-                        if(QuoteManager.getInstance().getSelectedQuote()!=null)
-                            SaleManager.getInstance().createNewSale(QuoteManager.getInstance().getSelectedQuote().get_id());
-                        else IO.logAndAlert("Cannot Create Sale", "Cannot create sale because the selected quote is invalid.", IO.TAG_ERROR);
-                    } else IO.logAndAlert("Cannot Create Sale", "Cannot create sale from this quote because the quote data is invalid.", IO.TAG_ERROR);
-                } else IO.logAndAlert("Cannot Create Sale", "Cannot create sale from this quote because the quote data is invalid.", IO.TAG_ERROR);
-            }else IO.showMessage("Session Expired", "Active session has expired.", IO.TAG_ERROR);
-        }else IO.showMessage("Session Expired", "No active sessions.", IO.TAG_ERROR);
     }
 
     @FXML

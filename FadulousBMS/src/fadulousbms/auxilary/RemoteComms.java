@@ -16,6 +16,7 @@ import sun.net.www.http.HttpClient;
 import javax.swing.*;
 import java.io.*;
 import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLEncoder;
 import java.util.AbstractMap;
@@ -96,6 +97,16 @@ public class RemoteComms
     public static void setHost(String h)
     {
         host = h;
+    }
+
+    public static boolean pingServer() throws IOException
+    {
+        URL urlConn = new URL(host);
+        HttpURLConnection httpConn =  (HttpURLConnection)urlConn.openConnection();
+
+        boolean response = (httpConn.getResponseCode() == HttpURLConnection.HTTP_OK);
+        httpConn.disconnect();
+        return response;
     }
 
     public static String sendGetRequest(String url, ArrayList<AbstractMap.SimpleEntry<String,String>> headers) throws IOException

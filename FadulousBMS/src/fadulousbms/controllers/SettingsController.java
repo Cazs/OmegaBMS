@@ -45,17 +45,14 @@ import javax.swing.JOptionPane;
  *
  * @author ghost
  */
-public class SettingsController implements Initializable, Screen 
+public class SettingsController extends Screen implements Initializable
 {
     @FXML
     private TextField txtIP = new TextField();
     @FXML
     private TextField txtPort = new TextField();
-    private ScreenManager screen_mgr;
     @FXML
-    private ImageView img_profile, img_logo;
-    @FXML
-    private final Label user_name = new Label();
+    private ImageView img_logo;
 
     @Override
     public void refresh()
@@ -69,7 +66,7 @@ public class SettingsController implements Initializable, Screen
             BufferedImage bufferedImage;
             bufferedImage = ImageIO.read(new File("images/profile.png"));
             Image image = SwingFXUtils.toFXImage(bufferedImage, null);
-            img_profile.setImage(image);
+            this.getProfileImageView().setImage(image);
 
             if(SessionManager.getInstance().getActive()!=null)
             {
@@ -96,7 +93,7 @@ public class SettingsController implements Initializable, Screen
 
         Employee e = SessionManager.getInstance().getActiveEmployee();
         if(e!=null)
-            user_name.setText(e.getFirstname() + " " + e.getLastname());
+            this.getUserNameLabel().setText(e.getFirstname() + " " + e.getLastname());
         else IO.log(getClass().getName(), IO.TAG_ERROR, "No active sessions.");
     }
 
@@ -106,7 +103,6 @@ public class SettingsController implements Initializable, Screen
     @Override
     public void initialize(URL url, ResourceBundle rb) 
     {
-
     }    
 
     @FXML
@@ -159,24 +155,11 @@ public class SettingsController implements Initializable, Screen
         }
     }
 
-    @Override
-    public void setParent(ScreenManager mgr) 
-    {
-        screen_mgr = mgr;
-    }
-
-    @FXML
-    public void showMain()
-    {
-        screen_mgr.setScreen(Screens.HOME.getScreen());
-    }
-
     @FXML
     public void applySettings()
     {
         if(txtPort.getText()!=null && txtIP.getText()!=null)
         {
-            //RemoteComms.host = "http://" + txtIP.getText() + ":" + txtPort.getText() + "/";
             RemoteComms.setHost("http://" + txtIP.getText() + ":" + txtPort.getText());
             IO.logAndAlert(getClass().getName(), "successfully updated system configuration.", IO.TAG_INFO);
         } else IO.logAndAlert(SettingsController.class.getName(), "Empty entries are not allowed for required fields.", IO.TAG_ERROR);

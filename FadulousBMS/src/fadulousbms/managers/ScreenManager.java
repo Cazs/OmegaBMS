@@ -11,6 +11,7 @@ import java.util.HashMap;
 
 import fadulousbms.auxilary.IO;
 import fadulousbms.auxilary.Screen;
+import fadulousbms.model.Screens;
 import javafx.animation.KeyFrame;
 import javafx.animation.KeyValue;
 import javafx.animation.Timeline;
@@ -36,13 +37,24 @@ public class ScreenManager extends StackPane
     private HashMap<String, Screen> controllers = new HashMap<>();
     private Screen focused;
     private String focused_id;
+    private String previous_id;
+    private Node loading_screen;
+    private Screen loading_screen_ctrl;
     
     public ScreenManager()
     {
         super();
-        //this.setWidth(600);
-        //this.setHeight(480);
-        //this.stage = stage;
+        try
+        {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("../views/loading.fxml"));
+            loading_screen = loader.load();
+
+            loading_screen_ctrl = loader.getController();
+            loading_screen_ctrl.setParent(this);
+        } catch (IOException e)
+        {
+            IO.log(getClass().getName(), IO.TAG_ERROR, e.getMessage());
+        }
     }
 
     /**
@@ -53,7 +65,7 @@ public class ScreenManager extends StackPane
      */
     public boolean addScreen(String id, Node screen)
     {
-        screens.put(id, screen);
+        screens.putIfAbsent(id, screen);
         return true;
     }
 
@@ -76,17 +88,34 @@ public class ScreenManager extends StackPane
      */
     public boolean  loadScreen(String id, URL path) throws IOException
     {
-        //String path = filename;
+        //setScreen("loading.fxml");
+
         FXMLLoader loader = new FXMLLoader(path);
-        //URL url = new URL(path);
-        //System.out.println(">>"+ScreenManager.class.getResource(path)+"<<");
         Parent screen = loader.load();
-        
+
+        //Backup previous screen and its controller
+        //Screen prev_screen_ctrl = controllers.get(previous_id);
+        //Node prev_screen = screens.get(previous_id);
+
+        //remove other screens
+        controllers = new HashMap<>();
+        screens = new HashMap<>();
+
+        //controllers.putIfAbsent(previous_id, prev_screen_ctrl);
+        //screens.putIfAbsent(previous_id, prev_screen);
+
         Screen screen_controller = loader.getController();
         screen_controller.setParent(this);
-        controllers.put(id, screen_controller);
-        
+
+        controllers.putIfAbsent(id, screen_controller);
         return addScreen(id, screen);
+    }
+
+    public void setPreviousScreen() throws IOException
+    {
+        if(loadScreen(previous_id, getClass().getResource("../views/"+ previous_id)))
+            setScreen(previous_id);
+        else IO.log(getClass().getName(), IO.TAG_ERROR, "could not load screen: " + previous_id);
     }
 
     /**
@@ -146,17 +175,37 @@ public class ScreenManager extends StackPane
         if(getChildren().setAll(new Node[]{}))//remove all screens
         {
             //getChildren().add(screens.get("loading.fxml"));
-            Node screen = screens.get(id);
+            Node screen;
+            if(id.equals("loading.fxml"))
+            {
+                System.out.println("showing loading screen");
+                screen = loading_screen;
+            }
+            else screen = screens.get(id);
 
             if(screen!=null)
             {
+                Screen controller;
                 //update UI of current view
-                Screen controller = controllers.get(id);
+                if(id.equals("loading.fxml"))
+                    controller = loading_screen_ctrl;
+                else controller = controllers.get(id);
+
                 if(controller!=null)
                 {
+                    if(focused_id!=null)
+                    {
+                        if (!focused_id.equals(previous_id))
+                        {
+                            previous_id = focused_id;
+                            IO.log(getClass().getName(), IO.TAG_INFO, "set previous screen to: " + previous_id);
+                        }
+                    }
+
                     focused_id = id;
                     focused = controller;
                     //screen.setOpacity(1);
+                    focused.refreshStatusBar("Welcome back" + (SessionManager.getInstance().getActiveEmployee()!=null?" "+SessionManager.getInstance().getActiveEmployee()+"!":"!"));
                     focused.refresh();//refresh the screen every time it's loaded
                 }
                 getChildren().add(screen);
@@ -166,11 +215,21 @@ public class ScreenManager extends StackPane
                         new KeyFrame(Duration.millis(20),new KeyValue(opacity, 1.0)));
                 fade.play();
             }else{
-                IO.logAndAlert(getClass().getName(), "Screen not loaded to memory.", IO.TAG_ERROR);
+                IO.logAndAlert(getClass().getName(), "Screen ["+id+"] not loaded to memory.", IO.TAG_ERROR);
             }
         }else{
             IO.logAndAlert(getClass().getName(), "Could not remove StackPane children.", IO.TAG_ERROR);
         }
+    }
+
+    public Screen getFocused()
+    {
+        return this.focused;
+    }
+
+    public String getFocused_id()
+    {
+        return this.focused_id;
     }
     
     public Node removeScreen(Node screen)

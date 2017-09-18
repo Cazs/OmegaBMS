@@ -118,20 +118,22 @@
 
 .sys-btn
 {
-    -fx-background-color: 
+    -fx-background-color: radial-gradient(center 53% 50%, radius 80%, #969696 5%, #696969 100%);
+    /*-fx-border-width: 5 3 1 1;
+    -fx-border-color: #d6d6d6;*/
+    /*-fx-background-color:
         #c3c4c4,
         linear-gradient(#d6d6d6 50%, white 100%),
-        radial-gradient(center 50% -40%, radius 200%, #e6e6e6 45%, rgba(230,230,230,0) 50%);
+        radial-gradient(center 50% -40%, radius 200%, #e6e6e6 45%, rgba(230,230,230,0) 50%);*/
     -fx-background-insets: 0,1,1;
     -fx-text-fill: black;
     /*-fx-effect: dropshadow( three-pass-box , rgba(0,0,0,0.6) , 5, 0.0 , 0 , 1 );*/
-    -fx-background-radius: 10;
+    -fx-background-radius: 5;
     -fx-effect: dropshadow( three-pass-box , rgba(0,0,0,0.7) , 15, 0.0 , 0 , 10 );
 }
 
 .sys-btn:hover
 {
-
     -fx-background-color:
         #c3c4c4,
         linear-gradient(#d6d6d6 50%, white 100%),
@@ -139,20 +141,23 @@
     -fx-background-insets: 0,1,1;
     -fx-text-fill: black;
     /*-fx-effect: dropshadow( three-pass-box , rgba(0,0,0,0.6) , 5, 0.0 , 0 , 1 );*/
-    -fx-background-radius: 20;
+    -fx-background-radius: 0;
 }
 
 .sys-nav
 {
-    -fx-background-color: linear-gradient(#D4D4D4 80%, #343434 100%);
+    -fx-background-color: #7A8FA1;/*linear-gradient(#D4D4D4 80%, #343434 100%);*/
     -fx-background-insets: 0,1,1;
     -fx-text-fill: black;
+    -fx-border-width: 0 0 2 0;
+    -fx-border-color: #343434;
     -fx-effect: dropshadow( three-pass-box , rgba(0,0,0,0.6) , 5, 0.0 , 0 , 1 );
 }
 
 .sys-body
 {
-    -fx-background-color: linear-gradient(#575757 1%, #D4D4D4 100%);
+    /*-fx-background-color:red;*/
+    -fx-background-color: radial-gradient(center 50% 40%, radius 200%, #3C3C3C, derive(#C5DBD2, -30%), derive(#C5DBD2, 30%));
     -fx-background-insets: 0,1,1;
     -fx-text-fill: black;
     -fx-effect: dropshadow( three-pass-box , rgba(0,0,0,0.6) , 5, 0.0 , 0 , 1 );
@@ -160,7 +165,7 @@
 
 .sys-footer
 {
-    -fx-background-color: linear-gradient(#343434 1%, #D4D4D4 100%);
+    -fx-background-color: #7A8FA1;/*linear-gradient(#343434 1%, #D4D4D4 100%);*/
     -fx-background-insets: 0,1,1;
     -fx-text-fill: black;
     -fx-effect: dropshadow( three-pass-box , rgba(0,0,0,0.6) , 15, 0.0 , 0 , -10 );

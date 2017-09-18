@@ -23,7 +23,7 @@ import java.util.logging.Logger;
 /**
  * Created by ghost on 2017/02/02.
  */
-public class FacilitiesController implements Initializable, Screen
+public class FacilitiesController extends Screen implements Initializable
 {
     private ScreenManager screen_mgr;
     @FXML
