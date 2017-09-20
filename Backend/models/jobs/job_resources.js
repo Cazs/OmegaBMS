@@ -1,5 +1,6 @@
 const mongoose = require('mongoose');
 var access_levels = require('../system/access_levels.js');
+var counters = require('../system/counters.js');
 
 const jobResourceSchema = mongoose.Schema(
   {
@@ -19,7 +20,21 @@ const jobResourceSchema = mongoose.Schema(
 
   module.exports.add = function(jobresource, callback)
   {
-    JobResources.create(jobresource, callback);
+    JobResources.create(jobresource, function(error, res_obj)
+    {
+      if(error)
+      {
+        console.log(error);
+        if(callback)
+          callback(error);
+        return;
+      }
+      console.log('successfully created new job resources.')
+      if(callback)
+        callback(error, res_obj);
+      //update timestamp
+      counters.timestamp('jobs_timestamp');
+    });
   }
 
   module.exports.get = function(job_id, callback)
@@ -36,7 +51,21 @@ const jobResourceSchema = mongoose.Schema(
   module.exports.update = function(record_id, jobresource, callback)
   {
     var query = {_id:record_id};
-    JobResources.findOneAndUpdate(query, jobresource, {}, callback);
+    JobResources.findOneAndUpdate(query, jobresource, {}, function(error, res_obj)
+    {
+      if(error)
+      {
+        console.log(error);
+        if(callback)
+          callback(error);
+        return;
+      }
+      console.log('successfully updated job resources.')
+      if(callback)
+        callback(error, res_obj);
+      //update timestamp
+      counters.timestamp('jobs_timestamp');
+    });
   }
 
   module.exports.isValid = function(jobresource)

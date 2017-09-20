@@ -1,5 +1,6 @@
 const mongoose = require('mongoose');
 var access_levels = require('../system/access_levels.js');
+var counters = require('../system/counters.js');
 
 const jobEmployeeSchema = mongoose.Schema(
   {
@@ -25,7 +26,21 @@ const jobEmployeeSchema = mongoose.Schema(
   module.exports.add = function(jobemployee, callback)
   {
     console.log('attempting to create a new job_employee.');
-    JobEmployees.create(jobemployee, callback);
+    JobEmployees.create(jobemployee, function(error, res_obj)
+    {
+      if(error)
+      {
+        console.log(error);
+        if(callback)
+          callback(error);
+        return;
+      }
+      console.log('successfully created new job_employee.')
+      if(callback)
+        callback(error, res_obj);
+      //update timestamp
+      counters.timestamp('jobs_timestamp');
+    });
   }
 
   module.exports.get = function(job_id, callback)
@@ -43,7 +58,21 @@ const jobEmployeeSchema = mongoose.Schema(
   {
     console.log('attempting to update job_employee[%s].', record_id);
     var query = {_id:record_id};
-    JobEmployees.findOneAndUpdate(query, jobemployee, {}, callback);
+    JobEmployees.findOneAndUpdate(query, jobemployee, {}, function(error, res_obj)
+    {
+      if(error)
+      {
+        console.log(error);
+        if(callback)
+          callback(error);
+        return;
+      }
+      console.log('successfully updated job_employee.')
+      if(callback)
+        callback(error, res_obj);
+      //update timestamp
+      counters.timestamp('jobs_timestamp');
+    });
   }
 
   module.exports.isValid = function(jobemployee)
