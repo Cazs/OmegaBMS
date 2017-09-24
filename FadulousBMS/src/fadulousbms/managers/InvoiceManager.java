@@ -2,10 +2,7 @@ package fadulousbms.managers;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import fadulousbms.auxilary.Globals;
-import fadulousbms.auxilary.IO;
-import fadulousbms.auxilary.RemoteComms;
-import fadulousbms.auxilary.Validators;
+import fadulousbms.auxilary.*;
 import fadulousbms.model.*;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -34,17 +31,15 @@ import java.util.ArrayList;
 public class InvoiceManager extends BusinessObjectManager
 {
     private Invoice[] invoices= null;
-    private Client[] clients = null;
-    private Supplier[] suppliers = null;
-    private Employee[] employees = null;
-    private String label_properties = "client_name|supplier_name";
-    private BusinessObject[] organisations=null, genders=null, domains=null;
-    private TableView tblInvoices, tblInvoiceResources, tblInvoiceRepresentatives;
-    private Gson gson;
-    private static final String TAG = "InvoiceManager";
+    private BusinessObject[] genders=null, domains=null;
     private static InvoiceManager invoice_manager = new InvoiceManager();
-    private Resource[] resources;
-    public static ResourceType[] resource_types;
+    private ScreenManager screenManager = null;
+    private Job selected_invoice;
+    private Gson gson;
+    public static final String ROOT_PATH = "cache/invoices/";
+    public String filename = "";
+    private long timestamp;
+    private static final String TAG = "InvoiceManager";
 
     private InvoiceManager()
     {
@@ -79,36 +74,10 @@ public class InvoiceManager extends BusinessObjectManager
         domains = new BusinessObject[]{internal, external};
 
         loadDataFromServer();
-
-        organisations = new BusinessObject[clients.length + suppliers.length + 3];
-        BusinessObject lbl_clients = new Client();
-        lbl_clients.parse("client_name", "________________________Clients________________________");
-
-        BusinessObject lbl_internal = new Client();
-        lbl_internal.parse("client_name", "INTERNAL");
-        lbl_internal.set_id("INTERNAL");
-
-        BusinessObject lbl_suppliers = new Supplier();
-        lbl_suppliers.parse("supplier_name", "________________________Suppliers________________________");
-
-        //Prepare the list of BusinessObjects to be added to the combo boxes.
-        organisations[0] = lbl_internal;
-        organisations[1] = lbl_clients;
-        int cursor = 1;
-        for(int i=0;i<clients.length;i++)
-            organisations[++cursor]=clients[i];
-        organisations[++cursor] = lbl_suppliers;
-        for(int i=0;i<suppliers.length;i++)
-            organisations[++cursor]=suppliers[i];
     }
 
     public void loadDataFromServer()
     {
-        invoices = null;
-        clients = null;
-        suppliers = null;
-        resource_types = null;
-
         try
         {
             SessionManager smgr = SessionManager.getInstance();
@@ -120,113 +89,29 @@ public class InvoiceManager extends BusinessObjectManager
                     ArrayList<AbstractMap.SimpleEntry<String,String>> headers = new ArrayList<>();
                     headers.add(new AbstractMap.SimpleEntry<>("Cookie", smgr.getActive().getSessionId()));
 
-                    String invoices_json = RemoteComms.sendGetRequest("/api/invoices", headers);
-                    invoices = gson.fromJson(invoices_json, Invoice[].class);
-
-                    String clients_json = RemoteComms.sendGetRequest("/api/clients", headers);
-                    clients = gson.fromJson(clients_json, Client[].class);
-
-                    String suppliers_json = RemoteComms.sendGetRequest("/api/suppliers", headers);
-                    suppliers = gson.fromJson(suppliers_json, Supplier[].class);
-
-                    String employees_json = RemoteComms.sendGetRequest("/api/employees", headers);
-                    employees = gson.fromJson(employees_json, Employee[].class);
-
-                    String resources_json = RemoteComms.sendGetRequest("/api/resources", headers);
-                    resources = gson.fromJson(resources_json, Resource[].class);
-
-                    String resource_types_json = RemoteComms.sendGetRequest("/api/resource/types", headers);
-                    resource_types = gson.fromJson(resource_types_json, ResourceType[].class);
-
-                    //Load invoice resources
-                    ArrayList<InvoiceResource> invoiceResourceIds;
-                    ArrayList<Resource> invoiceResources;
-                    if(invoices!=null)
+                    //Get Timestamp
+                    String timestamp_json = RemoteComms.sendGetRequest("/api/timestamp/invoices_timestamp", headers);
+                    Counters cntr_timestamp = gson.fromJson(timestamp_json, Counters.class);
+                    if(cntr_timestamp!=null)
                     {
-                        if(invoices.length>0)
-                        {
-                            for (Invoice invoice : invoices)
-                            {
-                                invoiceResourceIds = new ArrayList<>();
-
-                                String invoice_resource_ids_json = RemoteComms.sendGetRequest("/api/invoice/resources/" + invoice.get_id(), headers);
-                                if(invoice_resource_ids_json!=null)
-                                {
-                                    if (!invoice_resource_ids_json.equals("[]"))
-                                    {
-                                        InvoiceResource[] invoice_resources = gson.fromJson(invoice_resource_ids_json, InvoiceResource[].class);
-                                        for(InvoiceResource qr : invoice_resources)
-                                            invoiceResourceIds.add(qr);
-
-                                        invoiceResources = new ArrayList<>();
-                                        for (InvoiceResource invoice_resource : invoiceResourceIds)
-                                        {
-                                            String invoice_resources_json = RemoteComms.sendGetRequest("/api/resource/" + invoice_resource.get("resource_id"), headers);
-                                            if (!invoice_resources_json.equals("[]"))//if the resource exists add it to the list of the invoice's resources.
-                                            {
-                                                invoiceResources.add(gson.fromJson(invoice_resources_json, Resource.class));
-                                                IO.log(TAG, IO.TAG_INFO, String.format("added resource '%s' for invoice '%s'.", invoice_resource.get("resource_id"), invoice_resource.get("invoice_id")));
-                                            }
-                                            else
-                                                IO.log(TAG, IO.TAG_ERROR, String.format("resource '%s does not exist!", invoice_resource.get("resource_id")));
-                                        }
-                                        invoice.setResources(invoiceResources);
-                                    } else
-                                        IO.log(TAG, IO.TAG_WARN, String.format("invoice '%s does not have any resources.", invoice.get_id()));
-                                }else
-                                    IO.log(TAG, IO.TAG_WARN, String.format("invoice '%s does not have any resources.", invoice.get_id()));
-                            }
-                        }else{
-                            IO.log(TAG, IO.TAG_WARN, "no invoices found in database.");
-                        }
-                    }else{
-                        IO.log(TAG, IO.TAG_WARN, "invoices object is null.");
+                        timestamp = cntr_timestamp.getCount();
+                        filename = "invoices_"+timestamp+".dat";
+                        IO.log(this.getClass().getName(), IO.TAG_INFO, "Server Timestamp: "+timestamp);
+                    }else {
+                        IO.logAndAlert(this.getClass().getName(), "could not get valid timestamp", IO.TAG_ERROR);
+                        return;
                     }
 
-                    //Load invoice representatives
-                    ArrayList<InvoiceRep> invoiceRepIds;
-                    ArrayList<Employee> invoiceReps;
-                    if(invoices!=null)
+                    if(!isSerialized(ROOT_PATH+filename))
                     {
-                        if(invoices.length>0)
-                        {
-                            for (Invoice invoice : invoices)
-                            {
-                                invoiceRepIds = new ArrayList<>();
+                        String invoices_json = RemoteComms.sendGetRequest("/api/invoices", headers);
+                        invoices = gson.fromJson(invoices_json, Invoice[].class);
 
-                                String invoice_rep_ids_json = RemoteComms.sendGetRequest("/api/invoice/reps/" + invoice.get_id(), headers);
-                                if(invoice_rep_ids_json!=null)
-                                {
-                                    if (!invoice_rep_ids_json.equals("[]"))
-                                    {
-                                        InvoiceRep[] invoice_reps = gson.fromJson(invoice_rep_ids_json, InvoiceRep[].class);
-                                        for(InvoiceRep qr : invoice_reps)
-                                            invoiceRepIds.add(qr);
-
-                                        invoiceReps = new ArrayList<>();
-                                        for (InvoiceRep invoice_rep : invoice_reps)
-                                        {
-                                            String invoice_reps_json = RemoteComms.sendGetRequest("/api/employee/" + invoice_rep.get("usr"), headers);
-                                            if (!invoice_reps_json.equals("[]") && !invoice_reps_json.equals("null"))//if the resource exists add it to the list of the invoice's resources.
-                                            {
-                                                invoiceReps.add(gson.fromJson(invoice_reps_json, Employee.class));
-                                                IO.log(TAG, IO.TAG_INFO, String.format("added rep '%s' for invoice '%s'.", invoice_rep.get("usr"), invoice_rep.get("invoice_id")));
-                                            }
-                                            else
-                                                IO.log(TAG, IO.TAG_ERROR, String.format("employee '%s' does not exist!", invoice_rep.get("usr")));
-                                        }
-                                        invoice.setRepresentatives(invoiceReps);
-                                        IO.log(TAG, IO.TAG_INFO, String.format("set reps for invoice '%s'.", invoice.get_id()));
-                                    } else
-                                        IO.log(TAG, IO.TAG_WARN, String.format("invoice '%s does not have any representatives.", invoice.get_id()));
-                                }else
-                                    IO.log(TAG, IO.TAG_WARN, String.format("invoice '%s does not have any representatives.", invoice.get_id()));
-                            }
-                        }else{
-                            IO.log(TAG, IO.TAG_WARN, "no invoices found in database.");
-                        }
+                        IO.log(getClass().getName(), IO.TAG_INFO, "reloaded collection of invoices.");
+                        this.serialize(ROOT_PATH+filename, invoices);
                     }else{
-                        IO.log(TAG, IO.TAG_WARN, "invoices object is null.");
+                        IO.log(this.getClass().getName(), IO.TAG_INFO, "binary object ["+ROOT_PATH+filename+"] on local disk is already up-to-date.");
+                        invoices = (Invoice[]) this.deserialize(ROOT_PATH+filename);
                     }
                 }else{
                     JOptionPane.showMessageDialog(null, "Active session has expired.", "Session Expired", JOptionPane.ERROR_MESSAGE);
@@ -234,16 +119,48 @@ public class InvoiceManager extends BusinessObjectManager
             }else{
                 JOptionPane.showMessageDialog(null, "No active sessions.", "Session Expired", JOptionPane.ERROR_MESSAGE);
             }
-        }catch (MalformedURLException ex)
+        } catch (MalformedURLException ex)
         {
             IO.log(TAG, IO.TAG_ERROR, ex.getMessage());
-        }catch (IOException ex)
+        } catch (ClassNotFoundException ex)
+        {
+            IO.log(TAG, IO.TAG_ERROR, ex.getMessage());
+        } catch (IOException ex)
         {
             IO.log(TAG, IO.TAG_ERROR, ex.getMessage());
         }
     }
 
-    public void newWindow()
+    public void generateInvoice(Job job) throws IOException
+    {
+        SessionManager smgr = SessionManager.getInstance();
+        if(smgr.getActive()!=null)
+        {
+            if(!smgr.getActive().isExpired())
+            {
+                gson  = new GsonBuilder().create();
+                ArrayList<AbstractMap.SimpleEntry<String,String>> headers = new ArrayList<>();
+                headers.add(new AbstractMap.SimpleEntry<>("Cookie", smgr.getActive().getSessionId()));
+
+                Invoice invoice = new Invoice();
+                invoice.setCreator(smgr.getActiveEmployee().getUsr());
+                invoice.setJob_id(job.get_id());
+
+                HttpURLConnection response = RemoteComms.postData("/api/invoice/add", invoice.asUTFEncodedString(), headers);
+                if(response!=null)
+                {
+                    if(response.getResponseCode()==HttpURLConnection.HTTP_OK)
+                        IO.logAndAlert("Success", IO.readStream(response.getInputStream()), IO.TAG_INFO);
+                    else IO.logAndAlert("Error", IO.readStream(response.getErrorStream()), IO.TAG_ERROR);
+                }else IO.logAndAlert("Error", "Response object is null.", IO.TAG_ERROR);
+            }else{
+                JOptionPane.showMessageDialog(null, "Active session has expired.", "Session Expired", JOptionPane.ERROR_MESSAGE);
+            }
+        }else{
+            JOptionPane.showMessageDialog(null, "No active sessions.", "Session Expired", JOptionPane.ERROR_MESSAGE);
+        }
+    }
+    /*public void newWindow()
     {
         SessionManager smgr = SessionManager.getInstance();
         if(smgr.getActive()!=null)
@@ -380,611 +297,6 @@ public class InvoiceManager extends BusinessObjectManager
         }else{
             JOptionPane.showMessageDialog(null, "No active sessions.", "Session Expired", JOptionPane.ERROR_MESSAGE);
         }
-    }
-
-    public void invoiceResources()
-    {
-        SessionManager smgr = SessionManager.getInstance();
-        if(smgr.getActive()!=null)
-        {
-            if(!smgr.getActive().isExpired())
-            {
-                Stage stage = new Stage();
-                stage.setTitle(Globals.APP_NAME.getValue() + " - invoice resources");
-                stage.setMinWidth(320);
-                stage.setMinHeight(340);
-                //stage.setAlwaysOnTop(true);
-
-                tblInvoiceResources = new TableView();
-                tblInvoiceResources.setEditable(true);
-
-                TableColumn<BusinessObject, String> invoice_description = new TableColumn("Resource");
-                CustomTableViewControls.makeEditableTableColumn(invoice_description, TextFieldTableCell.forTableColumn(), 80, "resource_name", "/api/invoice/resource");
-
-                TableColumn<BusinessObject, String> resource_type = new TableColumn("Resource type");
-                CustomTableViewControls.makeComboBoxTableColumn(resource_type, resource_types, "resource_type", "type_name", "/api/resource", 100);
-
-                TableColumn<BusinessObject, String> resource_description = new TableColumn("Resource description");
-                CustomTableViewControls.makeEditableTableColumn(resource_description, TextFieldTableCell.forTableColumn(), 80, "resource_description", "/api/invoice/resource");
-
-                TableColumn<BusinessObject, String> resource_value = new TableColumn("Resource value[before markup]");
-                CustomTableViewControls.makeEditableTableColumn(resource_value, TextFieldTableCell.forTableColumn(), 80, "resource_value", "/api/invoice/resource");
-
-                TableColumn<BusinessObject, String> markup = new TableColumn("Markup");
-                CustomTableViewControls.makeEditableTableColumn(markup, TextFieldTableCell.forTableColumn(), 80, "markup", "/api/resource");
-
-                TableColumn<BusinessObject, Long> date_acquired = new TableColumn("Date acquired");
-                CustomTableViewControls.makeDatePickerTableColumn(date_acquired, "date_acquired", "/api/invoice/resource");
-
-                TableColumn<BusinessObject, Long> date_exhausted = new TableColumn("Date exhausted");
-                CustomTableViewControls.makeDatePickerTableColumn(date_exhausted, "date_exhausted", "/api/invoice/resource");
-
-                TableColumn<BusinessObject, String> other = new TableColumn("Other");
-                CustomTableViewControls.makeEditableTableColumn(other, TextFieldTableCell.forTableColumn(), 80, "other", "/api/invoice/resource");
-
-                MenuBar menu_bar = new MenuBar();
-                Menu file = new Menu("File");
-                Menu edit = new Menu("Edit");
-
-                MenuItem new_resource = new MenuItem("New resource");
-                new_resource.setOnAction(event -> handleNewInvoiceResource(stage));
-                MenuItem save = new MenuItem("Save");
-                MenuItem print = new MenuItem("Print");
-
-
-                ObservableList<Resource> lst_invoice_resources = FXCollections.observableArrayList();
-                int selected_index = tblInvoices.getSelectionModel().selectedIndexProperty().get();
-                //Invoice selected_invoice = (Invoice) tblInvoices.selectionModelProperty().get();
-                if(invoices!=null)
-                {
-                    if (selected_index >= 0 && selected_index < invoices.length)
-                    {
-                        if(invoices[selected_index].get("issuer_org_id")!=null)
-                        {
-                            for (BusinessObject businessObject : organisations)
-                            {
-                                if(businessObject.get_id()!=null)
-                                {
-                                    if (businessObject.get_id().equals(invoices[selected_index].get("issuer_org_id")))
-                                    {
-                                        if (label_properties.split("\\|").length > 1)
-                                        {
-                                            String name = (String) businessObject.get(label_properties.split("\\|")[0]);
-                                            if (name == null)
-                                                name = (String) businessObject.get(label_properties.split("\\|")[1]);
-                                            if (name == null)
-                                                IO.log(TAG, IO.TAG_ERROR, "neither of the label_properties were found in object!");
-                                            else
-                                            {
-                                                new_resource.setText("New resource for invoice issued by " + name);
-                                                IO.log(TAG, IO.TAG_INFO, String.format("set invoice context to [invoice issued by] '%s'", name));
-                                            }
-                                        } else
-                                        {
-                                            IO.log(TAG, IO.TAG_ERROR, "label_properties split array index out of bounds!");
-                                        }
-                                    }
-                                }else IO.log(TAG, IO.TAG_WARN, "business object id is null.");
-                            }
-                        }else{
-                            IO.log(TAG, IO.TAG_ERROR, String.format("issuer_org_id of selected invoice '%s' is null.", invoices[selected_index].get_id()));
-                        }
-                        if(invoices[selected_index].getResources()!=null)
-                            lst_invoice_resources.addAll(invoices[selected_index].getResources());
-                        else IO.log(TAG, IO.TAG_ERROR, String.format("invoice '%s' has no resources.", invoices[selected_index].get_id()));
-                    }
-                    else IO.log(TAG, IO.TAG_ERROR, "invoice array index out of bounds: " + selected_index);
-                }else IO.log(TAG, IO.TAG_ERROR, "invoices array is null!");
-
-                tblInvoiceResources.setItems(lst_invoice_resources);
-                tblInvoiceResources.getColumns().addAll(invoice_description, resource_type, resource_description, resource_value,
-                        markup, date_acquired, date_exhausted, other);
-
-
-                file.getItems().addAll(new_resource, save, print);
-
-                menu_bar.getMenus().addAll(file, edit);
-
-                BorderPane border_pane = new BorderPane();
-                border_pane.setTop(menu_bar);
-                border_pane.setCenter(tblInvoiceResources);
-
-                stage.setOnCloseRequest(event ->
-                {
-                    System.out.println("Reloading local data.");
-                    loadDataFromServer();
-
-                    stage.close();
-                });
-
-                Scene scene = new Scene(border_pane);
-                stage.setScene(scene);
-                stage.show();
-                stage.centerOnScreen();
-                stage.setResizable(true);
-            }else{
-                JOptionPane.showMessageDialog(null, "Active session has expired.", "Session Expired", JOptionPane.ERROR_MESSAGE);
-            }
-        }else{
-            JOptionPane.showMessageDialog(null, "No active sessions.", "Session Expired", JOptionPane.ERROR_MESSAGE);
-        }
-    }
-
-    public void handleNewInvoiceResource(Stage parentStage)
-    {
-        if(tblInvoices==null)
-        {
-            IO.log(TAG, IO.TAG_ERROR, "invoices table is null!");
-            return;
-        }
-
-        if(resources==null)
-        {
-            IO.log(TAG, IO.TAG_ERROR, "no resources were found in the database.");
-            return;
-        }
-
-        int selected_index = tblInvoices.getSelectionModel().selectedIndexProperty().get();
-
-        if(invoices!=null)
-        {
-            if (selected_index < 0 || selected_index >= invoices.length)
-            {
-                IO.log(TAG, IO.TAG_ERROR, "invoices array index is out of bounds");
-                return;
-            }
-        }else{
-            IO.log(TAG, IO.TAG_ERROR, "invoices array is null!");
-            return;
-        }
-
-        parentStage.setAlwaysOnTop(false);
-        Stage stage = new Stage();
-        stage.setTitle(Globals.APP_NAME.getValue() + " - Add new invoice resource");
-        stage.setMinWidth(320);
-
-        stage.setMinHeight(120);
-        //stage.setAlwaysOnTop(true);
-
-        VBox vbox = new VBox(10);
-
-        final TextField txt_invoice_issuer = new TextField();
-        txt_invoice_issuer.setMinWidth(200);
-        txt_invoice_issuer.setMaxWidth(Double.MAX_VALUE);
-        txt_invoice_issuer.setEditable(false);
-        HBox invoice_issuer = CustomTableViewControls.getLabelledNode("Invoice issuer", 200, txt_invoice_issuer);
-
-        //resource combo box
-        final ComboBox<Resource> cbx_resource_id = new ComboBox<>();
-        cbx_resource_id.setCellFactory(new Callback<ListView<Resource>, ListCell<Resource>>()
-        {
-            @Override
-            public ListCell<Resource> call(ListView<Resource> lst_resources)
-            {
-                return new ListCell<Resource>()
-                {
-                    @Override
-                    protected void updateItem(Resource resource, boolean empty)
-                    {
-                        super.updateItem(resource, empty);
-                        if(resource!=null && !empty)
-                        {
-                            setText(resource.getResource_name());
-                        }else{
-                            setText("");
-                        }
-                    }
-                };
-            }
-        });
-        cbx_resource_id.setButtonCell(new ListCell<Resource>()
-        {
-            @Override
-            protected void updateItem(Resource resource, boolean empty)
-            {
-                super.updateItem(resource, empty);
-                if(resource!=null && !empty)
-                {
-                    setText(resource.getResource_name());
-                }else{
-                    setText("");
-                }
-            }
-        });
-        //set invoice issuer
-        String issuer_id = (String)invoices[selected_index].get("issuer_org_id");
-        if(issuer_id!=null)
-            txt_invoice_issuer.setText(issuer_id);
-        else{
-            IO.log(TAG, IO.TAG_ERROR, "issuer id is null.");
-            return;
-        }
-
-        cbx_resource_id.setItems(FXCollections.observableArrayList(resources));
-        cbx_resource_id.setMinWidth(200);
-        cbx_resource_id.setMaxWidth(Double.MAX_VALUE);
-        HBox resource_id = CustomTableViewControls.getLabelledNode("Resource", 200, cbx_resource_id);
-
-
-        HBox submit;
-        submit = CustomTableViewControls.getSpacedButton("Submit", event ->
-        {
-            if(cbx_resource_id.getValue()!=null)
-            {
-                if (!Validators.isValidNode(cbx_resource_id, cbx_resource_id.getValue().get_id() == null ? "" : cbx_resource_id.getValue().get_id(), 1, ".+"))
-                    return;
-            }
-            else
-            {
-                Validators.isValidNode(cbx_resource_id, "", 1, ".+");
-                return;
-            }
-
-            String str_resource_id = cbx_resource_id.getValue().get_id();
-
-            ArrayList<AbstractMap.SimpleEntry<String, String>> params = new ArrayList<>();
-            //Mandatory
-            params.add(new AbstractMap.SimpleEntry<>("invoice_id", invoices[selected_index].get_id()));
-            params.add(new AbstractMap.SimpleEntry<>("resource_id", str_resource_id));
-
-            try
-            {
-                ArrayList<AbstractMap.SimpleEntry<String, String>> headers = new ArrayList<>();
-                if(SessionManager.getInstance().getActive()!=null)
-                    headers.add(new AbstractMap.SimpleEntry<>("Cookie", SessionManager.getInstance().getActive().getSessionId()));
-                else
-                {
-                    JOptionPane.showMessageDialog(null, "No active sessions.", "Session expired", JOptionPane.ERROR_MESSAGE);
-                    return;
-                }
-
-                HttpURLConnection connection = RemoteComms.postData("/api/invoice/resource/add", params, headers);
-                if(connection!=null)
-                {
-                    if(connection.getResponseCode()==HttpURLConnection.HTTP_OK)
-                    {
-                        JOptionPane.showMessageDialog(null, "Successfully added new invoice resource!", "Success", JOptionPane.INFORMATION_MESSAGE);
-                    }else{
-                        JOptionPane.showMessageDialog(null, connection.getResponseCode(), "Error", JOptionPane.ERROR_MESSAGE);
-                    }
-                }
-            } catch (IOException e)
-            {
-                IO.log(TAG, IO.TAG_ERROR, e.getMessage());
-            }
-        });
-
-        //Add form controls vertically on the scene
-        vbox.getChildren().add(invoice_issuer);
-        vbox.getChildren().add(resource_id);
-
-        vbox.getChildren().add(submit);
-
-        //Setup scene and display
-        Scene scene = new Scene(vbox);
-        File fCss = new File("src/fadulousbms/styles/home.css");
-        scene.getStylesheets().clear();
-        scene.getStylesheets().add("file:///"+ fCss.getAbsolutePath().replace("\\", "/"));
-
-        stage.setOnCloseRequest(event ->
-        {
-            System.out.println("Reloading local data.");
-            loadDataFromServer();
-        });
-
-        stage.setScene(scene);
-        stage.show();
-        stage.centerOnScreen();
-        stage.setResizable(true);
-    }
-
-    public void invoiceReps()
-    {
-        SessionManager smgr = SessionManager.getInstance();
-        if(smgr.getActive()!=null)
-        {
-            if(!smgr.getActive().isExpired())
-            {
-                Stage stage = new Stage();
-                stage.setTitle(Globals.APP_NAME.getValue() + " - invoice representatives");
-                stage.setMinWidth(320);
-                stage.setMinHeight(340);
-                //stage.setAlwaysOnTop(true);
-
-                tblInvoiceRepresentatives = new TableView();
-                tblInvoiceRepresentatives.setEditable(true);
-
-                TableColumn<BusinessObject, String> resource_id = new TableColumn<>("Employee ID");
-                resource_id.setMinWidth(100);
-                resource_id.setCellValueFactory(new PropertyValueFactory<>("short_id"));
-
-                TableColumn<BusinessObject, String> firstname = new TableColumn("First name");
-                CustomTableViewControls.makeEditableTableColumn(firstname, TextFieldTableCell.forTableColumn(), 80, "firstname", "/api/employee");
-
-                TableColumn<BusinessObject, String> lastname = new TableColumn("Last name");
-                CustomTableViewControls.makeEditableTableColumn(lastname, TextFieldTableCell.forTableColumn(), 80, "lastname", "/api/employee");
-
-                //TableColumn<BusinessObject, String> access_level = new TableColumn("Access level");
-                //CustomTableViewControls.makeEditableTableColumn(access_level, TextFieldTableCellOld.forTableColumn(), 80, "access_level", "/api/employee");
-
-                TableColumn<BusinessObject, String> gender = new TableColumn("Gender");
-                CustomTableViewControls.makeComboBoxTableColumn(gender, genders, "gender", "gender", "/api/employee", 80);
-
-                TableColumn<BusinessObject, String> email_address = new TableColumn("eMail address");
-                CustomTableViewControls.makeEditableTableColumn(email_address, TextFieldTableCell.forTableColumn(), 80, "email", "/api/employee");
-
-                TableColumn<BusinessObject, Long> date_joined = new TableColumn("Date joined");
-                CustomTableViewControls.makeDatePickerTableColumn(date_joined, "date_joined", "/api/employee");
-
-                TableColumn<BusinessObject, String> tel = new TableColumn("Tel. number");
-                CustomTableViewControls.makeEditableTableColumn(tel, TextFieldTableCell.forTableColumn(), 80, "tel", "/api/employee");
-
-                TableColumn<BusinessObject, String> cell = new TableColumn("Cell number");
-                CustomTableViewControls.makeEditableTableColumn(cell, TextFieldTableCell.forTableColumn(), 80, "cell", "/api/employee");
-
-                TableColumn<BusinessObject, String> domain = new TableColumn("Domain");
-                CustomTableViewControls.makeComboBoxTableColumn(domain, domains, "active", "domain", "/api/employee", 80);
-                //CustomTableViewControls.makeEditableTableColumn(other, TextFieldTableCellOld.forTableColumn(), 80, "other", "/api/invoice/resource");
-
-                TableColumn<BusinessObject, String> other = new TableColumn("Other");
-                CustomTableViewControls.makeEditableTableColumn(other, TextFieldTableCell.forTableColumn(), 80, "other", "/api/employee");
-
-                MenuBar menu_bar = new MenuBar();
-                Menu file = new Menu("File");
-                Menu edit = new Menu("Edit");
-
-                MenuItem new_resource = new MenuItem("New representative");
-                new_resource.setOnAction(event -> handleNewInvoiceRep(stage));
-                MenuItem save = new MenuItem("Save");
-                MenuItem print = new MenuItem("Print");
-
-
-                ObservableList<Employee> lst_invoice_reps = FXCollections.observableArrayList();
-                int selected_index = tblInvoices.getSelectionModel().selectedIndexProperty().get();
-                //Invoice selected_invoice = (Invoice) tblInvoices.selectionModelProperty().get();
-                //make fancy "New representative" label - not really necessary though
-                if(invoices!=null)
-                {
-                    if (selected_index >= 0 && selected_index < invoices.length)
-                    {
-                        if(invoices[selected_index].get("issuer_org_id")!=null)
-                        {
-                            for (BusinessObject businessObject : organisations)
-                            {
-                                if(businessObject.get_id()!=null)
-                                {
-                                    if (businessObject.get_id().equals(invoices[selected_index].get("issuer_org_id")))
-                                    {
-                                        if (label_properties.split("\\|").length > 1)
-                                        {
-                                            String name = (String) businessObject.get(label_properties.split("\\|")[0]);
-                                            if (name == null)
-                                                name = (String) businessObject.get(label_properties.split("\\|")[1]);
-                                            if (name == null)
-                                                IO.log(TAG, IO.TAG_ERROR, "neither of the label_properties were found in object!");
-                                            else
-                                            {
-                                                new_resource.setText("New representative for invoice issued by " + name);
-                                                IO.log(TAG, IO.TAG_INFO, String.format("set invoice [representative] context to [invoice issued by] '%s'", name));
-                                            }
-                                        } else
-                                        {
-                                            IO.log(TAG, IO.TAG_ERROR, "label_properties split array index out of bounds!");
-                                        }
-                                    }
-                                }else IO.log(TAG, IO.TAG_WARN, "business object id is null.");
-                            }
-                        }else{
-                            IO.log(TAG, IO.TAG_ERROR, String.format("issuer_org_id of selected invoice '%s' is null.", invoices[selected_index].get_id()));
-                        }
-                        if(invoices[selected_index].getRepresentatives()!=null)
-                        {
-                            lst_invoice_reps.addAll(invoices[selected_index].getRepresentatives());
-                            IO.log(TAG, IO.TAG_INFO, String.format("added invoice '%s' representatives.", invoices[selected_index].get_id()));
-                        }
-                        else IO.log(TAG, IO.TAG_ERROR, String.format("invoice '%s' has no representatives.", invoices[selected_index].get_id()));
-                    }
-                    else IO.log(TAG, IO.TAG_ERROR, "invoice array index out of bounds: " + selected_index);
-                }else IO.log(TAG, IO.TAG_ERROR, "invoices array is null!");
-
-                tblInvoiceRepresentatives.setItems(lst_invoice_reps);
-                tblInvoiceRepresentatives.getColumns().addAll(firstname, lastname, gender,
-                        email_address, date_joined, tel, cell, domain, other);
-
-
-                file.getItems().addAll(new_resource, save, print);
-
-                menu_bar.getMenus().addAll(file, edit);
-
-                BorderPane border_pane = new BorderPane();
-                border_pane.setTop(menu_bar);
-                border_pane.setCenter(tblInvoiceRepresentatives);
-
-                stage.setOnCloseRequest(event ->
-                {
-                    System.out.println("Reloading local data.");
-                    loadDataFromServer();
-
-                    stage.close();
-                });
-
-                Scene scene = new Scene(border_pane);
-                stage.setScene(scene);
-                stage.show();
-                stage.centerOnScreen();
-                stage.setResizable(true);
-            }else{
-                JOptionPane.showMessageDialog(null, "Active session has expired.", "Session Expired", JOptionPane.ERROR_MESSAGE);
-            }
-        }else{
-            JOptionPane.showMessageDialog(null, "No active sessions.", "Session Expired", JOptionPane.ERROR_MESSAGE);
-        }
-    }
-
-    public void handleNewInvoiceRep(Stage parentStage)
-    {
-        if(tblInvoices==null)
-        {
-            IO.log(TAG, IO.TAG_ERROR, "invoices table is null!");
-            return;
-        }
-
-        if(employees==null)
-        {
-            IO.log(TAG, IO.TAG_ERROR, "no employees were found in the database.");
-            return;
-        }
-
-        int selected_index = tblInvoices.getSelectionModel().selectedIndexProperty().get();
-
-        if(invoices!=null)
-        {
-            if (selected_index < 0 || selected_index >= invoices.length)
-            {
-                IO.log(TAG, IO.TAG_ERROR, "invoices array index is out of bounds");
-                return;
-            }
-        }else{
-            IO.log(TAG, IO.TAG_ERROR, "invoices array is null!");
-            return;
-        }
-
-        parentStage.setAlwaysOnTop(false);
-        Stage stage = new Stage();
-        stage.setTitle(Globals.APP_NAME.getValue() + " - Add new invoice representative");
-        stage.setMinWidth(320);
-        stage.setMinHeight(120);
-        //stage.setAlwaysOnTop(true);
-
-        VBox vbox = new VBox(10);
-
-        final TextField txt_invoice_issuer = new TextField();
-        txt_invoice_issuer.setMinWidth(200);
-        txt_invoice_issuer.setMaxWidth(Double.MAX_VALUE);
-        txt_invoice_issuer.setEditable(false);
-        HBox invoice_issuer = CustomTableViewControls.getLabelledNode("Invoice issuer", 200, txt_invoice_issuer);
-
-        //resource combo box
-        final ComboBox<Employee> cbx_employee = new ComboBox<>();
-        cbx_employee.setCellFactory(new Callback<ListView<Employee>, ListCell<Employee>>()
-        {
-            @Override
-            public ListCell<Employee> call(ListView<Employee> lst_reps)
-            {
-                return new ListCell<Employee>()
-                {
-                    @Override
-                    protected void updateItem(Employee employee, boolean empty)
-                    {
-                        super.updateItem(employee, empty);
-                        if(employee!=null && !empty)
-                        {
-                            setText(employee.getFirstname() + " " + employee.getLastname());
-                        }else{
-                            setText("");
-                        }
-                    }
-                };
-            }
-        });
-        cbx_employee.setButtonCell(new ListCell<Employee>()
-        {
-            @Override
-            protected void updateItem(Employee employee, boolean empty)
-            {
-                super.updateItem(employee, empty);
-                if(employee!=null && !empty)
-                {
-                    setText(employee.getFirstname() + " " + employee.getLastname());
-                }else{
-                    setText("");
-                }
-            }
-        });
-        //set invoice issuer
-        String issuer_id = (String)invoices[selected_index].get("issuer_org_id");
-        if(issuer_id!=null)
-            txt_invoice_issuer.setText(issuer_id);
-        else{
-            IO.log(TAG, IO.TAG_ERROR, "issuer id is null.");
-            return;
-        }
-
-        cbx_employee.setItems(FXCollections.observableArrayList(employees));
-        cbx_employee.setMinWidth(200);
-        cbx_employee.setMaxWidth(Double.MAX_VALUE);
-        HBox employee = CustomTableViewControls.getLabelledNode("Employee", 200, cbx_employee);
-
-        HBox submit;
-        submit = CustomTableViewControls.getSpacedButton("Submit", event ->
-        {
-            if(cbx_employee.getValue()!=null)
-            {
-                if (!Validators.isValidNode(cbx_employee, cbx_employee.getValue().get_id() == null ? "" : cbx_employee.getValue().get_id(), 1, ".+"))
-                    return;
-            }
-            else
-            {
-                Validators.isValidNode(cbx_employee, "", 1, ".+");
-                return;
-            }
-
-            String str_employee_usr = (String)cbx_employee.getValue().get("usr");
-
-            ArrayList<AbstractMap.SimpleEntry<String, String>> params = new ArrayList<>();
-            //Mandatory
-            params.add(new AbstractMap.SimpleEntry<>("invoice_id", invoices[selected_index].get_id()));
-            params.add(new AbstractMap.SimpleEntry<>("usr", str_employee_usr));
-
-            try
-            {
-                ArrayList<AbstractMap.SimpleEntry<String, String>> headers = new ArrayList<>();
-                if(SessionManager.getInstance().getActive()!=null)
-                    headers.add(new AbstractMap.SimpleEntry<>("Cookie", SessionManager.getInstance().getActive().getSessionId()));
-                else
-                {
-                    JOptionPane.showMessageDialog(null, "No active sessions.", "Session expired", JOptionPane.ERROR_MESSAGE);
-                    return;
-                }
-
-                HttpURLConnection connection = RemoteComms.postData("/api/invoice/rep/add", params, headers);
-                if(connection!=null)
-                {
-                    if(connection.getResponseCode()==HttpURLConnection.HTTP_OK)
-                    {
-                        JOptionPane.showMessageDialog(null, "Successfully added new invoice representative!", "Success", JOptionPane.INFORMATION_MESSAGE);
-                    }else{
-                        JOptionPane.showMessageDialog(null, connection.getResponseCode(), "Error", JOptionPane.ERROR_MESSAGE);
-                    }
-                }
-            } catch (IOException e)
-            {
-                IO.log(TAG, IO.TAG_ERROR, e.getMessage());
-            }
-        });
-
-        //Add form controls vertically on the scene
-        vbox.getChildren().add(invoice_issuer);
-        vbox.getChildren().add(employee);
-
-        vbox.getChildren().add(submit);
-
-        //Setup scene and display
-        Scene scene = new Scene(vbox);
-        File fCss = new File("src/fadulousbms/styles/home.css");
-        scene.getStylesheets().clear();
-        scene.getStylesheets().add("file:///"+ fCss.getAbsolutePath().replace("\\", "/"));
-
-        stage.setOnCloseRequest(event ->
-        {
-            System.out.println("Reloading local data.");
-            loadDataFromServer();
-        });
-
-        stage.setScene(scene);
-        stage.show();
-        stage.centerOnScreen();
-        stage.setResizable(true);
     }
 
     public void handleNewInvoice(Stage parentStage)
@@ -1290,5 +602,5 @@ public class InvoiceManager extends BusinessObjectManager
         stage.show();
         stage.centerOnScreen();
         stage.setResizable(true);
-    }
+    }*/
 }

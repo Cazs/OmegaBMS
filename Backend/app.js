@@ -8,7 +8,7 @@ const fs = require('fs');
 const hummus = require('hummus');
 var multer = require('multer');
 //const upload = multer({dest : __dirname + '/public/uploads/'});
-
+//154.0.175.175
 //Custom imports
 const employees = require('./models/employees/employees.js');
 const sessions = require('./models/system/sessions.js');
@@ -304,25 +304,65 @@ app.post('/api/quote/generic/resource/update/:object_id',function(req, res)
 /**** Invoices route handlers ****/
 app.get('/api/invoice/:object_id',function(req, res)
 {
-  getObject(req, res, invoices);
+  get(req, res, invoices, function(err, obj)
+  {
+    if(err)
+    {
+      errorAndCloseConnection(res,500,errors.INTERNAL_ERR);
+      logServerError(err);
+      return;
+    }
+    console.log('user with session_id [%s] requested invoice [%s].', req.headers.cookie, req.params.object_id);
+    res.json(obj);
+  });
 });
 
 app.get('/api/invoices',function(req, res)
 {
-  getAllObjects(req, res, invoices);
+  getAll(req, res, invoices, function(err, objs)
+  {
+    if(err)
+    {
+      errorAndCloseConnection(res,500,errors.INTERNAL_ERR);
+      logServerError(err);
+      return;
+    }
+    console.log('user with session_id [%s] requested all invoices in the database.', req.headers.cookie);
+    res.json(objs);
+  });
 });
 
 app.post('/api/invoice/add',function(req, res)
 {
-  addObject(req, res, invoices);
+  add(req, res, invoices, function(err, invoice)
+  {
+    if(err)
+    {
+      console.log(err);
+      return;
+    }
+    console.log('created new invoice:\n%s\n', JSON.stringify(invoice));
+    res.json({'message':'successfully created new invoice.'});
+  });
 });
 
 app.post('/api/invoice/update/:object_id',function(req, res)
 {
-  updateObject(req, res, invoices);
+  update(req, res, invoices, function(err, invoice)
+  {
+    if(err)
+    {
+      errorAndCloseConnection(res, 500, errors.INTERNAL_ERR);
+      logServerError(err);
+      return;
+    }
+    console.log('successfully updated invoice [%s].\n', invoice._id);
+    res.json(invoice);
+  });
 });
+
 //Invoice resources
-app.get('/api/invoice/resources/:object_id',function(req, res)
+/*app.get('/api/invoice/resources/:object_id',function(req, res)
 {
   getObject(req, res, invoice_resources);
 });
@@ -336,6 +376,7 @@ app.post('/api/invoice/resource/update/:object_id',function(req, res)
 {
   updateObject(req, res, invoice_resources);
 });
+
 //Invoice reps
 app.get('/api/invoice/reps/:object_id',function(req, res)
 {
@@ -350,7 +391,7 @@ app.post('/api/invoice/rep/add',function(req, res)
 app.post('/api/invoice/rep/update/:object_id',function(req, res)
 {
   updateObject(req, res, invoice_reps);
-});
+});*/
 
 /**** Resources route handlers ****/
 //Resource types handlers
@@ -393,37 +434,106 @@ app.post('/api/resource/update/:object_id',function(req, res)
 //Asset types handlers
 app.get('/api/asset/types',function(req, res)
 {
-  getAllObjects(req, res, asset_types);
+  getAll(req, res, asset_types, function(err, objs)
+  {
+    if(err)
+    {
+      errorAndCloseConnection(res,500,errors.INTERNAL_ERR);
+      logServerError(err);
+      return;
+    }
+    console.log('user with session_id [%s] requested all asset_types in the database.', req.headers.cookie);
+    res.json(objs);
+  });
 });
 
 app.post('/api/asset/type/add',function(req, res)
 {
-  addObject(req, res, asset_types);
+  add(req, res, asset_types, function(err, asset_type)
+  {
+    if(err)
+    {
+      console.log(err);
+      return;
+    }
+    console.log('created new asset_type:\n%s\n', JSON.stringify(asset_type));
+    res.json({'message':'successfully created new asset type.'});
+  });
 });
 
 app.post('/api/asset/type/update/:object_id',function(req, res)
 {
-  updateObject(req, res, asset_types);
+  update(req, res, asset_types, function(err, asset_type)
+  {
+    if(err)
+    {
+      errorAndCloseConnection(res, 500, errors.INTERNAL_ERR);
+      logServerError(err);
+      return;
+    }
+    console.log('successfully updated asset_type [%s].\n', asset_type._id);
+    res.json(asset_type);
+  });
 });
+
 //Actual Asset handlers
 app.get('/api/asset/:object_id',function(req, res)
 {
-  getObject(req, res, assets);
+  get(req, res, assets, function(err, obj)
+  {
+    if(err)
+    {
+      errorAndCloseConnection(res,500,errors.INTERNAL_ERR);
+      logServerError(err);
+      return;
+    }
+    console.log('user with session_id [%s] requested asset [%s].', req.headers.cookie, req.params.object_id);
+    res.json(obj);
+  });
 });
 
 app.get('/api/assets',function(req, res)
 {
-  getAllObjects(req, res, assets);
+  getAll(req, res, assets, function(err, objs)
+  {
+    if(err)
+    {
+      errorAndCloseConnection(res,500,errors.INTERNAL_ERR);
+      logServerError(err);
+      return;
+    }
+    console.log('user with session_id [%s] requested all assets in the database.', req.headers.cookie);
+    res.json(objs);
+  });
 });
 
 app.post('/api/asset/add',function(req, res)
 {
-  addObject(req, res, assets);
+  add(req, res, assets, function(err, asset)
+  {
+    if(err)
+    {
+      console.log(err);
+      return;
+    }
+    console.log('created new asset:\n%s\n', JSON.stringify(asset));
+    res.json({'message':'successfully created new asset.'});
+  });
 });
 
 app.post('/api/asset/update/:object_id',function(req, res)
 {
-  updateObject(req, res, assets);
+  update(req, res, assets, function(err, asset)
+  {
+    if(err)
+    {
+      errorAndCloseConnection(res, 500, errors.INTERNAL_ERR);
+      logServerError(err);
+      return;
+    }
+    console.log('successfully updated asset [%s].\n', asset._id);
+    res.json(asset);
+  });
 });
 
 /**** Suppliers route handlers ****/
@@ -1577,9 +1687,11 @@ createCounter('job_count');
 createCounter('quote_count');
 createCounter('quotes_timestamp');
 createCounter('jobs_timestamp');
+createCounter('invoices_timestamp');
 createCounter('suppliers_timestamp');
-createCounter('resources_timestamp');
 createCounter('clients_timestamp');
+createCounter('resources_timestamp');
+createCounter('assets_timestamp');
 
 app.listen(PORT);
 console.log('..::%s server is now running at localhost on port %s::..',APP_NAME, PORT);

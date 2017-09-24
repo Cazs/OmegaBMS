@@ -73,7 +73,7 @@
                         <Label text="Site name" GridPane.rowIndex="7" />
                         <TextField fx:id="txtSite" GridPane.columnIndex="1" GridPane.rowIndex="7" />
                         <Label text="Fax Number" GridPane.rowIndex="5" />
-                        <Label text="Client details" GridPane.columnSpan="2" GridPane.halignment="CENTER" GridPane.hgrow="ALWAYS" GridPane.valignment="CENTER" GridPane.vgrow="ALWAYS">
+                        <Label text="Create Pending Quote" GridPane.columnSpan="2" GridPane.halignment="CENTER" GridPane.hgrow="ALWAYS" GridPane.valignment="CENTER" GridPane.vgrow="ALWAYS">
                             <font>
                                 <Font name="System Bold" size="17.0" />
                             </font>

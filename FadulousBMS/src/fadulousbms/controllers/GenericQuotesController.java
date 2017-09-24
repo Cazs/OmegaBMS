@@ -25,6 +25,7 @@ import javafx.util.Callback;
 
 import java.io.IOException;
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.ResourceBundle;
 
 /**
@@ -70,7 +71,7 @@ public class GenericQuotesController extends Screen implements Initializable
         CustomTableViewControls.makeDatePickerTableColumn(colGenericQuoteDate, "date_generated", "/api/quote/generic");
         CustomTableViewControls.makeEditableTableColumn(colGenericQuoteRequest, TextFieldTableCell.forTableColumn(), 100, "request", "/api/quote/generic");
         CustomTableViewControls.makeEditableTableColumn(colGenericQuoteSitename, TextFieldTableCell.forTableColumn(), 100, "sitename", "/api/quote/generic");
-        CustomTableViewControls.makeDynamicToggleButtonTableColumn(colGenericQuoteStatus,100, "status", new String[]{"0","Pending","1","Accepted"}, false,"/api/quote/generic");
+        CustomTableViewControls.makeDynamicToggleButtonTableColumn(colGenericQuoteStatus,100, "status", new String[]{"0","Pending","1","Rejected"}, true,"/api/quote/generic");
         colGenericQuoteCreator.setCellValueFactory(new PropertyValueFactory<>("creator"));
         CustomTableViewControls.makeEditableTableColumn(colGenericQuoteExtra, TextFieldTableCell.forTableColumn(), 100, "extra", "/api/quote/generic");
 
@@ -166,7 +167,12 @@ public class GenericQuotesController extends Screen implements Initializable
         tblGenericQuotes.getSelectionModel().selectedIndexProperty().addListener((observable, oldValue, newValue) ->
                 GenericQuoteManager.getInstance().setSelectedGenericQuote(tblGenericQuotes.getSelectionModel().getSelectedItem()));
 
-        tblGenericQuotes.setItems(FXCollections.observableArrayList(GenericQuoteManager.getInstance().getGenericQuotes()));
+        GenericQuote[] genericQuotes = GenericQuoteManager.getInstance().getGenericQuotes();
+        ArrayList<GenericQuote> accepted_quotes = new ArrayList<>();
+        for(GenericQuote genericQuote: genericQuotes)
+            if(genericQuote.getStatus()==0)//if pending
+                accepted_quotes.add(genericQuote);
+        tblGenericQuotes.setItems(FXCollections.observableArrayList(accepted_quotes));
     }
 
     /**

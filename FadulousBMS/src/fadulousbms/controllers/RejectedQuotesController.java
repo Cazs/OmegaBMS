@@ -30,6 +30,7 @@ import javafx.util.Callback;
 
 import java.io.IOException;
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.ResourceBundle;
 
 /**
@@ -75,7 +76,7 @@ public class RejectedQuotesController extends Screen implements Initializable
         CustomTableViewControls.makeDatePickerTableColumn(colQuoteDate, "date_generated", "/api/quote/generic");
         CustomTableViewControls.makeEditableTableColumn(colQuoteRequest, TextFieldTableCell.forTableColumn(), 100, "request", "/api/quote/generic");
         CustomTableViewControls.makeEditableTableColumn(colQuoteSitename, TextFieldTableCell.forTableColumn(), 100, "sitename", "/api/quote/generic");
-        CustomTableViewControls.makeDynamicToggleButtonTableColumn(colQuoteStatus,100, "status", new String[]{"0","Pending","1","Accepted"}, false,"/api/quote/generic");
+        CustomTableViewControls.makeDynamicToggleButtonTableColumn(colQuoteStatus,100, "status", new String[]{"0","Pending","1","Rejected"}, true,"/api/quote/generic");
         colQuoteCreator.setCellValueFactory(new PropertyValueFactory<>("creator"));
         CustomTableViewControls.makeEditableTableColumn(colQuoteExtra, TextFieldTableCell.forTableColumn(), 100, "extra", "/api/quote/generic");
 
@@ -158,7 +159,12 @@ public class RejectedQuotesController extends Screen implements Initializable
         tblRejectedQuotes.getSelectionModel().selectedIndexProperty().addListener((observable, oldValue, newValue) ->
                 GenericQuoteManager.getInstance().setSelectedGenericQuote(tblRejectedQuotes.getSelectionModel().getSelectedItem()));
 
-        tblRejectedQuotes.setItems(FXCollections.observableArrayList(GenericQuoteManager.getInstance().getGenericQuotes()));
+        GenericQuote[] genericQuotes = GenericQuoteManager.getInstance().getGenericQuotes();
+        ArrayList<GenericQuote> rejected_quotes = new ArrayList<>();
+        for(GenericQuote genericQuote: genericQuotes)
+            if(genericQuote.getStatus()==1)//if rejected
+                rejected_quotes.add(genericQuote);
+        tblRejectedQuotes.setItems(FXCollections.observableArrayList(rejected_quotes));
     }
 
     /**

@@ -88,6 +88,11 @@ public class SafetyManager extends BusinessObjectManager
         }
     }
 
+    public FileMetadata[] getDocuments()
+    {
+        return documents;
+    }
+
     private void swap(int pos, int min_max)
     {
         FileMetadata temp = documents[pos];
@@ -203,7 +208,7 @@ public class SafetyManager extends BusinessObjectManager
                                 headers.add(new AbstractMap.SimpleEntry<>("Content-Type", "application/pdf"));
                                 headers.add(new AbstractMap.SimpleEntry<>("Filename", f.getName()));
                                 RemoteComms.uploadFile("/api/upload", headers, buffer);
-                                System.out.println("\n File size: " + buffer.length + " bytes.");
+                                IO.log(TAG, "File size: " + buffer.length + " bytes.", IO.TAG_INFO);
                             }else{
                                 IO.logAndAlert(TAG, "File not found.", IO.TAG_ERROR);
                             }

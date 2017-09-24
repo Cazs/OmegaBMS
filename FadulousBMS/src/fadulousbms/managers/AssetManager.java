@@ -3,10 +3,7 @@ package fadulousbms.managers;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonSyntaxException;
-import fadulousbms.auxilary.Globals;
-import fadulousbms.auxilary.IO;
-import fadulousbms.auxilary.RemoteComms;
-import fadulousbms.auxilary.Validators;
+import fadulousbms.auxilary.*;
 import fadulousbms.model.*;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -35,10 +32,13 @@ import java.util.ArrayList;
 public class AssetManager extends BusinessObjectManager
 {
     private Asset[] assets;
-    private TableView tblAssets;
-    private Gson gson;
+    private AssetType[] asset_types;
+    private Asset selected;
     private static AssetManager asset_manager = new AssetManager();
-    public static AssetType[] asset_types;
+    private Gson gson;
+    public static final String ROOT_PATH = "cache/assets/";
+    public String filename = "";
+    private long timestamp;
     public static final String TAG = "AssetManager";
 
     private AssetManager()
@@ -69,11 +69,36 @@ public class AssetManager extends BusinessObjectManager
                     ArrayList<AbstractMap.SimpleEntry<String, String>> headers = new ArrayList<>();
                     headers.add(new AbstractMap.SimpleEntry<>("Cookie", smgr.getActive().getSessionId()));
 
-                    String assets_json = RemoteComms.sendGetRequest("/api/assets", headers);
-                    assets = gson.fromJson(assets_json, Asset[].class);
+                    //Get Timestamp
+                    String timestamp_json = RemoteComms.sendGetRequest("/api/timestamp/assets_timestamp", headers);
+                    Counters cntr_timestamp = gson.fromJson(timestamp_json, Counters.class);
+                    if(cntr_timestamp!=null)
+                    {
+                        timestamp = cntr_timestamp.getCount();
+                        filename = "assets_"+timestamp+".dat";
+                        IO.log(this.getClass().getName(), IO.TAG_INFO, "Server Timestamp: "+timestamp);
+                    }else {
+                        IO.logAndAlert(this.getClass().getName(), "could not get valid timestamp", IO.TAG_ERROR);
+                        return;
+                    }
 
-                    String asset_types_json = RemoteComms.sendGetRequest("/api/asset/types", headers);
-                    asset_types = gson.fromJson(asset_types_json, AssetType[].class);
+                    if(!isSerialized(ROOT_PATH+filename))
+                    {
+                        String assets_json = RemoteComms.sendGetRequest("/api/assets", headers);
+                        assets = gson.fromJson(assets_json, Asset[].class);
+
+                        String asset_types_json = RemoteComms.sendGetRequest("/api/asset/types", headers);
+                        asset_types = gson.fromJson(asset_types_json, AssetType[].class);
+
+                        IO.log(getClass().getName(), IO.TAG_INFO, "reloaded collection of jobs.");
+
+                        this.serialize(ROOT_PATH+filename, assets);
+                        this.serialize(ROOT_PATH+"asset_types.dat", asset_types);
+                    }else{
+                        IO.log(this.getClass().getName(), IO.TAG_INFO, "binary object ["+ROOT_PATH+filename+"] on local disk is already up-to-date.");
+                        assets = (Asset[]) this.deserialize(ROOT_PATH+filename);
+                        asset_types = (AssetType[]) this.deserialize(ROOT_PATH+"asset_types.dat");
+                    }
                 } else
                 {
                     JOptionPane.showMessageDialog(null, "Active session has expired.", "Session Expired", JOptionPane.ERROR_MESSAGE);
@@ -89,13 +114,16 @@ public class AssetManager extends BusinessObjectManager
         }catch (MalformedURLException ex)
         {
             IO.log(TAG, IO.TAG_ERROR, ex.getMessage());
+        }catch (ClassNotFoundException e)
+        {
+            IO.log(TAG, IO.TAG_ERROR, e.getMessage());
         }catch (IOException ex)
         {
             IO.log(TAG, IO.TAG_ERROR, ex.getMessage());
         }
     }
 
-    public void newWindow()
+    /*public void newWindow()
     {
         SessionManager smgr = SessionManager.getInstance();
         if(smgr.getActive()!=null)
@@ -176,6 +204,26 @@ public class AssetManager extends BusinessObjectManager
         }else{
             JOptionPane.showMessageDialog(null, "No active sessions.", "Session Expired", JOptionPane.ERROR_MESSAGE);
         }
+    }*/
+
+    public Asset[] getAssets()
+    {
+        return assets;
+    }
+
+    public AssetType[] getAsset_types()
+    {
+        return asset_types;
+    }
+
+    public Asset getSelected()
+    {
+        return selected;
+    }
+
+    public void setSelected(Asset selected)
+    {
+        this.selected = selected;
     }
 
     public void handleNewAsset(Stage parentStage)

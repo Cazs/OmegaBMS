@@ -42,8 +42,9 @@ public class ResourceManager extends BusinessObjectManager
     private TableView tblResources;
     private Gson gson;
     private static ResourceManager resource_manager = new ResourceManager();
+
     //public static final String[] RESOURCE_TYPES = {"VEHICLE", "EQUIPMENT"};
-    public static ResourceType[] resource_types;
+    private ResourceType[] resource_types;
     public static final String TAG = "ResourceManager";
     public static final String ROOT_PATH = "cache/resources/";
     public String filename = "";
@@ -76,6 +77,11 @@ public class ResourceManager extends BusinessObjectManager
     public Resource getSelected()
     {
         return this.selected;
+    }
+
+    public ResourceType[] getResource_types()
+    {
+        return resource_types;
     }
 
     @Override
@@ -119,10 +125,13 @@ public class ResourceManager extends BusinessObjectManager
                         resource_types = gson.fromJson(resource_types_json, ResourceType[].class);
 
                         IO.log(getClass().getName(), IO.TAG_INFO, "reloaded collection of clients.");
+
                         this.serialize(ROOT_PATH+filename, resources);
+                        this.serialize(ROOT_PATH+"resource_types.dat", resource_types);
                     }else{
                         IO.log(this.getClass().getName(), IO.TAG_INFO, "binary object ["+ROOT_PATH+filename+"] on local disk is already up-to-date.");
                         resources = (Resource[]) this.deserialize(ROOT_PATH+filename);
+                        resource_types = (ResourceType[]) this.deserialize(ROOT_PATH+"resource_types.dat");
                     }
                 } else IO.logAndAlert("Session Expired", "Active session has expired.", IO.TAG_ERROR);
             } else IO.logAndAlert("Session Expired", "No active sessions.", IO.TAG_ERROR);

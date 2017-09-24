@@ -22,7 +22,7 @@ import java.util.ResourceBundle;
 /**
  * Created by ghost on 2017/02/02.
  */
-public class PurchasesController extends Screen implements Initializable
+public class AccountingController extends Screen implements Initializable
 {
     @Override
     public void refresh()
@@ -52,7 +52,7 @@ public class PurchasesController extends Screen implements Initializable
     }
 
     @FXML
-    public void stockClick()
+    public void purchasesClick()
     {
         final ScreenManager screenManager = this.getScreenManager();
         this.getScreenManager().showLoadingScreen(param ->
@@ -64,11 +64,11 @@ public class PurchasesController extends Screen implements Initializable
                 {
                     try
                     {
-                        if(screenManager.loadScreen(Screens.RESOURCES.getScreen(),getClass().getResource("../views/"+Screens.RESOURCES.getScreen())))
+                        if(screenManager.loadScreen(Screens.PURCHASES.getScreen(),getClass().getResource("../views/"+Screens.PURCHASES.getScreen())))
                         {
                             Platform.runLater(() ->
-                                    screenManager.setScreen(Screens.RESOURCES.getScreen()));
-                        } else IO.log(getClass().getName(), IO.TAG_ERROR, "could not load resources screen.");
+                                    screenManager.setScreen(Screens.PURCHASES.getScreen()));
+                        } else IO.log(getClass().getName(), IO.TAG_ERROR, "could not load purchases screen.");
                     } catch (IOException e)
                     {
                         IO.log(getClass().getName(), IO.TAG_ERROR, e.getMessage());
@@ -80,8 +80,7 @@ public class PurchasesController extends Screen implements Initializable
     }
 
     @FXML
-    public void assetsClick()
+    public void invoicesClick()
     {
-
     }
 }

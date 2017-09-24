@@ -1,6 +1,5 @@
 package fadulousbms.model;
 
-import fadulousbms.auxilary.Globals;
 import fadulousbms.auxilary.IO;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
@@ -29,7 +28,6 @@ public class GenericQuote implements BusinessObject, Serializable
     private String extra;
     private Employee creator_employee;
     private GenericQuoteItem[] resources;
-    public static double VAT = 14.0;
     private boolean marked;
     public static final String TAG = "GenericQuote";
 

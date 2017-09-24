@@ -14,6 +14,7 @@ import fadulousbms.managers.ScreenManager;
 import fadulousbms.managers.SessionManager;
 import fadulousbms.model.Employee;
 import fadulousbms.model.Screens;
+import javafx.application.Platform;
 import javafx.embed.swing.SwingFXUtils;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -21,6 +22,7 @@ import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.web.WebView;
 
 import javax.imageio.ImageIO;
 import javax.swing.*;
@@ -38,11 +40,22 @@ import java.util.ResourceBundle;
  */
 public class LoadingController extends Screen implements Initializable
 {
-    private ScreenManager screen_mgr;
+    @FXML
+    private Label lblLoading;
 
     @Override
     public void refresh()
     {
+        Employee e = SessionManager.getInstance().getActiveEmployee();
+        if(e!=null)
+            this.getUserNameLabel().setText(e.toString());
+        else IO.log(getClass().getName(), IO.TAG_ERROR, "No active sessions.");
+        //Set default profile photo
+        if(Screen.defaultProfileImage!=null)
+        {
+            Image image = SwingFXUtils.toFXImage(Screen.defaultProfileImage, null);
+            this.getProfileImageView().setImage(image);
+        }else IO.log("LoadingController", "default profile image is null.", IO.TAG_ERROR);
     }
 
     /**
@@ -51,19 +64,31 @@ public class LoadingController extends Screen implements Initializable
     @Override
     public void initialize(URL url, ResourceBundle rb) 
     {
-
+        Thread t = new Thread(() ->
+        {
+            while(true)
+            {
+                Platform.runLater(() ->
+                {
+                    if(lblLoading.getText().length()>14)
+                        lblLoading.setText("Loading");
+                    lblLoading.setText(lblLoading.getText()+".");
+                });
+                try
+                {
+                    Thread.sleep(100);
+                } catch (InterruptedException e)
+                {
+                    IO.log("LoadingScreenController", IO.TAG_ERROR, e.getMessage());
+                }
+            }
+        });
+        t.start();
+        //Set default profile photo
+        if(Screen.defaultProfileImage!=null)
+        {
+            Image image = SwingFXUtils.toFXImage(Screen.defaultProfileImage, null);
+            this.getProfileImageView().setImage(image);
+        }else IO.log("LoadingController", "default profile image is null.", IO.TAG_ERROR);
     }
-
-    @Override
-    public void setParent(ScreenManager mgr) 
-    {
-        screen_mgr = mgr;
-    }
-
-    @FXML
-    public void showMain()
-    {
-        screen_mgr.setScreen(Screens.HOME.getScreen());
-    }
-    
 }

@@ -167,9 +167,16 @@ public class SuppliersController extends Screen implements Initializable
     }
 
     @FXML
-    public void newSupplier()
+    public void createSupplierClick()
     {
-        //ClientManager.getInstance().nullifySelected();
-        //screen_mgr.setScreen(Screens.NEW_CLIENT.getScreen());
+        try
+        {
+            if(this.getScreenManager().loadScreen(Screens.NEW_SUPPLIER.getScreen(),getClass().getResource("../views/"+Screens.NEW_SUPPLIER.getScreen())))
+                this.getScreenManager().setScreen(Screens.NEW_SUPPLIER.getScreen());
+            else IO.log(getClass().getName(), IO.TAG_ERROR, "could not load supplier creation screen.");
+        } catch (IOException e)
+        {
+            IO.log(getClass().getName(), IO.TAG_ERROR, e.getMessage());
+        }
     }
 }

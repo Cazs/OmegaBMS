@@ -17,6 +17,7 @@ import java.util.ResourceBundle;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import javafx.application.Platform;
 import javafx.embed.swing.SwingFXUtils;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -29,6 +30,7 @@ import javafx.scene.image.ImageView;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.StackPane;
 import javafx.stage.Stage;
+import javafx.util.Callback;
 
 import javax.imageio.ImageIO;
 import javax.swing.*;
@@ -108,101 +110,198 @@ public class OperationsController extends Screen implements Initializable
     @FXML
     public void resourcesClick()
     {
-        try
+        final ScreenManager screenManager = this.getScreenManager();
+        this.getScreenManager().showLoadingScreen(param ->
         {
-            if(this.getScreenManager().loadScreen(Screens.RESOURCES.getScreen(),getClass().getResource("../views/"+Screens.RESOURCES.getScreen())))
-                this.getScreenManager().setScreen(Screens.RESOURCES.getScreen());
-            else IO.log(getClass().getName(), IO.TAG_ERROR, "could not load resources screen.");
-        } catch (IOException e)
-        {
-            IO.log(getClass().getName(), IO.TAG_ERROR, e.getMessage());
-        }
+            new Thread(new Runnable()
+            {
+                @Override
+                public void run()
+                {
+                    try
+                    {
+                        if(screenManager.loadScreen(Screens.RESOURCES.getScreen(),getClass().getResource("../views/"+Screens.RESOURCES.getScreen())))
+                        {
+                            Platform.runLater(() ->
+                                    screenManager.setScreen(Screens.RESOURCES.getScreen()));
+                        } else IO.log(getClass().getName(), IO.TAG_ERROR, "could not load resources screen.");
+                    } catch (IOException e)
+                    {
+                        IO.log(getClass().getName(), IO.TAG_ERROR, e.getMessage());
+                    }
+                }
+            }).start();
+            return null;
+        });
     }
 
     //Sales event handlers
     @FXML
     public void quotesClick()
     {
-        //this.getScreenManager().setScreen("loading.fxml");
-        try
+        final ScreenManager screenManager = this.getScreenManager();
+        this.getScreenManager().showLoadingScreen(param ->
         {
-            if(this.getScreenManager().loadScreen(Screens.QUOTES.getScreen(),getClass().getResource("../views/"+Screens.QUOTES.getScreen())))
-                this.getScreenManager().setScreen(Screens.QUOTES.getScreen());
-            else IO.log(getClass().getName(), IO.TAG_ERROR, "could not load quotes screen.");
-        } catch (IOException e)
-        {
-            IO.log(getClass().getName(), IO.TAG_ERROR, e.getMessage());
-        }
+            new Thread(new Runnable()
+            {
+                @Override
+                public void run()
+                {
+                    try
+                    {
+                        if(screenManager.loadScreen(Screens.QUOTES.getScreen(),getClass().getResource("../views/"+Screens.QUOTES.getScreen())))
+                        {
+                            Platform.runLater(() ->
+                                    screenManager.setScreen(Screens.QUOTES.getScreen()));
+                        } else IO.log(getClass().getName(), IO.TAG_ERROR, "could not load quotes screen.");
+                    } catch (IOException e)
+                    {
+                        IO.log(getClass().getName(), IO.TAG_ERROR, e.getMessage());
+                    }
+                }
+            }).start();
+            return null;
+        });
     }
 
     @FXML
     public void pendingQuotesClick()
     {
-        try
+        final ScreenManager screenManager = this.getScreenManager();
+        this.getScreenManager().showLoadingScreen(param ->
         {
-            if(this.getScreenManager().loadScreen(Screens.GENERIC_QUOTES.getScreen(),getClass().getResource("../views/"+Screens.GENERIC_QUOTES.getScreen())))
-                this.getScreenManager().setScreen(Screens.GENERIC_QUOTES.getScreen());
-            else IO.log(getClass().getName(), IO.TAG_ERROR, "could not load generic quotes screen.");
-        } catch (IOException e)
-        {
-            IO.log(getClass().getName(), IO.TAG_ERROR, e.getMessage());
-        }
+            new Thread(new Runnable()
+            {
+                @Override
+                public void run()
+                {
+                    try
+                    {
+                        if(screenManager.loadScreen(Screens.GENERIC_QUOTES.getScreen(),getClass().getResource("../views/"+Screens.GENERIC_QUOTES.getScreen())))
+                        {
+                            Platform.runLater(() ->
+                                    screenManager.setScreen(Screens.GENERIC_QUOTES.getScreen()));
+                        } else IO.log(getClass().getName(), IO.TAG_ERROR, "could not load generic quotes screen.");
+                    } catch (IOException e)
+                    {
+                        IO.log(getClass().getName(), IO.TAG_ERROR, e.getMessage());
+                    }
+                }
+            }).start();
+            return null;
+        });
     }
 
     @FXML
     public void rejectedQuotesClick()
     {
-        try
+        final ScreenManager screenManager = this.getScreenManager();
+        this.getScreenManager().showLoadingScreen(param ->
         {
-            if(this.getScreenManager().loadScreen(Screens.REJECTED_QUOTES.getScreen(),getClass().getResource("../views/"+Screens.REJECTED_QUOTES.getScreen())))
-                this.getScreenManager().setScreen(Screens.REJECTED_QUOTES.getScreen());
-            else IO.log(getClass().getName(), IO.TAG_ERROR, "could not load rejected quotes screen.");
-        } catch (IOException e)
-        {
-            IO.log(getClass().getName(), IO.TAG_ERROR, e.getMessage());
-        }
+            new Thread(new Runnable()
+            {
+                @Override
+                public void run()
+                {
+                    try
+                    {
+                        if(screenManager.loadScreen(Screens.REJECTED_QUOTES.getScreen(),getClass().getResource("../views/"+Screens.REJECTED_QUOTES.getScreen())))
+                        {
+                            Platform.runLater(() ->
+                                    screenManager.setScreen(Screens.REJECTED_QUOTES.getScreen()));
+                        } else IO.log(getClass().getName(), IO.TAG_ERROR, "could not load rejected quotes screen.");
+                    } catch (IOException e)
+                    {
+                        IO.log(getClass().getName(), IO.TAG_ERROR, e.getMessage());
+                    }
+                }
+            }).start();
+            return null;
+        });
     }
 
     //Production event handlers
     @FXML
     public void suppliersClick()
     {
-        try
+        final ScreenManager screenManager = this.getScreenManager();
+        this.getScreenManager().showLoadingScreen(param ->
         {
-            if(this.getScreenManager().loadScreen(Screens.SUPPLIERS.getScreen(),getClass().getResource("../views/"+Screens.SUPPLIERS.getScreen())))
-                this.getScreenManager().setScreen(Screens.SUPPLIERS.getScreen());
-            else IO.log(getClass().getName(), IO.TAG_ERROR, "could not load suppliers screen.");
-        } catch (IOException e)
-        {
-            IO.log(getClass().getName(), IO.TAG_ERROR, e.getMessage());
-        }
+            new Thread(new Runnable()
+            {
+                @Override
+                public void run()
+                {
+                    try
+                    {
+                        if(screenManager.loadScreen(Screens.SUPPLIERS.getScreen(),getClass().getResource("../views/"+Screens.SUPPLIERS.getScreen())))
+                        {
+                            Platform.runLater(() ->
+                                    screenManager.setScreen(Screens.SUPPLIERS.getScreen()));
+                        } else IO.log(getClass().getName(), IO.TAG_ERROR, "could not load suppliers screen.");
+                    } catch (IOException e)
+                    {
+                        IO.log(getClass().getName(), IO.TAG_ERROR, e.getMessage());
+                    }
+                }
+            }).start();
+            return null;
+        });
     }
 
     @FXML
     public void jobsClick()
     {
-        try
+        final ScreenManager screenManager = this.getScreenManager();
+        this.getScreenManager().showLoadingScreen(param ->
         {
-            if(this.getScreenManager().loadScreen(Screens.JOBS.getScreen(),getClass().getResource("../views/"+Screens.JOBS.getScreen())))
-                this.getScreenManager().setScreen(Screens.JOBS.getScreen());
-            else IO.log(getClass().getName(), IO.TAG_ERROR, "could not load jobs screen.");
-        } catch (IOException e)
-        {
-            IO.log(getClass().getName(), IO.TAG_ERROR, e.getMessage());
-        }
+            new Thread(new Runnable()
+            {
+                @Override
+                public void run()
+                {
+                    try
+                    {
+                        if(screenManager.loadScreen(Screens.JOBS.getScreen(),getClass().getResource("../views/"+Screens.JOBS.getScreen())))
+                        {
+                            Platform.runLater(() ->
+                                    screenManager.setScreen(Screens.JOBS.getScreen()));
+                        } else IO.log(getClass().getName(), IO.TAG_ERROR, "could not load jobs screen.");
+                    } catch (IOException e)
+                    {
+                        IO.log(getClass().getName(), IO.TAG_ERROR, e.getMessage());
+                    }
+                }
+            }).start();
+            return null;
+        });
     }
 
     @FXML
     public void clientsClick()
     {
-        try
+        final ScreenManager screenManager = this.getScreenManager();
+        this.getScreenManager().showLoadingScreen(param ->
         {
-            if(this.getScreenManager().loadScreen(Screens.CLIENTS.getScreen(),getClass().getResource("../views/"+Screens.CLIENTS.getScreen())))
-                this.getScreenManager().setScreen(Screens.CLIENTS.getScreen());
-            else IO.log(getClass().getName(), IO.TAG_ERROR, "could not load clients screen.");
-        } catch (IOException e)
-        {
-            IO.log(getClass().getName(), IO.TAG_ERROR, e.getMessage());
-        }
+            new Thread(new Runnable()
+            {
+                @Override
+                public void run()
+                {
+                    try
+                    {
+                        if(screenManager.loadScreen(Screens.CLIENTS.getScreen(),getClass().getResource("../views/"+Screens.CLIENTS.getScreen())))
+                        {
+                            Platform.runLater(() ->
+                                    screenManager.setScreen(Screens.CLIENTS.getScreen()));
+                        } else IO.log(getClass().getName(), IO.TAG_ERROR, "could not load clients screen.");
+                    } catch (IOException e)
+                    {
+                        IO.log(getClass().getName(), IO.TAG_ERROR, e.getMessage());
+                    }
+                }
+            }).start();
+            return null;
+        });
     }
 }

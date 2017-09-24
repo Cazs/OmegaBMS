@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.scene.effect.*?>
 <?import java.lang.*?>
 <?import javafx.scene.shape.*?>
 <?import javafx.geometry.*?>
@@ -10,7 +11,7 @@
 
 <BorderPane maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="600.0" minWidth="650.0" styleClass="border-pane" stylesheets="@../styles/home.css" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="fadulousbms.controllers.LoginController">
    <center>
-      <StackPane BorderPane.alignment="CENTER">
+      <StackPane fx:id="main_pane" BorderPane.alignment="CENTER">
          <children>
             <BorderPane maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" styleClass="sys-body" StackPane.alignment="CENTER">
                <StackPane.margin>
@@ -118,7 +119,11 @@
                <right>
                   <HBox alignment="CENTER_RIGHT" prefHeight="100.0" prefWidth="200.0" BorderPane.alignment="CENTER">
                      <children>
-                        <Button fx:id="btnHome" mnemonicParsing="false" onMouseClicked="#showMain" styleClass="btnDefault" text="Home" />
+                        <Button fx:id="btnHome" minHeight="35.0" minWidth="70.0" mnemonicParsing="false" onMouseClicked="#showMain" styleClass="btnDefault" text="Home">
+                           <HBox.margin>
+                              <Insets right="10.0" />
+                           </HBox.margin></Button>
+                        <Button alignment="CENTER" contentDisplay="CENTER" minHeight="35.0" minWidth="70.0" mnemonicParsing="false" onMouseClicked="#previousScreen" styleClass="btnBack" stylesheets="@../styles/home.css" text="Back" />
                      </children>
                   </HBox>
                </right>

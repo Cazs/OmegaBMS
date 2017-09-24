@@ -33,7 +33,6 @@ import java.util.*;
  */
 public class NewGenericQuoteController extends Screen implements Initializable
 {
-    private ScreenManager screen_mgr;
     private boolean itemsModified;
     private Date date_generated;
 
@@ -52,8 +51,8 @@ public class NewGenericQuoteController extends Screen implements Initializable
     @Override
     public void refresh()
     {
-        QuoteManager.getInstance().initialize(screen_mgr);
-        ResourceManager.getInstance().initialize(screen_mgr);
+        QuoteManager.getInstance().initialize(this.getScreenManager());
+        ResourceManager.getInstance().initialize(this.getScreenManager());
     }
 
     /**
@@ -126,36 +125,6 @@ public class NewGenericQuoteController extends Screen implements Initializable
                 };
 
         colAction.setCellFactory(cellFactory);
-    }
-
-    @FXML
-    public void previousScreen()
-    {
-        if(itemsModified)
-        {
-            int response = JOptionPane.showConfirmDialog(null, "You have unsaved changes to the quote's items, would you like to save them?");
-
-            if(response == JOptionPane.OK_OPTION)
-            {
-                createGenericQuote();
-            }else{
-                screen_mgr.setScreen(Screens.QUOTES.getScreen());
-            }
-        }else{
-            screen_mgr.setScreen(Screens.QUOTES.getScreen());
-        }
-    }
-
-    @Override
-    public void setParent(ScreenManager mgr) 
-    {
-        screen_mgr = mgr;
-    }
-
-    @FXML
-    public void showMain()
-    {
-        screen_mgr.setScreen(Screens.HOME.getScreen());
     }
 
     @FXML

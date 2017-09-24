@@ -1,6 +1,7 @@
 const mongoose = require('mongoose');
 const crypto = require('crypto');
 var access_levels = require('../system/access_levels.js');
+var counters = require('../system/counters.js');
 
 var VALIDATION_MODE_STRICT = "strict";
 var VALIDATION_MODE_PASSIVE = "passive";

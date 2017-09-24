@@ -105,6 +105,7 @@ public class JobsController extends Screen implements Initializable
                         final TableCell<Job, String> cell = new TableCell<Job, String>()
                         {
                             final Button btnView = new Button("View");
+                            final Button btnInvoice = new Button("Generate Invoice");
                             final Button btnPDF = new Button("PDF");
                             final Button btnRemove = new Button("Delete");
 
@@ -117,6 +118,12 @@ public class JobsController extends Screen implements Initializable
                                 btnView.setMinWidth(100);
                                 btnView.setMinHeight(35);
                                 HBox.setHgrow(btnView, Priority.ALWAYS);
+
+                                btnInvoice.getStylesheets().add(this.getClass().getResource("../styles/home.css").toExternalForm());
+                                btnInvoice.getStyleClass().add("btnApply");
+                                btnInvoice.setMinWidth(100);
+                                btnInvoice.setMinHeight(35);
+                                HBox.setHgrow(btnInvoice, Priority.ALWAYS);
 
                                 btnPDF.getStylesheets().add(this.getClass().getResource("../styles/home.css").toExternalForm());
                                 btnPDF.getStyleClass().add("btnApply");
@@ -136,7 +143,7 @@ public class JobsController extends Screen implements Initializable
                                     setText(null);
                                 } else
                                 {
-                                    HBox hBox = new HBox(btnView, btnPDF, btnRemove);
+                                    HBox hBox = new HBox(btnView, btnInvoice, btnPDF, btnRemove);
                                     Job job = getTableView().getItems().get(getIndex());
 
                                     btnView.setOnAction(event ->
@@ -153,8 +160,30 @@ public class JobsController extends Screen implements Initializable
                                         }
                                     });
 
+                                    btnInvoice.setOnAction(event ->
+                                    {
+                                        try
+                                        {
+                                            InvoiceManager.getInstance().generateInvoice(job);
+                                        } catch (IOException ex)
+                                        {
+                                            IO.log(getClass().getName(), IO.TAG_ERROR, ex.getMessage());
+                                        }
+                                        /*InvoiceManager.getInstance().setSelected(getTableView().getItems().get(getIndex()));
+                                        try
+                                        {
+                                            if(screenManager.loadScreen(Screens.VIEW_JOB.getScreen(),getClass().getResource("../views/"+Screens.VIEW_JOB.getScreen())))
+                                                screenManager.setScreen(Screens.VIEW_JOB.getScreen());
+                                            else IO.log(getClass().getName(), IO.TAG_ERROR, "could not load jobs viewer screen.");
+                                        } catch (IOException e)
+                                        {
+                                            IO.log(getClass().getName(), IO.TAG_ERROR, e.getMessage());
+                                        }*/
+                                    });
+
                                     btnRemove.setOnAction(event ->
                                     {
+                                        //197.242.144.30
                                         //Quote quote = getTableView().getItems().get(getIndex());
                                         //getTableView().getItems().remove(quote);
                                         //getTableView().refresh();

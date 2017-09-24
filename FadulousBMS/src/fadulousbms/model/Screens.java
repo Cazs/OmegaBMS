@@ -19,6 +19,7 @@ public enum Screens
     OPERATIONS_FACILITIES("Operations_facilities.fxml"),
     OPERATIONS_CLIENTS("Operations_facilities.fxml"),
     SAFETY("Safety.fxml"),
+    SAFETY_FILES("SafetyFiles.fxml"),
     SETTINGS("Settings.fxml"),
     CREATE_ACCOUNT("Create_account.fxml"),
     RESET_PWD("ResetPassword.fxml"),
@@ -33,8 +34,17 @@ public enum Screens
     JOBS("Jobs.fxml"),
     VIEW_JOB("View_job.fxml"),
     CLIENTS("Clients.fxml"),
+    NEW_CLIENT("NewClient.fxml"),
     SUPPLIERS("Suppliers.fxml"),
-    RESOURCES("Stock.fxml");
+    NEW_SUPPLIER("NewSupplier.fxml"),
+    RESOURCES("Stock.fxml"),
+    NEW_RESOURCE("NewResource.fxml"),
+    FACILITIES("Facilities.fxml"),
+    HR("HR.fxml"),
+    ACCOUNTING("Accounting.fxml"),
+    PURCHASES("Purchases.fxml"),
+    ASSETS("Assets.fxml"),
+    NEW_ASSET("NewAsset.fxml");
 
     private String screen;
     

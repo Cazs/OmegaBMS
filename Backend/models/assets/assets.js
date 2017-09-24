@@ -1,5 +1,6 @@
 const mongoose = require('mongoose');
 var access_levels = require('../system/access_levels.js');
+var counters = require('../system/counters.js');
 
 const assetSchema = mongoose.Schema(
   {
@@ -15,6 +16,10 @@ const assetSchema = mongoose.Schema(
       type:String,
       required:true
     },
+    asset_serial:{
+      type:String,
+      required:true
+    },
     asset_value:{
       type:Number,
       required:true
@@ -25,6 +30,14 @@ const assetSchema = mongoose.Schema(
     },
     date_exhausted:{
       type:Number,
+      required:false
+    },
+    quantity:{
+      type:Number,
+      required:false
+    },
+    unit:{
+      type:String,
       required:false
     },
     other:{
@@ -40,7 +53,19 @@ module.exports.ACCESS_MODE = access_levels.NORMAL;//Required access level to exe
 
 module.exports.add = function (asset, callback)
 {
-  Assets.create(asset, callback);
+  console.log('attempting to create a new asset.');
+  Assets.create(asset, function(err, new_asset)
+  {
+    if(err)
+    {
+      callback(err);
+      return;
+    }
+    //asset was successfully created
+    callback(err, new_asset);
+    //update timestamp
+    counters.timestamp('assets_timestamp');
+  });
 };
 
 module.exports.get = function (asset_id, callback)
@@ -57,7 +82,18 @@ module.exports.getAll = function (callback)
 module.exports.update = function (asset_id, asset, callback)
 {
   var query = {_id :asset_id};
-  Assets.findOneAndUpdate(query, asset, {}, callback);
+  Assets.findOneAndUpdate(query, asset, {}, function(err, asset_obj)
+  {
+    if(err)
+    {
+      callback(err);
+      return;
+    }
+    //asset was successfully updated
+    callback(err, asset_obj);
+    //update timestamp
+    counters.timestamp('assets_timestamp');
+  });
 };
 
 module.exports.isValid = function(asset)

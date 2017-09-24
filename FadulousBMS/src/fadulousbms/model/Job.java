@@ -403,14 +403,18 @@ public class Job implements BusinessObject, Serializable
             if(date_logged>0)
                 result.append(URLEncoder.encode("date_logged","UTF-8") + "="
                         + URLEncoder.encode(String.valueOf(date_logged), "UTF-8"));
-            result.append("&" + URLEncoder.encode("date_assigned","UTF-8") + "="
-                    + URLEncoder.encode(String.valueOf(date_assigned), "UTF-8"));
-            result.append("&" + URLEncoder.encode("planned_start_date","UTF-8") + "="
-                    + URLEncoder.encode(String.valueOf(planned_start_date), "UTF-8"));
-            result.append("&" + URLEncoder.encode("date_started","UTF-8") + "="
-                    + URLEncoder.encode(String.valueOf(date_started), "UTF-8"));
-            result.append("&" + URLEncoder.encode("date_completed","UTF-8") + "="
-                    + URLEncoder.encode(String.valueOf(date_completed), "UTF-8"));
+            if(date_assigned>0)
+                result.append("&" + URLEncoder.encode("date_assigned","UTF-8") + "="
+                        + URLEncoder.encode(String.valueOf(date_assigned), "UTF-8"));
+            if(planned_start_date>0)
+                result.append("&" + URLEncoder.encode("planned_start_date","UTF-8") + "="
+                        + URLEncoder.encode(String.valueOf(planned_start_date), "UTF-8"));
+            if(date_started>0)
+                result.append("&" + URLEncoder.encode("date_started","UTF-8") + "="
+                        + URLEncoder.encode(String.valueOf(date_started), "UTF-8"));
+            if(date_completed>0)
+                result.append("&" + URLEncoder.encode("date_completed","UTF-8") + "="
+                        + URLEncoder.encode(String.valueOf(date_completed), "UTF-8"));
             if(invoice_id!=null)
                 result.append("&" + URLEncoder.encode("invoice_id","UTF-8") + "="
                         + URLEncoder.encode(invoice_id, "UTF-8"));

@@ -25,6 +25,7 @@ import java.util.concurrent.TimeoutException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import javafx.application.Platform;
 import javafx.embed.swing.SwingFXUtils;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -56,6 +57,8 @@ public class LoginController extends Screen implements Initializable
         if(e!=null)
             this.getUserNameLabel().setText(e.getFirstname() + " " + e.getLastname());
         else IO.log(getClass().getName(), IO.TAG_ERROR, "No active sessions.");
+
+        //this.getLoadingPane().setVisible(false);
     }
 
     /**
@@ -100,36 +103,47 @@ public class LoginController extends Screen implements Initializable
     @FXML
     public void login()
     {
-        try 
+        final ScreenManager screenManager = this.getScreenManager();
+        this.getScreenManager().showLoadingScreen(param ->
         {
-            String usr = txtUsr.getText(), pwd=txtPwd.getText();
-            if(usr!=null && pwd!=null)
+            new Thread(new Runnable()
             {
-                try
+                @Override
+                public void run()
                 {
-                    Session session = RemoteComms.auth(usr, pwd);
-                    SessionManager ssn_mgr = SessionManager.getInstance();
-                    ssn_mgr.addSession(session);
+                    try
+                    {
+                        String usr = txtUsr.getText(), pwd=txtPwd.getText();
+                        if(usr!=null && pwd!=null)
+                        {
+                            Session session = RemoteComms.auth(usr, pwd);
+                            SessionManager ssn_mgr = SessionManager.getInstance();
+                            ssn_mgr.addSession(session);
 
-                    if(this.getScreenManager().loadScreen(Screens.HOME.getScreen(),getClass().getResource("../views/"+Screens.HOME.getScreen())))
-                        this.getScreenManager().setScreen(Screens.HOME.getScreen());
-                    else IO.log(getClass().getName(), IO.TAG_ERROR, "could not load home screen.");
-                }catch(ConnectException ex)
-                {
-                    JOptionPane.showMessageDialog(null, ex.getMessage() + ", \nis the server up? are you connected to the network?", "Login failure", JOptionPane.ERROR_MESSAGE);
-                    IO.log(getClass().getName(), IO.TAG_ERROR, ex.getMessage() + ", \nis the server up? are you connected to the network?");
-                } catch (LoginException ex) 
-                {
-                    JOptionPane.showMessageDialog(null, ex.getMessage(), "Login failure", JOptionPane.ERROR_MESSAGE);
-                    IO.log(getClass().getName(), IO.TAG_ERROR, ex.getMessage());
+                            if (screenManager.loadScreen(Screens.HOME.getScreen(), getClass().getResource("../views/" + Screens.HOME.getScreen())))
+                            {
+                                Platform.runLater(() ->
+                                        screenManager.setScreen(Screens.HOME.getScreen()));
+                            } else IO.log(getClass().getName(), IO.TAG_ERROR, "could not load home screen.");
+                        }else{
+                            JOptionPane.showMessageDialog(null, "Invalid entry.", "Login failure", JOptionPane.ERROR_MESSAGE);
+                            IO.log(getClass().getName(), IO.TAG_ERROR, "invalid input.");
+                        }
+                    }catch(ConnectException ex)
+                    {
+                        JOptionPane.showMessageDialog(null, ex.getMessage() + ", \nis the server up? are you connected to the network?", "Login failure", JOptionPane.ERROR_MESSAGE);
+                        IO.log(getClass().getName(), IO.TAG_ERROR, ex.getMessage() + ", \nis the server up? are you connected to the network?");
+                    } catch (LoginException ex)
+                    {
+                        JOptionPane.showMessageDialog(null, ex.getMessage(), "Login failure", JOptionPane.ERROR_MESSAGE);
+                        IO.log(getClass().getName(), IO.TAG_ERROR, ex.getMessage());
+                    } catch (IOException e)
+                    {
+                        IO.log(getClass().getName(), IO.TAG_ERROR, e.getMessage());
+                    }
                 }
-            }else{
-                JOptionPane.showMessageDialog(null, "Invalid entry.", "Login failure", JOptionPane.ERROR_MESSAGE);
-                IO.log(getClass().getName(), IO.TAG_ERROR, "invalid input.");
-            }
-        } catch (IOException ex) 
-        {
-            IO.logAndAlert(getClass().getName(), ex.getMessage(), IO.TAG_ERROR);
-        }
+            }).start();
+            return null;
+        });
     }
 }

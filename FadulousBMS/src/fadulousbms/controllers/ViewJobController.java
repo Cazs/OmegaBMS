@@ -254,68 +254,65 @@ public class ViewJobController extends Screen implements Initializable
     @FXML
     public void assignEmployee()
     {
-        if(QuoteManager.getInstance()!=null)
+        EmployeeManager.getInstance().loadDataFromServer();
+
+        if(EmployeeManager.getInstance().getEmployees()!=null)
         {
-            if(EmployeeManager.getInstance().getEmployees()!=null)
+            if(EmployeeManager.getInstance().getEmployees().length>0)
             {
-                if(EmployeeManager.getInstance().getEmployees().length>0)
+                ComboBox<Employee> employeeComboBox = new ComboBox<>();
+                employeeComboBox.setMinWidth(120);
+                employeeComboBox.setItems(FXCollections.observableArrayList(EmployeeManager.getInstance().getEmployees()));
+                HBox.setHgrow(employeeComboBox, Priority.ALWAYS);
+
+                Button btnAdd = new Button("Add");
+                btnAdd.setMinWidth(80);
+                btnAdd.setMinHeight(40);
+                btnAdd.setDefaultButton(true);
+                btnAdd.getStyleClass().add("btnApply");
+                btnAdd.getStylesheets().add(this.getClass().getResource("../styles/home.css").toExternalForm());
+
+                Button btnCancel = new Button("Close");
+                btnCancel.setMinWidth(80);
+                btnCancel.setMinHeight(40);
+                btnCancel.getStyleClass().add("btnBack");
+                btnCancel.getStylesheets().add(this.getClass().getResource("../styles/home.css").toExternalForm());
+
+                HBox hBox = new HBox(new Label("Employee: "), employeeComboBox);
+                HBox.setHgrow(hBox, Priority.ALWAYS);
+                hBox.setSpacing(20);
+
+                HBox hBoxButtons = new HBox(btnAdd, btnCancel);
+                hBoxButtons.setHgrow(btnAdd, Priority.ALWAYS);
+                hBoxButtons.setHgrow(btnCancel, Priority.ALWAYS);
+                hBoxButtons.setSpacing(20);
+
+                VBox vBox = new VBox(hBox, hBoxButtons);
+                VBox.setVgrow(vBox, Priority.ALWAYS);
+                vBox.setSpacing(20);
+                HBox.setHgrow(vBox, Priority.ALWAYS);
+                vBox.setFillWidth(true);
+
+                Stage stage = new Stage();
+                stage.setTitle("Add Job Representative");
+                stage.setScene(new Scene(vBox));
+                stage.setAlwaysOnTop(true);
+                stage.show();
+
+                btnAdd.setOnAction(event ->
                 {
-                    ComboBox<Employee> employeeComboBox = new ComboBox<>();
-                    employeeComboBox.setMinWidth(120);
-                    employeeComboBox.setItems(FXCollections.observableArrayList(EmployeeManager.getInstance().getEmployees()));
-                    HBox.setHgrow(employeeComboBox, Priority.ALWAYS);
-
-                    Button btnAdd = new Button("Add");
-                    btnAdd.setMinWidth(80);
-                    btnAdd.setMinHeight(40);
-                    btnAdd.setDefaultButton(true);
-                    btnAdd.getStyleClass().add("btnApply");
-                    btnAdd.getStylesheets().add(this.getClass().getResource("../styles/home.css").toExternalForm());
-
-                    Button btnCancel = new Button("Close");
-                    btnCancel.setMinWidth(80);
-                    btnCancel.setMinHeight(40);
-                    btnCancel.getStyleClass().add("btnBack");
-                    btnCancel.getStylesheets().add(this.getClass().getResource("../styles/home.css").toExternalForm());
-
-                    HBox hBox = new HBox(new Label("Employee: "), employeeComboBox);
-                    HBox.setHgrow(hBox, Priority.ALWAYS);
-                    hBox.setSpacing(20);
-
-                    HBox hBoxButtons = new HBox(btnAdd, btnCancel);
-                    hBoxButtons.setHgrow(btnAdd, Priority.ALWAYS);
-                    hBoxButtons.setHgrow(btnCancel, Priority.ALWAYS);
-                    hBoxButtons.setSpacing(20);
-
-                    VBox vBox = new VBox(hBox, hBoxButtons);
-                    VBox.setVgrow(vBox, Priority.ALWAYS);
-                    vBox.setSpacing(20);
-                    HBox.setHgrow(vBox, Priority.ALWAYS);
-                    vBox.setFillWidth(true);
-
-                    Stage stage = new Stage();
-                    stage.setTitle("Add Job Representative");
-                    stage.setScene(new Scene(vBox));
-                    stage.setAlwaysOnTop(true);
-                    stage.show();
-
-                    btnAdd.setOnAction(event ->
+                    if(employeeComboBox.getValue()!=null)
                     {
-                        if(employeeComboBox.getValue()!=null)
-                        {
-                            tblEmployees.getItems().add(employeeComboBox.getValue());
-                            itemsModified=true;
-                        }
-                        else IO.logAndAlert("Add Quote Representative", "Invalid employee selected.", IO.TAG_ERROR);
-                    });
+                        tblEmployees.getItems().add(employeeComboBox.getValue());
+                        itemsModified=true;
+                    } else IO.logAndAlert("Add Job Representative", "Invalid employee selected.", IO.TAG_ERROR);
+                });
 
-                    btnCancel.setOnAction(event ->
-                        stage.close());
-                    return;
-                }
-            }
-        }
-        IO.logAndAlert("New Sale Consultant", "No employees were found in the database, please add an employee first and try again.",IO.TAG_ERROR);
+                btnCancel.setOnAction(event ->
+                    stage.close());
+                return;
+            } else IO.logAndAlert("New Job Representative", "No employees were found in the database, please add an employee first and try again.",IO.TAG_ERROR);
+        }else IO.logAndAlert("New Job Representative", "No employees were found in the database, please add an employee first and try again.",IO.TAG_ERROR);
     }
 
     @FXML

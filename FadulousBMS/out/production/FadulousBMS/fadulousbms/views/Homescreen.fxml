@@ -29,10 +29,10 @@
                       <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
                     </rowConstraints>
                      <BorderPane.margin>
-                        <Insets bottom="40.0" left="40.0" right="40.0" top="40.0" />
+                        <Insets bottom="40.0" left="70.0" right="70.0" top="40.0" />
                      </BorderPane.margin>
                      <children>
-                        <BorderPane prefHeight="200.0" prefWidth="200.0" styleClass="sys-btn" GridPane.columnIndex="1" GridPane.rowIndex="1">
+                        <BorderPane onMouseClicked="#hrClick" prefHeight="200.0" prefWidth="200.0" styleClass="sys-btn" GridPane.columnIndex="1" GridPane.rowIndex="1">
                            <center>
                               <Label maxHeight="-Infinity" minWidth="-Infinity" text="HR" BorderPane.alignment="CENTER">
                                  <font>
@@ -40,7 +40,7 @@
                                  </font></Label>
                            </center>
                         </BorderPane>
-                        <BorderPane prefHeight="200.0" prefWidth="200.0" styleClass="sys-btn" GridPane.columnIndex="1">
+                        <BorderPane onMouseClicked="#accountingClick" prefHeight="200.0" prefWidth="200.0" styleClass="sys-btn" GridPane.columnIndex="1">
                            <center>
                               <Label text="Accounting" BorderPane.alignment="CENTER">
                                  <font>
@@ -76,7 +76,7 @@
                               </Label>
                            </center>
                         </BorderPane>
-                        <BorderPane prefHeight="200.0" prefWidth="200.0" styleClass="sys-btn" GridPane.columnIndex="1" GridPane.rowIndex="2">
+                        <BorderPane onMouseClicked="#facilitiesClick" prefHeight="200.0" prefWidth="200.0" styleClass="sys-btn" GridPane.columnIndex="1" GridPane.rowIndex="2">
                            <center>
                               <Label text="Facilities" BorderPane.alignment="CENTER">
                                  <font>
@@ -92,15 +92,6 @@
                   </GridPane>
                </center>
             </BorderPane>
-            <Pane fx:id="loading_pane" prefHeight="200.0" prefWidth="200.0" style="-fx-background-color: rgba(0,0,0,.5);">
-               <effect>
-                  <MotionBlur radius="42.75" />
-               </effect>
-            </Pane>
-            <BorderPane fx:id="loading_bpane" prefHeight="200.0" prefWidth="200.0">
-               <center>
-                  <Arc fill="DODGERBLUE" length="270.0" radiusX="100.0" radiusY="100.0" startAngle="45.0" stroke="BLACK" strokeType="INSIDE" type="ROUND" BorderPane.alignment="CENTER" />
-               </center></BorderPane>
          </children>
       </StackPane>
    </center>

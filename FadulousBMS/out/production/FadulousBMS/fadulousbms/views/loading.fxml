@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.scene.web.*?>
 <?import java.lang.*?>
 <?import javafx.scene.shape.*?>
 <?import javafx.geometry.*?>
@@ -8,7 +9,7 @@
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.text.*?>
 
-<BorderPane styleClass="border-pane" stylesheets="@../styles/home.css" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="fadulousbms.controllers.HomescreenController">
+<BorderPane styleClass="border-pane" stylesheets="@../styles/home.css" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="fadulousbms.controllers.LoadingController">
    <top>
       <BorderPane styleClass="sys-nav" BorderPane.alignment="CENTER">
          <top>
@@ -35,13 +36,6 @@
                      </children>
                   </HBox>
                </left>
-               <center>
-                  <Label text="Home" BorderPane.alignment="CENTER">
-                     <font>
-                        <Font size="30.0" />
-                     </font>
-                  </Label>
-               </center>
                <right>
                   <HBox alignment="CENTER_RIGHT" prefHeight="100.0" prefWidth="200.0" BorderPane.alignment="CENTER">
                      <children>
@@ -75,6 +69,6 @@
       </HBox>
    </bottom>
    <center>
-      <Label text="Loading..." BorderPane.alignment="CENTER" />
+      <Label fx:id="lblLoading" text="Loading." BorderPane.alignment="CENTER" />
    </center>
 </BorderPane>

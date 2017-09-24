@@ -18,6 +18,7 @@ import java.io.File;
 import java.io.IOException;
 import java.net.MalformedURLException;
 
+import javafx.application.Platform;
 import javafx.embed.swing.SwingFXUtils;
 import javafx.fxml.FXML;
 import java.net.URL;
@@ -65,6 +66,8 @@ public class HomescreenController extends Screen implements Initializable
     @Override
     public void refresh()
     {
+        //this.getLoadingPane().setVisible(true);
+
         Employee e = SessionManager.getInstance().getActiveEmployee();
         if(e!=null)
         {
@@ -76,6 +79,8 @@ public class HomescreenController extends Screen implements Initializable
             }
         }
         else IO.log(getClass().getName(), IO.TAG_ERROR, "No active sessions.");
+
+        //this.getLoadingPane().setVisible(false);
     }
 
     /**
@@ -84,19 +89,19 @@ public class HomescreenController extends Screen implements Initializable
     @Override
     public void initialize(URL url, ResourceBundle rb) 
     {
-        try
+        //try
         {
-            defaultProfileImage = ImageIO.read(new File("images/profile.png"));
+            //defaultProfileImage = ImageIO.read(new File("images/profile.png"));
             Image image = SwingFXUtils.toFXImage(defaultProfileImage, null);
             this.getProfileImageView().setImage(image);
             //img_profile.setImage(new Image("dist/profile.png"));
             colorAdjust.setBrightness(0.0);
 
             refresh();
-        }catch (IOException ex)
+        }/*catch (IOException ex)
         {
             Logger.getLogger(HomescreenController.class.getName()).log(Level.SEVERE, null, ex);
-        }
+        }*/
     }
     
     private Rectangle createTile()
@@ -114,26 +119,14 @@ public class HomescreenController extends Screen implements Initializable
     
     public void operationsClick()
     {
-        if (SessionManager.getInstance().getActive() != null)
+        try
         {
-            if (!SessionManager.getInstance().getActive().isExpired())
-            {
-                try
-                {
-                    this.getScreenManager().loadScreen(Screens.OPERATIONS.getScreen(),
-                            HomescreenController.class.getResource("../views/" + Screens.OPERATIONS.getScreen()));
-                    this.getScreenManager().setScreen(Screens.OPERATIONS.getScreen());
-                } catch (IOException ex)
-                {
-                    Logger.getLogger(HomescreenController.class.getName()).log(Level.SEVERE, null, ex);
-                }
-            }else{
-                JOptionPane.showMessageDialog(null, "No active sessions!", "Session expired", JOptionPane.ERROR_MESSAGE);
-                return;
-            }
-        }else{
-            JOptionPane.showMessageDialog(null, "No active sessions!", "Session expired", JOptionPane.ERROR_MESSAGE);
-            return;
+            if(this.getScreenManager().loadScreen(Screens.OPERATIONS.getScreen(),getClass().getResource("../views/"+Screens.OPERATIONS.getScreen())))
+                this.getScreenManager().setScreen(Screens.OPERATIONS.getScreen());
+            else IO.log(getClass().getName(), IO.TAG_ERROR, "could not load operations screen.");
+        } catch (IOException ex)
+        {
+            IO.log(getClass().getName(), IO.TAG_ERROR, ex.getMessage());
         }
     }
 
@@ -199,6 +192,62 @@ public class HomescreenController extends Screen implements Initializable
         fadeOutTimeline.setCycleCount(1);
         fadeOutTimeline.setAutoReverse(false);
         fadeOutTimeline.play();
+    }
+
+    @FXML
+    public void hrClick()
+    {
+        try
+        {
+            if(this.getScreenManager().loadScreen(Screens.HR.getScreen(),getClass().getResource("../views/"+Screens.HR.getScreen())))
+                this.getScreenManager().setScreen(Screens.HR.getScreen());
+            else IO.log(getClass().getName(), IO.TAG_ERROR, "could not load human resources screen.");
+        } catch (IOException e)
+        {
+            IO.log(getClass().getName(), IO.TAG_ERROR, e.getMessage());
+        }
+    }
+
+    @FXML
+    public void accountingClick()
+    {
+        final ScreenManager screenManager = this.getScreenManager();
+        this.getScreenManager().showLoadingScreen(param ->
+        {
+            new Thread(new Runnable()
+            {
+                @Override
+                public void run()
+                {
+                    try
+                    {
+                        if(screenManager.loadScreen(Screens.ACCOUNTING.getScreen(),getClass().getResource("../views/"+Screens.ACCOUNTING.getScreen())))
+                        {
+                            Platform.runLater(() ->
+                                    screenManager.setScreen(Screens.ACCOUNTING.getScreen()));
+                        } else IO.log(getClass().getName(), IO.TAG_ERROR, "could not load accounting screen.");
+                    } catch (IOException e)
+                    {
+                        IO.log(getClass().getName(), IO.TAG_ERROR, e.getMessage());
+                    }
+                }
+            }).start();
+            return null;
+        });
+    }
+
+    @FXML
+    public void facilitiesClick()
+    {
+        try
+        {
+            if(this.getScreenManager().loadScreen(Screens.FACILITIES.getScreen(),getClass().getResource("../views/"+Screens.FACILITIES.getScreen())))
+                this.getScreenManager().setScreen(Screens.FACILITIES.getScreen());
+            else IO.log(getClass().getName(), IO.TAG_ERROR, "could not load facilities screen.");
+        } catch (IOException e)
+        {
+            IO.log(getClass().getName(), IO.TAG_ERROR, e.getMessage());
+        }
     }
 
     @FXML

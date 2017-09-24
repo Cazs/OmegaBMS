@@ -4,27 +4,36 @@ import fadulousbms.auxilary.IO;
 import fadulousbms.auxilary.RemoteComms;
 import fadulousbms.auxilary.Screen;
 import fadulousbms.auxilary.Validators;
-import fadulousbms.managers.*;
-import fadulousbms.model.*;
+import fadulousbms.managers.ClientManager;
+import fadulousbms.managers.SessionManager;
+import fadulousbms.managers.SupplierManager;
+import fadulousbms.model.Client;
+import fadulousbms.model.Supplier;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
-import javafx.scene.control.*;
+import javafx.scene.control.CheckBox;
+import javafx.scene.control.DatePicker;
+import javafx.scene.control.TextArea;
+import javafx.scene.control.TextField;
+
 import java.io.IOException;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.time.ZoneId;
-import java.util.*;
+import java.util.AbstractMap;
+import java.util.ArrayList;
+import java.util.ResourceBundle;
 
 /**
  * views Controller class
  *
  * @author ghost
  */
-public class NewSupplierController extends Screen implements Initializable
+public class NewClientController extends Screen implements Initializable
 {
     private boolean itemsModified;
     @FXML
-    private TextField txtName,txtSpeciality,txtTel,txtFax,txtWebsite,txtEmail;
+    private TextField txtName,txtTel,txtFax,txtWebsite;
     @FXML
     private CheckBox cbxActive;
     @FXML
@@ -46,7 +55,7 @@ public class NewSupplierController extends Screen implements Initializable
     }
 
     @FXML
-    public void createSupplier()
+    public void createClient()
     {
         if(SessionManager.getInstance().getActive()==null)
         {
@@ -73,19 +82,9 @@ public class NewSupplierController extends Screen implements Initializable
             txtPostal.getStylesheets().add(this.getClass().getResource("../styles/home.css").toExternalForm());
             return;
         }
-        if(!Validators.isValidNode(txtSpeciality, txtTel.getText(), 1, ".+"))
-        {
-            txtTel.getStylesheets().add(this.getClass().getResource("../styles/home.css").toExternalForm());
-            return;
-        }
         if(!Validators.isValidNode(txtWebsite, txtWebsite.getText(), 1, ".+"))
         {
             txtWebsite.getStylesheets().add(this.getClass().getResource("../styles/home.css").toExternalForm());
-            return;
-        }
-        if(!Validators.isValidNode(txtEmail, txtEmail.getText(), 1, ".+"))
-        {
-            txtEmail.getStylesheets().add(this.getClass().getResource("../styles/home.css").toExternalForm());
             return;
         }
         if(!Validators.isValidNode(txtTel, txtTel.getText(), 1, ".+"))
@@ -99,19 +98,16 @@ public class NewSupplierController extends Screen implements Initializable
             return;
         }
 
-
-        //prepare supplier parameters
-        Supplier supplier = new Supplier();
-        supplier.setSupplier_name(txtName.getText());
-        supplier.setPhysical_address(txtPhysical.getText());
-        supplier.setPostal_address(txtPostal.getText());
-        supplier.setTel(txtTel.getText());
-        supplier.setFax(txtFax.getText());
-        supplier.setDate_partnered(datePartnered.getValue().atStartOfDay(ZoneId.systemDefault()).toEpochSecond());
-        supplier.setSpeciality(txtSpeciality.getText());
-        supplier.setWebsite(txtWebsite.getText());
-        supplier.setContact_email(txtEmail.getText());
-        supplier.setActive(cbxActive.isSelected());
+        //prepare client parameters
+        Client client = new Client();
+        client.setClient_name(txtName.getText());
+        client.setPhysical_address(txtPhysical.getText());
+        client.setPostal_address(txtPostal.getText());
+        client.setTel(txtTel.getText());
+        client.setFax(txtFax.getText());
+        client.setDate_partnered(datePartnered.getValue().atStartOfDay(ZoneId.systemDefault()).toEpochSecond());
+        client.setWebsite(txtWebsite.getText());
+        client.setActive(cbxActive.isSelected());
 
         //if(str_extra!=null)
         //    quote.setExtra(str_extra);
@@ -122,26 +118,26 @@ public class NewSupplierController extends Screen implements Initializable
             headers.add(new AbstractMap.SimpleEntry<>("Cookie", SessionManager.getInstance().getActive().getSessionId()));
 
             //create new supplier on database
-            HttpURLConnection connection = RemoteComms.postData("/api/supplier/add", supplier.asUTFEncodedString(), headers);
+            HttpURLConnection connection = RemoteComms.postData("/api/client/add", client.asUTFEncodedString(), headers);
             if(connection!=null)
             {
                 if(connection.getResponseCode()==HttpURLConnection.HTTP_OK)
                 {
                     String response = IO.readStream(connection.getInputStream());
-                    IO.log(getClass().getName(), IO.TAG_INFO, "created supplier["+response+"].");
+                    IO.log(getClass().getName(), IO.TAG_INFO, "created client["+response+"].");
 
                     if(response==null)
                     {
-                        IO.logAndAlert("New Supplier Creation Failure", "Invalid response.", IO.TAG_ERROR);
+                        IO.logAndAlert("New Client Creation Failure", "Invalid response.", IO.TAG_ERROR);
                         return;
                     }
                     if(response.isEmpty())
                     {
-                        IO.logAndAlert("New Supplier Creation Failure", "Invalid response.", IO.TAG_ERROR);
+                        IO.logAndAlert("New Client Creation Failure", "Invalid response.", IO.TAG_ERROR);
                         return;
                     }
-                    SupplierManager.getInstance().setSelected(supplier);
-                    IO.logAndAlert("New Supplier Creation Success", "Successfully created a new supplier.", IO.TAG_INFO);
+                    ClientManager.getInstance().setSelected(client);
+                    IO.logAndAlert("New Client Creation Success", "Successfully created a new client.", IO.TAG_INFO);
                     itemsModified = false;
                 }else
                 {

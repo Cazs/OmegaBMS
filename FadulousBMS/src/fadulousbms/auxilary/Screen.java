@@ -13,11 +13,10 @@ import javafx.scene.control.Label;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.Pane;
+import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
-import javafx.scene.paint.Paint;
+import javafx.scene.shape.Arc;
 import javafx.scene.shape.Circle;
-
-import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 
@@ -38,15 +37,24 @@ public abstract class Screen
     @FXML
     private Label lblOutput;
     @FXML
-    private Pane pane;
+    private BorderPane loading_pane;
+    /*@FXML
+    private BorderPane loading_bpane;
     @FXML
-    private BorderPane bpane;
+    private Arc shpLoad;*/
 
     public Screen()
     {
-        pane.setVisible(false);
-        bpane.setVisible(false);
+        //loading_pane.setVisible(false);
+        //loading_bpane.setVisible(false);
+        //shpLoad.setFill(Color.RED);
+        //System.err.println(main_pane==null);
     }
+
+    /*public BorderPane getLoadingPane()
+    {
+        return this.loading_pane;
+    }*/
 
     public void setParent(ScreenManager mgr)
     {
@@ -146,6 +154,12 @@ public abstract class Screen
         }
     }
 
+    @FXML
+    public void comingSoon()
+    {
+        IO.logAndAlert("Coming Soon", "This feature is currently being implemented.", IO.TAG_INFO);
+    }
+
     public ScreenManager getScreenManager()
     {
         return  this.screen_mgr;
@@ -159,6 +173,11 @@ public abstract class Screen
     public Label getUserNameLabel()
     {
         return this.user_name;
+    }
+
+    public BorderPane getLoadingPane()
+    {
+        return this.loading_pane;
     }
 
     @FXML

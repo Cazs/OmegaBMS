@@ -6,44 +6,71 @@
 package fadulousbms.controllers;
 
 import fadulousbms.auxilary.IO;
+import fadulousbms.auxilary.RemoteComms;
 import fadulousbms.auxilary.Screen;
-import fadulousbms.managers.*;
+import fadulousbms.managers.EmployeeManager;
+import fadulousbms.managers.SafetyManager;
+import fadulousbms.managers.SessionManager;
+import fadulousbms.model.CustomTableViewControls;
 import fadulousbms.model.Employee;
-import fadulousbms.model.Screens;
+import fadulousbms.model.FileMetadata;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.embed.swing.SwingFXUtils;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
-import javafx.scene.Group;
-import javafx.scene.Scene;
-import javafx.scene.control.Label;
+import javafx.scene.control.TableColumn;
+import javafx.scene.control.TableView;
+import javafx.scene.control.cell.TextFieldTableCell;
 import javafx.scene.image.Image;
-import javafx.scene.image.ImageView;
-import javafx.stage.Stage;
+import javafx.stage.FileChooser;
 
 import javax.imageio.ImageIO;
-import javax.swing.*;
 import java.awt.image.BufferedImage;
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.net.URL;
+import java.util.AbstractMap;
+import java.util.ArrayList;
 import java.util.ResourceBundle;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 /**
  * views Controller class
  *
  * @author ghost
  */
-public class SafetyController extends Screen implements Initializable
+public class SafetyFilesController extends Screen implements Initializable
 {
+    @FXML
+    private TableView tblSafety;
+    @FXML
+    private TableColumn colIndex,colLabel,colPath,colRequired,colOptions,colType,colSelect,colAction;
+
     @Override
     public void refresh()
     {
+        EmployeeManager.getInstance().initialize(this.getScreenManager());
+        SafetyManager.getInstance().initialize(this.getScreenManager());
+
         Employee e = SessionManager.getInstance().getActiveEmployee();
         if(e!=null)
             this.getUserNameLabel().setText(e.getFirstname() + " " + e.getLastname());
         else IO.log(getClass().getName(), IO.TAG_ERROR, "No active sessions.");
+
+        CustomTableViewControls.makeEditableTableColumn(colIndex, TextFieldTableCell.forTableColumn(), 215, "index", "/api/safety/index");
+        CustomTableViewControls.makeEditableTableColumn(colLabel, TextFieldTableCell.forTableColumn(), 215, "label", "/api/safety/index");
+        CustomTableViewControls.makeEditableTableColumn(colPath, TextFieldTableCell.forTableColumn(), 215, "pdf_path", "/api/safety/index");
+        CustomTableViewControls.makeToggleButtonTableColumn(colRequired, null,60, "required", "/api/safety/index");
+        CustomTableViewControls.makeEditableTableColumn(colOptions, TextFieldTableCell.forTableColumn(), 215, "logo_options", "/api/safety/index");
+        CustomTableViewControls.makeCheckboxedTableColumn(colSelect, null, 60, "marked", "/api/safety/index");
+        CustomTableViewControls.makeEditableTableColumn(colType, TextFieldTableCell.forTableColumn(), 60, "type", "/api/safety/index");
+        CustomTableViewControls.makeActionTableColumn(colAction, 270, "pdf_path", "/api/ safety/index");
+
+        ObservableList<FileMetadata> lst_safety = FXCollections.observableArrayList();
+        lst_safety.addAll(SafetyManager.getInstance().getDocuments());
+        tblSafety.setItems(lst_safety);
     }
 
     /**
@@ -71,39 +98,71 @@ public class SafetyController extends Screen implements Initializable
         }
     }
 
-    public void safetyClick()
+    @FXML
+    public void generateIndex()
     {
+        IO.viewIndexPage("Safety Documents Index", SafetyManager.getInstance().getDocuments(), "bin/safety_index.pdf");
     }
 
-    public void riskClick()
+    @FXML
+    public void printIndex()
     {
+        IO.printIndexPage("bin/safety_index.pdf");
     }
 
-    public void ohsClick()
+    @FXML
+    public void printMarked()
     {
+        IO.printSelectedDocuments(SafetyManager.getInstance().getDocuments());
     }
 
-    public void appointmentClick()
+    @FXML
+    public void printAll()
     {
+        IO.printAllDocuments(SafetyManager.getInstance().getDocuments());
     }
 
-    public void showScanWindow()
+    @FXML
+    public void upload()
     {
-        /*Morena morena = new Morena();
-        try
+        //Validate session - also done on server-side don't worry ;)
+        SessionManager smgr = SessionManager.getInstance();
+        if(smgr.getActive()!=null)
         {
-            Manager manager= Manager.getInstance();
-            morena.simpleScan();
-            manager.close();
-        } catch (Exception e)
-        {
-            IO.logAndAlert(getClass().getName(), e.getMessage(), IO.TAG_ERROR);
-        }*/
-        //Scan scan = new Scan();
+            if(!smgr.getActive().isExpired())
+            {
+                try
+                {
+                    FileChooser fileChooser = new FileChooser();
+                    File f = fileChooser.showOpenDialog(null);
+                    if (f != null)
+                    {
+                        if (f.exists())
+                        {
+                            FileInputStream in = new FileInputStream(f);
+                            byte[] buffer = new byte[(int) f.length()];
+                            in.read(buffer, 0, buffer.length);
+                            in.close();
 
-    }
-
-    public void inspectionClick()
-    {
+                            ArrayList<AbstractMap.SimpleEntry<String, String>> headers = new ArrayList<>();
+                            headers.add(new AbstractMap.SimpleEntry<>("Cookie", SessionManager.getInstance().getActive().getSessionId()));
+                            headers.add(new AbstractMap.SimpleEntry<>("Content-Type", "application/pdf"));
+                            headers.add(new AbstractMap.SimpleEntry<>("Filename", f.getName()));
+                            RemoteComms.uploadFile("/api/upload", headers, buffer);
+                            System.out.println("\n File size: " + buffer.length + " bytes.");
+                        } else
+                        {
+                            IO.logAndAlert(getClass().getName(), "File not found.", IO.TAG_ERROR);
+                        }
+                    } else
+                    {
+                        IO.log(getClass().getName(), "File object is null.", IO.TAG_ERROR);
+                    }
+                }catch (IOException e)
+                {
+                    IO.log(getClass().getName(), e.getMessage(), IO.TAG_ERROR);
+                }
+            }else IO.showMessage("Session Expired", "Active session has expired.", IO.TAG_ERROR);
+        }else IO.showMessage("Session Expired", "No active sessions.", IO.TAG_ERROR);
     }
 }

@@ -17,7 +17,7 @@
               <menus>
                 <Menu mnemonicParsing="false" text="File">
                   <items>
-                    <MenuItem mnemonicParsing="false" text="New Client" />
+                    <MenuItem mnemonicParsing="false" onAction="#createSupplierClick" text="New Supplier" />
                         <MenuItem mnemonicParsing="false" text="Close" />
                   </items>
                 </Menu>

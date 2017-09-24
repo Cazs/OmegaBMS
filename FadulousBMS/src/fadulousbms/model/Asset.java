@@ -1,24 +1,29 @@
 package fadulousbms.model;
 
+import fadulousbms.auxilary.IO;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 
+import java.io.Serializable;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 
 /**
  * Created by ghost on 2017/02/01.
  */
-public class Asset implements BusinessObject
+public class Asset implements BusinessObject, Serializable
 {
     private boolean marked;
     private String _id;
     private String asset_name;
     private String asset_description;
+    private String asset_serial;
     private String asset_type;
     private double asset_value;
     private long date_acquired;
     private long date_exhausted;
+    private long quantity;
+    private String unit;
     private String other;
 
     public StringProperty idProperty(){return new SimpleStringProperty(_id);}
@@ -75,6 +80,18 @@ public class Asset implements BusinessObject
         this.asset_description = asset_description;
     }
 
+    public StringProperty asset_serialProperty(){return new SimpleStringProperty(asset_serial);}
+
+    public String getAsset_serial()
+    {
+        return asset_serial;
+    }
+
+    public void setAsset_serial(String asset_serial)
+    {
+        this.asset_serial = asset_serial;
+    }
+
     public StringProperty asset_typeProperty(){return new SimpleStringProperty(asset_type);}
 
     public String getAsset_type()
@@ -123,6 +140,30 @@ public class Asset implements BusinessObject
         this.date_exhausted = date_exhausted;
     }
 
+    public StringProperty quantityProperty(){return new SimpleStringProperty(String.valueOf(quantity));}
+
+    public long getQuantity()
+    {
+        return quantity;
+    }
+
+    public void setQuantity(long quantity)
+    {
+        this.quantity = quantity;
+    }
+
+    public StringProperty unitProperty(){return new SimpleStringProperty(unit);}
+
+    public String getUnit()
+    {
+        return unit;
+    }
+
+    public void setUnit(String unit)
+    {
+        this.unit = unit;
+    }
+
     public StringProperty otherProperty(){return new SimpleStringProperty(String.valueOf(other));}
 
     public String getOther()
@@ -142,26 +183,34 @@ public class Asset implements BusinessObject
         StringBuilder result = new StringBuilder();
         try
         {
-            result.append(URLEncoder.encode("asset_name","UTF-8") + "="
-                    + URLEncoder.encode(asset_name, "UTF-8") + "&");
-            result.append(URLEncoder.encode("asset_type","UTF-8") + "="
-                    + URLEncoder.encode(asset_type, "UTF-8") + "&");
-            result.append(URLEncoder.encode("asset_description","UTF-8") + "="
-                    + URLEncoder.encode(asset_description, "UTF-8") + "&");
-            result.append(URLEncoder.encode("asset_value","UTF-8") + "="
-                    + URLEncoder.encode(String.valueOf(asset_value), "UTF-8") + "&");
-            result.append(URLEncoder.encode("date_acquired","UTF-8") + "="
-                    + URLEncoder.encode(String.valueOf(date_acquired), "UTF-8") + "&");
-            result.append(URLEncoder.encode("date_exhausted","UTF-8") + "="
-                    + URLEncoder.encode(String.valueOf(date_exhausted), "UTF-8") + "&");
+            result.append("&" + URLEncoder.encode("asset_name","UTF-8") + "="
+                    + URLEncoder.encode(asset_name, "UTF-8"));
+            result.append("&" + URLEncoder.encode("asset_type","UTF-8") + "="
+                    + URLEncoder.encode(asset_type, "UTF-8"));
+            result.append("&" + URLEncoder.encode("asset_description","UTF-8") + "="
+                    + URLEncoder.encode(asset_description, "UTF-8"));
+            result.append("&" + URLEncoder.encode("asset_serial","UTF-8") + "="
+                    + URLEncoder.encode(String.valueOf(asset_serial), "UTF-8"));
+            result.append("&" + URLEncoder.encode("asset_value","UTF-8") + "="
+                    + URLEncoder.encode(String.valueOf(asset_value), "UTF-8"));
+            if(date_acquired>0)
+                result.append("&" + URLEncoder.encode("date_acquired","UTF-8") + "="
+                        + URLEncoder.encode(String.valueOf(date_acquired), "UTF-8"));
+            if(date_exhausted>0)
+                result.append("&" +  URLEncoder.encode("date_exhausted","UTF-8") + "="
+                        + URLEncoder.encode(String.valueOf(date_exhausted), "UTF-8"));
+            result.append("&" + URLEncoder.encode("quantity","UTF-8") + "="
+                    + URLEncoder.encode(String.valueOf(quantity), "UTF-8"));
+            result.append("&" + URLEncoder.encode("unit","UTF-8") + "="
+                    + URLEncoder.encode(String.valueOf(unit), "UTF-8"));
             if(other!=null)
-                result.append(URLEncoder.encode("other","UTF-8") + "="
-                        + URLEncoder.encode(other, "UTF-8") + "&");
+                result.append("&" + URLEncoder.encode("other","UTF-8") + "="
+                        + URLEncoder.encode(other, "UTF-8"));
 
             return result.toString();
         } catch (UnsupportedEncodingException e)
         {
-            System.err.println(e.getMessage());
+            IO.log(getClass().getName(), e.getMessage(), IO.TAG_ERROR);
         }
         return null;
     }
@@ -177,6 +226,9 @@ public class Asset implements BusinessObject
             case "asset_description":
                 asset_description = (String)val;
                 break;
+            case "asset_serial":
+                asset_serial = (String)val;
+                break;
             case "asset_type":
                 asset_type = (String)val;
                 break;
@@ -189,11 +241,17 @@ public class Asset implements BusinessObject
             case "date_exhausted":
                 date_exhausted = Long.parseLong(String.valueOf(val));
                 break;
+            case "quantity":
+                quantity = Long.parseLong(String.valueOf(val));
+                break;
+            case "unit":
+                unit = (String)val;
+                break;
             case "other":
                 other = (String)val;
                 break;
             default:
-                System.err.println("Unknown Asset attribute '" + var + "'.");
+                IO.log(getClass().getName(), "Unknown Asset attribute '" + var + "'.", IO.TAG_ERROR);
                 break;
         }
     }
@@ -207,18 +265,24 @@ public class Asset implements BusinessObject
                 return asset_name;
             case "asset_type":
                 return asset_type;
-            case "asset_value":
-                return asset_value;
             case "asset_description":
                 return asset_description;
+            case "asset_serial":
+                return asset_serial;
+            case "asset_value":
+                return asset_value;
             case "date_acquired":
                 return date_acquired;
             case "date_exhausted":
                 return date_exhausted;
+            case "quantity":
+                return quantity;
+            case "unit":
+                return unit;
             case "other":
                 return other;
             default:
-                System.err.println("Unknown Asset attribute '" + var + "'.");
+                IO.log(getClass().getName(), "Unknown Asset attribute '" + var + "'.", IO.TAG_ERROR);
                 return null;
         }
     }

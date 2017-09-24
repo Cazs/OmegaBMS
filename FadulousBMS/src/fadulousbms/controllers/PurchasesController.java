@@ -2,32 +2,27 @@ package fadulousbms.controllers;
 
 import fadulousbms.auxilary.IO;
 import fadulousbms.auxilary.Screen;
-import fadulousbms.managers.*;
+import fadulousbms.managers.AssetManager;
+import fadulousbms.managers.ScreenManager;
+import fadulousbms.managers.SessionManager;
 import fadulousbms.model.Employee;
 import fadulousbms.model.Screens;
+import javafx.application.Platform;
 import javafx.embed.swing.SwingFXUtils;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
-import javafx.scene.Group;
-import javafx.scene.Scene;
-import javafx.scene.control.Label;
 import javafx.scene.image.Image;
-import javafx.scene.image.ImageView;
-import javafx.stage.Stage;
 
 import javax.imageio.ImageIO;
-import javax.swing.*;
 import java.io.File;
 import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 /**
  * Created by ghost on 2017/02/02.
  */
-public class FacilitiesController extends Screen implements Initializable
+public class PurchasesController extends Screen implements Initializable
 {
     @Override
     public void refresh()
@@ -54,5 +49,66 @@ public class FacilitiesController extends Screen implements Initializable
         {
             IO.log(getClass().getName(), IO.TAG_ERROR, e.getMessage());
         }
+    }
+
+    @FXML
+    public void stockClick()
+    {
+        final ScreenManager screenManager = this.getScreenManager();
+        this.getScreenManager().showLoadingScreen(param ->
+        {
+            new Thread(new Runnable()
+            {
+                @Override
+                public void run()
+                {
+                    try
+                    {
+                        if(screenManager.loadScreen(Screens.RESOURCES.getScreen(),getClass().getResource("../views/"+Screens.RESOURCES.getScreen())))
+                        {
+                            Platform.runLater(() ->
+                                    screenManager.setScreen(Screens.RESOURCES.getScreen()));
+                        } else IO.log(getClass().getName(), IO.TAG_ERROR, "could not load resources screen.");
+                    } catch (IOException e)
+                    {
+                        IO.log(getClass().getName(), IO.TAG_ERROR, e.getMessage());
+                    }
+                }
+            }).start();
+            return null;
+        });
+    }
+
+    @FXML
+    public void assetsClick()
+    {
+        final ScreenManager screenManager = this.getScreenManager();
+        this.getScreenManager().showLoadingScreen(param ->
+        {
+            new Thread(new Runnable()
+            {
+                @Override
+                public void run()
+                {
+                    try
+                    {
+                        if(screenManager.loadScreen(Screens.ASSETS.getScreen(),getClass().getResource("../views/"+Screens.ASSETS.getScreen())))
+                        {
+                            Platform.runLater(() ->
+                                    screenManager.setScreen(Screens.ASSETS.getScreen()));
+                        } else IO.log(getClass().getName(), IO.TAG_ERROR, "could not load assets screen.");
+                    } catch (IOException e)
+                    {
+                        IO.log(getClass().getName(), IO.TAG_ERROR, e.getMessage());
+                    }
+                }
+            }).start();
+            return null;
+        });
+    }
+
+    @FXML
+    public void otherClick()
+    {
     }
 }

@@ -163,9 +163,16 @@ public class ClientsController extends Screen implements Initializable
     }
 
     @FXML
-    public void newClient()
+    public void createClientClick()
     {
-        //ClientManager.getInstance().nullifySelected();
-        //this.getScreenManager().setScreen(Screens.NEW_CLIENT.getScreen());
+        try
+        {
+            if(this.getScreenManager().loadScreen(Screens.NEW_CLIENT.getScreen(),getClass().getResource("../views/"+Screens.NEW_CLIENT.getScreen())))
+                this.getScreenManager().setScreen(Screens.NEW_CLIENT.getScreen());
+            else IO.log(getClass().getName(), IO.TAG_ERROR, "could not load client creation screen.");
+        } catch (IOException e)
+        {
+            IO.log(getClass().getName(), IO.TAG_ERROR, e.getMessage());
+        }
     }
 }

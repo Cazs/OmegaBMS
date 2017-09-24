@@ -25,8 +25,8 @@ public class Resource implements BusinessObject, Serializable
     private String resource_serial;
     private String resource_type;
     private double resource_value;
-    private double markup;
-    private double labour;
+    private double markup;//TODO:??
+    private double labour;//TODO:??
     private long quantity;
     private long date_acquired;
     private long date_exhausted;
