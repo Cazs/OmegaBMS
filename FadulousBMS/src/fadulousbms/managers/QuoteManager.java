@@ -162,10 +162,10 @@ public class QuoteManager extends BusinessObjectManager
                         String quotes_json = RemoteComms.sendGetRequest("/api/quotes", headers);
                         quotes = gson.fromJson(quotes_json, Quote[].class);
 
-                        /*ClientManager.getInstance().loadDataFromServer();
-                        SupplierManager.getInstance().loadDataFromServer();
+                        ClientManager.getInstance().loadDataFromServer();
+                        //SupplierManager.getInstance().loadDataFromServer();
+                        ResourceManager.getInstance().loadDataFromServer();
                         EmployeeManager.getInstance().loadDataFromServer();
-                        ResourceManager.getInstance().loadDataFromServer();*/
 
                         if(quotes!=null)
                         {

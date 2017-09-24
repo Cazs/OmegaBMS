@@ -340,6 +340,7 @@ public class ViewQuoteController extends Screen implements Initializable
                     }
                 };
 
+        colEmployeeAction.setMinWidth(120);
         colEmployeeAction.setCellFactory(actionColCellFactory);
     }
 

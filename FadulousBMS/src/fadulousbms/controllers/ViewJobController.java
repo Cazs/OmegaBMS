@@ -38,17 +38,11 @@ import java.util.ResourceBundle;
 public class ViewJobController extends Screen implements Initializable
 {
     private boolean itemsModified;
-
-    @FXML
-    private TableView<QuoteItem> tblQuoteItems;
-    @FXML
-    private TableColumn colMarkup,colQuantity,colLabour;
-    //
     @FXML
     private TableView<Employee> tblEmployees;
     @FXML
     private TableColumn colFirstname,colLastname,colCell,colEmail,colTel,colGender,
-                        colActive,colAction,colEmployeeAction;
+                        colActive,colEmployeeAction;
     @FXML
     private TextField txtJobNumber,txtCompany, txtContact, txtCell,txtTel,txtTotal,txtFax,txtEmail,txtSite,txtDateGenerated,txtExtra;
     @FXML
@@ -61,18 +55,7 @@ public class ViewJobController extends Screen implements Initializable
         ResourceManager.getInstance().initialize(this.getScreenManager());
 
         tblEmployees.getItems().clear();
-        //tblQuoteItems.getItems().clear();
 
-        //Setup Quote Items table
-        /*colMarkup.setCellValueFactory(new PropertyValueFactory<>("markup"));
-        colMarkup.setCellFactory(col -> new TextFieldTableCell("markup", "markup", callback));
-
-        colQuantity.setCellValueFactory(new PropertyValueFactory<>("quantity"));
-        colQuantity.setCellFactory(col -> new TextFieldTableCell("quantity", "quantity", callback));
-
-        colLabour.setCellValueFactory(new PropertyValueFactory<>("labour"));
-        colLabour.setCellFactory(col -> new TextFieldTableCell("labour", "labour", callback));
-        */
         //Setup Sale Reps table
         colFirstname.setCellValueFactory(new PropertyValueFactory<>("firstname"));
         colLastname.setCellValueFactory(new PropertyValueFactory<>("lastname"));
@@ -122,7 +105,10 @@ public class ViewJobController extends Screen implements Initializable
                 tblQuoteItems.setItems(FXCollections.observableArrayList(selected.getResources()));
             else IO.log(getClass().getName(), IO.TAG_WARN, "quote [" + selected.get_id() + "] has no resources.");*/
             if (selected.getAssigned_employees() != null)
+            {
                 tblEmployees.setItems(FXCollections.observableArrayList(selected.getAssigned_employees()));
+                tblEmployees.refresh();
+            }
             else IO.log(getClass().getName(), IO.TAG_WARN, "job [" + selected.get_id() + "] has no representatives.");
         }else IO.logAndAlert("Job Viewer", "Selected Job is invalid.", IO.TAG_ERROR);
     }
@@ -133,76 +119,6 @@ public class ViewJobController extends Screen implements Initializable
     @Override
     public void initialize(URL url, ResourceBundle rb)
     {
-        colAction.setCellFactory(new ButtonTableCellFactory<>());
-
-        colAction.setCellValueFactory(new PropertyValueFactory<>(""));
-
-        Callback<TableColumn<QuoteItem, String>, TableCell<QuoteItem, String>> cellFactory
-                =
-                new Callback<TableColumn<QuoteItem, String>, TableCell<QuoteItem, String>>()
-                {
-                    @Override
-                    public TableCell call(final TableColumn<QuoteItem, String> param)
-                    {
-                        final TableCell<QuoteItem, String> cell = new TableCell<QuoteItem, String>()
-                        {
-                            final Button btnAdd = new Button("Add materials");
-                            final Button btnRemove = new Button("Remove item");
-
-                            @Override
-                            public void updateItem(String item, boolean empty)
-                            {
-                                super.updateItem(item, empty);
-                                btnAdd.getStylesheets().add(this.getClass().getResource("../styles/home.css").toExternalForm());
-                                btnAdd.getStyleClass().add("btnApply");
-                                btnAdd.setMinWidth(100);
-                                btnAdd.setMinHeight(35);
-                                HBox.setHgrow(btnAdd, Priority.ALWAYS);
-
-                                btnRemove.getStylesheets().add(this.getClass().getResource("../styles/home.css").toExternalForm());
-                                btnRemove.getStyleClass().add("btnBack");
-                                btnRemove.setMinWidth(100);
-                                btnRemove.setMinHeight(35);
-                                HBox.setHgrow(btnRemove, Priority.ALWAYS);
-
-                                if (empty)
-                                {
-                                    setGraphic(null);
-                                    setText(null);
-                                } else
-                                {
-                                    HBox hBox = new HBox(btnAdd, btnRemove);
-
-                                    btnAdd.setOnAction(event ->
-                                    {
-                                        QuoteItem quoteItem = getTableView().getItems().get(getIndex());
-                                        //addQuoteItemAdditionalMaterial(quoteItem);
-                                        System.out.println("Successfully added material quote number " + quoteItem.getItem_number());
-                                    });
-
-                                    btnRemove.setOnAction(event ->
-                                    {
-                                        QuoteItem quoteItem = getTableView().getItems().get(getIndex());
-                                        getTableView().getItems().remove(quoteItem);
-                                        getTableView().refresh();
-                                        //computeQuoteTotal();
-                                        System.out.println("Successfully removed quote item " + quoteItem.getItem_number());
-                                    });
-
-                                    hBox.setFillHeight(true);
-                                    HBox.setHgrow(hBox, Priority.ALWAYS);
-                                    hBox.setSpacing(5);
-                                    setGraphic(hBox);
-                                    setText(null);
-                                }
-                            }
-                        };
-                    return cell;
-                    }
-                };
-
-        colAction.setCellFactory(cellFactory);
-
         Callback<TableColumn<Employee, String>, TableCell<Employee, String>> actionColCellFactory
                 =
                 new Callback<TableColumn<Employee, String>, TableCell<Employee, String>>()
@@ -248,6 +164,7 @@ public class ViewJobController extends Screen implements Initializable
                     }
                 };
 
+        colEmployeeAction.setMinWidth(120);
         colEmployeeAction.setCellFactory(actionColCellFactory);
     }
 

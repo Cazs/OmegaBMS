@@ -119,8 +119,11 @@ public class JobManager extends BusinessObjectManager
                         String jobs_json = RemoteComms.sendGetRequest("/api/jobs", headers);
                         jobs = gson.fromJson(jobs_json, Job[].class);
 
-                        for (Job job : jobs)//for each Job get its employees
+                        QuoteManager.getInstance().loadDataFromServer();
+
+                        for (Job job : jobs)
                         {
+                            //for each Job get its Quotes
                             QuoteManager.getInstance().loadDataFromServer();
                             for (Quote quote : QuoteManager.getInstance().getQuotes())
                             {
@@ -158,6 +161,11 @@ public class JobManager extends BusinessObjectManager
                                 safety_docs[i] = safety_doc;
                             }
                             job.setSafety_catalogue(safety_docs);
+
+                            //set Job quote object
+                            for(Quote quote : QuoteManager.getInstance().getQuotes())
+                                if(job.getQuote_id().equals(quote.get_id()))
+                                    job.setQuote(quote);
                         }
                         IO.log(getClass().getName(), IO.TAG_INFO, "reloaded collection of jobs.");
                         this.serialize(ROOT_PATH+filename, jobs);

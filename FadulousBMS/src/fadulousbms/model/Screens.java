@@ -44,7 +44,8 @@ public enum Screens
     ACCOUNTING("Accounting.fxml"),
     PURCHASES("Purchases.fxml"),
     ASSETS("Assets.fxml"),
-    NEW_ASSET("NewAsset.fxml");
+    NEW_ASSET("NewAsset.fxml"),
+    INVOICES("Invoices.fxml");
 
     private String screen;
     

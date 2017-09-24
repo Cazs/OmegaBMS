@@ -15,7 +15,7 @@ public class JobEmployee implements BusinessObject
     private String _id;
     private String job_id;
     private String usr;
-    private long date_assigned;
+    private long date_logged;
     private boolean marked;
     public static final String TAG = "JobEmployee";
 
@@ -64,16 +64,16 @@ public class JobEmployee implements BusinessObject
         this.usr = usr;
     }
 
-    private StringProperty date_assignedProperty(){return new SimpleStringProperty(String.valueOf(date_assigned));}
+    private StringProperty date_loggedProperty(){return new SimpleStringProperty(String.valueOf(date_logged));}
 
-    public double getDate_assigned()
+    public double getDate_logged()
     {
-        return date_assigned;
+        return date_logged;
     }
 
-    public void setDate_assigned(long date_assigned)
+    public void setDate_logged(long date_logged)
     {
-        this.date_assigned = date_assigned;
+        this.date_logged = date_logged;
     }
 
     @Override
@@ -98,11 +98,11 @@ public class JobEmployee implements BusinessObject
                 case "usr":
                     usr = String.valueOf(val);
                     break;
-                case "date_assigned":
-                    date_assigned = Long.parseLong((String) val);
+                case "date_logged":
+                    date_logged = Long.parseLong((String) val);
                     break;
                 default:
-                    System.err.println("Unknown JobEmployee attribute '" + var + "'.");
+                    IO.log(getClass().getName(), IO.TAG_ERROR, "unknown JobEmployee attribute '" + var + "'.");
                     break;
             }
         }catch (NumberFormatException e)
@@ -120,10 +120,10 @@ public class JobEmployee implements BusinessObject
                 return job_id;
             case "usr":
                 return usr;
-            case "date_assigned":
-                return date_assigned;
+            case "date_logged":
+                return date_logged;
             default:
-                System.err.println("Unknown JobEmployee attribute '" + var + "'.");
+                IO.log(getClass().getName(), IO.TAG_ERROR, "unknown JobEmployee attribute '" + var + "'.");
                 return null;
         }
     }
@@ -139,8 +139,8 @@ public class JobEmployee implements BusinessObject
                     + URLEncoder.encode(job_id, "UTF-8") + "&");
             result.append(URLEncoder.encode("usr","UTF-8") + "="
                     + URLEncoder.encode(usr, "UTF-8") + "&");
-            result.append(URLEncoder.encode("date_assigned","UTF-8") + "="
-                    + URLEncoder.encode(String.valueOf(date_assigned), "UTF-8"));
+            result.append(URLEncoder.encode("date_logged","UTF-8") + "="
+                    + URLEncoder.encode(String.valueOf(date_logged), "UTF-8"));
 
             return result.toString();
         } catch (UnsupportedEncodingException e)

@@ -49,9 +49,9 @@
       </HBox>
       <BorderPane style="-fx-background-color: rgba(0,0,0,.1);">
          <center>
-            <Label alignment="CENTER" contentDisplay="CENTER" text="View Quote" BorderPane.alignment="CENTER">
+            <Label alignment="CENTER" contentDisplay="CENTER" text="Detailed Quote Information" BorderPane.alignment="CENTER">
                <font>
-                  <Font name="System Bold" size="22.0" />
+                  <Font name="System Bold" size="31.0" />
                </font>
             </Label>
          </center>

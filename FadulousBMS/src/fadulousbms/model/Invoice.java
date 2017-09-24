@@ -6,9 +6,12 @@
 package fadulousbms.model;
 
 import fadulousbms.auxilary.IO;
+import fadulousbms.managers.ClientManager;
+import fadulousbms.managers.EmployeeManager;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 
+import java.io.Serializable;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.util.ArrayList;
@@ -17,7 +20,7 @@ import java.util.ArrayList;
  *
  * @author ghost
  */
-public class Invoice implements BusinessObject
+public class Invoice implements BusinessObject, Serializable
 {
     private String _id;
     //private String quote_id;
@@ -91,11 +94,99 @@ public class Invoice implements BusinessObject
         this.job_id = job_id;
     }
 
-    private StringProperty creatorProperty(){return new SimpleStringProperty(creator);}
+    public StringProperty invoice_numberProperty()
+    {
+        return new SimpleStringProperty(_id);//TODO: fix this!
+    }
+
+    public String getTotal()
+    {
+        return totalProperty().get();
+    }
+
+    private StringProperty totalProperty()
+    {
+        if(job==null)
+        {
+            IO.logAndAlert("Error " + getClass().getName(), "Job object is not set", IO.TAG_ERROR);
+            return new SimpleStringProperty("N/A");
+        }
+        if(job.getQuote()==null)
+        {
+            IO.logAndAlert("Error " + getClass().getName(), "Job Quote object is not set", IO.TAG_ERROR);
+            return new SimpleStringProperty("N/A");
+        }
+
+        return job.getQuote().totalProperty();
+    }
+
+    public long getJob_number()
+    {
+        if(job==null)
+        {
+            IO.logAndAlert("Error " + getClass().getName(), "Job object is not set", IO.TAG_ERROR);
+            return 0;
+        }
+        return job.getJob_number();
+    }
+
+    public StringProperty job_numberProperty()
+    {
+        if(job==null)
+        {
+            IO.logAndAlert("Error " + getClass().getName(), "Job object is not set", IO.TAG_ERROR);
+            return new SimpleStringProperty("N/A");
+        }
+        return new SimpleStringProperty(String.valueOf(job.getJob_number()));
+    }
+
+    public String getClient()
+    {
+        return  clientProperty().get();
+    }
+
+    private StringProperty clientProperty()
+    {
+        if(job==null)
+        {
+            IO.logAndAlert("Error " + getClass().getName(), "Job object is not set", IO.TAG_ERROR);
+            return new SimpleStringProperty("N/A");
+        }
+        if(job.getQuote()==null)
+        {
+            IO.logAndAlert("Error " + getClass().getName(), "Job->Quote object is not set", IO.TAG_ERROR);
+            return new SimpleStringProperty("N/A");
+        }
+        if(job.getQuote().getClient().getClient_name()==null)
+        {
+            IO.logAndAlert("Error " + getClass().getName(), "Job->Quote->Client object is not set", IO.TAG_ERROR);
+            return new SimpleStringProperty("N/A");
+        }
+
+        for(Client client : ClientManager.getInstance().getClients())
+            if(client.get_id().equals(job.getQuote().getClient_id()))
+                return new SimpleStringProperty(job.getQuote().getClient().getClient_name());
+
+        return new SimpleStringProperty("N/A");
+    }
+
+    private StringProperty creatorProperty()
+    {
+        if(EmployeeManager.getInstance().getEmployees()==null)
+        {
+            IO.logAndAlert("Error " + getClass().getName(), "Employees array is not set", IO.TAG_ERROR);
+            return new SimpleStringProperty(creator);
+        }
+
+        for(Employee employee : EmployeeManager.getInstance().getEmployees())
+            if(employee.getUsr().equals(creator))
+                return new SimpleStringProperty(employee.toString());
+        return new SimpleStringProperty(creator);
+    }
 
     public String getCreator()
     {
-        return creator;
+        return creatorProperty().get();
     }
 
     public void setCreator(String creator)

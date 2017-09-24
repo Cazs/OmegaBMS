@@ -57,9 +57,9 @@
                               </Label>
                            </center>
                         </BorderPane>
-                        <BorderPane minWidth="150.0" styleClass="sys-btn" GridPane.columnIndex="1" GridPane.rowIndex="1">
+                        <BorderPane minWidth="150.0" onMouseClicked="#invoicesClick" styleClass="sys-btn" GridPane.columnIndex="1" GridPane.rowIndex="1">
                            <center>
-                              <Label BorderPane.alignment="CENTER">
+                              <Label text="Invoices" BorderPane.alignment="CENTER">
                                  <font>
                                     <Font size="31.0" />
                                  </font>
