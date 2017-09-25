@@ -45,6 +45,7 @@ const ohs_index = require('./models/ohs/index.js');
 const appointment_index = require('./models/appointment/index.js');
 const vericodes = require('./models/system/vericodes.js');
 const counters = require('./models/system/counters.js');
+const expenses = require('./models/expenses/expenses.js');
 
 mongoose.connect('mongodb://localhost/fadulousbms');
 
@@ -298,6 +299,66 @@ app.post('/api/quote/generic/resource/update/:object_id',function(req, res)
     }
     console.log('successfully updated generic_quote_resources for generic quote[%s].\n', quote_resource.quote_id);
     res.json(quote_resource);
+  });
+});
+
+//Expenses handlers
+app.get('/api/expense/:object_id',function(req, res)
+{
+  get(req, res, expenses, function(err, obj)
+  {
+    if(err)
+    {
+      errorAndCloseConnection(res,500,errors.INTERNAL_ERR);
+      logServerError(err);
+      return;
+    }
+    console.log('user with session_id [%s] requested expense [%s].', req.headers.cookie, req.params.object_id);
+    res.json(obj);
+  });
+});
+
+app.get('/api/expenses',function(req, res)
+{
+  getAll(req, res, expenses, function(err, objs)
+  {
+    if(err)
+    {
+      errorAndCloseConnection(res,500,errors.INTERNAL_ERR);
+      logServerError(err);
+      return;
+    }
+    console.log('user with session_id [%s] requested all expenses in the database.', req.headers.cookie);
+    res.json(objs);
+  });
+});
+
+app.post('/api/expense/add',function(req, res)
+{
+  add(req, res, expenses, function(err, expense)
+  {
+    if(err)
+    {
+      console.log(err);
+      return;
+    }
+    console.log('created new expense:\n%s\n', JSON.stringify(expense));
+    res.json({'message':'successfully created new expense.'});
+  });
+});
+
+app.post('/api/expense/update/:object_id',function(req, res)
+{
+  update(req, res, expenses, function(err, expense)
+  {
+    if(err)
+    {
+      errorAndCloseConnection(res, 500, errors.INTERNAL_ERR);
+      logServerError(err);
+      return;
+    }
+    console.log('successfully updated expense[%s].\n', expense._id);
+    res.json(expense);
   });
 });
 
@@ -1692,6 +1753,7 @@ createCounter('suppliers_timestamp');
 createCounter('clients_timestamp');
 createCounter('resources_timestamp');
 createCounter('assets_timestamp');
+createCounter('expenses_timestamp');
 
 app.listen(PORT);
 console.log('..::%s server is now running at localhost on port %s::..',APP_NAME, PORT);

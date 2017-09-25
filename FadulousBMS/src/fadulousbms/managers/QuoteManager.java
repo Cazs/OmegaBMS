@@ -332,6 +332,13 @@ public class QuoteManager extends BusinessObjectManager
         return total;
     }
 
+    public void generatePDF() throws IOException
+    {
+        if(selected_quote!=null)
+            PDF.createQuotePdf(selected_quote);
+        else IO.logAndAlert("Error", "Please choose a valid quote.", IO.TAG_ERROR);
+    }
+
     public void updateQuote(Quote quote, ObservableList<QuoteItem> quoteItems, ObservableList<Employee> quoteReps)
     {
         if(quoteItems==null)

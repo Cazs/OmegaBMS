@@ -8,19 +8,14 @@ package fadulousbms.controllers;
 import fadulousbms.auxilary.*;
 import fadulousbms.managers.*;
 import fadulousbms.model.*;
-import javafx.collections.FXCollections;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
-import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
-import javafx.scene.layout.VBox;
-import javafx.stage.Stage;
 import javafx.util.Callback;
 
-import javax.swing.*;
 import java.io.IOException;
 import java.net.HttpURLConnection;
 import java.net.URL;
@@ -204,7 +199,7 @@ public class NewGenericQuoteController extends Screen implements Initializable
         quote.setCell(txtCell.getText());
         quote.setTel(txtTel.getText());
         quote.setStatus(0);
-        quote.setCreator(SessionManager.getInstance().getActive().getUser());
+        quote.setCreator(SessionManager.getInstance().getActive().getUsername());
         GenericQuoteItem[] items = new GenericQuoteItem[quoteItems.size()];
         quoteItems.toArray(items);
         quote.setResources(items);

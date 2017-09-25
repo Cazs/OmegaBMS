@@ -110,5 +110,28 @@ public class PurchasesController extends Screen implements Initializable
     @FXML
     public void otherClick()
     {
+        final ScreenManager screenManager = this.getScreenManager();
+        this.getScreenManager().showLoadingScreen(param ->
+        {
+            new Thread(new Runnable()
+            {
+                @Override
+                public void run()
+                {
+                    try
+                    {
+                        if(screenManager.loadScreen(Screens.EXPENSES.getScreen(),getClass().getResource("../views/"+Screens.EXPENSES.getScreen())))
+                        {
+                            Platform.runLater(() ->
+                                    screenManager.setScreen(Screens.EXPENSES.getScreen()));
+                        } else IO.log(getClass().getName(), IO.TAG_ERROR, "could not load expenses screen.");
+                    } catch (IOException e)
+                    {
+                        IO.log(getClass().getName(), IO.TAG_ERROR, e.getMessage());
+                    }
+                }
+            }).start();
+            return null;
+        });
     }
 }

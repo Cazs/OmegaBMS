@@ -222,7 +222,7 @@ public class GenericQuote implements BusinessObject, Serializable
     {
         this.creator_employee = creator_employee;
         if(creator_employee!=null)
-            setCreator(creator_employee.toString());
+            setCreator(creator_employee.getUsr());
     }
 
     public GenericQuoteItem[] getResources()

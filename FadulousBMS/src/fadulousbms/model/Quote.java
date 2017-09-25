@@ -78,7 +78,7 @@ public class Quote implements BusinessObject, Serializable
     @Override
     public void setMarked(boolean marked){this.marked=marked;}
 
-    private StringProperty client_idProperty(){return new SimpleStringProperty(client_id);}
+    public StringProperty client_idProperty(){return new SimpleStringProperty(client_id);}
 
     public String getClient_id()
     {
@@ -90,7 +90,7 @@ public class Quote implements BusinessObject, Serializable
         this.client_id = client_id;
     }
 
-    private StringProperty contact_person_idProperty(){return new SimpleStringProperty(contact_person_id);}
+    public StringProperty contact_person_idProperty(){return new SimpleStringProperty(contact_person_id);}
 
     public String getContact_person_id()
     {
@@ -102,7 +102,7 @@ public class Quote implements BusinessObject, Serializable
         this.contact_person_id = contact_person_id;
     }
 
-    private StringProperty sitenameProperty(){return new SimpleStringProperty(sitename);}
+    public StringProperty sitenameProperty(){return new SimpleStringProperty(sitename);}
 
     public String getSitename()
     {
@@ -114,7 +114,7 @@ public class Quote implements BusinessObject, Serializable
         this.sitename = sitename;
     }
 
-    private StringProperty requestProperty(){return new SimpleStringProperty(request);}
+    public StringProperty requestProperty(){return new SimpleStringProperty(request);}
 
     public String getRequest()
     {
@@ -148,18 +148,18 @@ public class Quote implements BusinessObject, Serializable
         this.status = status;
     }
 
-    private StringProperty creatorProperty()
+    public StringProperty creatorProperty()
     {
         if(creator_employee==null)
             return new SimpleStringProperty(String.valueOf(creator));
-        else return new SimpleStringProperty(String.valueOf(creator_employee.getFirstname()+" "+creator_employee.getLastname()));
+        else return new SimpleStringProperty(String.valueOf(creator_employee.toString()));
     }
 
     public String getCreator()
     {
         if(creator_employee==null)
             return creator;
-        else return creator_employee.getFirstname()+" "+creator_employee.getLastname();
+        else return creator_employee.toString();
     }
 
     public String getCreatorID(){return this.creator;}
@@ -178,10 +178,10 @@ public class Quote implements BusinessObject, Serializable
     {
         this.creator_employee = creator_employee;
         if(creator_employee!=null)
-            setCreator(creator_employee.toString());
+            setCreator(creator_employee.getUsr());
     }
 
-    private StringProperty revisionProperty(){return new SimpleStringProperty(String.valueOf(revision));}
+    public StringProperty revisionProperty(){return new SimpleStringProperty(String.valueOf(revision));}
 
     public double getRevision()
     {

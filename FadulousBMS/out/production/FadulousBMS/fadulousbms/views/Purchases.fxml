@@ -41,7 +41,7 @@
                         </BorderPane>
                         <BorderPane minWidth="150.0" onMouseClicked="#otherClick" styleClass="sys-btn" GridPane.rowIndex="1">
                            <center>
-                              <Label text="Other" textAlignment="CENTER" BorderPane.alignment="CENTER">
+                              <Label text="Other Expenses" textAlignment="CENTER" BorderPane.alignment="CENTER">
                                  <font>
                                     <Font size="22.0" />
                                  </font>

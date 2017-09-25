@@ -56,7 +56,7 @@ public class Session
         this.ttl = ttl;
     }
     
-    public String getUser()
+    public String getUsername()
     {
         return usr;
     }

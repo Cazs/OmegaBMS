@@ -9,6 +9,7 @@ import fadulousbms.auxilary.IO;
 import fadulousbms.auxilary.Screen;
 import fadulousbms.managers.*;
 import fadulousbms.model.*;
+import javafx.application.Platform;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -62,6 +63,7 @@ public class InvoicesController extends Screen implements Initializable
         EmployeeManager.getInstance().loadDataFromServer();
         InvoiceManager.getInstance().loadDataFromServer();
         ClientManager.getInstance().loadDataFromServer();
+        JobManager.getInstance().loadDataFromServer();
 
         colInvoiceNum.setMinWidth(140);
         colInvoiceNum.setCellValueFactory(new PropertyValueFactory<>("invoice_number"));
@@ -144,7 +146,30 @@ public class InvoicesController extends Screen implements Initializable
                                             IO.logAndAlert("Error " + getClass().getName(), "Job->Quote object is not set", IO.TAG_ERROR);
                                             return;
                                         }
-                                        QuoteManager.getInstance().setSelectedQuote(invoice.getJob().getQuote());
+                                        screenManager.showLoadingScreen(param ->
+                                        {
+                                            new Thread(new Runnable()
+                                            {
+                                                @Override
+                                                public void run()
+                                                {
+                                                    QuoteManager.getInstance().setSelectedQuote(invoice.getJob().getQuote());
+                                                    try
+                                                    {
+                                                        if(screenManager.loadScreen(Screens.VIEW_QUOTE.getScreen(),getClass().getResource("../views/"+Screens.VIEW_QUOTE.getScreen())))
+                                                        {
+                                                            Platform.runLater(() -> screenManager.setScreen(Screens.VIEW_QUOTE.getScreen()));
+                                                        }
+                                                        else IO.log(getClass().getName(), IO.TAG_ERROR, "could not load quotes viewer screen.");
+                                                    } catch (IOException e)
+                                                    {
+                                                        IO.log(getClass().getName(), IO.TAG_ERROR, e.getMessage());
+                                                    }
+                                                }
+                                            }).start();
+                                            return null;
+                                        });
+                                        /*QuoteManager.getInstance().setSelectedQuote(invoice.getJob().getQuote());
                                         try
                                         {
                                             if(screenManager.loadScreen(Screens.VIEW_QUOTE.getScreen(),getClass().getResource("../views/"+Screens.VIEW_QUOTE.getScreen())))
@@ -153,21 +178,41 @@ public class InvoicesController extends Screen implements Initializable
                                         } catch (IOException e)
                                         {
                                             IO.log(getClass().getName(), IO.TAG_ERROR, e.getMessage());
-                                        }
+                                        }*/
                                     });
 
                                     btnViewJob.setOnAction(event ->
                                     {
-                                        JobManager.getInstance().setSelectedJob(invoice.getJob());
-                                        try
+                                        if(invoice.getJob()==null)
                                         {
-                                            if(screenManager.loadScreen(Screens.VIEW_JOB.getScreen(),getClass().getResource("../views/"+Screens.VIEW_JOB.getScreen())))
-                                                screenManager.setScreen(Screens.VIEW_JOB.getScreen());
-                                            else IO.log(getClass().getName(), IO.TAG_ERROR, "could not load jobs viewer screen.");
-                                        } catch (IOException e)
-                                        {
-                                            IO.log(getClass().getName(), IO.TAG_ERROR, e.getMessage());
+                                            IO.logAndAlert("Error " + getClass().getName(), "Job object is not set", IO.TAG_ERROR);
+                                            return;
                                         }
+                                        JobManager.getInstance().loadDataFromServer();
+
+                                        screenManager.showLoadingScreen(param ->
+                                        {
+                                            new Thread(new Runnable()
+                                            {
+                                                @Override
+                                                public void run()
+                                                {
+                                                    JobManager.getInstance().setSelectedJob(invoice.getJob());
+                                                    try
+                                                    {
+                                                        if(screenManager.loadScreen(Screens.VIEW_JOB.getScreen(),getClass().getResource("../views/"+Screens.VIEW_JOB.getScreen())))
+                                                        {
+                                                            Platform.runLater(() -> screenManager.setScreen(Screens.VIEW_JOB.getScreen()));
+                                                        }
+                                                        else IO.log(getClass().getName(), IO.TAG_ERROR, "could not load jobs viewer screen.");
+                                                    } catch (IOException e)
+                                                    {
+                                                        IO.log(getClass().getName(), IO.TAG_ERROR, e.getMessage());
+                                                    }
+                                                }
+                                            }).start();
+                                            return null;
+                                        });
                                         /*if(invoice.getJob()==null)
                                         {
                                             IO.logAndAlert("Error " + getClass().getName(), "Job object is not set", IO.TAG_ERROR);

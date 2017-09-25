@@ -45,7 +45,9 @@ public enum Screens
     PURCHASES("Purchases.fxml"),
     ASSETS("Assets.fxml"),
     NEW_ASSET("NewAsset.fxml"),
-    INVOICES("Invoices.fxml");
+    INVOICES("Invoices.fxml"),
+    EXPENSES("Expenses.fxml"),
+    NEW_EXPENSE("NewExpense.fxml");
 
     private String screen;
     

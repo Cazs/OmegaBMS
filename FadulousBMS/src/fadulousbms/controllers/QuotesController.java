@@ -8,6 +8,7 @@ package fadulousbms.controllers;
 import fadulousbms.auxilary.*;
 import fadulousbms.managers.*;
 import fadulousbms.model.*;
+import javafx.application.Platform;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
@@ -133,8 +134,37 @@ public class QuotesController extends Screen implements Initializable
 
                                     btnView.setOnAction(event ->
                                     {
+                                        Quote quote = getTableView().getItems().get(getIndex());
+                                        if(quote==null)
+                                        {
+                                            IO.logAndAlert("Error " + getClass().getName(), "Quote object is not set", IO.TAG_ERROR);
+                                            return;
+                                        }
+                                        screenManager.showLoadingScreen(param ->
+                                        {
+                                            new Thread(new Runnable()
+                                            {
+                                                @Override
+                                                public void run()
+                                                {
+                                                    QuoteManager.getInstance().setSelectedQuote(quote);
+                                                    try
+                                                    {
+                                                        if(screenManager.loadScreen(Screens.VIEW_QUOTE.getScreen(),getClass().getResource("../views/"+Screens.VIEW_QUOTE.getScreen())))
+                                                        {
+                                                            Platform.runLater(() -> screenManager.setScreen(Screens.VIEW_QUOTE.getScreen()));
+                                                        }
+                                                        else IO.log(getClass().getName(), IO.TAG_ERROR, "could not load quotes viewer screen.");
+                                                    } catch (IOException e)
+                                                    {
+                                                        IO.log(getClass().getName(), IO.TAG_ERROR, e.getMessage());
+                                                    }
+                                                }
+                                            }).start();
+                                            return null;
+                                        });
                                         //System.out.println("Successfully added material quote number " + quoteItem.getItem_number());
-                                        QuoteManager.getInstance().setSelectedQuote(getTableView().getItems().get(getIndex()));
+                                        /*QuoteManager.getInstance().setSelectedQuote(getTableView().getItems().get(getIndex()));
                                         try
                                         {
                                             if(screenManager.loadScreen(Screens.VIEW_QUOTE.getScreen(),getClass().getResource("../views/"+Screens.VIEW_QUOTE.getScreen())))
@@ -143,7 +173,7 @@ public class QuotesController extends Screen implements Initializable
                                         } catch (IOException e)
                                         {
                                             IO.log(getClass().getName(), IO.TAG_ERROR, e.getMessage());
-                                        }
+                                        }*/
                                     });
 
                                     btnRemove.setOnAction(event ->

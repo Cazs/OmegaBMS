@@ -10,6 +10,7 @@ import fadulousbms.auxilary.PDF;
 import fadulousbms.auxilary.Screen;
 import fadulousbms.managers.*;
 import fadulousbms.model.*;
+import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.embed.swing.SwingFXUtils;
@@ -148,7 +149,36 @@ public class JobsController extends Screen implements Initializable
 
                                     btnView.setOnAction(event ->
                                     {
-                                        JobManager.getInstance().setSelectedJob(getTableView().getItems().get(getIndex()));
+                                        if(job==null)
+                                        {
+                                            IO.logAndAlert("Error " + getClass().getName(), "Job object is not set", IO.TAG_ERROR);
+                                            return;
+                                        }
+
+                                        screenManager.showLoadingScreen(param ->
+                                        {
+                                            new Thread(new Runnable()
+                                            {
+                                                @Override
+                                                public void run()
+                                                {
+                                                    JobManager.getInstance().setSelectedJob(job);
+                                                    try
+                                                    {
+                                                        if(screenManager.loadScreen(Screens.VIEW_JOB.getScreen(),getClass().getResource("../views/"+Screens.VIEW_JOB.getScreen())))
+                                                        {
+                                                            Platform.runLater(() -> screenManager.setScreen(Screens.VIEW_JOB.getScreen()));
+                                                        }
+                                                        else IO.log(getClass().getName(), IO.TAG_ERROR, "could not load jobs viewer screen.");
+                                                    } catch (IOException e)
+                                                    {
+                                                        IO.log(getClass().getName(), IO.TAG_ERROR, e.getMessage());
+                                                    }
+                                                }
+                                            }).start();
+                                            return null;
+                                        });
+                                        /*JobManager.getInstance().setSelectedJob(getTableView().getItems().get(getIndex()));
                                         try
                                         {
                                             if(screenManager.loadScreen(Screens.VIEW_JOB.getScreen(),getClass().getResource("../views/"+Screens.VIEW_JOB.getScreen())))
@@ -157,7 +187,7 @@ public class JobsController extends Screen implements Initializable
                                         } catch (IOException e)
                                         {
                                             IO.log(getClass().getName(), IO.TAG_ERROR, e.getMessage());
-                                        }
+                                        }*/
                                     });
 
                                     btnInvoice.setOnAction(event ->

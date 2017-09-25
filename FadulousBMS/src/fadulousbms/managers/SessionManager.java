@@ -8,7 +8,6 @@ package fadulousbms.managers;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import fadulousbms.auxilary.IO;
-import fadulousbms.controllers.HomescreenController;
 import fadulousbms.auxilary.RemoteComms;
 import fadulousbms.auxilary.Session;
 import fadulousbms.model.Employee;
@@ -16,8 +15,6 @@ import java.io.IOException;
 import java.util.AbstractMap;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.swing.JOptionPane;
 
 /**
@@ -43,7 +40,7 @@ public class SessionManager
     {
         if(session==null)
             return;
-        Session s = getUserSession(session.getUser());
+        Session s = getUserSession(session.getUsername());
         if(s!=null)
         {
             s.setDate(session.getDate());
@@ -62,7 +59,7 @@ public class SessionManager
             {
                 ArrayList<AbstractMap.SimpleEntry<String,String>> headers = new ArrayList<>();
                 headers.add(new AbstractMap.SimpleEntry<>("Cookie", active_sess.getSessionId()));
-                String employee_json = RemoteComms.sendGetRequest("/api/employee/" + active_sess.getUser(), headers);
+                String employee_json = RemoteComms.sendGetRequest("/api/employee/" + active_sess.getUsername(), headers);
                 if(employee_json!=null)
                 {
                     if(!employee_json.equals("[]") && !employee_json.equals("null"))
@@ -104,7 +101,7 @@ public class SessionManager
     {
         for(Session s : sessions)
         {
-            if(s.getUser().equals(usr))
+            if(s.getUsername().equals(usr))
                 return s;
         }
         return null;

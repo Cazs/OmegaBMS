@@ -91,22 +91,22 @@
       </BorderPane>
       <TableView fx:id="tblAssets" editable="true" tableMenuButtonVisible="true" VBox.vgrow="ALWAYS">
         <columns>
-          <TableColumn fx:id="colId" maxWidth="1.7976931348623157E308" minWidth="80.0" prefWidth="-1.0" text="Client ID" visible="false">
+          <TableColumn fx:id="colId" maxWidth="1.7976931348623157E308" minWidth="80.0" prefWidth="-1.0" text="Asset ID" visible="false">
               <cellValueFactory>
                   <PropertyValueFactory property="_id" />
               </cellValueFactory>
           </TableColumn>
-          <TableColumn fx:id="colName" maxWidth="1.7976931348623157E308" minWidth="180.0" prefWidth="-1.0" text="Asset Name">
+          <TableColumn fx:id="colName" maxWidth="1.7976931348623157E308" minWidth="120.0" prefWidth="-1.0" text="Asset Name">
               <cellValueFactory>
                   <PropertyValueFactory property="resource_name" />
               </cellValueFactory>
           </TableColumn>
-            <TableColumn fx:id="colSerial" maxWidth="1.7976931348623157E308" minWidth="250.0" prefWidth="-1.0" text="Serial Number">
+            <TableColumn fx:id="colSerial" maxWidth="1.7976931348623157E308" minWidth="120.0" prefWidth="-1.0" text="Serial Number">
                 <cellValueFactory>
                     <PropertyValueFactory property="resource_serial" />
                 </cellValueFactory>
             </TableColumn>
-            <TableColumn fx:id="colType" maxWidth="1.7976931348623157E308" minWidth="150.0" prefWidth="-1.0" text="Type">
+            <TableColumn fx:id="colType" maxWidth="1.7976931348623157E308" minWidth="170.0" prefWidth="-1.0" text="Type">
                 <cellValueFactory>
                     <PropertyValueFactory property="resource_type" />
                 </cellValueFactory>
@@ -116,17 +116,17 @@
                     <PropertyValueFactory property="resource_description" />
                 </cellValueFactory>
             </TableColumn>
-            <TableColumn fx:id="colValue" maxWidth="1.7976931348623157E308" minWidth="150.0" prefWidth="-1.0" text="Value">
+            <TableColumn fx:id="colValue" maxWidth="1.7976931348623157E308" minWidth="120.0" prefWidth="-1.0" text="Value">
                 <cellValueFactory>
                     <PropertyValueFactory property="resource_value" />
                 </cellValueFactory>
             </TableColumn>
-            <TableColumn fx:id="colUnit" maxWidth="1.7976931348623157E308" minWidth="150.0" prefWidth="-1.0" text="Unit">
+            <TableColumn fx:id="colUnit" maxWidth="1.7976931348623157E308" minWidth="80.0" prefWidth="-1.0" text="Unit">
                 <cellValueFactory>
                     <PropertyValueFactory property="unit" />
                 </cellValueFactory>
             </TableColumn>
-            <TableColumn fx:id="colQuantity" maxWidth="1.7976931348623157E308" minWidth="150.0" prefWidth="-1.0" text="Quantity">
+            <TableColumn fx:id="colQuantity" maxWidth="1.7976931348623157E308" minWidth="80.0" prefWidth="-1.0" text="Quantity">
                 <cellValueFactory>
                     <PropertyValueFactory property="quantity" />
                 </cellValueFactory>
@@ -141,7 +141,7 @@
                     <PropertyValueFactory property="date_exhausted" />
                 </cellValueFactory>
             </TableColumn>
-            <TableColumn fx:id="colOther" maxWidth="1.7976931348623157E308" minWidth="150.0" prefWidth="-1.0" text="Other">
+            <TableColumn fx:id="colOther" maxWidth="1.7976931348623157E308" minWidth="100.0" prefWidth="-1.0" text="Other" visible="false">
                 <cellValueFactory>
                     <PropertyValueFactory property="extra" />
                 </cellValueFactory>

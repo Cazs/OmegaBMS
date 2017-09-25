@@ -5,27 +5,21 @@
  */
 package fadulousbms.controllers;
 
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
 import fadulousbms.auxilary.*;
 import fadulousbms.managers.*;
 import fadulousbms.model.*;
 import javafx.collections.FXCollections;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
-import javafx.geometry.Insets;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
-import javafx.scene.control.cell.TextFieldTableCell;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
-import javafx.scene.shape.Rectangle;
 import javafx.stage.Stage;
 import javafx.util.Callback;
 
-import javax.swing.*;
 import java.io.IOException;
 import java.net.HttpURLConnection;
 import java.net.URL;
@@ -710,7 +704,7 @@ public class NewQuoteController extends Screen implements Initializable
         quote.setSitename(str_site);
         quote.setRequest(txtRequest.getText());
         quote.setStatus(0);
-        quote.setCreator(SessionManager.getInstance().getActive().getUser());
+        quote.setCreator(SessionManager.getInstance().getActive().getUsername());
         quote.setRevision(1.0);
         QuoteItem[] items = new QuoteItem[quoteItems.size()];
         quoteItems.toArray(items);

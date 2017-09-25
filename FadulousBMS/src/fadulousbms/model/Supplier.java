@@ -316,4 +316,10 @@ public class Supplier implements BusinessObject, Serializable
         }
         return null;
     }
+
+    @Override
+    public String toString()
+    {
+        return supplier_name;
+    }
 }

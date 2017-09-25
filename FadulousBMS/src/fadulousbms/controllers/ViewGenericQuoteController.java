@@ -232,7 +232,7 @@ public class ViewGenericQuoteController extends Screen implements Initializable
         quote.setCell(txtCell.getText());
         quote.setTel(txtTel.getText());
         //quote.setStatus(0);
-        //quote.setCreator(SessionManager.getInstance().getActive().getUser());
+        //quote.setCreator(SessionManager.getInstance().getActive().getUsername());
         GenericQuoteItem[] items = new GenericQuoteItem[quoteItems.size()];
         quoteItems.toArray(items);
         quote.setResources(items);
