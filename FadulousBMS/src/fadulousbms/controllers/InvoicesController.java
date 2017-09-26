@@ -41,7 +41,7 @@ public class InvoicesController extends Screen implements Initializable
     @FXML
     private TableView<Invoice>    tblInvoices;
     @FXML
-    private TableColumn     colInvoiceNum,colJobNum,colClient,colTotal,colDateGenerated,
+    private TableColumn     colInvoiceNum,colJobNum,colClient,colTotal,colReceivable,colDateGenerated,colAccount,
                             colCreator,colExtra,colAction;
 
     @Override
@@ -75,6 +75,8 @@ public class InvoicesController extends Screen implements Initializable
         colCreator.setMinWidth(70);
         colCreator.setCellValueFactory(new PropertyValueFactory<>("creator"));
         colTotal.setCellValueFactory(new PropertyValueFactory<>("total"));
+        CustomTableViewControls.makeEditableTableColumn(colReceivable, TextFieldTableCell.forTableColumn(), 80, "receivable", "/api/invoice");
+        CustomTableViewControls.makeEditableTableColumn(colAccount, TextFieldTableCell.forTableColumn(), 80, "account", "/api/invoice");
         CustomTableViewControls.makeJobManagerAction(colAction, 420, null);
         CustomTableViewControls.makeEditableTableColumn(colExtra, TextFieldTableCell.forTableColumn(), 80, "extra", "/api/invoice");
 

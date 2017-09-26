@@ -43,7 +43,7 @@ public class AssetsController extends Screen implements Initializable
     @FXML
     private TableView<Asset> tblAssets;
     @FXML
-    private TableColumn colId,colName,colSerial,colType,colDescription,colValue,colUnit,
+    private TableColumn colId,colName,colSerial,colType,colDescription,colValue,colAccount,colUnit,
                         colQuantity,colDateAcquired,colDateExhausted,colOther,colAction;
 
     @Override
@@ -71,6 +71,7 @@ public class AssetsController extends Screen implements Initializable
         CustomTableViewControls.makeComboBoxTableColumn(colType, AssetManager.getInstance().getAsset_types(), "asset_type", "type_name", "/api/asset", 150);
         CustomTableViewControls.makeEditableTableColumn(colDescription, TextFieldTableCell.forTableColumn(), 215, "asset_description", "/api/asset");
         CustomTableViewControls.makeEditableTableColumn(colValue, TextFieldTableCell.forTableColumn(), 60, "asset_value", "/api/asset");
+        CustomTableViewControls.makeEditableTableColumn(colAccount, TextFieldTableCell.forTableColumn(), 60, "account", "/api/asset");
         CustomTableViewControls.makeEditableTableColumn(colUnit, TextFieldTableCell.forTableColumn(), 50, "unit", "/api/asset");
         CustomTableViewControls.makeEditableTableColumn(colQuantity, TextFieldTableCell.forTableColumn(), 50, "quantity", "/api/asset");
         CustomTableViewControls.makeLabelledDatePickerTableColumn(colDateAcquired, "date_acquired", "/api/asset");

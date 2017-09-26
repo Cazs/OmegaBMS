@@ -21,6 +21,7 @@ public class Expense implements BusinessObject, Serializable
     private String supplier;
     private long date_logged;
     private String creator;
+    private String account;
     private String other;
     private Employee creator_employee;
     private Supplier supplier_obj;
@@ -178,6 +179,18 @@ public class Expense implements BusinessObject, Serializable
         this.creator = creator;
     }
 
+    public StringProperty accountProperty(){return new SimpleStringProperty(account);}
+
+    public String getAccount()
+    {
+        return account;
+    }
+
+    public void setAccount(String account)
+    {
+        this.account = account;
+    }
+
     public StringProperty otherProperty(){return new SimpleStringProperty(other);}
 
     public String getOther()
@@ -215,6 +228,9 @@ public class Expense implements BusinessObject, Serializable
                 case "creator":
                     creator = String.valueOf(val);
                     break;
+                case "account":
+                    account = String.valueOf(val);
+                    break;
                 case "other":
                     other = String.valueOf(val);
                     break;
@@ -247,6 +263,8 @@ public class Expense implements BusinessObject, Serializable
                 return date_logged;
             case "creator":
                 return creator;
+            case "account":
+                return account;
             case "other":
                 return other;
             default:
@@ -281,6 +299,8 @@ public class Expense implements BusinessObject, Serializable
                         + URLEncoder.encode(String.valueOf(date_logged), "UTF-8"));
             result.append("&" + URLEncoder.encode("creator","UTF-8") + "="
                     + URLEncoder.encode(creator, "UTF-8"));
+            result.append("&" + URLEncoder.encode("account","UTF-8") + "="
+                    + URLEncoder.encode(account, "UTF-8"));
             if(other!=null)
                 if(!other.isEmpty())
                     result.append("&" + URLEncoder.encode("other","UTF-8") + "="

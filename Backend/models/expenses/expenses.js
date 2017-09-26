@@ -29,6 +29,10 @@ const expensesSchema = mongoose.Schema(
     type:String,
     required:true
   },
+  account:{
+    type:String,
+    required:true
+  },
   revision:{
     type:Number,
     required:false,
@@ -114,6 +118,8 @@ module.exports.isValid = function(expense)
   if(isNullOrEmpty(expense.date_logged))
     return false;
   if(isNullOrEmpty(expense.creator))
+    return false;
+  if(isNullOrEmpty(expense.account))
     return false;
 
     console.log('valid expense.');

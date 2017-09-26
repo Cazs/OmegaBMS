@@ -24,6 +24,10 @@ const resourceSchema = mongoose.Schema(
       type:Number,
       required:true
     },
+    account:{
+      type:String,
+      required:true
+    },
     unit:{
       type:String,
       required:true
@@ -124,6 +128,8 @@ module.exports.isValid = function(resource)
   if(isNullOrEmpty(resource.unit))
     return false;
   if(isNullOrEmpty(resource.quantity))
+    return false;
+  if(isNullOrEmpty(resource.account))
     return false;
   /*if(isNullOrEmpty(resource.date_exhausted))
     return false;*/

@@ -41,7 +41,7 @@ public class ExpensesController extends Screen implements Initializable
     private TableView<Expense>    tblExpenses;
     @FXML
     private TableColumn     colId,colTitle,colDescription,colValue,colSupplier,
-                            colDateLogged,colCreator,colOther,colAction;
+                            colDateLogged,colCreator,colAccount,colOther,colAction;
 
     @Override
     public void refresh()
@@ -70,6 +70,7 @@ public class ExpensesController extends Screen implements Initializable
         CustomTableViewControls.makeComboBoxTableColumn(colSupplier, SupplierManager.getInstance().getSuppliers(), "supplier", "supplier_name", "/api/expense", 160);
         CustomTableViewControls.makeDatePickerTableColumn(colDateLogged, "date_logged", "/api/expense");
         colCreator.setCellValueFactory(new PropertyValueFactory<>("creator"));
+        CustomTableViewControls.makeEditableTableColumn(colAccount, TextFieldTableCell.forTableColumn(), 100, "account", "/api/expense");
         CustomTableViewControls.makeEditableTableColumn(colOther, TextFieldTableCell.forTableColumn(), 100, "extra", "/api/expense");
 
         final ScreenManager screenManager = this.getScreenManager();

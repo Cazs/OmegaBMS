@@ -24,6 +24,10 @@ const assetSchema = mongoose.Schema(
       type:Number,
       required:true
     },
+    account:{
+      type:String,
+      required:true
+    },
     date_acquired:{
       type:Number,
       required:true
@@ -110,6 +114,8 @@ module.exports.isValid = function(asset)
   if(isNullOrEmpty(asset.date_acquired))
     return false;
   if(isNullOrEmpty(asset.asset_type))
+    return false;
+  if(isNullOrEmpty(asset.account))
     return false;
   /*if(isNullOrEmpty(resource.date_exhausted))
     return false;*/

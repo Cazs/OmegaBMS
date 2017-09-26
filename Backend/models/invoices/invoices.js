@@ -13,10 +13,18 @@ const invoiceSchema = mongoose.Schema(
       type:String,
       required:true
   },
+  receivable:{
+    type: Number,
+    required:true,
+  },
   date_generated:{
     type: Number,
     required:false,
     default: Math.floor(new Date().getTime()/1000)
+  },
+  account:{
+    type:String,
+    required:true
   },
   extra:{
     type: String,
@@ -58,7 +66,7 @@ module.exports.getAll = function(callback)
 
 module.exports.update = function(record_id, invoice, callback)
 {
-  console.log('attempting to update invoice[%s].\n', job_id);
+  console.log('attempting to update invoice[%s].\n', record_id);
   var query = {_id:record_id};
   Invoices.findOneAndUpdate(query, invoice, {}, function(error, res_obj)
   {
@@ -89,6 +97,10 @@ module.exports.isValid = function(invoice)
   if(isNullOrEmpty(invoice.job_id))
     return false;
   if(isNullOrEmpty(invoice.creator))
+    return false;
+  if(isNullOrEmpty(invoice.account))
+    return false;
+  if(isNullOrEmpty(invoice.receivable))
     return false;
 
   console.log('valid invoice.');

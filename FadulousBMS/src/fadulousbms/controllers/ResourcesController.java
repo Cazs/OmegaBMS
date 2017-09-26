@@ -39,7 +39,7 @@ public class ResourcesController extends Screen implements Initializable
     @FXML
     private TableView<Resource> tblResources;
     @FXML
-    private TableColumn colId,colName,colSerial,colType,colDescription,colValue,colUnit,
+    private TableColumn colId,colName,colSerial,colType,colDescription,colValue,colAccount,colUnit,
                         colQuantity,colDateAcquired,colDateExhausted,colOther,colAction;
 
     @Override
@@ -67,6 +67,7 @@ public class ResourcesController extends Screen implements Initializable
         CustomTableViewControls.makeComboBoxTableColumn(colType, ResourceManager.getInstance().getResource_types(), "resource_type", "type_name", "/api/resource", 120);
         CustomTableViewControls.makeEditableTableColumn(colDescription, TextFieldTableCell.forTableColumn(), 215, "resource_description", "/api/resource");
         CustomTableViewControls.makeEditableTableColumn(colValue, TextFieldTableCell.forTableColumn(), 80, "resource_value", "/api/resource");
+        CustomTableViewControls.makeEditableTableColumn(colAccount, TextFieldTableCell.forTableColumn(), 80, "account", "/api/resource");
         CustomTableViewControls.makeEditableTableColumn(colUnit, TextFieldTableCell.forTableColumn(), 50, "unit", "/api/resource");
         CustomTableViewControls.makeEditableTableColumn(colQuantity, TextFieldTableCell.forTableColumn(), 50, "quantity", "/api/resource");
         CustomTableViewControls.makeLabelledDatePickerTableColumn(colDateAcquired, "date_acquired", "/api/resource");

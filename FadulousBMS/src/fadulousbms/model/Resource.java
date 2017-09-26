@@ -25,6 +25,7 @@ public class Resource implements BusinessObject, Serializable
     private String resource_serial;
     private String resource_type;
     private double resource_value;
+    private String account;
     private double markup;//TODO:??
     private double labour;//TODO:??
     private long quantity;
@@ -137,6 +138,18 @@ public class Resource implements BusinessObject, Serializable
         this.resource_value = resource_value;
     }
 
+    public StringProperty accountProperty(){return new SimpleStringProperty(account);}
+
+    public String getAccount()
+    {
+        return account;
+    }
+
+    public void setAccount(String account)
+    {
+        this.account = account;
+    }
+
     public StringProperty unitProperty(){return new SimpleStringProperty(unit);}
 
     public String getUnit()
@@ -231,6 +244,9 @@ public class Resource implements BusinessObject, Serializable
                 case "resource_value":
                     resource_value = Double.parseDouble(String.valueOf(val));
                     break;
+                case "account":
+                    account = (String)val;
+                    break;
                 case "markup":
                     markup = Double.parseDouble(String.valueOf(val));
                     break;
@@ -277,6 +293,8 @@ public class Resource implements BusinessObject, Serializable
                 return resource_serial;
             case "resource_value":
                 return resource_value;
+            case "account":
+                return account;
             case "markup":
                 return markup;
             case "labour":
@@ -311,26 +329,28 @@ public class Resource implements BusinessObject, Serializable
         try
         {
             result.append(URLEncoder.encode("resource_name","UTF-8") + "="
-                    + URLEncoder.encode(resource_name, "UTF-8") + "&");
-            result.append(URLEncoder.encode("resource_type","UTF-8") + "="
-                    + URLEncoder.encode(resource_type, "UTF-8") + "&");
-            result.append(URLEncoder.encode("resource_description","UTF-8") + "="
-                    + URLEncoder.encode(resource_description, "UTF-8") + "&");
-            result.append(URLEncoder.encode("resource_serial","UTF-8") + "="
-                    + URLEncoder.encode(resource_serial, "UTF-8") + "&");
-            result.append(URLEncoder.encode("resource_value","UTF-8") + "="
-                    + URLEncoder.encode(String.valueOf(resource_value), "UTF-8") + "&");
-            result.append(URLEncoder.encode("markup","UTF-8") + "="
-                    + URLEncoder.encode(String.valueOf(markup), "UTF-8") + "&");
-            result.append(URLEncoder.encode("date_acquired","UTF-8") + "="
-                    + URLEncoder.encode(String.valueOf(date_acquired), "UTF-8") + "&");
-            result.append(URLEncoder.encode("date_exhausted","UTF-8") + "="
-                    + URLEncoder.encode(String.valueOf(date_exhausted), "UTF-8") + "&");
-            result.append(URLEncoder.encode("unit","UTF-8") + "="
-                    + URLEncoder.encode(unit, "UTF-8") + "&");
-            result.append(URLEncoder.encode("labour","UTF-8") + "="
-                    + URLEncoder.encode(String.valueOf(labour), "UTF-8") + "&");
-            result.append(URLEncoder.encode("quantity","UTF-8") + "="
+                    + URLEncoder.encode(resource_name, "UTF-8"));
+            result.append("&" + URLEncoder.encode("resource_type","UTF-8") + "="
+                    + URLEncoder.encode(resource_type, "UTF-8"));
+            result.append("&" + URLEncoder.encode("resource_description","UTF-8") + "="
+                    + URLEncoder.encode(resource_description, "UTF-8"));
+            result.append("&" + URLEncoder.encode("resource_serial","UTF-8") + "="
+                    + URLEncoder.encode(resource_serial, "UTF-8"));
+            result.append("&" + URLEncoder.encode("resource_value","UTF-8") + "="
+                    + URLEncoder.encode(String.valueOf(resource_value), "UTF-8"));
+            result.append("&" + URLEncoder.encode("account","UTF-8") + "="
+                    + URLEncoder.encode(account, "UTF-8"));
+            result.append("&" + URLEncoder.encode("markup","UTF-8") + "="
+                    + URLEncoder.encode(String.valueOf(markup), "UTF-8"));
+            result.append("&" + URLEncoder.encode("date_acquired","UTF-8") + "="
+                    + URLEncoder.encode(String.valueOf(date_acquired), "UTF-8"));
+            result.append("&" + URLEncoder.encode("date_exhausted","UTF-8") + "="
+                    + URLEncoder.encode(String.valueOf(date_exhausted), "UTF-8"));
+            result.append("&" + URLEncoder.encode("unit","UTF-8") + "="
+                    + URLEncoder.encode(unit, "UTF-8"));
+            result.append("&" + URLEncoder.encode("labour","UTF-8") + "="
+                    + URLEncoder.encode(String.valueOf(labour), "UTF-8"));
+            result.append("&" + URLEncoder.encode("quantity","UTF-8") + "="
                     + URLEncoder.encode(String.valueOf(quantity), "UTF-8"));
             if(other!=null)
                 if(!other.isEmpty())

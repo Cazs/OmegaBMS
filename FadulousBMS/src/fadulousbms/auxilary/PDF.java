@@ -2,10 +2,7 @@ package fadulousbms.auxilary;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import fadulousbms.managers.ClientManager;
-import fadulousbms.managers.EmployeeManager;
-import fadulousbms.managers.QuoteManager;
-import fadulousbms.managers.SessionManager;
+import fadulousbms.managers.*;
 import fadulousbms.model.*;
 import org.apache.pdfbox.cos.COSName;
 import org.apache.pdfbox.pdmodel.PDDocument;
@@ -39,6 +36,7 @@ import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.util.AbstractMap;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
 
 /**
@@ -685,12 +683,356 @@ public class PDF
         contents.endText();
         contents.close();
 
-        document.save("bin/quote_"+quote.get_id()+".pdf");
+        document.save("bin/pdf/quote_"+quote.get_id()+".pdf");
         document.close();
 
         PDFViewer pdfViewer = new PDFViewer(true);
         pdfViewer.setVisible(true);
-        pdfViewer.doOpen("bin/quote_" + quote.get_id() + ".pdf");
+        pdfViewer.doOpen("bin/pdf/quote_" + quote.get_id() + ".pdf");
+    }
+
+    /*private static String[] getSortingAttr(Transaction[] transactions, int index)
+    {
+        String sorting_attr = "date_logged";
+        Object val = objects[index].get("date_logged");
+        if(val==null)
+        {
+            val = objects[index].get("date_acquired");
+            sorting_attr = "date_acquired";
+        }
+        if(val==null)
+        {
+            val = objects[index].get("date_generated");
+            sorting_attr = "date_generated";
+        }
+        if(val==null)
+        {
+            IO.log("Array Partioner", IO.TAG_ERROR, "pivot attribute is null.");
+            return null;
+        }else return new String[]{sorting_attr, String.valueOf(val)};
+    }*/
+
+    /*static int partition(Transaction[] transactions, int left, int right)
+    {
+        int i = left, j = right;
+        Transaction tmp;
+        /*String[] pivot_data = getSortingAttr(transactions, (left + right) / 2);
+        if(pivot_data==null)
+        {
+            return 0;
+        }*
+        //String sorting_attr = pivot_data[0];
+        //Object val = pivot_data[1];
+        double pivot = transactions[(left + right) / 2].getDate();
+
+        //IO.log("Array Partitioner", IO.TAG_INFO, "Sorting attribute: " + sorting_attr);
+        IO.log("Array Partitioner", IO.TAG_INFO, "Pivot: " + pivot);
+
+        while (i <= j)
+        {
+            //String[] obj_i_data = getSortingAttr(objects, i);
+            //String[] obj_j_data = getSortingAttr(objects, j);
+
+            //Object obj_i = objects[i].get(sorting_attr);
+            //Object obj_j = objects[j].get(sorting_attr);
+            //IO.log("Array Partitioner", IO.TAG_INFO, "obj_i sorting attr: " + obj_i_data[0]);
+            IO.log("Array Partitioner", IO.TAG_INFO, "obj_i value: " + transactions[i].getDate());
+            //IO.log("Array Partitioner", IO.TAG_INFO, "obj_j sorting attr: " + obj_j_data[0]);
+            IO.log("Array Partitioner", IO.TAG_INFO, "obj_j value: " + transactions[j].getDate());
+
+            double date_i = transactions[i].getDate();
+            double date_j = transactions[j].getDate();
+
+            while (date_i < pivot)
+                i++;
+            while (date_j > pivot)
+                j--;
+            if (i <= j)
+            {
+                tmp = transactions[i];
+                transactions[i] = transactions[j];
+                transactions[j] = tmp;
+                i++;
+                j--;
+            }
+        }
+        return i;
+    }*/
+
+    static int partition(Transaction arr[], int left, int right)
+    {
+        int i = left, j = right;
+        Transaction tmp;
+        double pivot = arr[(left + right) / 2].getDate();
+
+        while (i <= j)
+        {
+            while (arr[i].getDate() < pivot)
+                i++;
+            while (arr[j].getDate() > pivot)
+                j--;
+            if (i <= j)
+            {
+                tmp = arr[i];
+                arr[i] = arr[j];
+                arr[j] = tmp;
+                i++;
+                j--;
+            }
+        }
+
+        return i;
+    }
+
+    public static void quickSort(Transaction transactions[], int left, int right)
+    {
+        int index = partition(transactions, left, right);
+        if (left < index - 1)
+            quickSort(transactions, left, index - 1);
+        if (index < right)
+            quickSort(transactions, index, right);
+    }
+
+    public static Transaction[] selectionSort(Transaction[] arr){
+
+        for (int i = 0; i < arr.length - 1; i++)
+        {
+            int index = i;
+            for (int j = i + 1; j < arr.length; j++)
+                if (arr[j].getDate() < arr[index].getDate())
+                    index = j;
+
+            Transaction lowerVal = arr[index];
+            arr[index] = arr[i];
+            arr[i] = lowerVal;
+        }
+        return arr;
+    }
+
+    public static void createGeneralJournalPdf() throws IOException
+    {
+        //Init managers and load data to memory
+        AssetManager.getInstance().loadDataFromServer();
+        ResourceManager.getInstance().loadDataFromServer();
+        ExpenseManager.getInstance().loadDataFromServer();
+        InvoiceManager.getInstance().loadDataFromServer();
+
+        ArrayList<Transaction> transactions = new ArrayList<>();
+        //Load assets
+        for(Asset asset : AssetManager.getInstance().getAssets())
+            transactions.add(new Transaction(asset.get_id(), asset.getDate_acquired(), asset));
+        //Load Resources/Stock
+        for(Resource resource : ResourceManager.getInstance().getResources())
+            transactions.add(new Transaction(resource.get_id(), resource.getDate_acquired(), resource));
+        //Load additional Expenses
+        for(Expense expense: ExpenseManager.getInstance().getExpenses())
+            transactions.add(new Transaction(expense.get_id(), expense.getDate_logged(), expense));
+        //Load Service income (Invoices)
+        for(Invoice invoice: InvoiceManager.getInstance().getInvoices())
+            transactions.add(new Transaction(invoice.get_id(), invoice.getDate_generated(), invoice));
+
+        Transaction[] transactions_arr = new Transaction[transactions.size()];
+        transactions.toArray(transactions_arr);
+        long start_ms = System.currentTimeMillis();
+        quickSort(transactions_arr, 0, transactions.size()-1);
+        //Arrays.sort(transactions_arr);
+        //transactions_arr = selectionSort(transactions_arr);
+        System.out.println("Sorted in: "+ (System.currentTimeMillis()-start_ms) + "ms");
+        System.out.println("Transaction count: "+ transactions_arr.length);
+
+        // Create a new document with an empty page.
+        PDDocument document = new PDDocument();
+        PDPage page = new PDPage(PDRectangle.A4);
+        document.addPage(page);
+
+        // Adobe Acrobat uses Helvetica as a default font and
+        // stores that under the name '/Helv' in the resources dictionary
+        PDFont font = PDType1Font.HELVETICA;
+        PDResources resources = new PDResources();
+        resources.put(COSName.getPDFName("Helv"), font);
+
+        PDPageContentStream contents = new PDPageContentStream(document, page);
+        int logo_h = 60;
+        PDImageXObject logo = PDImageXObject.createFromFile("images/logo.png", document);
+        contents.drawImage(logo, 10, 770, 160, logo_h);
+
+        float w = page.getBBox().getWidth();
+        float h = page.getBBox().getHeight();
+        int line_pos = (int)h-logo_h-20;
+        int digit_font_size=9;
+
+        /**Draw lines**/
+        int center_vert_line_start = line_pos;
+        int bottom_line = (int)h-logo_h-(ROW_COUNT+1)*LINE_HEIGHT;
+        //createLinesAndBordersOnPage(contents, (int)w, line_pos, bottom_line);
+        drawHorzLines(contents, line_pos, (int) w, new Insets(0,0,80,0));
+
+        /** begin text from the top**/
+        contents.beginText();
+        contents.setFont(font, 12);
+        line_pos-=LINE_HEIGHT/2;
+
+        String gj_title = "General Journal";
+        addTextToPageStream(contents, gj_title, PDType1Font.COURIER_BOLD, 16,(int)(w-250), 830);
+        addTextToPageStream(contents, "Company: " + Globals.COMPANY.getValue(), PDType1Font.COURIER, 12,(int)(w-250), 815);
+        addTextToPageStream(contents, "Period: <insert>", PDType1Font.COURIER, 12,(int)(w-200), 800);
+        addTextToPageStream(contents, "Generated: <insert>", PDType1Font.COURIER, 12,(int)(w-200), 785);
+
+        //horizontal solid line
+        contents.endText();
+        contents.setStrokingColor(Color.BLACK);
+        contents.moveTo(10, line_pos-LINE_HEIGHT/2);
+        contents.lineTo(w-10, line_pos-LINE_HEIGHT/2);
+        contents.stroke();
+        contents.beginText();
+        line_pos-=LINE_HEIGHT;
+
+        addTextToPageStream(contents,"Date", PDType1Font.COURIER_BOLD_OBLIQUE, 15,10, line_pos);
+        addTextToPageStream(contents,"Account", PDType1Font.COURIER_BOLD_OBLIQUE, 15,150, line_pos);
+        addTextToPageStream(contents,"Debit", PDType1Font.COURIER_BOLD_OBLIQUE, 15,(int)w-180, line_pos);
+        addTextToPageStream(contents,"Credit", PDType1Font.COURIER_BOLD_OBLIQUE, 15,(int)w-100, line_pos);
+
+        //horizontal solid line
+        contents.endText();
+        contents.setStrokingColor(Color.BLACK);
+        contents.moveTo(10, line_pos-LINE_HEIGHT/2);
+        contents.lineTo(w-10, line_pos-LINE_HEIGHT/2);
+        contents.stroke();
+        contents.beginText();
+
+        line_pos-=LINE_HEIGHT;//next line
+
+        int lines=0;
+        int pages = 1;
+        for(Transaction t : transactions_arr)
+        {
+            if(lines>15)
+            {
+                //line_pos-=LINE_HEIGHT;
+                addTextToPageStream(contents, "page " + pages, PDType1Font.HELVETICA, 18, (int)(w/2)-50, 30);
+                contents.close();
+                page = new PDPage(PDRectangle.A4);
+                document.addPage(page);
+                contents = new PDPageContentStream(document, page);
+                contents.drawImage(logo, 10, 770, 160, logo_h);
+                line_pos = (int)h-logo_h-20;
+                //line_pos = 700;
+                drawHorzLines(contents, line_pos, (int) w, new Insets(0,0,80,0));
+                line_pos-=LINE_HEIGHT/2;
+                contents.beginText();
+
+                addTextToPageStream(contents, gj_title, PDType1Font.COURIER_BOLD, 16,(int)(w-250), 830);
+                addTextToPageStream(contents, "Company: " + Globals.COMPANY.getValue(), PDType1Font.COURIER, 12,(int)(w-250), 815);
+                addTextToPageStream(contents, "Period: <insert>", PDType1Font.COURIER, 12,(int)(w-200), 800);
+                addTextToPageStream(contents, "Generated: <insert>", PDType1Font.COURIER, 12,(int)(w-200), 785);
+                line_pos-=LINE_HEIGHT;
+                pages++;
+                lines=0;
+            }
+            addTextToPageStream(contents,
+                    (new SimpleDateFormat("yyyy-MM-dd").format(
+                            new Date(t.getDate()*1000))),
+                    PDType1Font.HELVETICA, 15,10, line_pos);
+
+            if(t.getBusinessObject() instanceof Invoice)
+            {
+                //title
+                String title = ((Invoice) t.getBusinessObject()).getAccount();
+                if (title.length()<=50)
+                    addTextToPageStream(contents, title, PDType1Font.HELVETICA, 12, 105, line_pos);
+                if(title.length()>50 && title.length()<=60)
+                    addTextToPageStream(contents, title, PDType1Font.HELVETICA, 10, 105, line_pos);
+                if(title.length()>60)
+                    addTextToPageStream(contents, title, PDType1Font.HELVETICA, 8, 105, line_pos);
+                //debit
+                double difference=0;
+                if(((Invoice) t.getBusinessObject()).getJob()!=null)
+                    if(((Invoice) t.getBusinessObject()).getJob().getQuote()!=null)
+                        difference = ((Invoice) t.getBusinessObject()).getJob().getQuote().getTotal()-((Invoice) t.getBusinessObject()).getReceivable();
+                addTextToPageStream(contents, Globals.CURRENCY_SYMBOL.getValue() + " "+String.valueOf(difference), PDType1Font.HELVETICA, 15, (int) w - 180, line_pos);
+                line_pos-=LINE_HEIGHT;//next line
+                //account
+                addTextToPageStream(contents, "Accounts Receivable", PDType1Font.HELVETICA, 15, 105, line_pos);
+                //debit
+                addTextToPageStream(contents, Globals.CURRENCY_SYMBOL.getValue() + " "+String.valueOf(((Invoice) t.getBusinessObject()).getReceivable()), PDType1Font.HELVETICA, 15, (int) w - 180, line_pos);
+                line_pos-=LINE_HEIGHT;//next line
+                //account
+                addTextToPageStream(contents, "Service Revenue", PDType1Font.HELVETICA, 15, 150, line_pos);
+                //credit
+                addTextToPageStream(contents,Globals.CURRENCY_SYMBOL.getValue() + " "+String.valueOf(((Invoice) t.getBusinessObject()).getTotal()), PDType1Font.HELVETICA, 15,(int)w-100, line_pos);
+            } else if(t.getBusinessObject() instanceof Expense)
+            {
+                //title
+                String title = ((Expense) t.getBusinessObject()).getExpense_title();
+                if (title.length()<=50)
+                    addTextToPageStream(contents, title, PDType1Font.HELVETICA, 12, 105, line_pos);
+                if(title.length()>50 && title.length()<=60)
+                    addTextToPageStream(contents, title, PDType1Font.HELVETICA, 10, 105, line_pos);
+                if(title.length()>60)
+                    addTextToPageStream(contents, title, PDType1Font.HELVETICA, 8, 105, line_pos);
+                //debit
+                addTextToPageStream(contents, Globals.CURRENCY_SYMBOL.getValue() + " "+String.valueOf(((Expense) t.getBusinessObject()).getExpense_value()), PDType1Font.HELVETICA, 15, (int) w - 180, line_pos);
+                line_pos-=LINE_HEIGHT;//next line
+                //account
+                addTextToPageStream(contents, ((Expense) t.getBusinessObject()).getAccount(), PDType1Font.HELVETICA, 15, 150, line_pos);
+                //credit
+                addTextToPageStream(contents,Globals.CURRENCY_SYMBOL.getValue() + " "+String.valueOf(((Expense) t.getBusinessObject()).getExpense_value()), PDType1Font.HELVETICA, 15,(int)w-100, line_pos);
+            } else if(t.getBusinessObject() instanceof Asset)
+            {
+                //title
+                String title =((Asset) t.getBusinessObject()).getAsset_name();
+                if (title.length()<=50)
+                    addTextToPageStream(contents, "Purchased asset: "+title, PDType1Font.HELVETICA, 12, 105, line_pos);
+                if(title.length()>50 && title.length()<=60)
+                    addTextToPageStream(contents, "Purchased asset: "+title, PDType1Font.HELVETICA, 10, 105, line_pos);
+                if(title.length()>60)
+                    addTextToPageStream(contents, "Purchased asset: "+title, PDType1Font.HELVETICA, 8, 105, line_pos);
+                //debit
+                addTextToPageStream(contents, Globals.CURRENCY_SYMBOL.getValue() + " "+String.valueOf(((Asset) t.getBusinessObject()).getAsset_value()), PDType1Font.HELVETICA, 15, (int) w - 180, line_pos);
+                line_pos-=LINE_HEIGHT;//next line
+                //account
+                addTextToPageStream(contents, ((Asset) t.getBusinessObject()).getAccount(), PDType1Font.HELVETICA, 15, 150, line_pos);
+                //credit
+                addTextToPageStream(contents,Globals.CURRENCY_SYMBOL.getValue() + " "+String.valueOf(((Asset) t.getBusinessObject()).getAsset_value()), PDType1Font.HELVETICA, 15,(int)w-100, line_pos);
+            } else if(t.getBusinessObject() instanceof Resource)
+            {
+                //title
+                String title = ((Resource) t.getBusinessObject()).getResource_name();
+                if (title.length()<=50)
+                    addTextToPageStream(contents, "Purchased stock: "+title, PDType1Font.HELVETICA, 12, 105, line_pos);
+                if(title.length()>50 && title.length()<=60)
+                    addTextToPageStream(contents, "Purchased stock: "+title, PDType1Font.HELVETICA, 10, 105, line_pos);
+                if(title.length()>60)
+                    addTextToPageStream(contents, "Purchased stock: "+title, PDType1Font.HELVETICA, 8, 105, line_pos);
+                //debit
+                addTextToPageStream(contents, Globals.CURRENCY_SYMBOL.getValue() + " "+String.valueOf(((Resource) t.getBusinessObject()).getResource_value()), PDType1Font.HELVETICA, 15, (int) w - 180, line_pos);
+                line_pos-=LINE_HEIGHT;//next line
+                //account
+                addTextToPageStream(contents, ((Resource) t.getBusinessObject()).getAccount(), PDType1Font.HELVETICA, 15, 150, line_pos);
+                //credit
+                addTextToPageStream(contents,Globals.CURRENCY_SYMBOL.getValue() + " "+String.valueOf(((Resource) t.getBusinessObject()).getResource_value()), PDType1Font.HELVETICA, 15,(int)w-100, line_pos);
+            }
+            //addTextToPageStream(contents,"Account", PDType1Font.COURIER_BOLD_OBLIQUE, 15,100, line_pos);
+            //addTextToPageStream(contents,"Credit", PDType1Font.COURIER_BOLD_OBLIQUE, 15,(int)w-100, line_pos);
+            lines++;
+            line_pos-=LINE_HEIGHT;//next line
+        }
+        addTextToPageStream(contents, "page " + pages, PDType1Font.HELVETICA, 18, (int)(w/2)-50, 30);
+
+        //horizontal solid line
+        contents.endText();
+        contents.setStrokingColor(Color.BLACK);
+        contents.moveTo(0, line_pos-LINE_HEIGHT/2);
+        contents.lineTo(w, line_pos-LINE_HEIGHT/2);
+        contents.stroke();
+
+        contents.close();
+        document.save("bin/pdf/general_journal.pdf");
+        document.close();
+
+        PDFViewer pdfViewer = new PDFViewer(true);
+        pdfViewer.setVisible(true);
+        pdfViewer.doOpen("bin/pdf/general_journal.pdf");
     }
 
     public static void createJobCardPdf(Job job) throws IOException
@@ -858,12 +1200,12 @@ public class PDF
             return;
         }
 
-        document.save("bin/job_card_"+job.get_id()+".pdf");
+        document.save("bin/pdf/job_card_"+job.get_id()+".pdf");
         document.close();
 
         PDFViewer pdfViewer = new PDFViewer(true);
         pdfViewer.setVisible(true);
-        pdfViewer.doOpen("bin/job_card_" + job.get_id() + ".pdf");
+        pdfViewer.doOpen("bin/pdf/job_card_" + job.get_id() + ".pdf");
     }
 
     public static void addTextToPageStream(PDPageContentStream contents, String text, int font_size, int x, int y) throws IOException

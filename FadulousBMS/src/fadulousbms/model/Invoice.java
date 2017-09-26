@@ -30,8 +30,10 @@ public class Invoice implements BusinessObject, Serializable
     //private Quote quote;
     private Job job;
     private long date_generated;
+    private String account;
     private String extra;
     private boolean marked;
+    private double receivable;
 
     public StringProperty idProperty(){return new SimpleStringProperty(_id);}
 
@@ -68,6 +70,30 @@ public class Invoice implements BusinessObject, Serializable
     public void setDate_generated(long date_generated)
     {
         this.date_generated = date_generated;
+    }
+
+    public StringProperty accountProperty(){return new SimpleStringProperty(account);}
+
+    public String getAccount()
+    {
+        return account;
+    }
+
+    public void setAccount(String account)
+    {
+        this.account = account;
+    }
+
+    public StringProperty receivableProperty(){return new SimpleStringProperty(String.valueOf(receivable));}
+
+    public double getReceivable()
+    {
+        return receivable;
+    }
+
+    public void setReceivable(double receivable)
+    {
+        this.receivable = receivable;
     }
 
     /*private StringProperty quote_idProperty(){return new SimpleStringProperty(quote_id);}
@@ -252,11 +278,17 @@ public class Invoice implements BusinessObject, Serializable
                 case "creator":
                     creator = String.valueOf(val);
                     break;
+                case "account":
+                    account = String.valueOf(val);
+                    break;
+                case "receivable":
+                    receivable = Double.valueOf(String.valueOf(val));
+                    break;
                 case "extra":
                     extra = String.valueOf(val);
                     break;
                 default:
-                    System.err.println("Unknown Invoice attribute '" + var + "'.");
+                    IO.log(getClass().getName(), IO.TAG_ERROR, "unknown Invoice attribute '" + var + "'.");
                     break;
             }
         }catch (NumberFormatException e)
@@ -280,10 +312,14 @@ public class Invoice implements BusinessObject, Serializable
                 return date_generated;
             case "creator":
                 return creator;
+            case "account":
+                return account;
+            case "receivable":
+                return receivable;
             case "extra":
                 return extra;
             default:
-                System.err.println("Unknown Invoice attribute '" + var + "'.");
+                IO.log(getClass().getName(), IO.TAG_ERROR, "unknown Invoice attribute '" + var + "'.");
                 return null;
         }
     }
@@ -310,6 +346,10 @@ public class Invoice implements BusinessObject, Serializable
                         + URLEncoder.encode(String.valueOf(date_generated), "UTF-8"));
             result.append("&" + URLEncoder.encode("creator","UTF-8") + "="
                     + URLEncoder.encode(String.valueOf(creator), "UTF-8"));
+            result.append("&" + URLEncoder.encode("account","UTF-8") + "="
+                    + URLEncoder.encode(account, "UTF-8"));
+            result.append("&" + URLEncoder.encode("receivable","UTF-8") + "="
+                    + URLEncoder.encode(String.valueOf(receivable), "UTF-8"));
             if(extra!=null)
                 result.append(URLEncoder.encode("extra","UTF-8") + "="
                         + URLEncoder.encode(extra, "UTF-8") + "&");

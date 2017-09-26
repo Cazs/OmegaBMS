@@ -1,6 +1,7 @@
 package fadulousbms.controllers;
 
 import fadulousbms.auxilary.IO;
+import fadulousbms.auxilary.PDF;
 import fadulousbms.auxilary.Screen;
 import fadulousbms.managers.AssetManager;
 import fadulousbms.managers.ScreenManager;
@@ -105,5 +106,17 @@ public class AccountingController extends Screen implements Initializable
             }).start();
             return null;
         });
+    }
+
+    @FXML
+    public void generalJournalClick()
+    {
+        try
+        {
+            PDF.createGeneralJournalPdf();
+        } catch (IOException e)
+        {
+            IO.log(getClass().getName(), IO.TAG_ERROR, e.getMessage());
+        }
     }
 }

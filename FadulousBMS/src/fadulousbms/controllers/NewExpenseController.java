@@ -32,7 +32,7 @@ public class NewExpenseController extends Screen implements Initializable
     private boolean itemsModified;
     private Date date_generated;
     @FXML
-    private TextField txtTitle,txtDescription,txtValue,txtOther;
+    private TextField txtTitle,txtDescription,txtValue,txtOther,txtAccount;
     @FXML
     private ComboBox<Supplier> cbxSupplier;
     @FXML
@@ -83,6 +83,11 @@ public class NewExpenseController extends Screen implements Initializable
             txtValue.getStylesheets().add(this.getClass().getResource("../styles/home.css").toExternalForm());
             return;
         }
+        if(!Validators.isValidNode(txtAccount, txtAccount.getText(), 1, ".+"))
+        {
+            txtAccount.getStylesheets().add(this.getClass().getResource("../styles/home.css").toExternalForm());
+            return;
+        }
         if(cbxSupplier.getValue()==null)
         {
             IO.logAndAlert("Error", "Please choose a valid supplier.", IO.TAG_ERROR);
@@ -105,6 +110,7 @@ public class NewExpenseController extends Screen implements Initializable
         expense.setExpense_description(txtDescription.getText());
         expense.setExpense_value(Double.parseDouble(txtValue.getText()));
         expense.setCreator(SessionManager.getInstance().getActive().getUsername());
+        expense.setAccount(txtAccount.getText());
         expense.setSupplier_obj(cbxSupplier.getValue());
         expense.setDate_logged(dateLogged.getValue().atStartOfDay(ZoneId.systemDefault()).toEpochSecond());
         if(txtOther.getText()!=null)

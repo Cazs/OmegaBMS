@@ -135,6 +135,11 @@ public class InvoiceManager extends BusinessObjectManager
 
     public void generateInvoice(Job job) throws IOException
     {
+        if(job.getQuote()==null)
+        {
+            IO.logAndAlert(getClass().getName(), "Job Quote object is not set.", IO.TAG_ERROR);
+            return;
+        }
         SessionManager smgr = SessionManager.getInstance();
         if(smgr.getActive()!=null)
         {
@@ -147,6 +152,8 @@ public class InvoiceManager extends BusinessObjectManager
                 Invoice invoice = new Invoice();
                 invoice.setCreator(smgr.getActiveEmployee().getUsr());
                 invoice.setJob_id(job.get_id());
+                invoice.setAccount("Cash");
+                invoice.setReceivable(job.getQuote().getTotal());
 
                 HttpURLConnection response = RemoteComms.postData("/api/invoice/add", invoice.asUTFEncodedString(), headers);
                 if(response!=null)

@@ -20,6 +20,7 @@ public class Asset implements BusinessObject, Serializable
     private String asset_serial;
     private String asset_type;
     private double asset_value;
+    private String account;
     private long date_acquired;
     private long date_exhausted;
     private long quantity;
@@ -116,6 +117,18 @@ public class Asset implements BusinessObject, Serializable
         this.asset_value = asset_value;
     }
 
+    public StringProperty accountProperty(){return new SimpleStringProperty(account);}
+
+    public String getAccount()
+    {
+        return account;
+    }
+
+    public void setAccount(String account)
+    {
+        this.account = account;
+    }
+
     //public StringProperty date_acquiredProperty(){return new SimpleStringProperty(String.valueOf(date_acquired));}
 
     public long getDate_acquired()
@@ -193,6 +206,8 @@ public class Asset implements BusinessObject, Serializable
                     + URLEncoder.encode(String.valueOf(asset_serial), "UTF-8"));
             result.append("&" + URLEncoder.encode("asset_value","UTF-8") + "="
                     + URLEncoder.encode(String.valueOf(asset_value), "UTF-8"));
+            result.append("&" + URLEncoder.encode("account","UTF-8") + "="
+                    + URLEncoder.encode(account, "UTF-8"));
             if(date_acquired>0)
                 result.append("&" + URLEncoder.encode("date_acquired","UTF-8") + "="
                         + URLEncoder.encode(String.valueOf(date_acquired), "UTF-8"));
@@ -235,6 +250,9 @@ public class Asset implements BusinessObject, Serializable
             case "asset_value":
                 asset_value = Double.parseDouble(String.valueOf(val));
                 break;
+            case "account":
+                account = (String)val;
+                break;
             case "date_acquired":
                 date_acquired = Long.parseLong(String.valueOf(val));
                 break;
@@ -271,6 +289,8 @@ public class Asset implements BusinessObject, Serializable
                 return asset_serial;
             case "asset_value":
                 return asset_value;
+            case "account":
+                return account;
             case "date_acquired":
                 return date_acquired;
             case "date_exhausted":
