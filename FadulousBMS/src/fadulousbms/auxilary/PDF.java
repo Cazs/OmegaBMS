@@ -34,10 +34,7 @@ import java.io.IOException;
 import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
-import java.util.AbstractMap;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Date;
+import java.util.*;
 
 /**
  * Created by ghost on 2017/02/10.
@@ -809,7 +806,7 @@ public class PDF
         return arr;
     }
 
-    public static void createGeneralJournalPdf() throws IOException
+    public static void createGeneralJournalPdf(long start, long end) throws IOException
     {
         //Init managers and load data to memory
         AssetManager.getInstance().loadDataFromServer();
@@ -873,10 +870,16 @@ public class PDF
         line_pos-=LINE_HEIGHT/2;
 
         String gj_title = "General Journal";
+        String date_start = (new SimpleDateFormat("yyyy/MM/dd").format(
+                new Date(start * 1000)));
+        String date_end = (new SimpleDateFormat("yyyy/MM/dd").format(
+                new Date(end * 1000)));
+        String date_generated = (new SimpleDateFormat("yyyy/MM/dd").format(
+                new Date(System.currentTimeMillis())));
         addTextToPageStream(contents, gj_title, PDType1Font.COURIER_BOLD, 16,(int)(w-250), 830);
         addTextToPageStream(contents, "Company: " + Globals.COMPANY.getValue(), PDType1Font.COURIER, 12,(int)(w-250), 815);
-        addTextToPageStream(contents, "Period: <insert>", PDType1Font.COURIER, 12,(int)(w-200), 800);
-        addTextToPageStream(contents, "Generated: <insert>", PDType1Font.COURIER, 12,(int)(w-200), 785);
+        addTextToPageStream(contents, "Period: "+date_start+" - " + date_end, PDType1Font.COURIER, 12,(int)(w-200), 800);
+        addTextToPageStream(contents, "Generated: " + date_generated, PDType1Font.COURIER, 12,(int)(w-200), 785);
 
         //horizontal solid line
         contents.endText();
@@ -906,116 +909,119 @@ public class PDF
         int pages = 1;
         for(Transaction t : transactions_arr)
         {
-            if(lines>15)
+            if(t.getDate()>=start && t.getDate()<=end)
             {
-                //line_pos-=LINE_HEIGHT;
-                addTextToPageStream(contents, "page " + pages, PDType1Font.HELVETICA, 18, (int)(w/2)-50, 30);
-                contents.close();
-                page = new PDPage(PDRectangle.A4);
-                document.addPage(page);
-                contents = new PDPageContentStream(document, page);
-                contents.drawImage(logo, 10, 770, 160, logo_h);
-                line_pos = (int)h-logo_h-20;
-                //line_pos = 700;
-                drawHorzLines(contents, line_pos, (int) w, new Insets(0,0,80,0));
-                line_pos-=LINE_HEIGHT/2;
-                contents.beginText();
+                if (lines > 15)
+                {
+                    //line_pos-=LINE_HEIGHT;
+                    addTextToPageStream(contents, "page " + pages, PDType1Font.HELVETICA, 18, (int) (w / 2) - 50, 30);
+                    contents.close();
+                    page = new PDPage(PDRectangle.A4);
+                    document.addPage(page);
+                    contents = new PDPageContentStream(document, page);
+                    contents.drawImage(logo, 10, 770, 160, logo_h);
+                    line_pos = (int) h - logo_h - 20;
+                    //line_pos = 700;
+                    drawHorzLines(contents, line_pos, (int) w, new Insets(0, 0, 80, 0));
+                    line_pos -= LINE_HEIGHT / 2;
+                    contents.beginText();
 
-                addTextToPageStream(contents, gj_title, PDType1Font.COURIER_BOLD, 16,(int)(w-250), 830);
-                addTextToPageStream(contents, "Company: " + Globals.COMPANY.getValue(), PDType1Font.COURIER, 12,(int)(w-250), 815);
-                addTextToPageStream(contents, "Period: <insert>", PDType1Font.COURIER, 12,(int)(w-200), 800);
-                addTextToPageStream(contents, "Generated: <insert>", PDType1Font.COURIER, 12,(int)(w-200), 785);
-                line_pos-=LINE_HEIGHT;
-                pages++;
-                lines=0;
-            }
-            addTextToPageStream(contents,
-                    (new SimpleDateFormat("yyyy-MM-dd").format(
-                            new Date(t.getDate()*1000))),
-                    PDType1Font.HELVETICA, 15,10, line_pos);
+                    addTextToPageStream(contents, gj_title, PDType1Font.COURIER_BOLD, 16, (int) (w - 250), 830);
+                    addTextToPageStream(contents, "Company: " + Globals.COMPANY.getValue(), PDType1Font.COURIER, 12, (int) (w - 250), 815);
+                    addTextToPageStream(contents, "Period: "+date_start+" - " + date_end, PDType1Font.COURIER, 12,(int)(w-200), 800);
+                    addTextToPageStream(contents, "Generated: " + date_generated, PDType1Font.COURIER, 12,(int)(w-200), 785);
+                    line_pos -= LINE_HEIGHT;
+                    pages++;
+                    lines = 0;
+                }
+                addTextToPageStream(contents,
+                        (new SimpleDateFormat("yyyy-MM-dd").format(
+                                new Date(t.getDate() * 1000))),
+                        PDType1Font.HELVETICA, 15, 10, line_pos);
 
-            if(t.getBusinessObject() instanceof Invoice)
-            {
-                //title
-                String title = ((Invoice) t.getBusinessObject()).getAccount();
-                if (title.length()<=50)
-                    addTextToPageStream(contents, title, PDType1Font.HELVETICA, 12, 105, line_pos);
-                if(title.length()>50 && title.length()<=60)
-                    addTextToPageStream(contents, title, PDType1Font.HELVETICA, 10, 105, line_pos);
-                if(title.length()>60)
-                    addTextToPageStream(contents, title, PDType1Font.HELVETICA, 8, 105, line_pos);
-                //debit
-                double difference=0;
-                if(((Invoice) t.getBusinessObject()).getJob()!=null)
-                    if(((Invoice) t.getBusinessObject()).getJob().getQuote()!=null)
-                        difference = ((Invoice) t.getBusinessObject()).getJob().getQuote().getTotal()-((Invoice) t.getBusinessObject()).getReceivable();
-                addTextToPageStream(contents, Globals.CURRENCY_SYMBOL.getValue() + " "+String.valueOf(difference), PDType1Font.HELVETICA, 15, (int) w - 180, line_pos);
-                line_pos-=LINE_HEIGHT;//next line
-                //account
-                addTextToPageStream(contents, "Accounts Receivable", PDType1Font.HELVETICA, 15, 105, line_pos);
-                //debit
-                addTextToPageStream(contents, Globals.CURRENCY_SYMBOL.getValue() + " "+String.valueOf(((Invoice) t.getBusinessObject()).getReceivable()), PDType1Font.HELVETICA, 15, (int) w - 180, line_pos);
-                line_pos-=LINE_HEIGHT;//next line
-                //account
-                addTextToPageStream(contents, "Service Revenue", PDType1Font.HELVETICA, 15, 150, line_pos);
-                //credit
-                addTextToPageStream(contents,Globals.CURRENCY_SYMBOL.getValue() + " "+String.valueOf(((Invoice) t.getBusinessObject()).getTotal()), PDType1Font.HELVETICA, 15,(int)w-100, line_pos);
-            } else if(t.getBusinessObject() instanceof Expense)
-            {
-                //title
-                String title = ((Expense) t.getBusinessObject()).getExpense_title();
-                if (title.length()<=50)
-                    addTextToPageStream(contents, title, PDType1Font.HELVETICA, 12, 105, line_pos);
-                if(title.length()>50 && title.length()<=60)
-                    addTextToPageStream(contents, title, PDType1Font.HELVETICA, 10, 105, line_pos);
-                if(title.length()>60)
-                    addTextToPageStream(contents, title, PDType1Font.HELVETICA, 8, 105, line_pos);
-                //debit
-                addTextToPageStream(contents, Globals.CURRENCY_SYMBOL.getValue() + " "+String.valueOf(((Expense) t.getBusinessObject()).getExpense_value()), PDType1Font.HELVETICA, 15, (int) w - 180, line_pos);
-                line_pos-=LINE_HEIGHT;//next line
-                //account
-                addTextToPageStream(contents, ((Expense) t.getBusinessObject()).getAccount(), PDType1Font.HELVETICA, 15, 150, line_pos);
-                //credit
-                addTextToPageStream(contents,Globals.CURRENCY_SYMBOL.getValue() + " "+String.valueOf(((Expense) t.getBusinessObject()).getExpense_value()), PDType1Font.HELVETICA, 15,(int)w-100, line_pos);
-            } else if(t.getBusinessObject() instanceof Asset)
-            {
-                //title
-                String title =((Asset) t.getBusinessObject()).getAsset_name();
-                if (title.length()<=50)
-                    addTextToPageStream(contents, "Purchased asset: "+title, PDType1Font.HELVETICA, 12, 105, line_pos);
-                if(title.length()>50 && title.length()<=60)
-                    addTextToPageStream(contents, "Purchased asset: "+title, PDType1Font.HELVETICA, 10, 105, line_pos);
-                if(title.length()>60)
-                    addTextToPageStream(contents, "Purchased asset: "+title, PDType1Font.HELVETICA, 8, 105, line_pos);
-                //debit
-                addTextToPageStream(contents, Globals.CURRENCY_SYMBOL.getValue() + " "+String.valueOf(((Asset) t.getBusinessObject()).getAsset_value()), PDType1Font.HELVETICA, 15, (int) w - 180, line_pos);
-                line_pos-=LINE_HEIGHT;//next line
-                //account
-                addTextToPageStream(contents, ((Asset) t.getBusinessObject()).getAccount(), PDType1Font.HELVETICA, 15, 150, line_pos);
-                //credit
-                addTextToPageStream(contents,Globals.CURRENCY_SYMBOL.getValue() + " "+String.valueOf(((Asset) t.getBusinessObject()).getAsset_value()), PDType1Font.HELVETICA, 15,(int)w-100, line_pos);
-            } else if(t.getBusinessObject() instanceof Resource)
-            {
-                //title
-                String title = ((Resource) t.getBusinessObject()).getResource_name();
-                if (title.length()<=50)
-                    addTextToPageStream(contents, "Purchased stock: "+title, PDType1Font.HELVETICA, 12, 105, line_pos);
-                if(title.length()>50 && title.length()<=60)
-                    addTextToPageStream(contents, "Purchased stock: "+title, PDType1Font.HELVETICA, 10, 105, line_pos);
-                if(title.length()>60)
-                    addTextToPageStream(contents, "Purchased stock: "+title, PDType1Font.HELVETICA, 8, 105, line_pos);
-                //debit
-                addTextToPageStream(contents, Globals.CURRENCY_SYMBOL.getValue() + " "+String.valueOf(((Resource) t.getBusinessObject()).getResource_value()), PDType1Font.HELVETICA, 15, (int) w - 180, line_pos);
-                line_pos-=LINE_HEIGHT;//next line
-                //account
-                addTextToPageStream(contents, ((Resource) t.getBusinessObject()).getAccount(), PDType1Font.HELVETICA, 15, 150, line_pos);
-                //credit
-                addTextToPageStream(contents,Globals.CURRENCY_SYMBOL.getValue() + " "+String.valueOf(((Resource) t.getBusinessObject()).getResource_value()), PDType1Font.HELVETICA, 15,(int)w-100, line_pos);
+                if (t.getBusinessObject() instanceof Invoice)
+                {
+                    //title
+                    String title = ((Invoice) t.getBusinessObject()).getAccount();
+                    if (title.length() <= 50)
+                        addTextToPageStream(contents, title, PDType1Font.HELVETICA, 12, 105, line_pos);
+                    if (title.length() > 50 && title.length() <= 60)
+                        addTextToPageStream(contents, title, PDType1Font.HELVETICA, 10, 105, line_pos);
+                    if (title.length() > 60)
+                        addTextToPageStream(contents, title, PDType1Font.HELVETICA, 8, 105, line_pos);
+                    //debit
+                    double difference = 0;
+                    if (((Invoice) t.getBusinessObject()).getJob() != null)
+                        if (((Invoice) t.getBusinessObject()).getJob().getQuote() != null)
+                            difference = ((Invoice) t.getBusinessObject()).getJob().getQuote().getTotal() - ((Invoice) t.getBusinessObject()).getReceivable();
+                    addTextToPageStream(contents, Globals.CURRENCY_SYMBOL.getValue() + " " + String.valueOf(difference), PDType1Font.HELVETICA, 15, (int) w - 180, line_pos);
+                    line_pos -= LINE_HEIGHT;//next line
+                    //account
+                    addTextToPageStream(contents, "Accounts Receivable", PDType1Font.HELVETICA, 15, 105, line_pos);
+                    //debit
+                    addTextToPageStream(contents, Globals.CURRENCY_SYMBOL.getValue() + " " + String.valueOf(((Invoice) t.getBusinessObject()).getReceivable()), PDType1Font.HELVETICA, 15, (int) w - 180, line_pos);
+                    line_pos -= LINE_HEIGHT;//next line
+                    //account
+                    addTextToPageStream(contents, "Service Revenue", PDType1Font.HELVETICA, 15, 150, line_pos);
+                    //credit
+                    addTextToPageStream(contents, Globals.CURRENCY_SYMBOL.getValue() + " " + String.valueOf(((Invoice) t.getBusinessObject()).getTotal()), PDType1Font.HELVETICA, 15, (int) w - 100, line_pos);
+                } else if (t.getBusinessObject() instanceof Expense)
+                {
+                    //title
+                    String title = ((Expense) t.getBusinessObject()).getExpense_title();
+                    if (title.length() <= 50)
+                        addTextToPageStream(contents, title, PDType1Font.HELVETICA, 12, 105, line_pos);
+                    if (title.length() > 50 && title.length() <= 60)
+                        addTextToPageStream(contents, title, PDType1Font.HELVETICA, 10, 105, line_pos);
+                    if (title.length() > 60)
+                        addTextToPageStream(contents, title, PDType1Font.HELVETICA, 8, 105, line_pos);
+                    //debit
+                    addTextToPageStream(contents, Globals.CURRENCY_SYMBOL.getValue() + " " + String.valueOf(((Expense) t.getBusinessObject()).getExpense_value()), PDType1Font.HELVETICA, 15, (int) w - 180, line_pos);
+                    line_pos -= LINE_HEIGHT;//next line
+                    //account
+                    addTextToPageStream(contents, ((Expense) t.getBusinessObject()).getAccount(), PDType1Font.HELVETICA, 15, 150, line_pos);
+                    //credit
+                    addTextToPageStream(contents, Globals.CURRENCY_SYMBOL.getValue() + " " + String.valueOf(((Expense) t.getBusinessObject()).getExpense_value()), PDType1Font.HELVETICA, 15, (int) w - 100, line_pos);
+                } else if (t.getBusinessObject() instanceof Asset)
+                {
+                    //title
+                    String title = ((Asset) t.getBusinessObject()).getAsset_name();
+                    if (title.length() <= 50)
+                        addTextToPageStream(contents, "Purchased asset: " + title, PDType1Font.HELVETICA, 12, 105, line_pos);
+                    if (title.length() > 50 && title.length() <= 60)
+                        addTextToPageStream(contents, "Purchased asset: " + title, PDType1Font.HELVETICA, 10, 105, line_pos);
+                    if (title.length() > 60)
+                        addTextToPageStream(contents, "Purchased asset: " + title, PDType1Font.HELVETICA, 8, 105, line_pos);
+                    //debit
+                    addTextToPageStream(contents, Globals.CURRENCY_SYMBOL.getValue() + " " + String.valueOf(((Asset) t.getBusinessObject()).getAsset_value()), PDType1Font.HELVETICA, 15, (int) w - 180, line_pos);
+                    line_pos -= LINE_HEIGHT;//next line
+                    //account
+                    addTextToPageStream(contents, ((Asset) t.getBusinessObject()).getAccount(), PDType1Font.HELVETICA, 15, 150, line_pos);
+                    //credit
+                    addTextToPageStream(contents, Globals.CURRENCY_SYMBOL.getValue() + " " + String.valueOf(((Asset) t.getBusinessObject()).getAsset_value()), PDType1Font.HELVETICA, 15, (int) w - 100, line_pos);
+                } else if (t.getBusinessObject() instanceof Resource)
+                {
+                    //title
+                    String title = ((Resource) t.getBusinessObject()).getResource_name();
+                    if (title.length() <= 50)
+                        addTextToPageStream(contents, "Purchased stock: " + title, PDType1Font.HELVETICA, 12, 105, line_pos);
+                    if (title.length() > 50 && title.length() <= 60)
+                        addTextToPageStream(contents, "Purchased stock: " + title, PDType1Font.HELVETICA, 10, 105, line_pos);
+                    if (title.length() > 60)
+                        addTextToPageStream(contents, "Purchased stock: " + title, PDType1Font.HELVETICA, 8, 105, line_pos);
+                    //debit
+                    addTextToPageStream(contents, Globals.CURRENCY_SYMBOL.getValue() + " " + String.valueOf(((Resource) t.getBusinessObject()).getResource_value()), PDType1Font.HELVETICA, 15, (int) w - 180, line_pos);
+                    line_pos -= LINE_HEIGHT;//next line
+                    //account
+                    addTextToPageStream(contents, ((Resource) t.getBusinessObject()).getAccount(), PDType1Font.HELVETICA, 15, 150, line_pos);
+                    //credit
+                    addTextToPageStream(contents, Globals.CURRENCY_SYMBOL.getValue() + " " + String.valueOf(((Resource) t.getBusinessObject()).getResource_value()), PDType1Font.HELVETICA, 15, (int) w - 100, line_pos);
+                }
+                //addTextToPageStream(contents,"Account", PDType1Font.COURIER_BOLD_OBLIQUE, 15,100, line_pos);
+                //addTextToPageStream(contents,"Credit", PDType1Font.COURIER_BOLD_OBLIQUE, 15,(int)w-100, line_pos);
+                lines++;
+                line_pos -= LINE_HEIGHT;//next line
             }
-            //addTextToPageStream(contents,"Account", PDType1Font.COURIER_BOLD_OBLIQUE, 15,100, line_pos);
-            //addTextToPageStream(contents,"Credit", PDType1Font.COURIER_BOLD_OBLIQUE, 15,(int)w-100, line_pos);
-            lines++;
-            line_pos-=LINE_HEIGHT;//next line
         }
         addTextToPageStream(contents, "page " + pages, PDType1Font.HELVETICA, 18, (int)(w/2)-50, 30);
 
@@ -1033,6 +1039,439 @@ public class PDF
         PDFViewer pdfViewer = new PDFViewer(true);
         pdfViewer.setVisible(true);
         pdfViewer.doOpen("bin/pdf/general_journal.pdf");
+    }
+
+    private static PDPageContentStream initLedgerPage(PDDocument document,String account, long start, long end) throws IOException
+    {
+        // Create a new document with an empty page.
+        //PDDocument document = new PDDocument();
+        PDPage page = new PDPage(PDRectangle.A4);
+        document.addPage(page);
+
+        // Adobe Acrobat uses Helvetica as a default font and
+        // stores that under the name '/Helv' in the resources dictionary
+        PDFont font = PDType1Font.HELVETICA;
+        PDResources resources = new PDResources();
+        resources.put(COSName.getPDFName("Helv"), font);
+
+        PDPageContentStream contents = new PDPageContentStream(document, page);
+        int logo_h = 60;
+        PDImageXObject logo = PDImageXObject.createFromFile("images/logo.png", document);
+        contents.drawImage(logo, 10, 770, 160, logo_h);
+
+        float w = page.getBBox().getWidth();
+        float h = page.getBBox().getHeight();
+        int line_pos = (int)h-logo_h-20;
+
+        /**Draw lines**/
+        drawHorzLines(contents, line_pos, (int) w, new Insets(0,0,80,0));
+
+        /** begin text from the top**/
+        contents.beginText();
+        contents.setFont(font, 12);
+        line_pos-=LINE_HEIGHT/2;
+
+        String ledger_title = account.substring(0,1).toUpperCase() + account.substring(1) + " General Ledger";
+        String date_start = (new SimpleDateFormat("yyyy/MM/dd").format(
+                new Date(start * 1000)));
+        String date_end = (new SimpleDateFormat("yyyy/MM/dd").format(
+                new Date(end * 1000)));
+        String date_generated = (new SimpleDateFormat("yyyy/MM/dd").format(
+                new Date(System.currentTimeMillis())));
+        addTextToPageStream(contents, ledger_title, PDType1Font.COURIER_BOLD, 16,(int)(w/2-100), 830);
+        addTextToPageStream(contents, "Company: " + Globals.COMPANY.getValue(), PDType1Font.COURIER, 12,(int)(w/2-100), 815);
+        addTextToPageStream(contents, "Period: "+date_start+" - " + date_end, PDType1Font.COURIER, 12,(int)(w/2-100), 800);
+        addTextToPageStream(contents, "Generated: " + date_generated, PDType1Font.COURIER, 12,(int)(w/2-100), 785);
+
+        //horizontal solid line
+        contents.endText();
+        contents.setStrokingColor(Color.BLACK);
+        contents.moveTo(10, line_pos-LINE_HEIGHT/2);
+        contents.lineTo(w-10, line_pos-LINE_HEIGHT/2);
+        contents.stroke();
+        contents.beginText();
+        line_pos-=LINE_HEIGHT;
+
+        addTextToPageStream(contents,"Date", PDType1Font.COURIER_BOLD_OBLIQUE, 15,10, line_pos);
+        addTextToPageStream(contents,"Description", PDType1Font.COURIER_BOLD_OBLIQUE, 15,150, line_pos);
+        addTextToPageStream(contents,"Debit", PDType1Font.COURIER_BOLD_OBLIQUE, 15,(int)w-180, line_pos);
+        addTextToPageStream(contents,"Credit", PDType1Font.COURIER_BOLD_OBLIQUE, 15,(int)w-100, line_pos);
+
+        //horizontal solid line
+        contents.endText();
+        contents.setStrokingColor(Color.BLACK);
+        contents.moveTo(10, line_pos-LINE_HEIGHT/2);
+        contents.lineTo(w-10, line_pos-LINE_HEIGHT/2);
+        contents.stroke();
+        //contents.beginText();
+
+        return contents;
+    }
+
+    public static void createGeneralLedgerPdf(long start, long end) throws IOException
+    {
+        //Init managers and load data to memory
+        AssetManager.getInstance().loadDataFromServer();
+        ResourceManager.getInstance().loadDataFromServer();
+        ExpenseManager.getInstance().loadDataFromServer();
+        InvoiceManager.getInstance().loadDataFromServer();
+        RevenueManager.getInstance().loadDataFromServer();
+
+        ArrayList<Transaction> transactions = new ArrayList<>();
+        //Load assets
+        for(Asset asset : AssetManager.getInstance().getAssets())
+            transactions.add(new Transaction(asset.get_id(), asset.getDate_acquired(), asset));
+        //Load Resources/Stock
+        for(Resource resource : ResourceManager.getInstance().getResources())
+            transactions.add(new Transaction(resource.get_id(), resource.getDate_acquired(), resource));
+        //Load additional Expenses
+        for(Expense expense: ExpenseManager.getInstance().getExpenses())
+            transactions.add(new Transaction(expense.get_id(), expense.getDate_logged(), expense));
+        //Load Service revenue (Invoices)
+        for(Invoice invoice: InvoiceManager.getInstance().getInvoices())
+            transactions.add(new Transaction(invoice.get_id(), invoice.getDate_generated(), invoice));
+        //Load Additional income/revenue
+        for(Revenue revenue: RevenueManager.getInstance().getRevenues())
+            transactions.add(new Transaction(revenue.get_id(), revenue.getDate_logged(), revenue));
+
+        Transaction[] transactions_arr = new Transaction[transactions.size()];
+        transactions.toArray(transactions_arr);
+        long start_ms = System.currentTimeMillis();
+        quickSort(transactions_arr, 0, transactions.size()-1);
+        //Arrays.sort(transactions_arr);
+        //transactions_arr = selectionSort(transactions_arr);
+        System.out.println("Sorted in: "+ (System.currentTimeMillis()-start_ms) + "ms");
+        System.out.println("Transaction count: "+ transactions_arr.length);
+
+        HashMap<String, Account> accounts_map = new HashMap<>();
+        for(Transaction t : transactions_arr)
+        {
+            if(t.getBusinessObject() instanceof Expense)
+            {
+                Expense expense = ((Expense)t.getBusinessObject());
+                String str_acc = expense.getAccount();
+                Account acc = accounts_map.get(str_acc.toLowerCase());
+                if(acc==null)
+                {
+                    //account not in map yet create it.
+                    acc = new Account(str_acc.toLowerCase(), expense.getExpense_value(), 0);
+                    acc.addTransaction(t);
+                    accounts_map.put(str_acc.toLowerCase(), acc);
+                }else{
+                    //account in map, update its debit
+                    acc.setDebit(acc.getDebit()+expense.getExpense_value());
+                    acc.addTransaction(t);
+                }
+            }else if(t.getBusinessObject() instanceof Asset)
+            {
+                Asset asset = ((Asset)t.getBusinessObject());
+                String str_acc = asset.getAccount();
+                Account acc = accounts_map.get(str_acc.toLowerCase());
+                if(acc==null)
+                {
+                    //account not in map yet create it.
+                    acc = new Account(str_acc.toLowerCase(), asset.getAsset_value(), 0);
+                    acc.addTransaction(t);
+                    accounts_map.put(str_acc.toLowerCase(), acc);
+                }else{
+                    //account in map, update its debit
+                    acc.setDebit(acc.getDebit()+asset.getAsset_value());
+                    acc.addTransaction(t);
+                }
+            }else if(t.getBusinessObject() instanceof Resource)
+            {
+                Resource resource = ((Resource)t.getBusinessObject());
+                String str_acc = resource.getAccount();
+                Account acc = accounts_map.get(str_acc.toLowerCase());
+                if(acc==null)
+                {
+                    //account not in map yet create it.
+                    acc = new Account(str_acc.toLowerCase(), resource.getResource_value(), 0);
+                    acc.addTransaction(t);
+                    accounts_map.put(str_acc.toLowerCase(), acc);
+                }else{
+                    //account in map, update its debit
+                    acc.setDebit(acc.getDebit()+resource.getResource_value());
+                    acc.addTransaction(t);
+                }
+            }else if(t.getBusinessObject() instanceof Invoice)
+            {
+                Invoice invoice = ((Invoice)t.getBusinessObject());
+                String str_acc = invoice.getAccount();
+                Account acc = accounts_map.get(str_acc.toLowerCase());
+                if(acc==null)
+                {
+                    //account not in map yet create it.
+                    acc = new Account(str_acc.toLowerCase(), 0, invoice.getTotal());
+                    acc.addTransaction(t);
+                    accounts_map.put(str_acc.toLowerCase(), acc);
+                }else{
+                    //account in map, update its credit
+                    acc.setCredit(acc.getCredit()+invoice.getTotal());
+                    acc.addTransaction(t);
+                }
+                //Update service revenue
+                acc = accounts_map.get("service revenue");
+                if(acc==null)
+                {
+                    //account not in map yet create it.
+                    acc = new Account("service revenue", 0, invoice.getTotal());
+                    acc.addTransaction(t);
+                    accounts_map.put("service revenue", acc);
+                }else{
+                    //account in map, update its credit
+                    acc.setCredit(acc.getCredit()+invoice.getTotal());
+                    acc.addTransaction(t);
+                }
+                //check difference between received and sale total
+                double difference = 0;
+                if (((Invoice) t.getBusinessObject()).getJob() != null)
+                    if (((Invoice) t.getBusinessObject()).getJob().getQuote() != null)
+                        difference = ((Invoice) t.getBusinessObject()).getJob().getQuote().getTotal() - ((Invoice) t.getBusinessObject()).getReceivable();
+                if(difference>0)
+                {
+                    //customer paid on credit, add to accounts receivable
+                    //Update accounts receivable
+                    acc = accounts_map.get("accounts receivable");
+                    if(acc==null)
+                    {
+                        //account not in map yet create it.
+                        acc = new Account("accounts receivable",difference, 0);
+                        acc.addTransaction(t);
+                        accounts_map.put("accounts receivable", acc);
+                    }else{
+                        //account in map, update its credit
+                        acc.setDebit(acc.getDebit()+difference);
+                        acc.addTransaction(t);
+                    }
+                }
+            }else if(t.getBusinessObject() instanceof Revenue)
+            {
+                Revenue revenue = ((Revenue)t.getBusinessObject());
+                String str_acc = revenue.getAccount();
+                Account acc = accounts_map.get(str_acc.toLowerCase());
+                if(acc==null)
+                {
+                    //account not in map yet create it.
+                    acc = new Account(str_acc.toLowerCase(), 0, revenue.getRevenue_value());
+                    acc.addTransaction(t);
+                    accounts_map.put(str_acc.toLowerCase(), acc);
+                }else{
+                    //account in map, update its credit
+                    acc.setCredit(acc.getCredit()+revenue.getRevenue_value());
+                    acc.addTransaction(t);
+                }
+                //Update additional revenue
+                acc = accounts_map.get("additional revenue");
+                if(acc==null)
+                {
+                    //account not in map yet create it.
+                    acc = new Account("additional revenue", 0, revenue.getRevenue_value());
+                    acc.addTransaction(t);
+                    accounts_map.put("additional revenue", acc);
+                }else{
+                    //account in map, update its credit
+                    acc.setCredit(acc.getCredit()+revenue.getRevenue_value());
+                    acc.addTransaction(t);
+                }
+            }
+        }
+
+        PDDocument document = new PDDocument();
+        PDPageContentStream contents = null;
+        int logo_h = 60, pages= 1, line_pos= 0, w=0, h=0;
+
+        for(Account account : accounts_map.values())
+        {
+            System.out.println("account: " + account.getAccount_name() + ", debit: "+ account.getDebit() +
+                                ", credit: " + account.getCredit()+", transactions: "+ account.getTransactions().size());
+
+            if(contents!=null)
+            {
+                contents.endText();
+                contents.close();
+            }
+            contents = initLedgerPage(document, account.getAccount_name(), start, end);
+            contents.beginText();
+            h = (int)document.getPage(0).getBBox().getHeight();
+            w = (int)document.getPage(0).getBBox().getWidth();
+            line_pos = h-logo_h-LINE_HEIGHT*3-LINE_HEIGHT/2;
+            pages++;
+            int lines=0;
+            double credit=0;
+            double debit=0;
+
+            //Generate ledger for each account
+            for(Transaction transaction : account.getTransactions())
+            {
+                if(transaction.getDate()>=start && transaction.getDate()<=end)
+                {
+                    if (lines > 32)
+                    {
+                        //line_pos-=LINE_HEIGHT;
+                        addTextToPageStream(contents, "page " + pages, PDType1Font.HELVETICA, 18, (int) (w / 2) - 50, 30);
+                        contents.close();
+                        contents = initLedgerPage(document, account.getAccount_name(), start, end);
+                        contents.beginText();
+                        pages++;
+                        lines = 0;
+                        line_pos = h-logo_h-LINE_HEIGHT*3-LINE_HEIGHT/2;
+                    }
+                    addTextToPageStream(contents,
+                            (new SimpleDateFormat("yyyy-MM-dd").format(
+                                    new Date(transaction.getDate() * 1000))),
+                            PDType1Font.HELVETICA, 15, 10, line_pos);
+
+                    if (transaction.getBusinessObject() instanceof Revenue)
+                    {
+                        System.out.println(((Revenue) transaction.getBusinessObject()).getRevenue_title() + " in Account: " + account.getAccount_name());
+                        //title
+                        String title = ((Revenue) transaction.getBusinessObject()).getRevenue_title();
+                        //TODO: add to Additional Revenue account
+                        addTextToPageStream(contents, title, PDType1Font.HELVETICA, 15, 105, line_pos);
+                        //debit
+                        /*double difference = 0;
+                        if (((Invoice) transaction.getBusinessObject()).getJob() != null)
+                            if (((Invoice) transaction.getBusinessObject()).getJob().getQuote() != null)
+                                difference = ((Invoice) transaction.getBusinessObject()).getJob().getQuote().getTotal() - ((Invoice) t.getBusinessObject()).getReceivable();*/
+                        if(!account.getAccount_name().toLowerCase().equals("additional revenue") && !account.getAccount_name().toLowerCase().equals("accounts receivable"))
+                        {
+                            //debit
+                            addTextToPageStream(contents, Globals.CURRENCY_SYMBOL.getValue() + " " + String.valueOf(((Revenue) transaction.getBusinessObject()).getRevenue_value()), PDType1Font.HELVETICA, 15, w - 180, line_pos);
+                            debit += ((Revenue) transaction.getBusinessObject()).getRevenue_value();
+                        }else
+                        {
+                            //credit
+                            addTextToPageStream(contents, Globals.CURRENCY_SYMBOL.getValue() + " " + String.valueOf(((Revenue) transaction.getBusinessObject()).getRevenue_value()), PDType1Font.HELVETICA, 15, w - 100, line_pos);
+                            credit += ((Revenue) transaction.getBusinessObject()).getRevenue_value();
+                        }
+                    }else if (transaction.getBusinessObject() instanceof Invoice)
+                    {
+                        //title
+                        String title = "Service Revenue";
+                        //TODO: add to Service Revenue account if diff>0 add to accounts receivable
+                        addTextToPageStream(contents, title, PDType1Font.HELVETICA, 15, 105, line_pos);
+                        //debit
+                        double difference = 0;
+                        if (((Invoice) transaction.getBusinessObject()).getJob() != null)
+                            if (((Invoice) transaction.getBusinessObject()).getJob().getQuote() != null)
+                                difference = ((Invoice) transaction.getBusinessObject()).getJob().getQuote().getTotal() - ((Invoice) transaction.getBusinessObject()).getReceivable();
+                        double invoice_total = ((Invoice) transaction.getBusinessObject()).getJob().getQuote().getTotal();
+                        if(!account.getAccount_name().toLowerCase().equals("service revenue"))
+                        {
+                            if(!account.getAccount_name().toLowerCase().equals("accounts receivable"))
+                            {
+                                //debit
+                                addTextToPageStream(contents, Globals.CURRENCY_SYMBOL.getValue() + " " + String.valueOf(invoice_total), PDType1Font.HELVETICA, 15, w - 180, line_pos);
+                                debit += invoice_total;
+                            }else{
+                                //purchased on credit, debit accounts receivable
+                                addTextToPageStream(contents, Globals.CURRENCY_SYMBOL.getValue() + " " + String.valueOf(difference), PDType1Font.HELVETICA, 15, w - 180, line_pos);
+                                debit += difference;
+                            }
+                        }else
+                        {
+                            //credit
+                            addTextToPageStream(contents, Globals.CURRENCY_SYMBOL.getValue() + " " + String.valueOf(invoice_total), PDType1Font.HELVETICA, 15, w - 100, line_pos);
+                            credit += invoice_total;
+                        }
+                    } else if (transaction.getBusinessObject() instanceof Expense)
+                    {
+                        //title
+                        String title = ((Expense) transaction.getBusinessObject()).getExpense_title();
+                        if (title.length() <= 50)
+                            addTextToPageStream(contents, title, PDType1Font.HELVETICA, 14, 105, line_pos);
+                        if (title.length() > 50 && title.length() <= 60)
+                            addTextToPageStream(contents, title, PDType1Font.HELVETICA, 10, 105, line_pos);
+                        if (title.length() > 60)
+                            addTextToPageStream(contents, title, PDType1Font.HELVETICA, 8, 105, line_pos);
+                        //debit
+                        //addTextToPageStream(contents, Globals.CURRENCY_SYMBOL.getValue() + " " + String.valueOf(((Expense) transaction.getBusinessObject()).getExpense_value()), PDType1Font.HELVETICA, 15, (int) w - 180, line_pos);
+                        //credit
+                        addTextToPageStream(contents, Globals.CURRENCY_SYMBOL.getValue() + " " + String.valueOf(((Expense) transaction.getBusinessObject()).getExpense_value()), PDType1Font.HELVETICA, 15,  w - 100, line_pos);
+                        credit+=((Expense) transaction.getBusinessObject()).getExpense_value();
+                    } else if (transaction.getBusinessObject() instanceof Asset)
+                    {
+                        //title
+                        String title = ((Asset) transaction.getBusinessObject()).getAsset_name();
+                        if (title.length() <= 50)
+                            addTextToPageStream(contents, "Purchased asset: " + title, PDType1Font.HELVETICA, 12, 105, line_pos);
+                        if (title.length() > 50 && title.length() <= 60)
+                            addTextToPageStream(contents, "Purchased asset: " + title, PDType1Font.HELVETICA, 10, 105, line_pos);
+                        if (title.length() > 60)
+                            addTextToPageStream(contents, "Purchased asset: " + title, PDType1Font.HELVETICA, 8, 105, line_pos);
+                        //debit
+                        addTextToPageStream(contents, Globals.CURRENCY_SYMBOL.getValue() + " " + String.valueOf(((Asset) transaction.getBusinessObject()).getAsset_value()), PDType1Font.HELVETICA, 15,w - 180, line_pos);
+                        debit+=((Asset) transaction.getBusinessObject()).getAsset_value();
+                        //credit
+                        //addTextToPageStream(contents, Globals.CURRENCY_SYMBOL.getValue() + " " + String.valueOf(((Asset) transaction.getBusinessObject()).getAsset_value()), PDType1Font.HELVETICA, 15, (int) w - 100, line_pos);
+                    } else if (transaction.getBusinessObject() instanceof Resource)
+                    {
+                        //title
+                        String title = ((Resource) transaction.getBusinessObject()).getResource_name();
+                        if (title.length() <= 50)
+                            addTextToPageStream(contents, "Purchased stock: " + title, PDType1Font.HELVETICA, 12, 105, line_pos);
+                        if (title.length() > 50 && title.length() <= 60)
+                            addTextToPageStream(contents, "Purchased stock: " + title, PDType1Font.HELVETICA, 10, 105, line_pos);
+                        if (title.length() > 60)
+                            addTextToPageStream(contents, "Purchased stock: " + title, PDType1Font.HELVETICA, 8, 105, line_pos);
+                        //debit
+                        addTextToPageStream(contents, Globals.CURRENCY_SYMBOL.getValue() + " " + String.valueOf(((Resource) transaction.getBusinessObject()).getResource_value()), PDType1Font.HELVETICA, 15, w - 180, line_pos);
+                        debit+=((Resource) transaction.getBusinessObject()).getResource_value();
+                        //credit
+                        //addTextToPageStream(contents, Globals.CURRENCY_SYMBOL.getValue() + " " + String.valueOf(((Resource) transaction.getBusinessObject()).getResource_value()), PDType1Font.HELVETICA, 15, (int) w - 100, line_pos);
+                    }
+                    //addTextToPageStream(contents,"Account", PDType1Font.COURIER_BOLD_OBLIQUE, 15,100, line_pos);
+                    //addTextToPageStream(contents,"Credit", PDType1Font.COURIER_BOLD_OBLIQUE, 15,(int)w-100, line_pos);
+                    lines++;
+                    line_pos -= LINE_HEIGHT;//next line
+                }
+            }
+            //horizontal solid line
+            contents.endText();
+            contents.setStrokingColor(Color.BLACK);
+            contents.moveTo(0, line_pos-LINE_HEIGHT/2+LINE_HEIGHT);
+            contents.lineTo(w, line_pos-LINE_HEIGHT/2+LINE_HEIGHT);
+            contents.stroke();
+            contents.beginText();
+
+            addTextToPageStream(contents, "Totals", PDType1Font.COURIER_BOLD_OBLIQUE, 16, 105, line_pos);
+            addTextToPageStream(contents, Globals.CURRENCY_SYMBOL.getValue() + " " + String.valueOf(debit), PDType1Font.HELVETICA, 14, w - 200, line_pos);
+            addTextToPageStream(contents, Globals.CURRENCY_SYMBOL.getValue() + " " + String.valueOf(credit), PDType1Font.HELVETICA, 14, w - 100, line_pos);
+            line_pos-=LINE_HEIGHT;
+
+            //horizontal solid line
+            contents.endText();
+            contents.setStrokingColor(Color.BLACK);
+            contents.moveTo(0, line_pos-LINE_HEIGHT/2+LINE_HEIGHT);
+            contents.lineTo(w, line_pos-LINE_HEIGHT/2+LINE_HEIGHT);
+            contents.stroke();
+            contents.beginText();
+
+            addTextToPageStream(contents, "Closing Balance", PDType1Font.COURIER_BOLD_OBLIQUE, 16, 105, line_pos);
+            double balance = debit-credit;
+            if(balance>0)
+                addTextToPageStream(contents, Globals.CURRENCY_SYMBOL.getValue() + " " + String.valueOf(Math.abs(balance)), PDType1Font.HELVETICA, 14, w - 200, line_pos);
+            else addTextToPageStream(contents, Globals.CURRENCY_SYMBOL.getValue() + " " + String.valueOf(Math.abs(balance)), PDType1Font.HELVETICA, 14, w - 100, line_pos);
+
+            //horizontal solid line
+            contents.endText();
+            contents.setStrokingColor(Color.BLACK);
+            contents.moveTo(0, line_pos-LINE_HEIGHT/2);
+            contents.lineTo(w, line_pos-LINE_HEIGHT/2);
+            contents.stroke();
+
+            contents.beginText();
+            addTextToPageStream(contents, "page " + pages, PDType1Font.HELVETICA, 18, (w/2)-50, 30);
+        }
+
+        contents.close();
+        document.save("bin/pdf/general_ledger.pdf");
+        document.close();
+
+        PDFViewer pdfViewer = new PDFViewer(true);
+        pdfViewer.setVisible(true);
+        pdfViewer.doOpen("bin/pdf/general_ledger.pdf");
     }
 
     public static void createJobCardPdf(Job job) throws IOException

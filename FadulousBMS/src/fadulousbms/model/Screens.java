@@ -47,7 +47,10 @@ public enum Screens
     NEW_ASSET("NewAsset.fxml"),
     INVOICES("Invoices.fxml"),
     EXPENSES("Expenses.fxml"),
-    NEW_EXPENSE("NewExpense.fxml");
+    NEW_EXPENSE("NewExpense.fxml"),
+    JOURNALS("Journals.fxml"),
+    ADDITIONAL_REVENUE("Revenue.fxml"),
+    NEW_REVENUE("NewRevenue.fxml");
 
     private String screen;
     

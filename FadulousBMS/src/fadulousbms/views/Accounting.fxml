@@ -26,6 +26,7 @@
                     <rowConstraints>
                       <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
                       <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                        <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
                     </rowConstraints>
                      <BorderPane.margin>
                         <Insets bottom="40.0" left="70.0" right="70.0" top="40.0" />
@@ -39,7 +40,7 @@
                                  </font></Label>
                            </center>
                         </BorderPane>
-                        <BorderPane minWidth="150.0" styleClass="sys-btn" GridPane.rowIndex="1">
+                        <BorderPane minWidth="150.0" onMouseClicked="#generalLedgerClick" styleClass="sys-btn" GridPane.rowIndex="1">
                            <center>
                               <Label text="Ledgers" textAlignment="CENTER" BorderPane.alignment="CENTER">
                                  <font>
@@ -62,6 +63,24 @@
                               <Label text="Invoices" BorderPane.alignment="CENTER">
                                  <font>
                                     <Font size="31.0" />
+                                 </font>
+                              </Label>
+                           </center>
+                        </BorderPane>
+                        <BorderPane minWidth="150.0" onMouseClicked="#purchasesClick" styleClass="sys-btn">
+                           <center>
+                              <Label text="Purchases" textAlignment="CENTER" BorderPane.alignment="CENTER">
+                                 <font>
+                                    <Font size="22.0" />
+                                 </font>
+                              </Label>
+                           </center>
+                        </BorderPane>
+                        <BorderPane layoutX="60.0" layoutY="93.0" minWidth="150.0" onMouseClicked="#additionalRevenueClick" styleClass="sys-btn" GridPane.rowIndex="2">
+                           <center>
+                              <Label text="Additional Revenue" textAlignment="CENTER" wrapText="true" BorderPane.alignment="CENTER">
+                                 <font>
+                                    <Font size="22.0" />
                                  </font>
                               </Label>
                            </center>

@@ -103,7 +103,10 @@ public class FadulousBMS extends Application
         {
             int result = JOptionPane.showConfirmDialog(null, "Are you sure you want to exit?");
             if(result==JOptionPane.OK_OPTION)
+            {
                 stage.close();
+                System.exit(0);
+            }
             else  event.consume();
         });
         //grid = new GridDisplay(2, 4);

@@ -104,7 +104,7 @@ public class NewExpenseController extends Screen implements Initializable
             return;
         }
 
-        //prepare quote parameters
+        //prepare expense parameters
         Expense expense = new Expense();
         expense.setExpense_title(txtTitle.getText());
         expense.setExpense_description(txtDescription.getText());

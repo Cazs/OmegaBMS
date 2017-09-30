@@ -125,9 +125,20 @@ public class Invoice implements BusinessObject, Serializable
         return new SimpleStringProperty(_id);//TODO: fix this!
     }
 
-    public String getTotal()
+    public double getTotal()
     {
-        return totalProperty().get();
+        if(job==null)
+        {
+            IO.logAndAlert("Error " + getClass().getName(), "Job object is not set", IO.TAG_ERROR);
+            return 0;
+        }
+        if(job.getQuote()==null)
+        {
+            IO.logAndAlert("Error " + getClass().getName(), "Job Quote object is not set", IO.TAG_ERROR);
+            return 0;
+        }
+
+        return job.getQuote().getTotal();
     }
 
     private StringProperty totalProperty()

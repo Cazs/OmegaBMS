@@ -102,8 +102,8 @@ public class ExpenseManager extends BusinessObjectManager
                             IO.log(getClass().getName(), IO.TAG_INFO, "reloaded collection of expenses.");
                             this.serialize(ROOT_PATH+filename, expenses);
                         }else{
-                            IO.log(getClass().getName(), IO.TAG_ERROR, "generic quotes object is null.");
-                            IO.showMessage("No generic quotes", "no generic quotes found in database.", IO.TAG_ERROR);
+                            IO.log(getClass().getName(), IO.TAG_ERROR, "expense object is null.");
+                            IO.showMessage("No expenses", "no expenses found in database.", IO.TAG_ERROR);
                         }
                     }else{
                         IO.log(this.getClass().getName(), IO.TAG_INFO, "binary object ["+ROOT_PATH+filename+"] on local disk is already up-to-date.");
