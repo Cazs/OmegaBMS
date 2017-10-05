@@ -42,6 +42,8 @@ import javax.swing.*;
  */
 public class OperationsController extends Screen implements Initializable
 {
+    @FXML
+    private TabPane tabs;
     public static final String TAG="OperationsController";
 
     /**

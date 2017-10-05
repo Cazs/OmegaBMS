@@ -40,7 +40,7 @@ import java.util.logging.Logger;
 public class FadulousBMS extends Application 
 {
     //GridDisplay grid;
-    //public static final String[] SCREENS = {"Homescreen.fxml","Operations.fxml"};
+    //public static final String[] SCREENS = {"Homescreen.fxml","Operations.old.fxml"};
     
     /*public class GridDisplay
     {
@@ -110,7 +110,7 @@ public class FadulousBMS extends Application
             else  event.consume();
         });
         //grid = new GridDisplay(2, 4);
-        ScreenManager screen_mgr = new ScreenManager();
+        ScreenManager screen_mgr = ScreenManager.getInstance();//new ScreenManager();
         IO.getInstance().init(screen_mgr);
 
 

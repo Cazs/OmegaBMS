@@ -126,7 +126,7 @@ module.exports.update = function(record_id, quote, callback)
 
 module.exports.isValid = function(quote)
 {
-  console.log('validating quote:\n%s', JSON.stringify(quote));
+  console.log('\nvalidating quote:\n%s', JSON.stringify(quote));
 
   if(isNullOrEmpty(quote))
     return false;

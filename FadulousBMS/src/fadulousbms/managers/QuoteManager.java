@@ -442,6 +442,7 @@ public class QuoteManager extends BusinessObjectManager
                         if (updated_all_quote_items && updated_all_quote_reps)
                         {
                             IO.logAndAlert("Quote Manager","successfully updated quote[" + quote.get_id() + "].", IO.TAG_INFO);
+                            loadDataFromServer();
                         } else {
                             if(!updated_all_quote_items)
                                 IO.logAndAlert("Quote Update Failure", "Could not update all Quote Items for Quote["+quote.get_id()+"].", IO.TAG_INFO);

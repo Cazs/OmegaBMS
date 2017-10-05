@@ -46,7 +46,7 @@ public class RevenueController extends Screen implements Initializable
     public void refresh()
     {
         //Set Employee name
-        Employee e = SessionManager.getInstance().getActiveEmployee();
+        /*Employee e = SessionManager.getInstance().getActiveEmployee();
 
         if(e!=null)
             this.getUserNameLabel().setText(e.toString());
@@ -56,7 +56,7 @@ public class RevenueController extends Screen implements Initializable
         {
             Image image = SwingFXUtils.toFXImage(HomescreenController.defaultProfileImage, null);
             this.getProfileImageView().setImage(image);
-        }else IO.log(getClass().getName(), "default profile image is null.", IO.TAG_ERROR);
+        }else IO.log(getClass().getName(), "default profile image is null.", IO.TAG_ERROR);*/
 
         EmployeeManager.getInstance().loadDataFromServer();
         RevenueManager.getInstance().initialize(this.getScreenManager());
@@ -158,6 +158,7 @@ public class RevenueController extends Screen implements Initializable
     @Override
     public void initialize(URL url, ResourceBundle rb) 
     {
+        refresh();
     }
 
     @FXML

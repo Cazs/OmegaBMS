@@ -10,12 +10,18 @@ import com.google.gson.GsonBuilder;
 import fadulousbms.auxilary.*;
 import fadulousbms.managers.*;
 import fadulousbms.model.*;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
+import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.input.KeyCode;
+import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
@@ -26,6 +32,7 @@ import javax.swing.*;
 import java.io.IOException;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.rmi.Remote;
 import java.text.SimpleDateFormat;
 import java.time.DateTimeException;
 import java.time.LocalDate;
@@ -57,6 +64,7 @@ public class ViewQuoteController extends Screen implements Initializable
     private TextField txtCell,txtTel,txtTotal,txtQuoteId,txtFax,txtEmail,txtSite,txtDateGenerated,txtExtra;
     @FXML
     private TextArea txtRequest;
+    //private TableColumn<QuoteItem, String> col;
 
     @Override
     public void refresh()
@@ -82,7 +90,6 @@ public class ViewQuoteController extends Screen implements Initializable
                     double qty = Double.parseDouble(quantity);
                     double markup = Double.parseDouble(strMarkup);
                     double labour = Double.parseDouble(strLabour);
-
                     double rate = (item_value * (markup / 100)) + item_value + labour;//rate per item
 
                     obj.parse("rate", String.valueOf(rate));//set new rate
@@ -99,13 +106,128 @@ public class ViewQuoteController extends Screen implements Initializable
 
         //Setup Quote Items table
         colMarkup.setCellValueFactory(new PropertyValueFactory<>("markup"));
-        colMarkup.setCellFactory(col -> new fadulousbms.model.TextFieldTableCell("markup", "markup", callback));
+        colMarkup.setCellFactory(param -> new TableCell()
+        {
+            final TextField txt = new TextField("0.0");
+
+            @Override
+            protected void updateItem(Object item, boolean empty)
+            {
+                super.updateItem(item, empty);
+                if (getIndex() >= 0 && getIndex() < tblQuoteItems.getItems().size())
+                {
+                    QuoteItem quoteItem = tblQuoteItems.getItems().get(getIndex());
+                    //update QuoteItem object on TextField commit
+                    txt.setOnKeyPressed(event ->
+                    {
+                        if(event.getCode()== KeyCode.ENTER)
+                        {
+                            QuoteItem quote_item = (QuoteItem) getTableView().getItems().get(getIndex());
+                            try
+                            {
+                                quote_item.setMarkup(Double.valueOf(txt.getText()));
+                                RemoteComms.updateBusinessObjectOnServer(quote_item, "/api/quote/resource", "markup");
+                            }catch (NumberFormatException e)
+                            {
+                                IO.logAndAlert("Error","Please enter a valid markup percentage.", IO.TAG_ERROR);
+                                return;
+                            }
+                            IO.logAndAlert("Success","Successfully updated markup percentage property for quote item #" + quote_item.getItem_number(), IO.TAG_INFO);
+                        }
+                    });
+
+                    if (!empty)
+                    {
+                        txt.setText(quoteItem.getMarkup());
+                        setGraphic(txt);
+                    } else setGraphic(null);
+                    getTableView().refresh();
+                }
+            }
+        });
 
         colQuantity.setCellValueFactory(new PropertyValueFactory<>("quantity"));
-        colQuantity.setCellFactory(col -> new fadulousbms.model.TextFieldTableCell("quantity", "quantity", callback));
+        //colQuantity.setCellFactory(col -> new fadulousbms.model.TextFieldTableCell("quantity", "quantity", callback));
+        colQuantity.setCellFactory(param -> new TableCell()
+        {
+            final TextField txt = new TextField("0.0");
+
+            @Override
+            protected void updateItem(Object item, boolean empty)
+            {
+                super.updateItem(item, empty);
+                if (getIndex() >= 0 && getIndex() < tblQuoteItems.getItems().size())
+                {
+                    QuoteItem quoteItem = tblQuoteItems.getItems().get(getIndex());
+                    //update QuoteItem object on TextField commit
+                    txt.setOnKeyPressed(event ->
+                    {
+                        if(event.getCode()== KeyCode.ENTER)
+                        {
+                            QuoteItem quote_item = (QuoteItem) getTableView().getItems().get(getIndex());
+                            try
+                            {
+                                quote_item.setQuantity(Integer.valueOf(txt.getText()));
+                                RemoteComms.updateBusinessObjectOnServer(quote_item, "/api/quote/resource", "quantity");
+                            }catch (NumberFormatException e)
+                            {
+                                IO.logAndAlert("Error","Please enter a valid quantity.", IO.TAG_ERROR);
+                                return;
+                            }
+                            IO.logAndAlert("Success","Successfully updated item quantity property for quote item #" + quote_item.getItem_number(), IO.TAG_INFO);
+                        }
+                    });
+
+                    if (!empty)
+                    {
+                        txt.setText(quoteItem.getQuantity());
+                        setGraphic(txt);
+                    } else setGraphic(null);
+                    getTableView().refresh();
+                }
+            }
+        });
 
         colLabour.setCellValueFactory(new PropertyValueFactory<>("labour"));
-        colLabour.setCellFactory(col -> new fadulousbms.model.TextFieldTableCell("labour", "labour", callback));
+        //colLabour.setCellFactory(col -> new fadulousbms.model.TextFieldTableCell("labour", "labour", callback));
+        colLabour.setCellFactory(param -> new TableCell()
+        {
+            final TextField txt = new TextField("0.0");
+
+            @Override
+            protected void updateItem(Object item, boolean empty)
+            {
+                super.updateItem(item, empty);
+                if (getIndex() >= 0 && getIndex() < tblQuoteItems.getItems().size())
+                {
+                    QuoteItem quoteItem = tblQuoteItems.getItems().get(getIndex());
+                    //update QuoteItem object on TextField commit
+                    txt.setOnKeyPressed(event ->
+                    {
+                        if(event.getCode()== KeyCode.ENTER)
+                        {
+                            QuoteItem quote_item = (QuoteItem) getTableView().getItems().get(getIndex());
+                            try
+                            {
+                                quote_item.setLabour(Double.valueOf(txt.getText()));
+                                RemoteComms.updateBusinessObjectOnServer(quote_item, "/api/quote/resource", "labour");
+                            }catch (NumberFormatException e)
+                            {
+                                IO.logAndAlert("Error","Please enter a valid labour cost.", IO.TAG_ERROR);
+                                return;
+                            }
+                            IO.logAndAlert("Success","Successfully updated labour cost property for quote item #" + quote_item.getItem_number(), IO.TAG_INFO);
+                        }
+                    });
+                    if (!empty)
+                    {
+                        txt.setText(quoteItem.getLabour());
+                        setGraphic(txt);
+                    } else setGraphic(null);
+                    getTableView().refresh();
+                }
+            }
+        });
 
         //Setup Sale Reps table
         colFirstname.setCellValueFactory(new PropertyValueFactory<>("firstname"));
@@ -214,6 +336,225 @@ public class ViewQuoteController extends Screen implements Initializable
             if (selected.getRepresentatives() != null)
                 tblSaleReps.setItems(FXCollections.observableArrayList(selected.getRepresentatives()));
             else IO.log(getClass().getName(), IO.TAG_WARN, "quote [" + selected.get_id() + "] has no representatives.");
+
+            /** Store additional cost cols in a HashMap -  used a map
+             * To ensure that only a single instance of all additional
+             * Cost columns are stored.
+             **/
+            HashMap<String, TableColumn> map = new HashMap<>();
+            //for(TableColumn column: tblQuoteItems.getColumns())
+            //    map.putIfAbsent(column.getText().toLowerCase(), column);
+            //search for matching column for each additional cost
+            for(QuoteItem item: tblQuoteItems.getItems())
+            {
+                /*if(item.getAdditional_costs()==null)
+                {
+                    IO.log(getClass().getName(), IO.TAG_INFO, "quote resource ["+item.get_id()+"] has no additional costs. [null]. skipping..");
+                    continue;
+                }
+                if(item.getAdditional_costs().length()<=0)
+                {
+                    IO.log(getClass().getName(), IO.TAG_INFO, "quote resource ["+item.get_id()+"] has no additional costs. skipping..");
+                    continue;
+                }*/
+                for(String str_cost: item.getAdditional_costs().split(";"))
+                {
+                    String[] arr = str_cost.split("=");
+                    if (arr != null)
+                    {
+                        if(arr.length>1)
+                        {
+                            TableColumn col;
+                            //if column absent from map, add it
+                            if (map.get(arr[0].toLowerCase()) == null)
+                            {
+                                col = new TableColumn(arr[0]);
+                                col.setPrefWidth(80);
+                                map.putIfAbsent(arr[0].toLowerCase(), col);
+                            } else col = map.get(arr[0].toLowerCase());
+                        }
+                    }
+                }
+            }
+            //HashMap<String, TableColumn> cols_map = new HashMap<>();
+            //for(TableColumn column: tblQuoteItems.getColumns())
+            //    cols_map.putIfAbsent(column.getText().toLowerCase(), column);
+
+            //tblQuoteItems.getColumns().clear();
+            //for each additional cost column, check if its not already added to the table
+            for(TableColumn column: map.values())
+            {
+                boolean found=false;
+                for(TableColumn col: tblQuoteItems.getColumns())
+                {
+                    if (col.getText().toLowerCase().equals(column.getText().toLowerCase()))
+                    {
+                        found = true;
+                        break;
+                    }
+                }
+                if(!found)
+                {
+                    tblQuoteItems.getColumns().add(column);
+                } else IO.log(getClass().getName(), IO.TAG_INFO, "TableColumn ["+column.getText()+"] has already been added to the TableView.");
+
+                column.setCellFactory(new Callback<TableColumn<QuoteItem, String>, TableCell<QuoteItem, String>>()
+                {
+                        @Override
+                        public TableCell<QuoteItem, String> call(TableColumn<QuoteItem, String> param)
+                        {
+                            return new TableCell<QuoteItem, String>()
+                            {
+                                final TextField txt = new TextField("0.0");
+
+                                @Override
+                                protected void updateItem(String item, boolean empty)
+                                {
+                                    super.updateItem(item, empty);
+                                    if (getIndex() >= 0 && getIndex() < tblQuoteItems.getItems().size())
+                                    {
+                                        //System.out.println(tblQuoteItems.getItems().get(getIndex()).getEquipment_name());
+                                        QuoteItem quoteItem = tblQuoteItems.getItems().get(getIndex());
+                                        //update QuoteItem object on TextField commit
+                                        txt.setOnKeyPressed(event ->
+                                        {
+                                            if(event.getCode()== KeyCode.ENTER)
+                                            {
+                                                QuoteItem quote_item = getTableView().getItems().get(getIndex());
+                                                if (quote_item != null)
+                                                {
+                                                    String new_cost = column.getText().toLowerCase() + "=" + txt.getText();
+                                                    String old_add_costs="";
+                                                    if(quote_item.getAdditional_costs()!=null)
+                                                        old_add_costs = quote_item.getAdditional_costs().toLowerCase();
+                                                    String new_add_costs = "";
+                                                    int old_var_index = old_add_costs.indexOf(column.getText().toLowerCase());
+                                                    //if(old_add_costs==null)
+                                                    //if(old_add_costs.isEmpty())
+                                                    if (old_var_index < 0)
+                                                    {
+                                                        if (old_add_costs.isEmpty())
+                                                        {
+                                                            //pair DNE & no additional costs exist - append pair
+                                                            //** key-value pair is the first and only pair - add it w/o semi-colon
+                                                            new_add_costs += new_cost;
+                                                        } else
+                                                        {
+                                                            //pair DNE but other additional costs exist - append pair then add the rest of the pairs
+                                                            new_add_costs += new_cost + ";" + old_add_costs;//.substring(old_add_costs.indexOf(';')-1)
+                                                        }
+                                                    } else if (old_var_index == 0)
+                                                    {
+                                                        //** key-value pair exists and is first pair.
+                                                        new_add_costs += new_cost;
+                                                        if (old_add_costs.indexOf(';') > 0)//if there are other pairs append them
+                                                            new_add_costs += ";" + old_add_costs.substring(old_add_costs.indexOf(';') + 1);
+                                                    } else
+                                                    {
+                                                        //** key-value pair is not first - append to additional costs.
+                                                        //copy additional costs before current cost
+                                                        new_add_costs = old_add_costs.substring(0, old_var_index - 1);
+                                                        //append current cost
+                                                        new_add_costs += ";" + new_cost;
+                                                        //append additional costs after current cost
+                                                        int i = old_add_costs.substring(old_var_index).indexOf(';');
+                                                        new_add_costs += ";" + old_add_costs.substring(i + 1);
+                                                    }
+                                                    System.out.println("new additional costs for quote item [#" + quote_item.getItem_number() + "]:: " + new_add_costs);
+                                                    quote_item.setAdditional_costs(new_add_costs);
+
+                                                    /*String add_costs = quote_item.getAdditional_costs().toLowerCase();
+                                                    if (add_costs.contains(column.getText().toLowerCase()))// + "=" + oldValue))
+                                                        add_costs = add_costs.replace(column.getText() + "=" + oldValue, column.getText() + "=" + newValue);
+                                                    else
+                                                        add_costs = add_costs.length() > 0 ? add_costs + ";" + column.getText() + "=" + newValue : column.getText() + "=" + newValue;
+                                                    quote_item.setAdditional_costs(add_costs)*/
+                                                    //System.out.println("Committed text: "+add_costs+", old: " + oldValue + ", new: " + newValue);
+
+                                                    RemoteComms.updateBusinessObjectOnServer(quote_item, "/api/quote/resource", column.getText());
+                                                    IO.logAndAlert("Success", "Successfully updated property '" + column.getText() + "' for quote item #" + quote_item.getItem_number(), IO.TAG_INFO);
+                                                }
+                                            }
+                                        });
+
+                                        //render the cell
+                                        if (!empty)// && item!=null
+                                        {
+                                            /*if(column.getText().toLowerCase().equals("markup"))
+                                            {
+                                                txt.setText(quoteItem.getMarkup());
+                                            } else*/
+                                            {
+                                                if (quoteItem.getAdditional_costs() == null)
+                                                {
+                                                    txt.setText("0.0");
+                                                } else if (quoteItem.getAdditional_costs().length() <= 0)
+                                                {
+                                                    txt.setText("0.0");
+                                                } else if (quoteItem.getAdditional_costs().length() > 0)
+                                                {
+                                                    //QuoteItem quote_item = getTableView().getItems().get(getIndex());
+                                                    if (quoteItem.getAdditional_costs() != null)
+                                                    {
+                                                        for (String str_cost : quoteItem.getAdditional_costs().split(";"))
+                                                        {
+                                                            String[] arr = str_cost.split("=");
+                                                            if (arr != null)
+                                                            {
+                                                                if (arr.length > 1)
+                                                                    if (arr[0].toLowerCase().equals(column.getText().toLowerCase()))
+                                                                    {
+                                                                        txt.setText(arr[1]);
+                                                                        break;
+                                                                    }
+                                                            }
+                                                        }
+                                                    }
+                                                }
+                                            }
+                                            txt.setPrefWidth(50);
+                                            setGraphic(txt);
+                                            getTableView().refresh();
+                                        } else
+                                        {
+                                            setGraphic(null);
+                                            getTableView().refresh();
+                                        }
+                                    } else
+                                        IO.log("Quote Resources Table", IO.TAG_ERROR, "index out of bounds [" + getIndex() + "]");
+                                }
+                            };
+                        }
+                    });
+            }
+
+            /*for(TableColumn tc : tblQuoteItems.getColumns())
+            {
+                if(tc.getText().toLowerCase().equals("markup"))
+                    tc.setCellFactory(col -> new fadulousbms.model.TextFieldTableCell("markup", "markup", callback));
+            }*/
+
+            /*for(TableColumn column: cols_map.values())
+            {
+                if(column.getText().toLowerCase().equals("markup"))
+                {
+                    System.out.println("set factory for markup");
+                    column.setCellValueFactory(new PropertyValueFactory<>("markup"));
+                    column.setCellFactory(col -> new fadulousbms.model.TextFieldTableCell("markup", "markup", callback));
+                }
+                tblQuoteItems.getColumns().add(column);
+            }*/
+            //Setup Quote Items table
+            /*colMarkup.setCellValueFactory(new PropertyValueFactory<>("markup"));
+            colMarkup.setCellFactory(col -> new fadulousbms.model.TextFieldTableCell("markup", "markup", callback));
+
+            colQuantity.setCellValueFactory(new PropertyValueFactory<>("quantity"));
+            colQuantity.setCellFactory(col -> new fadulousbms.model.TextFieldTableCell("quantity", "quantity", callback));
+
+            colLabour.setCellValueFactory(new PropertyValueFactory<>("labour"));
+            colLabour.setCellFactory(col -> new fadulousbms.model.TextFieldTableCell("labour", "labour", callback));*/
+            //tblQuoteItems.getColumns().clear();
+            tblQuoteItems.refresh();
         }else IO.logAndAlert("View Quote", "Selected Quote is invalid.", IO.TAG_ERROR);
 
         computeQuoteTotal();
@@ -410,10 +751,106 @@ public class ViewQuoteController extends Screen implements Initializable
             }
 
             String new_cost = txtName.getText()+"="+txtCost.getText();
-            if(quoteItem.getAdditional_costs().isEmpty())
+            if(quoteItem.getAdditional_costs()==null)
                 quoteItem.setAdditional_costs(new_cost);
-            else quoteItem.setAdditional_costs(quoteItem.getAdditional_costs()+";"+new_cost);
+            else if(quoteItem.getAdditional_costs().isEmpty())
+                quoteItem.setAdditional_costs(new_cost);
+            else
+            {
+                //if additional cost exists already, update its value
+                if(quoteItem.getAdditional_costs().toLowerCase().contains(txtName.getText().toLowerCase()))
+                {
+                    System.out.println("item already has additional costs.");
+                    String old_add_costs = quoteItem.getAdditional_costs().toLowerCase();
+                    String new_add_costs="";
+                    int old_var_index = old_add_costs.indexOf(txtName.getText().toLowerCase());
+                    if(old_var_index==0)
+                    {
+                        //key-value pair is first add it w/o semi-colon
+                        new_add_costs += new_cost;
+                    }else
+                    {
+                        new_add_costs = old_add_costs.substring(0, old_var_index);
+                        new_add_costs += ";" + new_cost;
+                    }
+                    quoteItem.setAdditional_costs(new_add_costs);
+                } else quoteItem.setAdditional_costs(quoteItem.getAdditional_costs()+";"+new_cost);
+            }
 
+            //RemoteComms.updateBusinessObjectOnServer(quoteItem, "/api/quote/resource", txtName.getText());
+
+            TableColumn<QuoteItem, String> col = new TableColumn(txtName.getText());
+            col.setPrefWidth(80);
+            col.setCellFactory(new Callback<TableColumn<QuoteItem, String>, TableCell<QuoteItem, String>>()
+            {
+                @Override
+                public TableCell<QuoteItem, String> call(TableColumn<QuoteItem, String> param)
+                {
+                    return new TableCell<QuoteItem, String>()
+                    {
+                        final TextField txt = new TextField("0.0");
+
+                        @Override
+                        protected void updateItem(String item, boolean empty)
+                        {
+                            super.updateItem(item, empty);
+
+                            //update QuoteItem object
+                            txt.textProperty().addListener((observable, oldValue, newValue) ->
+                            {
+                                if(txt.isFocused())
+                                {
+                                    QuoteItem quote_item = getTableView().getItems().get(getIndex());
+                                    String add_costs = quote_item.getAdditional_costs();
+                                    if(add_costs.contains(col.getText()+"="+oldValue))
+                                        add_costs = add_costs.replace(col.getText()+"="+oldValue,col.getText()+"="+newValue);
+                                    else add_costs=add_costs.length()>0?add_costs+";"+col.getText()+"="+newValue:col.getText()+"="+newValue;
+                                    //System.out.println("Committed text: "+add_costs+", old: " + oldValue + ", new: " + newValue);
+                                    quote_item.setAdditional_costs(add_costs);
+                                    RemoteComms.updateBusinessObjectOnServer(quote_item, "/api/quote/resource", col.getText());
+                                    setText("R "+newValue);
+                                    setGraphic(null);
+                                    getTableView().refresh();
+                                }
+                            });
+
+                            //render the cell
+                            if(!empty)
+                            {
+                                //txt.setText("0.0");
+                                QuoteItem quote_item = getTableView().getItems().get(getIndex());
+                                if(quote_item.getAdditional_costs()!=null)
+                                {
+                                    for(String str_cost: quote_item.getAdditional_costs().split(";"))
+                                    {
+                                        String[] arr = str_cost.split("=");
+                                        if(arr!=null)
+                                            if(arr.length>1)
+                                                if(arr[0].toLowerCase().equals(col.getText().toLowerCase()))
+                                                {
+                                                    txt.setText(arr[1]);
+                                                    break;
+                                                }
+                                    }
+                                }
+                                txt.setPrefWidth(50);
+                                setGraphic(txt);
+                                getTableView().refresh();
+                            }else setGraphic(null);
+                        }
+                    };
+                }
+            });
+            boolean found=false;
+            for(TableColumn c: tblQuoteItems.getColumns())
+                if(col.getText().toLowerCase().equals(c.getText().toLowerCase()))
+                {
+                    found=true;
+                    break;
+                }
+            if(!found)
+                tblQuoteItems.getColumns().add(col);
+            tblQuoteItems.refresh();
             computeQuoteTotal();
         });
 

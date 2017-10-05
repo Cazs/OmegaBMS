@@ -1,0 +1,60 @@
+<?import javafx.scene.control.*?>
+<?import javafx.scene.control.cell.*?>
+<?import javafx.scene.layout.*?>
+
+<Tab text="Quotes" fx:id="quotesTab" fx:controller="fadulousbms.controllers.QuotesController" xmlns:fx="http://javafx.com/fxml">
+    <content>
+        <TableView fx:id="tblQuotes" editable="true" tableMenuButtonVisible="true" VBox.vgrow="ALWAYS">
+            <columns>
+                <TableColumn fx:id="colId" maxWidth="1.7976931348623157E308" minWidth="80.0" prefWidth="-1.0" text="Quote ID" visible="false">
+                    <cellValueFactory>
+                        <PropertyValueFactory property="_id" />
+                    </cellValueFactory>
+                </TableColumn>
+                <TableColumn fx:id="colClient" maxWidth="1.7976931348623157E308" minWidth="180.0" prefWidth="-1.0" text="Client">
+                    <cellValueFactory>
+                        <PropertyValueFactory property="client_id" />
+                    </cellValueFactory>
+                </TableColumn>
+                <TableColumn fx:id="colRequest" maxWidth="1.7976931348623157E308" minWidth="250.0" prefWidth="-1.0" text="Request">
+                    <cellValueFactory>
+                        <PropertyValueFactory property="request" />
+                    </cellValueFactory>
+                </TableColumn>
+                <TableColumn fx:id="colSitename" maxWidth="1.7976931348623157E308" minWidth="150.0" prefWidth="-1.0" text="Sitename">
+                    <cellValueFactory>
+                        <PropertyValueFactory property="sitename" />
+                    </cellValueFactory>
+                </TableColumn>
+                <TableColumn fx:id="colContactPerson" maxWidth="1.7976931348623157E308" minWidth="150.0" prefWidth="-1.0" text="Contact Person">
+                    <cellValueFactory>
+                        <PropertyValueFactory property="contact_person_id" />
+                    </cellValueFactory>
+                </TableColumn>
+                <TableColumn fx:id="colDateGenerated" editable="false" maxWidth="1.7976931348623157E308" minWidth="150.0" prefWidth="-1.0" text="Date Logged">
+                    <cellValueFactory>
+                        <PropertyValueFactory property="date_generated" />
+                    </cellValueFactory>
+                </TableColumn>
+                <TableColumn fx:id="colStatus" prefWidth="75.0" text="Status" visible="false">
+                    <cellValueFactory>
+                        <PropertyValueFactory property="status" />
+                    </cellValueFactory>
+                </TableColumn>
+                <TableColumn fx:id="colCreator" maxWidth="1.7976931348623157E308" minWidth="150.0" prefWidth="-1.0" text="Creator" />
+                <TableColumn fx:id="colTotal" maxWidth="1.7976931348623157E308" minWidth="150.0" prefWidth="-1.0" text="Total" />
+                <TableColumn fx:id="colRevision" maxWidth="1.7976931348623157E308" minWidth="80.0" prefWidth="-1.0" text="Revision" visible="false" />
+                <TableColumn fx:id="colExtra" maxWidth="1.7976931348623157E308" minWidth="80.0" prefWidth="-1.0" text="Extra" visible="false">
+                    <cellValueFactory>
+                        <PropertyValueFactory property="extra" />
+                    </cellValueFactory>
+                </TableColumn>
+                <TableColumn fx:id="colAction" maxWidth="1.7976931348623157E308" minWidth="220.0" prefWidth="-1.0" text="Action">
+                    <cellValueFactory>
+                        <PropertyValueFactory property="extra" />
+                    </cellValueFactory>
+                </TableColumn>
+            </columns>
+        </TableView>
+    </content>
+</Tab>

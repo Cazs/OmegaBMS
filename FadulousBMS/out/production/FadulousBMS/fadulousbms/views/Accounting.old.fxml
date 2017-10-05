@@ -1,0 +1,188 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.shape.*?>
+<?import java.lang.*?>
+<?import javafx.scene.effect.*?>
+<?import javafx.geometry.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.image.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.*?>
+
+<BorderPane fx:id="rootContainer" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="600.0" minWidth="650.0" styleClass="border-pane" stylesheets="@../styles/home.css" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="fadulousbms.controllers.AccountingController">
+   <center>
+      <StackPane BorderPane.alignment="CENTER">
+         <children>
+            <BorderPane maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" styleClass="sys-body" StackPane.alignment="CENTER">
+               <StackPane.margin>
+                  <Insets />
+               </StackPane.margin>
+               <center>
+                  <GridPane alignment="CENTER" hgap="20.0" vgap="20.0" BorderPane.alignment="CENTER">
+                    <columnConstraints>
+                      <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                      <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                    </columnConstraints>
+                    <rowConstraints>
+                      <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                      <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                        <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                    </rowConstraints>
+                     <BorderPane.margin>
+                        <Insets bottom="40.0" left="70.0" right="70.0" top="40.0" />
+                     </BorderPane.margin>
+                     <children>
+                        <BorderPane minWidth="150.0" onMouseClicked="#generalJournalClick" styleClass="sys-btn" GridPane.columnIndex="1">
+                           <center>
+                              <Label alignment="CENTER" text="Journals" BorderPane.alignment="CENTER">
+                                 <font>
+                                    <Font size="24.0" />
+                                 </font></Label>
+                           </center>
+                        </BorderPane>
+                        <BorderPane minWidth="150.0" onMouseClicked="#generalLedgerClick" styleClass="sys-btn" GridPane.rowIndex="1">
+                           <center>
+                              <Label text="Ledgers" textAlignment="CENTER" BorderPane.alignment="CENTER">
+                                 <font>
+                                    <Font size="22.0" />
+                                 </font>
+                              </Label>
+                           </center>
+                        </BorderPane>
+                        <BorderPane minWidth="150.0" onMouseClicked="#purchasesClick" styleClass="sys-btn">
+                           <center>
+                              <Label text="Purchases" BorderPane.alignment="CENTER">
+                                 <font>
+                                    <Font size="22.0" />
+                                 </font>
+                              </Label>
+                           </center>
+                        </BorderPane>
+                        <BorderPane minWidth="150.0" onMouseClicked="#invoicesClick" styleClass="sys-btn" GridPane.columnIndex="1" GridPane.rowIndex="1">
+                           <center>
+                              <Label text="Invoices" BorderPane.alignment="CENTER">
+                                 <font>
+                                    <Font size="31.0" />
+                                 </font>
+                              </Label>
+                           </center>
+                        </BorderPane>
+                        <BorderPane minWidth="150.0" onMouseClicked="#purchasesClick" styleClass="sys-btn">
+                           <center>
+                              <Label text="Purchases" textAlignment="CENTER" BorderPane.alignment="CENTER">
+                                 <font>
+                                    <Font size="22.0" />
+                                 </font>
+                              </Label>
+                           </center>
+                        </BorderPane>
+                        <BorderPane layoutX="60.0" layoutY="93.0" minWidth="150.0" onMouseClicked="#additionalRevenueClick" styleClass="sys-btn" GridPane.rowIndex="2">
+                           <center>
+                              <Label text="Additional Revenue" textAlignment="CENTER" wrapText="true" BorderPane.alignment="CENTER">
+                                 <font>
+                                    <Font size="22.0" />
+                                 </font>
+                              </Label>
+                           </center>
+                        </BorderPane>
+                     </children>
+                     <padding>
+                        <Insets bottom="10.0" left="50.0" right="50.0" top="10.0" />
+                     </padding>
+                  </GridPane>
+               </center>
+               <effect>
+                  <InnerShadow choke="0.56" height="72.61" radius="31.25" width="54.39" />
+               </effect>
+               <bottom>
+                  <HBox alignment="CENTER" styleClass="sys-footer" BorderPane.alignment="CENTER">
+                     <children>
+                        <Button alignment="CENTER" contentDisplay="CENTER" defaultButton="true" mnemonicParsing="false" prefHeight="100.0" prefWidth="100.0" style="-fx-border-radius: 20;" styleClass="sys-btn" stylesheets="@../styles/home.css" text="Purchases" HBox.hgrow="ALWAYS">
+                           <HBox.margin>
+                              <Insets bottom="20.0" left="20.0" right="20.0" top="20.0" />
+                           </HBox.margin>
+                        </Button>
+                        <Button mnemonicParsing="false" prefHeight="100.0" prefWidth="100.0" styleClass="sys-btn" text="Journals">
+                           <HBox.margin>
+                              <Insets bottom="20.0" left="20.0" right="20.0" top="20.0" />
+                           </HBox.margin>
+                        </Button>
+                        <Button mnemonicParsing="false" prefHeight="100.0" prefWidth="100.0" styleClass="sys-btn" text="Ledgers">
+                           <HBox.margin>
+                              <Insets bottom="20.0" left="20.0" right="20.0" top="20.0" />
+                           </HBox.margin>
+                        </Button>
+                     </children>
+                  </HBox>
+               </bottom>
+            </BorderPane>
+         </children>
+      </StackPane>
+   </center>
+   <top>
+      <BorderPane styleClass="sys-nav" BorderPane.alignment="CENTER">
+         <top>
+            <Label text="Airotek BMS" BorderPane.alignment="CENTER">
+               <font>
+                  <Font size="38.0" />
+               </font>
+            </Label>
+         </top>
+         <bottom>
+            <BorderPane style="-fx-border-insets: -50 -10 0 -10;" BorderPane.alignment="CENTER">
+               <left>
+                  <HBox alignment="CENTER_LEFT" BorderPane.alignment="CENTER">
+                     <children>
+                        <ImageView fx:id="img_profile" fitHeight="60.0" fitWidth="60.0" pickOnBounds="true" preserveRatio="true">
+                           <image>
+                              <Image url="@../../../images/profile.png" />
+                           </image></ImageView>
+                        <Label fx:id="user_name" text="not signed in" HBox.hgrow="ALWAYS">
+                           <font>
+                              <Font size="20.0" />
+                           </font>
+                        </Label>
+                     </children>
+                  </HBox>
+               </left>
+               <right>
+                  <HBox alignment="CENTER_RIGHT" prefHeight="100.0" prefWidth="200.0" BorderPane.alignment="CENTER">
+                     <children>
+                        <Button alignment="CENTER" contentDisplay="CENTER" minHeight="35.0" minWidth="70.0" mnemonicParsing="false" onMouseClicked="#showMain" styleClass="btnDefault" stylesheets="@../styles/home.css" text="home" />
+                        <Button minHeight="35.0" minWidth="70.0" mnemonicParsing="false" onMouseClicked="#showLogin" styleClass="btnAdd" stylesheets="@../styles/home.css" text="login">
+                           <HBox.margin>
+                              <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
+                           </HBox.margin></Button>
+                        <Button alignment="CENTER" contentDisplay="CENTER" minHeight="35.0" minWidth="70.0" mnemonicParsing="false" onMouseClicked="#previousScreen" styleClass="btnBack" stylesheets="@../styles/home.css" text="Back" />
+                     </children>
+                  </HBox>
+               </right>
+               <center>
+                  <VBox alignment="CENTER" BorderPane.alignment="CENTER">
+                     <children>
+                        <Label text="Accounting">
+                           <font>
+                              <Font size="30.0" />
+                           </font>
+                        </Label>
+                     </children>
+                  </VBox>
+               </center>
+            </BorderPane>
+         </bottom>
+      </BorderPane>
+   </top>
+   <bottom>
+      <HBox BorderPane.alignment="CENTER">
+         <children>
+            <Label text="Server Status:" />
+            <Circle fx:id="shpServerStatus" fill="DODGERBLUE" radius="7.0" stroke="BLACK" strokeType="INSIDE" />
+            <Label fx:id="lblOutput" text="console output">
+               <HBox.margin>
+                  <Insets left="10.0" />
+               </HBox.margin>
+            </Label>
+         </children>
+      </HBox>
+   </bottom>
+</BorderPane>

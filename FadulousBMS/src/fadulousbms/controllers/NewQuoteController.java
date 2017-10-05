@@ -8,6 +8,8 @@ package fadulousbms.controllers;
 import fadulousbms.auxilary.*;
 import fadulousbms.managers.*;
 import fadulousbms.model.*;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -258,7 +260,7 @@ public class NewQuoteController extends Screen implements Initializable
                                     {
                                         QuoteItem quoteItem = getTableView().getItems().get(getIndex());
                                         addQuoteItemAdditionalMaterial(quoteItem);
-                                        IO.log(getClass().getName(), IO.TAG_INFO, "Successfully added material quote number " + quoteItem.getItem_number());
+                                        IO.log(getClass().getName(), IO.TAG_INFO, "successfully added material quote number " + quoteItem.getItem_number());
                                     });
 
                                     btnRemove.setOnAction(event ->
@@ -356,6 +358,42 @@ public class NewQuoteController extends Screen implements Initializable
             else quoteItem.setAdditional_costs(quoteItem.getAdditional_costs()+";"+new_cost);
 
             computeQuoteTotal();
+            //TODO: set value of column
+            TableColumn<QuoteItem, String> col = new TableColumn(txtName.getText());
+            col.setPrefWidth(80);
+            col.setCellFactory(param ->
+                    new TableCell<QuoteItem, String>()
+                    {
+                        TextField txt = new TextField();
+                        @Override
+                        protected void updateItem(String item, boolean empty)
+                        {
+                            //setEditable(true);
+                            //setText("Test");
+                            if(!empty)
+                            {
+                                System.out.println(getTableView().getItems().get(getIndex())==null);
+                                String add_costs = (getTableView().getItems().get(getIndex())).getAdditional_costs();
+                                for(String str: add_costs.split(";"))
+                                {
+                                    String cost[] = str.split("=");
+                                    if(cost[0].toLowerCase().equals(col.getText().toLowerCase()))
+                                    {
+                                        txt.setText(cost[1]);
+                                        break;
+                                    }
+                                }
+                                setGraphic(txt);
+                                txt.textProperty().addListener((observable, oldValue, newValue) ->
+                                {
+                                    System.out.println("text submitted: " + txt.getText());
+                                });
+                            }else setGraphic(null);
+                        }
+                    });
+
+            tblQuoteItems.getColumns().add(col);
+            tblQuoteItems.refresh();
         });
 
         HBox row1 = new HBox(new Label("Material name"), txtName);

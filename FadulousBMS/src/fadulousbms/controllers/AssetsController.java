@@ -52,7 +52,7 @@ public class AssetsController extends Screen implements Initializable
         AssetManager.getInstance().initialize(this.getScreenManager());
 
         //Set Employee name
-        Employee e = SessionManager.getInstance().getActiveEmployee();
+        /*Employee e = SessionManager.getInstance().getActiveEmployee();
         if(e!=null)
             this.getUserNameLabel().setText(e.toString());
         else IO.log(getClass().getName(), IO.TAG_ERROR, "No active sessions.");
@@ -62,7 +62,7 @@ public class AssetsController extends Screen implements Initializable
         {
             Image image = SwingFXUtils.toFXImage(HomescreenController.defaultProfileImage, null);
             this.getProfileImageView().setImage(image);
-        }else IO.log(getClass().getName(), "default profile image is null.", IO.TAG_ERROR);
+        }else IO.log(getClass().getName(), "default profile image is null.", IO.TAG_ERROR);*/
 
         colId.setMinWidth(100);
         colId.setCellValueFactory(new PropertyValueFactory<>("_id"));
@@ -82,7 +82,6 @@ public class AssetsController extends Screen implements Initializable
         lst_assets.addAll(AssetManager.getInstance().getAssets());
         tblAssets.setItems(lst_assets);
 
-        final ScreenManager screenManager = this.getScreenManager();
         Callback<TableColumn<Asset, String>, TableCell<Asset, String>> cellFactory
                 =
                 new Callback<TableColumn<Asset, String>, TableCell<Asset, String>>()
@@ -161,6 +160,7 @@ public class AssetsController extends Screen implements Initializable
     @Override
     public void initialize(URL url, ResourceBundle rb) 
     {
+        refresh();
     }
 
     @FXML

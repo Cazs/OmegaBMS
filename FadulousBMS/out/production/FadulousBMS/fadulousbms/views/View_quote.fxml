@@ -182,7 +182,7 @@
       </SplitPane>
        <TableView fx:id="tblQuoteItems" editable="true" prefHeight="200.0" prefWidth="200.0" tableMenuButtonVisible="true">
            <columns>
-               <TableColumn fx:id="colItemNumber" maxWidth="1.7976931348623157E308" minWidth="50.0" prefWidth="-1.0" text="Item">
+               <TableColumn fx:id="colItemNumber" maxWidth="1.7976931348623157E308" minWidth="50.0" prefWidth="-1.0" text="Item #">
                    <cellValueFactory>
                        <PropertyValueFactory property="item_number" />
                    </cellValueFactory>
@@ -232,7 +232,7 @@
                        <TextFieldTableCell fx:factory="forTableColumn" />
                    </cellFactory>
                </TableColumn>
-               <TableColumn fx:id="colValue" maxWidth="1.7976931348623157E308" minWidth="100.0" prefWidth="-1.0" text="Value">
+               <TableColumn fx:id="colValue" maxWidth="1.7976931348623157E308" minWidth="100.0" prefWidth="-1.0" text="Unit Cost">
                    <cellValueFactory>
                        <PropertyValueFactory property="value" />
                    </cellValueFactory>

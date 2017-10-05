@@ -1,5 +1,6 @@
 const mongoose = require('mongoose');
 var access_levels = require('../system/access_levels.js');
+var counters = require('../system/counters.js');
 
 const quoteResourceSchema = mongoose.Schema(
   {
@@ -44,7 +45,21 @@ const quoteResourceSchema = mongoose.Schema(
   module.exports.add = function(quoteresource, callback)
   {
     console.log('attempting to create new quote_resource for quote [%s].', quoteresource.quote_id);
-    QuoteResources.create(quoteresource, callback);
+    QuoteResources.create(quoteresource, function(error, res_obj)
+    {
+      if(error)
+      {
+        console.log(error);
+        if(callback)
+          callback(error);
+        return;
+      }
+      console.log('successfully created new qquote_resourceuote.')
+      if(callback)
+        callback(error, res_obj);
+      //update timestamp
+      counters.timestamp('quotes_timestamp');
+    });
   }
 
   module.exports.get = function(quote_id, callback)
@@ -62,7 +77,21 @@ const quoteResourceSchema = mongoose.Schema(
   {
     var query = {_id:record_id};
     console.log('attempting to update quote_resource[%s].', record_id);
-    QuoteResources.findOneAndUpdate(query, quoteresource, {}, callback);
+    QuoteResources.findOneAndUpdate(query, quoteresource, {}, function(error, res_obj)
+    {
+      if(error)
+      {
+        console.log(error);
+        if(callback)
+          callback(error);
+        return;
+      }
+      console.log('successfully updated quote_resource.')
+      if(callback)
+        callback(error, res_obj);
+      //update timestamp
+      counters.timestamp('quotes_timestamp');
+    });
   }
 
   module.exports.isValid = function(quoteresource)

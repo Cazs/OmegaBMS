@@ -53,7 +53,7 @@ public class ClientsController extends Screen implements Initializable
         ClientManager.getInstance().initialize(this.getScreenManager());
 
         //Set Employee name
-        Employee e = SessionManager.getInstance().getActiveEmployee();
+        /*Employee e = SessionManager.getInstance().getActiveEmployee();
         if(e!=null)
             this.getUserNameLabel().setText(e.toString());
         else IO.log(getClass().getName(), IO.TAG_ERROR, "No active sessions.");
@@ -63,7 +63,7 @@ public class ClientsController extends Screen implements Initializable
         {
             Image image = SwingFXUtils.toFXImage(HomescreenController.defaultProfileImage, null);
             this.getProfileImageView().setImage(image);
-        }else IO.log(getClass().getName(), "default profile image is null.", IO.TAG_ERROR);
+        }else IO.log(getClass().getName(), "default profile image is null.", IO.TAG_ERROR);*/
 
         colClientId.setMinWidth(100);
         colClientId.setCellValueFactory(new PropertyValueFactory<>("_id"));
@@ -160,6 +160,7 @@ public class ClientsController extends Screen implements Initializable
     @Override
     public void initialize(URL url, ResourceBundle rb) 
     {
+        refresh();
     }
 
     @FXML

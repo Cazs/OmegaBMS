@@ -48,7 +48,7 @@ import java.util.logging.Logger;
  *
  * @author ghost
  */
-public class QuotesController extends Screen implements Initializable
+public class QuotesController extends OperationsController implements Initializable
 {
     @FXML
     private TableView<Quote>    tblQuotes;
@@ -62,7 +62,7 @@ public class QuotesController extends Screen implements Initializable
     {
         //Set Employee name
         Employee e = SessionManager.getInstance().getActiveEmployee();
-        if(e!=null)
+        /*if(e!=null)
             this.getUserNameLabel().setText(e.toString());
         else IO.log(getClass().getName(), IO.TAG_ERROR, "No active sessions.");
         //Set default profile photo
@@ -70,10 +70,11 @@ public class QuotesController extends Screen implements Initializable
         {
             Image image = SwingFXUtils.toFXImage(HomescreenController.defaultProfileImage, null);
             this.getProfileImageView().setImage(image);
-        }else IO.log(getClass().getName(), "default profile image is null.", IO.TAG_ERROR);
+        }else IO.log(getClass().getName(), "default profile image is null.", IO.TAG_ERROR);*/
 
         EmployeeManager.getInstance().loadDataFromServer();
         ClientManager.getInstance().loadDataFromServer();
+        //QuoteManager.getInstance().initialize(this.getScreenManager());
         QuoteManager.getInstance().loadDataFromServer();
 
         colId.setCellValueFactory(new PropertyValueFactory<>("_id"));
@@ -88,7 +89,6 @@ public class QuotesController extends Screen implements Initializable
         colTotal.setCellValueFactory(new PropertyValueFactory<>("total"));
         CustomTableViewControls.makeEditableTableColumn(colExtra, TextFieldTableCell.forTableColumn(), 100, "extra", "/api/quote");
 
-        final ScreenManager screenManager = this.getScreenManager();
         Callback<TableColumn<Quote, String>, TableCell<Quote, String>> cellFactory
                 =
                 new Callback<TableColumn<Quote, String>, TableCell<Quote, String>>()
@@ -140,7 +140,8 @@ public class QuotesController extends Screen implements Initializable
                                             IO.logAndAlert("Error " + getClass().getName(), "Quote object is not set", IO.TAG_ERROR);
                                             return;
                                         }
-                                        screenManager.showLoadingScreen(param ->
+
+                                        ScreenManager.getInstance().showLoadingScreen(param ->
                                         {
                                             new Thread(new Runnable()
                                             {
@@ -150,9 +151,9 @@ public class QuotesController extends Screen implements Initializable
                                                     QuoteManager.getInstance().setSelectedQuote(quote);
                                                     try
                                                     {
-                                                        if(screenManager.loadScreen(Screens.VIEW_QUOTE.getScreen(),getClass().getResource("../views/"+Screens.VIEW_QUOTE.getScreen())))
+                                                        if(ScreenManager.getInstance().loadScreen(Screens.VIEW_QUOTE.getScreen(),getClass().getResource("../views/"+Screens.VIEW_QUOTE.getScreen())))
                                                         {
-                                                            Platform.runLater(() -> screenManager.setScreen(Screens.VIEW_QUOTE.getScreen()));
+                                                            Platform.runLater(() -> ScreenManager.getInstance().setScreen(Screens.VIEW_QUOTE.getScreen()));
                                                         }
                                                         else IO.log(getClass().getName(), IO.TAG_ERROR, "could not load quotes viewer screen.");
                                                     } catch (IOException e)
@@ -222,5 +223,6 @@ public class QuotesController extends Screen implements Initializable
     @Override
     public void initialize(URL url, ResourceBundle rb) 
     {
+        refresh();
     }
 }

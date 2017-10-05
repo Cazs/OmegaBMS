@@ -286,7 +286,7 @@ public class RemoteComms
                     {
                         IO.logAndAlert(TAG, e.getMessage(), IO.TAG_ERROR);
                     }
-                } else IO.logAndAlert(TAG, "Invalid BusinessObject ID", IO.TAG_ERROR);
+                } else IO.log(TAG, IO.TAG_ERROR, "Invalid BusinessObject ID");
             }else{
                 JOptionPane.showMessageDialog(null, "No active sessions.", "Session expired", JOptionPane.ERROR_MESSAGE);
             }

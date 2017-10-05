@@ -60,6 +60,7 @@ public class AccountingController extends Screen implements Initializable
         {
             IO.log(getClass().getName(), IO.TAG_ERROR, e.getMessage());
         }
+        refresh();
     }
 
     @FXML

@@ -54,16 +54,15 @@ public class JobsController extends Screen implements Initializable
     {
         //Set Employee name
         Employee e = SessionManager.getInstance().getActiveEmployee();
-        if(e!=null)
+        /*if(e!=null)
             this.getUserNameLabel().setText(e.toString());
-        else IO.log(getClass().getName(), IO.TAG_ERROR, "No active sessions.");
-        //Set Employee profile photo
+        else IO.log(getClass().getName(), IO.TAG_ERROR, "No active sessions.");*/
         //Set default profile photo
-        if(HomescreenController.defaultProfileImage!=null)
+        /*if(HomescreenController.defaultProfileImage!=null)
         {
             Image image = SwingFXUtils.toFXImage(HomescreenController.defaultProfileImage, null);
             this.getProfileImageView().setImage(image);
-        }else IO.log(getClass().getName(), "default profile image is null.", IO.TAG_ERROR);
+        }else IO.log(getClass().getName(), "default profile image is null.", IO.TAG_ERROR);*/
 
         JobManager.getInstance().initialize(this.getScreenManager());
 
@@ -95,7 +94,6 @@ public class JobsController extends Screen implements Initializable
         lst_jobs.addAll(JobManager.getInstance().getJobs());
         tblJobs.setItems(lst_jobs);
 
-        final ScreenManager screenManager = this.getScreenManager();
         Callback<TableColumn<Job, String>, TableCell<Job, String>> cellFactory
                 =
                 new Callback<TableColumn<Job, String>, TableCell<Job, String>>()
@@ -155,7 +153,7 @@ public class JobsController extends Screen implements Initializable
                                             return;
                                         }
 
-                                        screenManager.showLoadingScreen(param ->
+                                        ScreenManager.getInstance().showLoadingScreen(param ->
                                         {
                                             new Thread(new Runnable()
                                             {
@@ -165,11 +163,10 @@ public class JobsController extends Screen implements Initializable
                                                     JobManager.getInstance().setSelectedJob(job);
                                                     try
                                                     {
-                                                        if(screenManager.loadScreen(Screens.VIEW_JOB.getScreen(),getClass().getResource("../views/"+Screens.VIEW_JOB.getScreen())))
+                                                        if(ScreenManager.getInstance().loadScreen(Screens.VIEW_JOB.getScreen(),getClass().getResource("../views/"+Screens.VIEW_JOB.getScreen())))
                                                         {
-                                                            Platform.runLater(() -> screenManager.setScreen(Screens.VIEW_JOB.getScreen()));
-                                                        }
-                                                        else IO.log(getClass().getName(), IO.TAG_ERROR, "could not load jobs viewer screen.");
+                                                            Platform.runLater(() -> ScreenManager.getInstance().setScreen(Screens.VIEW_JOB.getScreen()));
+                                                        } else IO.log(getClass().getName(), IO.TAG_ERROR, "could not load jobs viewer screen.");
                                                     } catch (IOException e)
                                                     {
                                                         IO.log(getClass().getName(), IO.TAG_ERROR, e.getMessage());
@@ -248,6 +245,7 @@ public class JobsController extends Screen implements Initializable
     @Override
     public void initialize(URL url, ResourceBundle rb) 
     {
+        refresh();
         /*colAction.setCellFactory(new ButtonTableCellFactory<>());
 
         colAction.setCellValueFactory(new PropertyValueFactory<>(""));

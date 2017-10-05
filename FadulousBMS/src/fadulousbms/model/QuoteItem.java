@@ -26,7 +26,7 @@ public class QuoteItem implements BusinessObject, Serializable
     private double markup;
     transient private double total_value;
     transient private double ex_total_value;
-    private String additional_costs="";
+    private String additional_costs;
     private Resource resource;
     private boolean marked;
     private String quote_id;

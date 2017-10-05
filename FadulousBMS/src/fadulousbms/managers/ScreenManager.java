@@ -36,23 +36,20 @@ import javafx.util.Duration;
  */
 public class ScreenManager extends StackPane
 {
-    //private HashMap<String, Node> screens = new HashMap<>();
     private Stack<AbstractMap.SimpleEntry<String, Node>> screens = new Stack<>();
-    //private HashMap<String, Screen> controllers = new HashMap<>();
     private Stack<AbstractMap.SimpleEntry<String, Screen>> controllers = new Stack<>();
     private Screen focused;
     private String focused_id;
     private String previous_id;
     private Node loading_screen;
     private Screen loading_screen_ctrl;
-    
-    public ScreenManager()
+    private static ScreenManager screenManager = new ScreenManager();
+
+    private ScreenManager()
     {
         super();
         try
         {
-            //loadScreen("loading.fxml", getClass().getResource("../views/loading.fxml"));
-            //loading_screen = screens.get("loading.fxml");
             FXMLLoader loader = new FXMLLoader(getClass().getResource("../views/loading.fxml"));
             loading_screen = loader.load();
             loading_screen_ctrl = loader.getController();
@@ -61,40 +58,13 @@ public class ScreenManager extends StackPane
         {
             IO.log(getClass().getName(), IO.TAG_ERROR, e.getMessage());
         }
-        /*try
-        {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("../views/loading.fxml"));
-            loading_screen = loader.load();
-
-            loading_screen_ctrl = loader.getController();
-            loading_screen_ctrl.setParent(this);
-        } catch (IOException e)
-        {
-            IO.log(getClass().getName(), IO.TAG_ERROR, e.getMessage());
-        }*/
     }
 
-    /**
-     * Method to add a Screen object to array of screens in memory.
-     * @param id Screen identifier.
-     * @param screen Screen/Node object to be added to memory.
-     * @return true if successfully added Screen, false otherwise.
-     */
-    /*public boolean addScreen(String id, Node screen)
+    public static ScreenManager getInstance()
     {
-        screens.putIfAbsent(id, screen);
-        return true;
-    }*/
+        return screenManager;
+    }
 
-    /**
-     * Method to get a Screen that has been loaded to memory.
-     * @param id Screen identifier.
-     * @return Screen[Node] object from memory.
-     */
-    /*public Node getScreen(String id)
-    {
-        return screens.get(id);
-    }*/
 
     /**
      * Method to load a single Screen into memory.
@@ -161,40 +131,29 @@ public class ScreenManager extends StackPane
         return true;
     }
 
+    public Screen peekScreenControllers()
+    {
+        if(controllers!=null)
+            return controllers.peek().getValue();
+        else return null;
+    }
+
+    public Node peekScreens()
+    {
+        if(screens!=null)
+            return screens.peek().getValue();
+        else return null;
+    }
+
     public void setPreviousScreen() throws IOException
     {
-        /*if(loadScreen(previous_id, getClass().getResource("../views/"+ previous_id)))
-            setScreen(previous_id);
-        else IO.log(getClass().getName(), IO.TAG_ERROR, "could not load screen: " + previous_id);*/
         if(screens.size()>1)
         {
-            screens.pop();
-            controllers.pop();
+            screens.pop().getValue();
+            controllers.pop().getValue();
             setScreen("previous");
         }
     }
-
-    /**
-     * Method to load array of Screens to memory.
-     * @param filenames Paths to the FXML views for the Screens.
-     * @throws IOException
-     */
-    /*public void  loadScreens(String[] filenames) throws IOException
-    {
-        for(String filename : filenames)
-        {
-            String path = "../views/"+filename;
-            FXMLLoader loader = new FXMLLoader(getClass().getResource(path));
-            loader.setRoot(this);
-            loader.setLocation(getClass().getResource(path));
-            Parent screen = (Parent)loader.load();
-
-            Screen screen_controller = (Screen)loader.getController();
-            screen_controller.setParent(this);
-            addScreen(filename, screen);
-        }
-    }*/
-    
 
     /**
      * Method to add a Screen object to ScreenManager
@@ -202,50 +161,16 @@ public class ScreenManager extends StackPane
      */
     public void setScreen(final String id)
     {
-        if(focused_id!=null)
-        {
-            /*Node screen = screens.get(focused_id);
-            System.out.println("\n instanceof> "+(screen instanceof BorderPane)+"\n");
-            if(screen instanceof Pane)
-            {
-                screen.setStyle("-fx-background-color: rgba(0, 100, 100, 0.5); -fx-background-radius: 10;");
-                for(Node node : ((Pane)screen).getChildren())
-                {
-                    node.setOpacity(0.2);
-                    node.setStyle("-fx-background-color: rgba(0, 100, 100, 0.5); -fx-background-radius: 10;");
-                }
-            }*/
-            /*for(Node node : getChildren())
-                node.setOpacity(0.1);*/
-            //final DoubleProperty opacity =  opacityProperty();
-            //Timeline fade = new Timeline(new KeyFrame(Duration.ONE, new KeyValue(opacity, 0.0)),
-            //        new KeyFrame(Duration.millis(20),new KeyValue(opacity, 1.0)));
-            //fade.setOnFinished(event -> );
-            //fade.play();
-            //screen.getScene().getRoot().setOpacity(0.2);
-            //if(focused!=null)
-            //    focused.refresh();
-            //System.out.println("lowered opacity of current screen");
-        }
-
         if(getChildren().setAll(new Node[]{}))//remove all screens
         {
-            //getChildren().add(screens.get("loading.fxml"));
             Node screen = null;
-            /*if(id.equals("loading.fxml"))
-            {
-                System.out.println("showing loading screen");
-                screen = loading_screen;
-            } else */if(screens.peek()!=null)
-                        screen = screens.peek().getValue();//screens.get(id);
-
+            if(screens.peek()!=null)
+                        screen = screens.peek().getValue();
             if(screen!=null)
             {
                 Screen controller = null;
                 //update UI of current view
-                /*if(id.equals("loading.fxml"))
-                    controller = loading_screen_ctrl;
-                else */if(controllers.peek()!=null)
+                if(controllers.peek()!=null)
                         controller = controllers.peek().getValue();
 
                 if(controller!=null)

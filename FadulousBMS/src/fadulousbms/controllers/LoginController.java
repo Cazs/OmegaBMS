@@ -8,9 +8,8 @@ package fadulousbms.controllers;
 import fadulousbms.auxilary.IO;
 import fadulousbms.auxilary.RemoteComms;
 import fadulousbms.auxilary.Screen;
-import fadulousbms.managers.ScreenManager;
+import fadulousbms.managers.*;
 import fadulousbms.auxilary.Session;
-import fadulousbms.managers.SessionManager;
 import fadulousbms.exceptions.LoginException;
 import fadulousbms.model.Employee;
 import fadulousbms.model.Screens;
@@ -119,6 +118,23 @@ public class LoginController extends Screen implements Initializable
                             Session session = RemoteComms.auth(usr, pwd);
                             SessionManager ssn_mgr = SessionManager.getInstance();
                             ssn_mgr.addSession(session);
+
+                            //load data to memory
+                            EmployeeManager.getInstance().loadDataFromServer();
+                            JobManager.getInstance().loadDataFromServer();
+                            ClientManager.getInstance().loadDataFromServer();
+                            SupplierManager.getInstance().loadDataFromServer();
+                            ResourceManager.getInstance().loadDataFromServer();
+                            QuoteManager.getInstance().loadDataFromServer();
+                            //QuoteManager.getInstance().initialize(screenManager);
+
+                            /*IO.log(getClass().getName(), IO.TAG_INFO,
+                                    "operations loaded? " + (screenManager.loadScreen(Screens.OPERATIONS.getScreen(),
+                                                            getClass().getResource("../views/"+Screens.OPERATIONS.getScreen()))==true));
+                            IO.log(getClass().getName(), IO.TAG_INFO,
+                                    "quotes loaded? " + (screenManager.loadScreen(Screens.QUOTES.getScreen(),
+                                            getClass().getResource("../views/"+Screens.QUOTES.getScreen()))==true));
+                            screenManager.peekScreenControllers().refresh();*/
 
                             if (screenManager.loadScreen(Screens.HOME.getScreen(), getClass().getResource("../views/" + Screens.HOME.getScreen())))
                             {

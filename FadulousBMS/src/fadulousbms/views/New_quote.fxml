@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import java.lang.*?>
 <?import javafx.scene.shape.*?>
 <?import javafx.scene.control.cell.*?>
 <?import javafx.scene.text.*?>
@@ -166,12 +167,12 @@
       </SplitPane>
        <TableView fx:id="tblQuoteItems" editable="true" prefHeight="200.0" prefWidth="200.0" tableMenuButtonVisible="true">
            <columns>
-               <TableColumn fx:id="colItemNumber" maxWidth="1.7976931348623157E308" minWidth="50.0" prefWidth="-1.0" text="Item">
+               <TableColumn fx:id="colItemNumber" maxWidth="1.7976931348623157E308" minWidth="70.0" prefWidth="-1.0" text="Item #">
                    <cellValueFactory>
                        <PropertyValueFactory property="item_number" />
                    </cellValueFactory>
                </TableColumn>
-            <TableColumn fx:id="colEquipmentName" maxWidth="1.7976931348623157E308" minWidth="150.0" prefWidth="200.0" text="Equipment Name">
+            <TableColumn fx:id="colEquipmentName" maxWidth="1.7976931348623157E308" minWidth="150.0" prefWidth="200.0" text="Brand Name">
                 <cellValueFactory>
                     <PropertyValueFactory property="equipment_name" />
                 </cellValueFactory>
@@ -192,7 +193,7 @@
                        <TextFieldTableCellOld fx:factory="forTableColumn" />
                    </cellFactory>-->
                </TableColumn>
-               <TableColumn fx:id="colQuantity" maxWidth="1.7976931348623157E308" minWidth="100.0" prefWidth="-1.0" text="Quantity">
+               <TableColumn fx:id="colQuantity" maxWidth="1.7976931348623157E308" minWidth="80.0" prefWidth="-1.0" text="Quantity">
                    <cellValueFactory>
                        <PropertyValueFactory property="quantity" />
                    </cellValueFactory>
@@ -216,7 +217,7 @@
                        <TextFieldTableCell fx:factory="forTableColumn" />
                    </cellFactory>
                </TableColumn>
-               <TableColumn fx:id="colValue" maxWidth="1.7976931348623157E308" minWidth="100.0" prefWidth="-1.0" text="Value">
+               <TableColumn fx:id="colValue" maxWidth="1.7976931348623157E308" minWidth="100.0" prefWidth="-1.0" text="Unit Cost">
                    <cellValueFactory>
                        <PropertyValueFactory property="value" />
                    </cellValueFactory>
