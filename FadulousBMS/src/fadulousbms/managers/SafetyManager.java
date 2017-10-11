@@ -43,7 +43,7 @@ public class SafetyManager extends BusinessObjectManager
     }
 
     @Override
-    public void initialize(ScreenManager screenManager)
+    public void initialize()
     {
         loadDataFromServer();
     }

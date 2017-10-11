@@ -51,7 +51,7 @@ public class AssetManager extends BusinessObjectManager
     }
 
     @Override
-    public void initialize(ScreenManager screenManager)
+    public void initialize()
     {
         loadDataFromServer();
     }

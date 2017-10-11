@@ -25,12 +25,18 @@ import java.util.ResourceBundle;
 public class PurchasesController extends Screen implements Initializable
 {
     @Override
-    public void refresh()
+    public void refreshView()
     {
         Employee e = SessionManager.getInstance().getActiveEmployee();
         if(e!=null)
             this.getUserNameLabel().setText(e.getFirstname() + " " + e.getLastname());
         else IO.log(getClass().getName(), IO.TAG_ERROR, "No active sessions.");
+    }
+
+    @Override
+    public void refreshModel()
+    {
+
     }
 
     /**
@@ -41,7 +47,7 @@ public class PurchasesController extends Screen implements Initializable
     {
         try
         {
-            AssetManager.getInstance().initialize(this.getScreenManager());
+            AssetManager.getInstance().initialize();
             defaultProfileImage = ImageIO.read(new File("images/profile.png"));
             Image image = SwingFXUtils.toFXImage(defaultProfileImage, null);
             this.getProfileImageView().setImage(image);
@@ -54,8 +60,8 @@ public class PurchasesController extends Screen implements Initializable
     @FXML
     public void stockClick()
     {
-        final ScreenManager screenManager = this.getScreenManager();
-        this.getScreenManager().showLoadingScreen(param ->
+        final ScreenManager screenManager = ScreenManager.getInstance();
+        ScreenManager.getInstance().showLoadingScreen(param ->
         {
             new Thread(new Runnable()
             {
@@ -82,8 +88,8 @@ public class PurchasesController extends Screen implements Initializable
     @FXML
     public void assetsClick()
     {
-        final ScreenManager screenManager = this.getScreenManager();
-        this.getScreenManager().showLoadingScreen(param ->
+        final ScreenManager screenManager = ScreenManager.getInstance();
+        ScreenManager.getInstance().showLoadingScreen(param ->
         {
             new Thread(new Runnable()
             {
@@ -110,8 +116,8 @@ public class PurchasesController extends Screen implements Initializable
     @FXML
     public void otherClick()
     {
-        final ScreenManager screenManager = this.getScreenManager();
-        this.getScreenManager().showLoadingScreen(param ->
+        final ScreenManager screenManager = ScreenManager.getInstance();
+        ScreenManager.getInstance().showLoadingScreen(param ->
         {
             new Thread(new Runnable()
             {

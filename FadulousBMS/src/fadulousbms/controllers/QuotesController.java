@@ -58,24 +58,9 @@ public class QuotesController extends OperationsController implements Initializa
                             colExtra,colAction;
 
     @Override
-    public void refresh()
+    public void refreshView()
     {
-        //Set Employee name
-        Employee e = SessionManager.getInstance().getActiveEmployee();
-        /*if(e!=null)
-            this.getUserNameLabel().setText(e.toString());
-        else IO.log(getClass().getName(), IO.TAG_ERROR, "No active sessions.");
-        //Set default profile photo
-        if(HomescreenController.defaultProfileImage!=null)
-        {
-            Image image = SwingFXUtils.toFXImage(HomescreenController.defaultProfileImage, null);
-            this.getProfileImageView().setImage(image);
-        }else IO.log(getClass().getName(), "default profile image is null.", IO.TAG_ERROR);*/
-
-        EmployeeManager.getInstance().loadDataFromServer();
-        ClientManager.getInstance().loadDataFromServer();
-        //QuoteManager.getInstance().initialize(this.getScreenManager());
-        QuoteManager.getInstance().loadDataFromServer();
+        IO.log(getClass().getName(), IO.TAG_INFO, "reloading quotes view..");
 
         colId.setCellValueFactory(new PropertyValueFactory<>("_id"));
         CustomTableViewControls.makeComboBoxTableColumn(colClient, ClientManager.getInstance().getClients(), "client_id", "client_name", "/api/quote", 180);
@@ -164,17 +149,6 @@ public class QuotesController extends OperationsController implements Initializa
                                             }).start();
                                             return null;
                                         });
-                                        //System.out.println("Successfully added material quote number " + quoteItem.getItem_number());
-                                        /*QuoteManager.getInstance().setSelectedQuote(getTableView().getItems().get(getIndex()));
-                                        try
-                                        {
-                                            if(screenManager.loadScreen(Screens.VIEW_QUOTE.getScreen(),getClass().getResource("../views/"+Screens.VIEW_QUOTE.getScreen())))
-                                                screenManager.setScreen(Screens.VIEW_QUOTE.getScreen());
-                                            else IO.log(getClass().getName(), IO.TAG_ERROR, "could not load quote viewing screen.");
-                                        } catch (IOException e)
-                                        {
-                                            IO.log(getClass().getName(), IO.TAG_ERROR, e.getMessage());
-                                        }*/
                                     });
 
                                     btnRemove.setOnAction(event ->
@@ -217,12 +191,26 @@ public class QuotesController extends OperationsController implements Initializa
         tblQuotes.setItems(FXCollections.observableArrayList(QuoteManager.getInstance().getQuotes()));
     }
 
+    @Override
+    public void refreshModel()
+    {
+        IO.log(getClass().getName(), IO.TAG_INFO, "reloading quotes data model..");
+
+        EmployeeManager.getInstance().loadDataFromServer();
+        ClientManager.getInstance().loadDataFromServer();
+        QuoteManager.getInstance().loadDataFromServer();
+    }
+
     /**
      * Initializes the controller class.
      */
     @Override
     public void initialize(URL url, ResourceBundle rb) 
     {
-        refresh();
+        new Thread(() ->
+        {
+            refreshModel();
+            Platform.runLater(() -> refreshView());
+        }).start();
     }
 }

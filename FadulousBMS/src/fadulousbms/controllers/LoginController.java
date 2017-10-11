@@ -50,7 +50,7 @@ public class LoginController extends Screen implements Initializable
     private TextField txtPwd = new TextField();
 
     @Override
-    public void refresh()
+    public void refreshView()
     {
         Employee e = SessionManager.getInstance().getActiveEmployee();
         if(e!=null)
@@ -58,16 +58,8 @@ public class LoginController extends Screen implements Initializable
         else IO.log(getClass().getName(), IO.TAG_ERROR, "No active sessions.");
 
         //this.getLoadingPane().setVisible(false);
-    }
-
-    /**
-     * Initializes the controller class.
-     */
-    @Override
-    public void initialize(URL url, ResourceBundle rb) 
-    {
         //TODO
-        txtUsr.setText("ghost");
+        txtUsr.setText("caspr");
         txtPwd.setText("12345678");
 
         try
@@ -85,13 +77,26 @@ public class LoginController extends Screen implements Initializable
         }
     }
 
+    @Override
+    public void refreshModel()
+    {
+    }
+
+    /**
+     * Initializes the controller class.
+     */
+    @Override
+    public void initialize(URL url, ResourceBundle rb) 
+    {
+    }
+
     @FXML
     public void resetPassword()
     {
         try
         {
-            if(this.getScreenManager().loadScreen(Screens.RESET_PWD.getScreen(),getClass().getResource("../views/"+Screens.RESET_PWD.getScreen())))
-                this.getScreenManager().setScreen(Screens.RESET_PWD.getScreen());
+            if(ScreenManager.getInstance().loadScreen(Screens.RESET_PWD.getScreen(),getClass().getResource("../views/"+Screens.RESET_PWD.getScreen())))
+                ScreenManager.getInstance().setScreen(Screens.RESET_PWD.getScreen());
             else IO.log(getClass().getName(), IO.TAG_ERROR, "could not load password reset screen.");
         } catch (IOException e)
         {
@@ -102,8 +107,8 @@ public class LoginController extends Screen implements Initializable
     @FXML
     public void login()
     {
-        final ScreenManager screenManager = this.getScreenManager();
-        this.getScreenManager().showLoadingScreen(param ->
+        final ScreenManager screenManager = ScreenManager.getInstance();
+        ScreenManager.getInstance().showLoadingScreen(param ->
         {
             new Thread(new Runnable()
             {
@@ -121,11 +126,11 @@ public class LoginController extends Screen implements Initializable
 
                             //load data to memory
                             EmployeeManager.getInstance().loadDataFromServer();
-                            JobManager.getInstance().loadDataFromServer();
-                            ClientManager.getInstance().loadDataFromServer();
-                            SupplierManager.getInstance().loadDataFromServer();
-                            ResourceManager.getInstance().loadDataFromServer();
-                            QuoteManager.getInstance().loadDataFromServer();
+                            //JobManager.getInstance().loadDataFromServer();
+                            //ClientManager.getInstance().loadDataFromServer();
+                            //SupplierManager.getInstance().loadDataFromServer();
+                            //ResourceManager.getInstance().loadDataFromServer();
+                            //QuoteManager.getInstance().loadDataFromServer();
                             //QuoteManager.getInstance().initialize(screenManager);
 
                             /*IO.log(getClass().getName(), IO.TAG_INFO,
@@ -136,10 +141,21 @@ public class LoginController extends Screen implements Initializable
                                             getClass().getResource("../views/"+Screens.QUOTES.getScreen()))==true));
                             screenManager.peekScreenControllers().refresh();*/
 
+                            //System.out.println(screenManager.loadScreen(Screens.HOME.getScreen(), getClass().getResource("../views/" + Screens.HOME.getScreen())));
                             if (screenManager.loadScreen(Screens.HOME.getScreen(), getClass().getResource("../views/" + Screens.HOME.getScreen())))
                             {
-                                Platform.runLater(() ->
-                                        screenManager.setScreen(Screens.HOME.getScreen()));
+                                /*Thread t = new Thread(() ->
+                                {
+                                    JobManager.getInstance().loadDataFromServer();
+                                    ClientManager.getInstance().loadDataFromServer();
+                                    SupplierManager.getInstance().loadDataFromServer();
+                                    ResourceManager.getInstance().loadDataFromServer();
+                                    QuoteManager.getInstance().loadDataFromServer();
+                                    QuoteManager.getInstance().initialize(screenManager);
+                                });
+                                t.start();*/
+                                //Platform.runLater(() ->
+                                screenManager.setScreen(Screens.HOME.getScreen());
                             } else IO.log(getClass().getName(), IO.TAG_ERROR, "could not load home screen.");
                         }else{
                             JOptionPane.showMessageDialog(null, "Invalid entry.", "Login failure", JOptionPane.ERROR_MESSAGE);

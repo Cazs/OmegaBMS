@@ -8,7 +8,6 @@ import fadulousbms.auxilary.RemoteComms;
 import fadulousbms.model.Employee;
 import fadulousbms.model.GenericQuote;
 import fadulousbms.model.GenericQuoteItem;
-import fadulousbms.model.Quote;
 import javafx.collections.ObservableList;
 
 import java.io.*;
@@ -37,7 +36,7 @@ public class GenericQuoteManager extends BusinessObjectManager
     }
 
     @Override
-    public void initialize(ScreenManager screenManager)
+    public void initialize()
     {
         loadDataFromServer();
     }
@@ -52,7 +51,7 @@ public class GenericQuoteManager extends BusinessObjectManager
             {
                 if (!smgr.getActive().isExpired())
                 {
-                    EmployeeManager.getInstance().initialize(screenManager);
+                    EmployeeManager.getInstance().initialize();
                     gson = new GsonBuilder().create();
                     ArrayList<AbstractMap.SimpleEntry<String, String>> headers = new ArrayList<>();
                     headers.add(new AbstractMap.SimpleEntry<>("Cookie", smgr.getActive().getSessionId()));

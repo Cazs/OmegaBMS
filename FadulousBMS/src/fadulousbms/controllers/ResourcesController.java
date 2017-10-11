@@ -9,18 +9,15 @@ import fadulousbms.auxilary.IO;
 import fadulousbms.auxilary.Screen;
 import fadulousbms.managers.ResourceManager;
 import fadulousbms.managers.ScreenManager;
-import fadulousbms.managers.SessionManager;
 import fadulousbms.model.*;
 import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-import javafx.embed.swing.SwingFXUtils;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.control.cell.TextFieldTableCell;
-import javafx.scene.image.Image;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
 import javafx.util.Callback;
@@ -43,22 +40,9 @@ public class ResourcesController extends Screen implements Initializable
                         colQuantity,colDateAcquired,colDateExhausted,colOther,colAction;
 
     @Override
-    public void refresh()
+    public void refreshView()
     {
-        ResourceManager.getInstance().initialize(this.getScreenManager());
-
-        //Set Employee name
-        /*Employee e = SessionManager.getInstance().getActiveEmployee();
-        if(e!=null)
-            this.getUserNameLabel().setText(e.toString());
-        else IO.log(getClass().getName(), IO.TAG_ERROR, "No active sessions.");
-        //Set Employee profile photo
-        //Set default profile photo
-        if(HomescreenController.defaultProfileImage!=null)
-        {
-            Image image = SwingFXUtils.toFXImage(HomescreenController.defaultProfileImage, null);
-            this.getProfileImageView().setImage(image);
-        }else IO.log(getClass().getName(), "default profile image is null.", IO.TAG_ERROR);*/
+        IO.log(getClass().getName(), IO.TAG_INFO, "reloading resources/materials view..");
 
         colId.setMinWidth(100);
         colId.setCellValueFactory(new PropertyValueFactory<>("_id"));
@@ -78,7 +62,6 @@ public class ResourcesController extends Screen implements Initializable
         lst_resources.addAll(ResourceManager.getInstance().getResources());
         tblResources.setItems(lst_resources);
 
-        final ScreenManager screenManager = this.getScreenManager();
         Callback<TableColumn<Resource, String>, TableCell<Resource, String>> cellFactory
                 =
                 new Callback<TableColumn<Resource, String>, TableCell<Resource, String>>()
@@ -151,20 +134,31 @@ public class ResourcesController extends Screen implements Initializable
                 ResourceManager.getInstance().setSelected(tblResources.getSelectionModel().getSelectedItem()));
     }
 
+    @Override
+    public void refreshModel()
+    {
+        IO.log(getClass().getName(), IO.TAG_INFO, "reloading resources data model..");
+        ResourceManager.getInstance().initialize();
+    }
+
     /**
      * Initializes the controller class.
      */
     @Override
     public void initialize(URL url, ResourceBundle rb) 
     {
-        refresh();
+        new Thread(() ->
+        {
+            refreshModel();
+            Platform.runLater(() -> refreshView());
+        }).start();
     }
 
     @FXML
     public void createResourceClick()
     {
-        final ScreenManager screenManager = this.getScreenManager();
-        this.getScreenManager().showLoadingScreen(param ->
+        final ScreenManager screenManager = ScreenManager.getInstance();
+        ScreenManager.getInstance().showLoadingScreen(param ->
         {
             new Thread(new Runnable()
             {

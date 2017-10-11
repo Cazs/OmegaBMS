@@ -6,34 +6,24 @@
 package fadulousbms.controllers;
 
 import fadulousbms.auxilary.IO;
-import fadulousbms.auxilary.PDF;
 import fadulousbms.auxilary.Screen;
 import fadulousbms.managers.*;
 import fadulousbms.model.*;
 import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-import javafx.embed.swing.SwingFXUtils;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
-import javafx.scene.Group;
-import javafx.scene.Scene;
 import javafx.scene.control.*;
-import javafx.scene.control.cell.CheckBoxTableCell;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.control.cell.TextFieldTableCell;
-import javafx.scene.image.Image;
-import javafx.scene.image.ImageView;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
-import javafx.stage.Stage;
 import javafx.util.Callback;
 
 import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 /**
  * views Controller class
@@ -50,21 +40,9 @@ public class JobsController extends Screen implements Initializable
                             colDateAssigned,colDateStarted,colDateEnded,colCreator,colExtra,colAction;
 
     @Override
-    public void refresh()
+    public void refreshView()
     {
-        //Set Employee name
-        Employee e = SessionManager.getInstance().getActiveEmployee();
-        /*if(e!=null)
-            this.getUserNameLabel().setText(e.toString());
-        else IO.log(getClass().getName(), IO.TAG_ERROR, "No active sessions.");*/
-        //Set default profile photo
-        /*if(HomescreenController.defaultProfileImage!=null)
-        {
-            Image image = SwingFXUtils.toFXImage(HomescreenController.defaultProfileImage, null);
-            this.getProfileImageView().setImage(image);
-        }else IO.log(getClass().getName(), "default profile image is null.", IO.TAG_ERROR);*/
-
-        JobManager.getInstance().initialize(this.getScreenManager());
+        IO.log(getClass().getName(), IO.TAG_INFO, "reloading jobs view..");
 
         colJobNum.setMinWidth(100);
         colJobNum.setCellValueFactory(new PropertyValueFactory<>("job_number"));
@@ -78,6 +56,7 @@ public class JobsController extends Screen implements Initializable
         CustomTableViewControls.makeLabelledDatePickerTableColumn(colDateAssigned, "date_assigned", "/api/job");
         CustomTableViewControls.makeLabelledDatePickerTableColumn(colDateStarted, "date_started", "/api/job");
         CustomTableViewControls.makeLabelledDatePickerTableColumn(colDateEnded, "date_completed", "/api/job");
+        colTotal.setCellValueFactory(new PropertyValueFactory<>("total"));
         CustomTableViewControls.makeJobManagerAction(colAction, 80, null);
         //colCreator.setCellValueFactory(new PropertyValueFactory<>("creator"));
         //TODO: creatorProperty
@@ -239,68 +218,23 @@ public class JobsController extends Screen implements Initializable
                 JobManager.getInstance().setSelectedJob(tblJobs.getSelectionModel().getSelectedItem()));
     }
 
+    @Override
+    public void refreshModel()
+    {
+        IO.log(getClass().getName(), IO.TAG_INFO, "reloading jobs data model..");
+        JobManager.getInstance().initialize();
+    }
+
     /**
      * Initializes the controller class.
      */
     @Override
     public void initialize(URL url, ResourceBundle rb) 
     {
-        refresh();
-        /*colAction.setCellFactory(new ButtonTableCellFactory<>());
-
-        colAction.setCellValueFactory(new PropertyValueFactory<>(""));
-
-        Callback<TableColumn<QuoteItem, String>, TableCell<QuoteItem, String>> cellFactory
-                =
-                new Callback<TableColumn<QuoteItem, String>, TableCell<QuoteItem, String>>()
-                {
-                    @Override
-                    public TableCell call(final TableColumn<QuoteItem, String> param)
-                    {
-                        final TableCell<QuoteItem, String> cell = new TableCell<QuoteItem, String>()
-                        {
-                            final Button btnAdd = new Button("Add materials");
-                            final Button btnRemove = new Button("Remove item");
-
-                            @Override
-                            public void updateItem(String item, boolean empty)
-                            {
-                                super.updateItem(item, empty);
-
-                                if (empty)
-                                {
-                                    setGraphic(null);
-                                    setText(null);
-                                } else
-                                {
-                                    HBox hBox = new HBox(btnAdd, btnRemove);
-
-                                    btnAdd.setOnAction(event ->
-                                    {
-                                        QuoteItem quoteItem = getTableView().getItems().get(getIndex());
-                                        addQuoteItemAdditionalMaterial(quoteItem);
-                                        System.out.println("Successfully added material quote number " + quoteItem.getItem_number());
-                                    });
-
-                                    btnRemove.setOnAction(event ->
-                                    {
-                                        QuoteItem quoteItem = getTableView().getItems().get(getIndex());
-                                        getTableView().getItems().remove(quoteItem);
-                                        System.out.println("Successfully removed quote item " + quoteItem.getItem_number());
-                                    });
-
-                                    hBox.setFillHeight(true);
-                                    HBox.setHgrow(hBox, Priority.ALWAYS);
-                                    hBox.setSpacing(5);
-                                    setGraphic(hBox);
-                                    setText(null);
-                                }
-                            }
-                        };
-                    return cell;
-                    }
-                };
-
-        colAction.setCellFactory(cellFactory);*/
+        new Thread(() ->
+        {
+            refreshModel();
+            Platform.runLater(() -> refreshView());
+        }).start();
     }
 }

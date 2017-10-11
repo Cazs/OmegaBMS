@@ -10,7 +10,7 @@ import java.io.*;
  */
 public abstract class BusinessObjectManager
 {
-    public abstract void initialize(ScreenManager screenManager);
+    public abstract void initialize();
 
     public boolean isSerialized(String path)
     {

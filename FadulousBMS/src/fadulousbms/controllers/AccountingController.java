@@ -36,12 +36,17 @@ import java.util.ResourceBundle;
 public class AccountingController extends Screen implements Initializable
 {
     @Override
-    public void refresh()
+    public void refreshView()
     {
         Employee e = SessionManager.getInstance().getActiveEmployee();
         if(e!=null)
             this.getUserNameLabel().setText(e.getFirstname() + " " + e.getLastname());
         else IO.log(getClass().getName(), IO.TAG_ERROR, "No active sessions.");
+    }
+
+    @Override
+    public void refreshModel()
+    {
     }
 
     /**
@@ -52,7 +57,7 @@ public class AccountingController extends Screen implements Initializable
     {
         try
         {
-            AssetManager.getInstance().initialize(this.getScreenManager());
+            AssetManager.getInstance().initialize();
             defaultProfileImage = ImageIO.read(new File("images/profile.png"));
             Image image = SwingFXUtils.toFXImage(defaultProfileImage, null);
             this.getProfileImageView().setImage(image);
@@ -60,14 +65,14 @@ public class AccountingController extends Screen implements Initializable
         {
             IO.log(getClass().getName(), IO.TAG_ERROR, e.getMessage());
         }
-        refresh();
+        //refreshView();
     }
 
     @FXML
     public void purchasesClick()
     {
-        final ScreenManager screenManager = this.getScreenManager();
-        this.getScreenManager().showLoadingScreen(param ->
+        final ScreenManager screenManager = ScreenManager.getInstance();
+        ScreenManager.getInstance().showLoadingScreen(param ->
         {
             new Thread(new Runnable()
             {
@@ -94,8 +99,8 @@ public class AccountingController extends Screen implements Initializable
     @FXML
     public void invoicesClick()
     {
-        final ScreenManager screenManager = this.getScreenManager();
-        this.getScreenManager().showLoadingScreen(param ->
+        final ScreenManager screenManager = ScreenManager.getInstance();
+        ScreenManager.getInstance().showLoadingScreen(param ->
         {
             new Thread(new Runnable()
             {
@@ -182,8 +187,8 @@ public class AccountingController extends Screen implements Initializable
             }
             //stage.close();
         });
-        /*final ScreenManager screenManager = this.getScreenManager();
-        this.getScreenManager().showLoadingScreen(param ->
+        /*final ScreenManager screenManager = ScreenManager.getInstance();
+        ScreenManager.getInstance().showLoadingScreen(param ->
         {
             new Thread(new Runnable()
             {
@@ -278,8 +283,8 @@ public class AccountingController extends Screen implements Initializable
             }
             //stage.close();
         });
-        /*final ScreenManager screenManager = this.getScreenManager();
-        this.getScreenManager().showLoadingScreen(param ->
+        /*final ScreenManager screenManager = ScreenManager.getInstance();
+        ScreenManager.getInstance().showLoadingScreen(param ->
         {
             new Thread(new Runnable()
             {
@@ -314,8 +319,8 @@ public class AccountingController extends Screen implements Initializable
     @FXML
     public void additionalRevenueClick()
     {
-        final ScreenManager screenManager = this.getScreenManager();
-        this.getScreenManager().showLoadingScreen(param ->
+        final ScreenManager screenManager = ScreenManager.getInstance();
+        ScreenManager.getInstance().showLoadingScreen(param ->
         {
             new Thread(new Runnable()
             {
@@ -329,6 +334,91 @@ public class AccountingController extends Screen implements Initializable
                             Platform.runLater(() ->
                                     screenManager.setScreen(Screens.ADDITIONAL_REVENUE.getScreen()));
                         } else IO.log(getClass().getName(), IO.TAG_ERROR, "could not load additional revenue screen.");
+                    } catch (IOException e)
+                    {
+                        IO.log(getClass().getName(), IO.TAG_ERROR, e.getMessage());
+                    }
+                }
+            }).start();
+            return null;
+        });
+    }
+
+    //Menu bar
+    @FXML
+    public void createAssetClick()
+    {
+        final ScreenManager screenManager = ScreenManager.getInstance();
+        ScreenManager.getInstance().showLoadingScreen(param ->
+        {
+            new Thread(new Runnable()
+            {
+                @Override
+                public void run()
+                {
+                    try
+                    {
+                        if(screenManager.loadScreen(Screens.NEW_ASSET.getScreen(),getClass().getResource("../views/"+Screens.NEW_ASSET.getScreen())))
+                        {
+                            Platform.runLater(() ->
+                                    screenManager.setScreen(Screens.NEW_ASSET.getScreen()));
+                        } else IO.log(getClass().getName(), IO.TAG_ERROR, "could not load asset creation screen.");
+                    } catch (IOException e)
+                    {
+                        IO.log(getClass().getName(), IO.TAG_ERROR, e.getMessage());
+                    }
+                }
+            }).start();
+            return null;
+        });
+    }
+
+    @FXML
+    public void newExpenseClick()
+    {
+        final ScreenManager screenManager = ScreenManager.getInstance();
+        ScreenManager.getInstance().showLoadingScreen(param ->
+        {
+            new Thread(new Runnable()
+            {
+                @Override
+                public void run()
+                {
+                    try
+                    {
+                        if(screenManager.loadScreen(Screens.NEW_EXPENSE.getScreen(),getClass().getResource("../views/"+Screens.NEW_EXPENSE.getScreen())))
+                        {
+                            Platform.runLater(() ->
+                                    screenManager.setScreen(Screens.NEW_EXPENSE.getScreen()));
+                        } else IO.log(getClass().getName(), IO.TAG_ERROR, "could not load expense creation screen.");
+                    } catch (IOException e)
+                    {
+                        IO.log(getClass().getName(), IO.TAG_ERROR, e.getMessage());
+                    }
+                }
+            }).start();
+            return null;
+        });
+    }
+
+    @FXML
+    public void newRevenueClick()
+    {
+        final ScreenManager screenManager = ScreenManager.getInstance();
+        ScreenManager.getInstance().showLoadingScreen(param ->
+        {
+            new Thread(new Runnable()
+            {
+                @Override
+                public void run()
+                {
+                    try
+                    {
+                        if(screenManager.loadScreen(Screens.NEW_REVENUE.getScreen(),getClass().getResource("../views/"+Screens.NEW_REVENUE.getScreen())))
+                        {
+                            Platform.runLater(() ->
+                                    screenManager.setScreen(Screens.NEW_REVENUE.getScreen()));
+                        } else IO.log(getClass().getName(), IO.TAG_ERROR, "could not load additional revenue creation screen.");
                     } catch (IOException e)
                     {
                         IO.log(getClass().getName(), IO.TAG_ERROR, e.getMessage());

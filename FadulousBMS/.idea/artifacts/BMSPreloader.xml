@@ -1,8 +1,0 @@
-<component name="ArtifactManager">
-  <artifact type="javafx-preloader" build-on-make="true" name="BMSPreloader">
-    <output-path>$PROJECT_DIR$/out/artifacts/BMSPreloader</output-path>
-    <root id="archive" name="BMSPreloader.jar">
-      <element id="module-output" name="BMSPreloader" />
-    </root>
-  </artifact>
-</component>

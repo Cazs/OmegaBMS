@@ -146,9 +146,9 @@
                           <cellValueFactory>
                               <PropertyValueFactory property="_id" />
                           </cellValueFactory>
-                      </TableColumn>
+                        </TableColumn>
                         <TableColumn fx:id="colLastname" maxWidth="1.7976931348623157E308" minWidth="120.0" prefWidth="-1.0" text="Last Name" />
-                      <TableColumn fx:id="colCell" maxWidth="1.7976931348623157E308" minWidth="120.0" prefWidth="-1.0" text="Cell No." />
+                        <TableColumn fx:id="colCell" maxWidth="1.7976931348623157E308" minWidth="120.0" prefWidth="-1.0" text="Cell No." />
                         <TableColumn fx:id="colTel" maxWidth="1.7976931348623157E308" minWidth="120.0" prefWidth="-1.0" text="Tel No." visible="false" />
                         <TableColumn fx:id="colEmail" maxWidth="1.7976931348623157E308" minWidth="120.0" prefWidth="-1.0" text="eMail" />
                         <TableColumn fx:id="colGender" maxWidth="1.7976931348623157E308" minWidth="120.0" prefWidth="-1.0" text="Gender" visible="false" />
@@ -233,9 +233,12 @@
                        <TextFieldTableCell fx:factory="forTableColumn" />
                    </cellFactory>
                </TableColumn>
-               <TableColumn fx:id="colAction" maxWidth="1.7976931348623157E308" minWidth="250.0" prefWidth="-1.0" text="Action">
-                  
+               <TableColumn fx:id="colTotal" maxWidth="1.7976931348623157E308" minWidth="100.0" prefWidth="-1.0" text="Total">
+                   <cellValueFactory>
+                       <PropertyValueFactory property="total" />
+                   </cellValueFactory>
                </TableColumn>
+               <TableColumn fx:id="colAction" maxWidth="1.7976931348623157E308" minWidth="250.0" prefWidth="-1.0" text="Action"/>
            </columns>
        </TableView>
       <HBox>

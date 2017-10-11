@@ -288,9 +288,10 @@ public class RemoteComms
                     }
                 } else IO.log(TAG, IO.TAG_ERROR, "Invalid BusinessObject ID");
             }else{
-                JOptionPane.showMessageDialog(null, "No active sessions.", "Session expired", JOptionPane.ERROR_MESSAGE);
+                IO.logAndAlert("Session expired", "No active sessions.", IO.TAG_ERROR);
             }
         }else{
+            IO.logAndAlert("Error", "Connection to server was interrupted.", IO.TAG_ERROR);
             JOptionPane.showMessageDialog(null, "No active sessions.", "Session expired", JOptionPane.ERROR_MESSAGE);
         }
     }

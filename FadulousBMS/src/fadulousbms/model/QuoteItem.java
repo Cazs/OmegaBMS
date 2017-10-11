@@ -1,5 +1,6 @@
 package fadulousbms.model;
 
+import fadulousbms.auxilary.Globals;
 import fadulousbms.auxilary.IO;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
@@ -24,8 +25,6 @@ public class QuoteItem implements BusinessObject, Serializable
     private double labour;
     private double value;
     private double markup;
-    transient private double total_value;
-    transient private double ex_total_value;
     private String additional_costs;
     private Resource resource;
     private boolean marked;
@@ -252,18 +251,6 @@ public class QuoteItem implements BusinessObject, Serializable
         this.extra = extra;
     }
 
-    private StringProperty total_valueProperty(){return new SimpleStringProperty(String.valueOf(total_value));}
-
-    public double getTotal_value(){return this.total_value;}
-
-    public void setTotal_value(double total_value){this.total_value=total_value;}
-
-    private StringProperty ex_total_valueProperty(){return new SimpleStringProperty(String.valueOf(ex_total_value));}
-
-    public double getEx_total_value(){return this.ex_total_value;}
-
-    public void setEx_total_value(double ex_total_value){this.ex_total_value=ex_total_value;}
-
     /*public Resource[] getAdditionalResources()
     {
         return additional_resources;
@@ -291,6 +278,46 @@ public class QuoteItem implements BusinessObject, Serializable
     public void setResource(Resource resource)
     {
         this.resource=resource;
+    }
+
+    public StringProperty totalProperty()
+    {
+        return new SimpleStringProperty(Globals.CURRENCY_SYMBOL.getValue() + " " + getTotal());
+    }
+
+    public double getTotal()
+    {
+        //Compute total
+        double rate = value + value*(markup/100);
+        double total = rate*quantity;
+        total += labour;
+
+        //check additional costs
+        if (additional_costs != null)
+        {
+            if (!additional_costs.isEmpty())
+            {
+                //compute additional costs for each Quote Item
+                if(additional_costs.contains(";"))//check cost delimiter
+                {
+                    String[] costs = additional_costs.split(";");
+                    for (String str_cost : costs)
+                    {
+                        if (str_cost.contains("="))
+                        {
+                            double cost = Double.parseDouble(str_cost.split("=")[1]);
+                            total += cost;
+                        }
+                        else IO.log(getClass().getName(), IO.TAG_ERROR, "invalid Quote Item additional cost.");
+                    }
+                }else if (additional_costs.contains("="))//if only one additional cost
+                {
+                    double cost = Double.parseDouble(additional_costs.split("=")[1]);
+                    total += cost;
+                }else IO.log(getClass().getName(), IO.TAG_ERROR, "invalid Quote Item additional cost.");
+            }
+        }
+        return total;
     }
 
     @Override
@@ -336,12 +363,6 @@ public class QuoteItem implements BusinessObject, Serializable
                 case "extra":
                     extra = String.valueOf(val);
                     break;
-                case "total_value":
-                    total_value = Double.parseDouble((String)val);
-                    break;
-                case "ex_total_value":
-                    ex_total_value = Double.parseDouble((String)val);
-                    break;
                 default:
                     IO.log(getClass().getName(), IO.TAG_ERROR, "Unknown QuoteItem attribute '" + var + "'.");
                     break;
@@ -383,10 +404,6 @@ public class QuoteItem implements BusinessObject, Serializable
                 return markup;
             case "extra":
                 return extra;
-            case "total_value":
-                return total_value;
-            case "ex_total_value":
-                return ex_total_value;
             default:
                 System.err.println("Unknown QuoteItem attribute '" + var + "'.");
                 return null;
@@ -414,8 +431,9 @@ public class QuoteItem implements BusinessObject, Serializable
                     + URLEncoder.encode(String.valueOf(item_number), "UTF-8") + "&");
             result.append(URLEncoder.encode("equipment_description","UTF-8") + "="
                     + URLEncoder.encode(equipment_description, "UTF-8") + "&");
-            result.append(URLEncoder.encode("additional_costs","UTF-8") + "="
-                    + URLEncoder.encode(additional_costs, "UTF-8") + "&");
+            if(additional_costs!=null)
+                result.append(URLEncoder.encode("additional_costs","UTF-8") + "="
+                        + URLEncoder.encode(additional_costs, "UTF-8") + "&");
             result.append(URLEncoder.encode("unit","UTF-8") + "="
                     + URLEncoder.encode(unit, "UTF-8") + "&");
             result.append(URLEncoder.encode("quantity","UTF-8") + "="

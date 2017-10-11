@@ -5,36 +5,26 @@
  */
 package fadulousbms.controllers;
 
-import fadulousbms.auxilary.Globals;
 import fadulousbms.auxilary.IO;
 import fadulousbms.auxilary.Screen;
-import fadulousbms.managers.ClientManager;
 import fadulousbms.managers.ScreenManager;
-import fadulousbms.managers.SessionManager;
 import fadulousbms.managers.SupplierManager;
 import fadulousbms.model.*;
+import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-import javafx.embed.swing.SwingFXUtils;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
-import javafx.scene.Group;
-import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.control.cell.TextFieldTableCell;
-import javafx.scene.image.Image;
-import javafx.scene.image.ImageView;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
-import javafx.stage.Stage;
 import javafx.util.Callback;
 
 import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 /**
  * views Controller class
@@ -51,22 +41,9 @@ public class SuppliersController extends Screen implements Initializable
                             colSupplierDatePartnered,colSupplierWebsite,colSupplierOther,colAction;
 
     @Override
-    public void refresh()
+    public void refreshView()
     {
-        SupplierManager.getInstance().initialize(this.getScreenManager());
-
-        //Set Employee name
-        /*Employee e = SessionManager.getInstance().getActiveEmployee();
-        if(e!=null)
-            this.getUserNameLabel().setText(e.toString());
-        else IO.log(getClass().getName(), IO.TAG_ERROR, "No active sessions.");
-        //Set Employee profile photo
-        //Set default profile photo
-        if(HomescreenController.defaultProfileImage!=null)
-        {
-            Image image = SwingFXUtils.toFXImage(HomescreenController.defaultProfileImage, null);
-            this.getProfileImageView().setImage(image);
-        }else IO.log(getClass().getName(), "default profile image is null.", IO.TAG_ERROR);*/
+        IO.log(getClass().getName(), IO.TAG_INFO, "reloading suppliers view..");
 
         colSupplierId.setMinWidth(100);
         colSupplierId.setCellValueFactory(new PropertyValueFactory<>("_id"));
@@ -85,7 +62,7 @@ public class SuppliersController extends Screen implements Initializable
         lst_suppliers.addAll(SupplierManager.getInstance().getSuppliers());
         tblSuppliers.setItems(lst_suppliers);
 
-        final ScreenManager screenManager = this.getScreenManager();
+        final ScreenManager screenManager = ScreenManager.getInstance();
         Callback<TableColumn<Supplier, String>, TableCell<Supplier, String>> cellFactory
                 =
                 new Callback<TableColumn<Supplier, String>, TableCell<Supplier, String>>()
@@ -158,13 +135,24 @@ public class SuppliersController extends Screen implements Initializable
                 SupplierManager.getInstance().setSelected(tblSuppliers.getSelectionModel().getSelectedItem()));
     }
 
+    @Override
+    public void refreshModel()
+    {
+        IO.log(getClass().getName(), IO.TAG_INFO, "reloading suppliers data model..");
+        SupplierManager.getInstance().initialize();
+    }
+
     /**
      * Initializes the controller class.
      */
     @Override
     public void initialize(URL url, ResourceBundle rb) 
     {
-        refresh();
+        new Thread(() ->
+        {
+            refreshModel();
+            Platform.runLater(() -> refreshView());
+        }).start();
     }
 
     @FXML
@@ -172,8 +160,8 @@ public class SuppliersController extends Screen implements Initializable
     {
         try
         {
-            if(this.getScreenManager().loadScreen(Screens.NEW_SUPPLIER.getScreen(),getClass().getResource("../views/"+Screens.NEW_SUPPLIER.getScreen())))
-                this.getScreenManager().setScreen(Screens.NEW_SUPPLIER.getScreen());
+            if(ScreenManager.getInstance().loadScreen(Screens.NEW_SUPPLIER.getScreen(),getClass().getResource("../views/"+Screens.NEW_SUPPLIER.getScreen())))
+                ScreenManager.getInstance().setScreen(Screens.NEW_SUPPLIER.getScreen());
             else IO.log(getClass().getName(), IO.TAG_ERROR, "could not load supplier creation screen.");
         } catch (IOException e)
         {

@@ -5,9 +5,11 @@ import fadulousbms.auxilary.RemoteComms;
 import fadulousbms.auxilary.Screen;
 import fadulousbms.auxilary.Validators;
 import fadulousbms.managers.ClientManager;
+import fadulousbms.managers.ScreenManager;
 import fadulousbms.managers.SessionManager;
 import fadulousbms.managers.SupplierManager;
 import fadulousbms.model.Client;
+import fadulousbms.model.Screens;
 import fadulousbms.model.Supplier;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -42,8 +44,14 @@ public class NewClientController extends Screen implements Initializable
     private TextArea txtPhysical,txtPostal;
 
     @Override
-    public void refresh()
+    public void refreshView()
     {
+    }
+
+    @Override
+    public void refreshModel()
+    {
+
     }
 
     /**
@@ -152,5 +160,33 @@ public class NewClientController extends Screen implements Initializable
         {
             IO.logAndAlert(getClass().getName(), e.getMessage(), IO.TAG_ERROR);
         }
+    }
+
+    @FXML
+    public void previousScreen()
+    {
+        final ScreenManager screenManager = ScreenManager.getInstance();
+        ScreenManager.getInstance().showLoadingScreen(param ->
+        {
+            new Thread(new Runnable()
+            {
+                @Override
+                public void run()
+                {
+                    try
+                    {
+                        if(screenManager.loadScreen(Screens.OPERATIONS.getScreen(),getClass().getResource("../views/"+Screens.OPERATIONS.getScreen())))
+                        {
+                            //Platform.runLater(() ->
+                            screenManager.setScreen(Screens.OPERATIONS.getScreen());
+                        } else IO.log(getClass().getName(), IO.TAG_ERROR, "could not load operations screen.");
+                    } catch (IOException e)
+                    {
+                        IO.log(getClass().getName(), IO.TAG_ERROR, e.getMessage());
+                    }
+                }
+            }).start();
+            return null;
+        });
     }
 }

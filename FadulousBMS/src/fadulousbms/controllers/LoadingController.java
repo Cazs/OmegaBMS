@@ -44,7 +44,7 @@ public class LoadingController extends Screen implements Initializable
     private Label lblLoading;
 
     @Override
-    public void refresh()
+    public void refreshView()
     {
         Employee e = SessionManager.getInstance().getActiveEmployee();
         if(e!=null)
@@ -56,6 +56,12 @@ public class LoadingController extends Screen implements Initializable
             Image image = SwingFXUtils.toFXImage(Screen.defaultProfileImage, null);
             this.getProfileImageView().setImage(image);
         }else IO.log("LoadingController", "default profile image is null.", IO.TAG_ERROR);
+    }
+
+    @Override
+    public void refreshModel()
+    {
+
     }
 
     /**

@@ -46,11 +46,13 @@ const employeeSchema = mongoose.Schema(
     },
     date_joined:{
       type:Number,
-      required:true
+      required:false,
+      default: Math.floor(new Date().getTime()/1000)//epoch seconds
     },
     active:{
       type:Boolean,
-      required:true
+      required:false,
+      default:true//TODO: default to false
     },
     other:{
       type:String,
@@ -85,14 +87,14 @@ module.exports.add = function(employee, callback)
       if(employee.access_level>access_levels.ADMIN)//creating super user account
       {
         //check if super user account exists
-        Employees.findOne({access_level:3}, function(err, employee)
+        Employees.findOne({access_level:3}, function(err, res_employee)
         {
           if(err)
           {
             callback(err);
             return;
           }
-          if(employee)
+          if(res_employee)
           {
             callback(new Error('super user account already exists.'));
             return;
@@ -100,6 +102,10 @@ module.exports.add = function(employee, callback)
           //set date_joined & active status - vericodes
           //creating super user account
           console.log('info: creating a super user account.');
+          var sha = crypto.createHash('sha1');
+          var pwd = employee.pwd;
+          employee.pwd = sha.update(pwd).digest('hex');
+          Employees.create(employee, callback);
         });
       }else{
         //set date_joined & active status - vericodes
@@ -111,9 +117,6 @@ module.exports.add = function(employee, callback)
       //creating normal account
     }
   }
-  /*var sha = crypto.createHash('sha1');
-  employee.pwd = sha.update(employee.pwd).digest('hex');
-  Employees.create(employee, callback);*/
 };
 
 module.exports.update = function(employee_id,employee,callback)

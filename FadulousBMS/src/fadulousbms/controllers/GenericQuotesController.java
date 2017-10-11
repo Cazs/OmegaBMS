@@ -6,7 +6,6 @@
 package fadulousbms.controllers;
 
 import fadulousbms.auxilary.IO;
-import fadulousbms.auxilary.PDF;
 import fadulousbms.auxilary.Screen;
 import fadulousbms.managers.*;
 import fadulousbms.model.*;
@@ -18,7 +17,6 @@ import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.control.cell.TextFieldTableCell;
 import javafx.scene.image.Image;
-import javafx.scene.image.ImageView;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
 import javafx.util.Callback;
@@ -43,7 +41,7 @@ public class GenericQuotesController extends Screen implements Initializable
                             colGenericQuoteExtra,colGenericQuoteAction;
 
     @Override
-    public void refresh()
+    public void refreshView()
     {
         //Set Employee name
         Employee e = SessionManager.getInstance().getActiveEmployee();
@@ -56,8 +54,6 @@ public class GenericQuotesController extends Screen implements Initializable
             Image image = SwingFXUtils.toFXImage(HomescreenController.defaultProfileImage, null);
             this.getProfileImageView().setImage(image);
         }else IO.log(getClass().getName(), "default profile image is null.", IO.TAG_ERROR);
-
-        GenericQuoteManager.getInstance().initialize(this.getScreenManager());
 
         //Set up pending quotes table
         colGenericQuoteNumber.setCellValueFactory(new PropertyValueFactory<>("_id"));
@@ -75,7 +71,7 @@ public class GenericQuotesController extends Screen implements Initializable
         colGenericQuoteCreator.setCellValueFactory(new PropertyValueFactory<>("creator"));
         CustomTableViewControls.makeEditableTableColumn(colGenericQuoteExtra, TextFieldTableCell.forTableColumn(), 100, "extra", "/api/quote/generic");
 
-        final ScreenManager screenManager = this.getScreenManager();
+        final ScreenManager screenManager = ScreenManager.getInstance();
         Callback colGenericCellFactory
                 =
                 new Callback<TableColumn<GenericQuote, String>, TableCell<GenericQuote, String>>()
@@ -173,6 +169,12 @@ public class GenericQuotesController extends Screen implements Initializable
             if(genericQuote.getStatus()==0)//if pending
                 accepted_quotes.add(genericQuote);
         tblGenericQuotes.setItems(FXCollections.observableArrayList(accepted_quotes));
+    }
+
+    @Override
+    public void refreshModel()
+    {
+        GenericQuoteManager.getInstance().initialize();
     }
 
     /**

@@ -45,8 +45,14 @@ public class NewRevenueController extends Screen implements Initializable
     private DatePicker dateLogged;
 
     @Override
-    public void refresh()
+    public void refreshView()
     {
+    }
+
+    @Override
+    public void refreshModel()
+    {
+
     }
 
     /**

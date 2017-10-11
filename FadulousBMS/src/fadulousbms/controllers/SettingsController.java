@@ -55,7 +55,7 @@ public class SettingsController extends Screen implements Initializable
     private ImageView img_logo;
 
     @Override
-    public void refresh()
+    public void refreshView()
     {
         txtIP.setText("127.0.0.1");
         txtPort.setText("9000");
@@ -95,6 +95,12 @@ public class SettingsController extends Screen implements Initializable
         if(e!=null)
             this.getUserNameLabel().setText(e.getFirstname() + " " + e.getLastname());
         else IO.log(getClass().getName(), IO.TAG_ERROR, "No active sessions.");
+    }
+
+    @Override
+    public void refreshModel()
+    {
+
     }
 
     /**

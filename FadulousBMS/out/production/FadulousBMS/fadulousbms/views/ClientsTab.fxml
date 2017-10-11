@@ -21,7 +21,7 @@
                         <PropertyValueFactory property="physical_address" />
                     </cellValueFactory>
                 </TableColumn>
-                <TableColumn fx:id="colClientPostalAddress" maxWidth="1.7976931348623157E308" minWidth="150.0" prefWidth="-1.0" text="Postal Address" visible="true">
+                <TableColumn fx:id="colClientPostalAddress" maxWidth="1.7976931348623157E308" minWidth="150.0" prefWidth="-1.0" text="Postal Address">
                     <cellValueFactory>
                         <PropertyValueFactory property="postal_address" />
                     </cellValueFactory>
@@ -56,8 +56,7 @@
                         <PropertyValueFactory property="other" />
                     </cellValueFactory>
                 </TableColumn>
-                <TableColumn fx:id="colAction" maxWidth="1.7976931348623157E308" minWidth="150.0" prefWidth="-1.0" text="Action">
-                </TableColumn>
+                <TableColumn fx:id="colAction" maxWidth="1.7976931348623157E308" minWidth="150.0" prefWidth="-1.0" text="Action"/>
             </columns>
         </TableView>
     </content>

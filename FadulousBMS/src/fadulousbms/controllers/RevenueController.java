@@ -11,7 +11,6 @@ import fadulousbms.managers.*;
 import fadulousbms.model.*;
 import javafx.application.Platform;
 import javafx.collections.FXCollections;
-import javafx.embed.swing.SwingFXUtils;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
@@ -20,7 +19,6 @@ import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.control.cell.TextFieldTableCell;
-import javafx.scene.image.Image;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
 import javafx.util.Callback;
@@ -43,23 +41,9 @@ public class RevenueController extends Screen implements Initializable
                             colCreator,colAccount,colOther,colAction;
 
     @Override
-    public void refresh()
+    public void refreshView()
     {
-        //Set Employee name
-        /*Employee e = SessionManager.getInstance().getActiveEmployee();
-
-        if(e!=null)
-            this.getUserNameLabel().setText(e.toString());
-        else IO.log(getClass().getName(), IO.TAG_ERROR, "No active sessions.");
-        //Set default profile photo
-        if(HomescreenController.defaultProfileImage!=null)
-        {
-            Image image = SwingFXUtils.toFXImage(HomescreenController.defaultProfileImage, null);
-            this.getProfileImageView().setImage(image);
-        }else IO.log(getClass().getName(), "default profile image is null.", IO.TAG_ERROR);*/
-
-        EmployeeManager.getInstance().loadDataFromServer();
-        RevenueManager.getInstance().initialize(this.getScreenManager());
+        IO.log(getClass().getName(), IO.TAG_INFO, "reloading revenue view..");
 
         //Set up expenses table
         colId.setCellValueFactory(new PropertyValueFactory<>("_id"));
@@ -71,7 +55,7 @@ public class RevenueController extends Screen implements Initializable
         CustomTableViewControls.makeEditableTableColumn(colAccount, TextFieldTableCell.forTableColumn(), 100, "account", "/api/revenue");
         CustomTableViewControls.makeEditableTableColumn(colOther, TextFieldTableCell.forTableColumn(), 100, "extra", "/api/revenue");
 
-        final ScreenManager screenManager = this.getScreenManager();
+        final ScreenManager screenManager = ScreenManager.getInstance();
         Callback colGenericCellFactory
                 =
                 new Callback<TableColumn<Revenue, String>, TableCell<Revenue, String>>()
@@ -152,40 +136,23 @@ public class RevenueController extends Screen implements Initializable
         tblRevenue.setItems(FXCollections.observableArrayList(RevenueManager.getInstance().getRevenues()));
     }
 
+    @Override
+    public void refreshModel()
+    {
+        EmployeeManager.getInstance().loadDataFromServer();
+        RevenueManager.getInstance().initialize();
+    }
+
     /**
      * Initializes the controller class.
      */
     @Override
     public void initialize(URL url, ResourceBundle rb) 
     {
-        refresh();
-    }
-
-    @FXML
-    public void newRevenueClick()
-    {
-        final ScreenManager screenManager = this.getScreenManager();
-        this.getScreenManager().showLoadingScreen(param ->
+        new Thread(() ->
         {
-            new Thread(new Runnable()
-            {
-                @Override
-                public void run()
-                {
-                    try
-                    {
-                        if(screenManager.loadScreen(Screens.NEW_REVENUE.getScreen(),getClass().getResource("../views/"+Screens.NEW_REVENUE.getScreen())))
-                        {
-                            Platform.runLater(() ->
-                                    screenManager.setScreen(Screens.NEW_REVENUE.getScreen()));
-                        } else IO.log(getClass().getName(), IO.TAG_ERROR, "could not load additional revenue creation screen.");
-                    } catch (IOException e)
-                    {
-                        IO.log(getClass().getName(), IO.TAG_ERROR, e.getMessage());
-                    }
-                }
-            }).start();
-            return null;
-        });
+            refreshModel();
+            Platform.runLater(() -> refreshView());
+        }).start();
     }
 }

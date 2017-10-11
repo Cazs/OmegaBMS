@@ -39,12 +39,18 @@ public class NewExpenseController extends Screen implements Initializable
     private DatePicker dateLogged;
 
     @Override
-    public void refresh()
+    public void refreshView()
     {
-        SupplierManager.getInstance().initialize(this.getScreenManager());
+        SupplierManager.getInstance().initialize();
         if(SupplierManager.getInstance().getSuppliers()!=null)
             cbxSupplier.setItems(FXCollections.observableArrayList(SupplierManager.getInstance().getSuppliers()));
         else IO.logAndAlert("No Suppliers Error", "No suppliers were found in the database.", IO.TAG_ERROR);
+    }
+
+    @Override
+    public void refreshModel()
+    {
+
     }
 
     /**

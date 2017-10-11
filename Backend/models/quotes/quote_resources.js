@@ -54,7 +54,7 @@ const quoteResourceSchema = mongoose.Schema(
           callback(error);
         return;
       }
-      console.log('successfully created new qquote_resourceuote.')
+      console.log('successfully created new quote_resource.')
       if(callback)
         callback(error, res_obj);
       //update timestamp

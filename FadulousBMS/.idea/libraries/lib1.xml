@@ -1,0 +1,17 @@
+<component name="libraryTable">
+  <library name="lib1">
+    <CLASSES>
+      <root url="jar://$PROJECT_DIR$/lib/morena7.jar!/" />
+      <root url="jar://$PROJECT_DIR$/lib/PDFRenderer-0.9.1.jar!/" />
+      <root url="jar://$PROJECT_DIR$/lib/morena7_win.jar!/" />
+      <root url="jar://$PROJECT_DIR$/lib/gson-2.8.0.jar!/" />
+      <root url="jar://$PROJECT_DIR$/lib/jfreesane-0.97.jar!/" />
+      <root url="jar://$PROJECT_DIR$/lib/morena_license.jar!/" />
+      <root url="jar://$PROJECT_DIR$/lib/morena7_osx.jar!/" />
+      <root url="jar://$PROJECT_DIR$/lib/pdfbox-app-2.0.4.jar!/" />
+      <root url="jar://$PROJECT_DIR$/lib/guava-16.0.1.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES />
+  </library>
+</component>

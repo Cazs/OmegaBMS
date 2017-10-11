@@ -57,7 +57,7 @@ public class CreateAccountController extends Screen implements Initializable
     private String[] access_levels = {"NONE", "NORMAL", "ADMIN", "SUPER"};
 
     @Override
-    public void refresh()
+    public void refreshView()
     {
         Employee e = SessionManager.getInstance().getActiveEmployee();
         if(e!=null)
@@ -65,6 +65,11 @@ public class CreateAccountController extends Screen implements Initializable
         else IO.log(getClass().getName(), IO.TAG_ERROR, "No active sessions.");
 
         cbxAccessLevel.setItems(FXCollections.observableArrayList(access_levels));
+    }
+
+    @Override
+    public void refreshModel()
+    {
     }
 
     /**
@@ -155,7 +160,8 @@ public class CreateAccountController extends Screen implements Initializable
     {
         if(!Validators.isValidNode(txt, txt.getText(), regex))
         {
-            IO.logAndAlert(errTitle, errMsg, IO.TAG_ERROR);
+            //IO.logAndAlert(errTitle, errMsg, IO.TAG_ERROR);
+            IO.log(getClass().getName(), IO.TAG_ERROR, errMsg);
             return false;
         }
         return true;

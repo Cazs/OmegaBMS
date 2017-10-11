@@ -45,20 +45,13 @@ public class ResetPwdController extends Screen implements Initializable
     private TextField txtUsr,txtPwd,txtCode;
 
     @Override
-    public void refresh()
+    public void refreshView()
     {
         Employee e = SessionManager.getInstance().getActiveEmployee();
         if(e!=null)
             this.getUserNameLabel().setText(e.getFirstname() + " " + e.getLastname());
         else IO.log(getClass().getName(), IO.TAG_ERROR, "No active sessions.");
-    }
 
-    /**
-     * Initializes the controller class.
-     */
-    @Override
-    public void initialize(URL url, ResourceBundle rb) 
-    {
         //TODO
         txtUsr.setText("ghost");
         txtPwd.setText("abc");
@@ -76,6 +69,20 @@ public class ResetPwdController extends Screen implements Initializable
         {
             IO.log(getClass().getName(), IO.TAG_ERROR, ex.getMessage());
         }
+    }
+
+    @Override
+    public void refreshModel()
+    {
+
+    }
+
+    /**
+     * Initializes the controller class.
+     */
+    @Override
+    public void initialize(URL url, ResourceBundle rb) 
+    {
     }
 
     @FXML

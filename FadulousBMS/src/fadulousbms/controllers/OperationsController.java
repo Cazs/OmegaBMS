@@ -13,6 +13,7 @@ import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 import java.net.URL;
+import java.util.List;
 import java.util.ResourceBundle;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -44,6 +45,11 @@ public class OperationsController extends Screen implements Initializable
 {
     @FXML
     private TabPane tabs;
+    @FXML
+    private Tab clientTab;
+    @FXML
+    private TableView<Client>    tblClients;
+
     public static final String TAG="OperationsController";
 
     /**
@@ -73,7 +79,7 @@ public class OperationsController extends Screen implements Initializable
     }
 
     @Override
-    public void refresh()
+    public void refreshView()
     {
         Employee e = SessionManager.getInstance().getActiveEmployee();
         if(e!=null)
@@ -81,14 +87,135 @@ public class OperationsController extends Screen implements Initializable
         else IO.log(getClass().getName(), IO.TAG_ERROR, "No active sessions.");
     }
 
+    @Override
+    public void refreshModel()
+    {
+        //ClientManager.getInstance().initialize();
+        //clientsController.refreshModel();
+        //clientsController.refreshView();
+    }
+
+    @FXML
+    public void newClientClick()
+    {
+        final ScreenManager screenManager = ScreenManager.getInstance();
+        ScreenManager.getInstance().showLoadingScreen(param ->
+        {
+            new Thread(new Runnable()
+            {
+                @Override
+                public void run()
+                {
+                    try
+                    {
+                        if(screenManager.loadScreen(Screens.NEW_CLIENT.getScreen(),getClass().getResource("../views/"+Screens.NEW_CLIENT.getScreen())))
+                        {
+                            //Platform.runLater(() ->
+                            screenManager.setScreen(Screens.NEW_CLIENT.getScreen());
+                        } else IO.log(getClass().getName(), IO.TAG_ERROR, "could not load client creation screen.");
+                    } catch (IOException e)
+                    {
+                        IO.log(getClass().getName(), IO.TAG_ERROR, e.getMessage());
+                    }
+                }
+            }).start();
+            return null;
+        });
+    }
+
+    @FXML
+    public void newSupplierClick()
+    {
+        final ScreenManager screenManager = ScreenManager.getInstance();
+        ScreenManager.getInstance().showLoadingScreen(param ->
+        {
+            new Thread(new Runnable()
+            {
+                @Override
+                public void run()
+                {
+                    try
+                    {
+                        if(screenManager.loadScreen(Screens.NEW_SUPPLIER.getScreen(),getClass().getResource("../views/"+Screens.NEW_SUPPLIER.getScreen())))
+                        {
+                            //Platform.runLater(() ->
+                            screenManager.setScreen(Screens.NEW_SUPPLIER.getScreen());
+                        } else IO.log(getClass().getName(), IO.TAG_ERROR, "could not load supplier creation screen.");
+                    } catch (IOException e)
+                    {
+                        IO.log(getClass().getName(), IO.TAG_ERROR, e.getMessage());
+                    }
+                }
+            }).start();
+            return null;
+        });
+    }
+
+    @FXML
+    public void newMaterialClick()
+    {
+        final ScreenManager screenManager = ScreenManager.getInstance();
+        ScreenManager.getInstance().showLoadingScreen(param ->
+        {
+            new Thread(new Runnable()
+            {
+                @Override
+                public void run()
+                {
+                    try
+                    {
+                        if(screenManager.loadScreen(Screens.NEW_RESOURCE.getScreen(),getClass().getResource("../views/"+Screens.NEW_RESOURCE.getScreen())))
+                        {
+                            //Platform.runLater(() ->
+                            screenManager.setScreen(Screens.NEW_RESOURCE.getScreen());
+                        } else IO.log(getClass().getName(), IO.TAG_ERROR, "could not load resource creation screen.");
+                    } catch (IOException e)
+                    {
+                        IO.log(getClass().getName(), IO.TAG_ERROR, e.getMessage());
+                    }
+                }
+            }).start();
+            return null;
+        });
+    }
+
+    @FXML
+    public void newQuoteClick()
+    {
+        final ScreenManager screenManager = ScreenManager.getInstance();
+        ScreenManager.getInstance().showLoadingScreen(param ->
+        {
+            new Thread(new Runnable()
+            {
+                @Override
+                public void run()
+                {
+                    try
+                    {
+                        if(screenManager.loadScreen(Screens.NEW_QUOTE.getScreen(),getClass().getResource("../views/"+Screens.NEW_QUOTE.getScreen())))
+                        {
+                            //Platform.runLater(() ->
+                            screenManager.setScreen(Screens.NEW_QUOTE.getScreen());
+                        } else IO.log(getClass().getName(), IO.TAG_ERROR, "could not load quote creation screen.");
+                    } catch (IOException e)
+                    {
+                        IO.log(getClass().getName(), IO.TAG_ERROR, e.getMessage());
+                    }
+                }
+            }).start();
+            return null;
+        });
+    }
+
+    //nav
     @FXML
     public void productionClick()
     {
         try 
         {
-            this.getScreenManager().loadScreen(Screens.OPERATIONS_PRODUCTION.getScreen(),
+            ScreenManager.getInstance().loadScreen(Screens.OPERATIONS_PRODUCTION.getScreen(),
                     getClass().getResource("../views/" + Screens.OPERATIONS_PRODUCTION.getScreen()));
-            this.getScreenManager().setScreen(Screens.OPERATIONS_PRODUCTION.getScreen());
+            ScreenManager.getInstance().setScreen(Screens.OPERATIONS_PRODUCTION.getScreen());
         } catch (IOException ex) 
         {
             Logger.getLogger(OperationsController.class.getName()).log(Level.SEVERE, null, ex);
@@ -100,9 +227,9 @@ public class OperationsController extends Screen implements Initializable
     {
         try
         {
-            this.getScreenManager().loadScreen(Screens.OPERATIONS_SALES.getScreen(),
+            ScreenManager.getInstance().loadScreen(Screens.OPERATIONS_SALES.getScreen(),
                     getClass().getResource("../views/" + Screens.OPERATIONS_SALES.getScreen()));
-            this.getScreenManager().setScreen(Screens.OPERATIONS_SALES.getScreen());
+            ScreenManager.getInstance().setScreen(Screens.OPERATIONS_SALES.getScreen());
         } catch (IOException ex)
         {
             Logger.getLogger(OperationsController.class.getName()).log(Level.SEVERE, null, ex);
@@ -112,8 +239,8 @@ public class OperationsController extends Screen implements Initializable
     @FXML
     public void resourcesClick()
     {
-        final ScreenManager screenManager = this.getScreenManager();
-        this.getScreenManager().showLoadingScreen(param ->
+        final ScreenManager screenManager = ScreenManager.getInstance();
+        ScreenManager.getInstance().showLoadingScreen(param ->
         {
             new Thread(new Runnable()
             {
@@ -141,8 +268,8 @@ public class OperationsController extends Screen implements Initializable
     @FXML
     public void quotesClick()
     {
-        final ScreenManager screenManager = this.getScreenManager();
-        this.getScreenManager().showLoadingScreen(param ->
+        final ScreenManager screenManager = ScreenManager.getInstance();
+        ScreenManager.getInstance().showLoadingScreen(param ->
         {
             new Thread(new Runnable()
             {
@@ -169,8 +296,8 @@ public class OperationsController extends Screen implements Initializable
     @FXML
     public void pendingQuotesClick()
     {
-        final ScreenManager screenManager = this.getScreenManager();
-        this.getScreenManager().showLoadingScreen(param ->
+        final ScreenManager screenManager = ScreenManager.getInstance();
+        ScreenManager.getInstance().showLoadingScreen(param ->
         {
             new Thread(new Runnable()
             {
@@ -197,8 +324,8 @@ public class OperationsController extends Screen implements Initializable
     @FXML
     public void rejectedQuotesClick()
     {
-        final ScreenManager screenManager = this.getScreenManager();
-        this.getScreenManager().showLoadingScreen(param ->
+        final ScreenManager screenManager = ScreenManager.getInstance();
+        ScreenManager.getInstance().showLoadingScreen(param ->
         {
             new Thread(new Runnable()
             {
@@ -226,8 +353,8 @@ public class OperationsController extends Screen implements Initializable
     @FXML
     public void suppliersClick()
     {
-        final ScreenManager screenManager = this.getScreenManager();
-        this.getScreenManager().showLoadingScreen(param ->
+        final ScreenManager screenManager = ScreenManager.getInstance();
+        ScreenManager.getInstance().showLoadingScreen(param ->
         {
             new Thread(new Runnable()
             {
@@ -254,8 +381,8 @@ public class OperationsController extends Screen implements Initializable
     @FXML
     public void jobsClick()
     {
-        final ScreenManager screenManager = this.getScreenManager();
-        this.getScreenManager().showLoadingScreen(param ->
+        final ScreenManager screenManager = ScreenManager.getInstance();
+        ScreenManager.getInstance().showLoadingScreen(param ->
         {
             new Thread(new Runnable()
             {
@@ -282,8 +409,8 @@ public class OperationsController extends Screen implements Initializable
     @FXML
     public void clientsClick()
     {
-        final ScreenManager screenManager = this.getScreenManager();
-        this.getScreenManager().showLoadingScreen(param ->
+        final ScreenManager screenManager = ScreenManager.getInstance();
+        ScreenManager.getInstance().showLoadingScreen(param ->
         {
             new Thread(new Runnable()
             {

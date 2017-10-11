@@ -1,0 +1,11 @@
+<component name="libraryTable">
+  <library name="3D">
+    <CLASSES>
+      <root url="jar://$PROJECT_DIR$/lib/ImageJ/plugins/3D/ImageJ_3D_Viewer.jar!/" />
+      <root url="jar://$PROJECT_DIR$/lib/ImageJ/plugins/3D/Interactive_3D_Surface_Plot.jar!/" />
+      <root url="jar://$PROJECT_DIR$/lib/ImageJ/plugins/3D/Volume_Viewer.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES />
+  </library>
+</component>

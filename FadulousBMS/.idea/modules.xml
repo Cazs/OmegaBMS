@@ -3,7 +3,9 @@
   <component name="ProjectModuleManager">
     <modules>
       <module fileurl="file://$PROJECT_DIR$/BMSPreloader/BMSPreloader.iml" filepath="$PROJECT_DIR$/BMSPreloader/BMSPreloader.iml" />
+      <module fileurl="file://$PROJECT_DIR$/lib/ImageJ/macros/Examples/Examples.iml" filepath="$PROJECT_DIR$/lib/ImageJ/macros/Examples/Examples.iml" />
       <module fileurl="file://$PROJECT_DIR$/FadulousBMS.iml" filepath="$PROJECT_DIR$/FadulousBMS.iml" />
+      <module fileurl="file://$PROJECT_DIR$/lib/ImageJ/plugins/plugins.iml" filepath="$PROJECT_DIR$/lib/ImageJ/plugins/plugins.iml" />
     </modules>
   </component>
 </project>

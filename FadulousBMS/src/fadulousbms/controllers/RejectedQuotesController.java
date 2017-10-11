@@ -8,7 +8,6 @@ package fadulousbms.controllers;
 import fadulousbms.auxilary.IO;
 import fadulousbms.auxilary.Screen;
 import fadulousbms.managers.GenericQuoteManager;
-import fadulousbms.managers.QuoteManager;
 import fadulousbms.managers.ScreenManager;
 import fadulousbms.managers.SessionManager;
 import fadulousbms.model.CustomTableViewControls;
@@ -23,7 +22,6 @@ import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.control.cell.TextFieldTableCell;
 import javafx.scene.image.Image;
-import javafx.scene.image.ImageView;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
 import javafx.util.Callback;
@@ -48,7 +46,7 @@ public class RejectedQuotesController extends Screen implements Initializable
                             colQuoteCreator, colQuoteExtra,colQuoteAction;
 
     @Override
-    public void refresh()
+    public void refreshView()
     {
         //Set Employee name
         Employee e = SessionManager.getInstance().getActiveEmployee();
@@ -61,8 +59,6 @@ public class RejectedQuotesController extends Screen implements Initializable
             Image image = SwingFXUtils.toFXImage(HomescreenController.defaultProfileImage, null);
             this.getProfileImageView().setImage(image);
         }else IO.log(getClass().getName(), "default profile image is null.", IO.TAG_ERROR);
-
-        GenericQuoteManager.getInstance().initialize(this.getScreenManager());
 
         //Set up pending quotes table
         colQuoteNumber.setCellValueFactory(new PropertyValueFactory<>("_id"));
@@ -80,7 +76,7 @@ public class RejectedQuotesController extends Screen implements Initializable
         colQuoteCreator.setCellValueFactory(new PropertyValueFactory<>("creator"));
         CustomTableViewControls.makeEditableTableColumn(colQuoteExtra, TextFieldTableCell.forTableColumn(), 100, "extra", "/api/quote/generic");
 
-        final ScreenManager screenManager = this.getScreenManager();
+        final ScreenManager screenManager = ScreenManager.getInstance();
         Callback colGenericCellFactory
                 =
                 new Callback<TableColumn<GenericQuote, String>, TableCell<GenericQuote, String>>()
@@ -165,6 +161,12 @@ public class RejectedQuotesController extends Screen implements Initializable
             if(genericQuote.getStatus()==1)//if rejected
                 rejected_quotes.add(genericQuote);
         tblRejectedQuotes.setItems(FXCollections.observableArrayList(rejected_quotes));
+    }
+
+    @Override
+    public void refreshModel()
+    {
+        GenericQuoteManager.getInstance().initialize();
     }
 
     /**

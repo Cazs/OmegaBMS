@@ -5,6 +5,7 @@
  */
 package fadulousbms.model;
 
+import fadulousbms.auxilary.Globals;
 import fadulousbms.auxilary.IO;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
@@ -299,6 +300,16 @@ public class Job implements BusinessObject, Serializable
                 return new SimpleStringProperty(quote.getContactPerson().toString());
             else return new SimpleStringProperty("n/a");
         else return new SimpleStringProperty("n/a");
+    }
+
+    public SimpleStringProperty totalProperty(){return new SimpleStringProperty(Globals.CURRENCY_SYMBOL.getValue() + " " + String.valueOf(getTotal()));}
+
+    public double getTotal()
+    {
+        //Compute total
+        if(quote!=null)
+            return quote.getTotal();
+        else return 0;
     }
 
     @Override

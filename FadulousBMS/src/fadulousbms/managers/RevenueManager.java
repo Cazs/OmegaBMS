@@ -6,9 +6,7 @@ import fadulousbms.auxilary.Counters;
 import fadulousbms.auxilary.IO;
 import fadulousbms.auxilary.RemoteComms;
 import fadulousbms.model.Employee;
-import fadulousbms.model.Expense;
 import fadulousbms.model.Revenue;
-import fadulousbms.model.Supplier;
 
 import java.io.IOException;
 import java.net.MalformedURLException;
@@ -35,7 +33,7 @@ public class RevenueManager extends BusinessObjectManager
     }
 
     @Override
-    public void initialize(ScreenManager screenManager)
+    public void initialize()
     {
         loadDataFromServer();
     }
@@ -49,8 +47,8 @@ public class RevenueManager extends BusinessObjectManager
             {
                 if (!smgr.getActive().isExpired())
                 {
-                    EmployeeManager.getInstance().initialize(screenManager);
-                    SupplierManager.getInstance().initialize(screenManager);
+                    EmployeeManager.getInstance().initialize();
+                    SupplierManager.getInstance().initialize();
 
                     gson = new GsonBuilder().create();
                     ArrayList<AbstractMap.SimpleEntry<String, String>> headers = new ArrayList<>();

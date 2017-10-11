@@ -62,9 +62,8 @@ public class JobManager extends BusinessObjectManager
     }
 
     @Override
-    public void initialize(ScreenManager screenManager)
+    public void initialize()
     {
-        this.screenManager = screenManager;
         //init genders
         BusinessObject male = new Gender();
         male.set_id("male");

@@ -1,0 +1,64 @@
+<?import javafx.scene.control.*?>
+<?import javafx.scene.control.cell.*?>
+<?import javafx.scene.layout.*?>
+
+<Tab text="Purchase Orders" fx:id="purchaseOrdersTab" fx:controller="fadulousbms.controllers.PurchaseOrdersController" xmlns:fx="http://javafx.com/fxml">
+    <content>
+        <TableView fx:id="tblPurchaseOrders" editable="true" tableMenuButtonVisible="true" VBox.vgrow="ALWAYS">
+            <columns>
+                <TableColumn fx:id="colId" maxWidth="1.7976931348623157E308" minWidth="80.0" prefWidth="-1.0" text="Expense ID" visible="false">
+                    <cellValueFactory>
+                        <PropertyValueFactory property="_id" />
+                    </cellValueFactory>
+                </TableColumn>
+                <TableColumn fx:id="colNumber" maxWidth="1.7976931348623157E308" minWidth="180.0" prefWidth="-1.0" text="Title">
+                    <cellValueFactory>
+                        <PropertyValueFactory property="number" />
+                    </cellValueFactory>
+                </TableColumn>
+                <TableColumn fx:id="colSupplier" maxWidth="1.7976931348623157E308" minWidth="180.0" prefWidth="-1.0" text="Supplier"/>
+                <TableColumn fx:id="colDescription" maxWidth="1.7976931348623157E308" minWidth="250.0" prefWidth="-1.0" text="Description">
+                    <cellValueFactory>
+                        <PropertyValueFactory property="description" />
+                    </cellValueFactory>
+                </TableColumn>
+                <TableColumn fx:id="colQuantity" maxWidth="1.7976931348623157E308" minWidth="150.0" prefWidth="-1.0" text="Quantity">
+                    <cellValueFactory>
+                        <PropertyValueFactory property="quantity" />
+                    </cellValueFactory>
+                </TableColumn>
+                <TableColumn fx:id="colPrice" maxWidth="1.7976931348623157E308" minWidth="150.0" prefWidth="-1.0" text="Price">
+                    <cellValueFactory>
+                        <PropertyValueFactory property="price" />
+                    </cellValueFactory>
+                </TableColumn>
+                <TableColumn fx:id="colDiscount" maxWidth="1.7976931348623157E308" minWidth="150.0" prefWidth="-1.0" text="Discount">
+                    <cellValueFactory>
+                        <PropertyValueFactory property="discount" />
+                    </cellValueFactory>
+                </TableColumn>
+                <TableColumn fx:id="colVat" maxWidth="1.7976931348623157E308" minWidth="150.0" prefWidth="-1.0" text="VAT">
+                    <cellValueFactory>
+                        <PropertyValueFactory property="vat" />
+                    </cellValueFactory>
+                </TableColumn>
+                <TableColumn fx:id="colDateLogged" maxWidth="1.7976931348623157E308" minWidth="150.0" prefWidth="-1.0" text="Date Logged">
+                    <cellValueFactory>
+                        <PropertyValueFactory property="date_logged" />
+                    </cellValueFactory>
+                </TableColumn>
+                <TableColumn fx:id="colCreator" prefWidth="75.0" text="Creator">
+                    <cellValueFactory>
+                        <PropertyValueFactory property="creator" />
+                    </cellValueFactory>
+                </TableColumn>
+                <TableColumn fx:id="colExtra" maxWidth="1.7976931348623157E308" minWidth="80.0" prefWidth="-1.0" text="Extra" visible="false">
+                    <cellValueFactory>
+                        <PropertyValueFactory property="extra" />
+                    </cellValueFactory>
+                </TableColumn>
+                <TableColumn fx:id="colAction" maxWidth="1.7976931348623157E308" minWidth="220.0" prefWidth="-1.0" text="Action" />
+            </columns>
+        </TableView>
+    </content>
+</Tab>

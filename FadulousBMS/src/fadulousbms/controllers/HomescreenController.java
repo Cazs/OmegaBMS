@@ -64,7 +64,7 @@ public class HomescreenController extends Screen implements Initializable
     private ColorAdjust colorAdjust = new ColorAdjust();
 
     @Override
-    public void refresh()
+    public void refreshView()
     {
         //this.getLoadingPane().setVisible(true);
 
@@ -80,28 +80,25 @@ public class HomescreenController extends Screen implements Initializable
         }
         else IO.log(getClass().getName(), IO.TAG_ERROR, "No active sessions.");
 
-        //this.getLoadingPane().setVisible(false);
+        //defaultProfileImage = ImageIO.read(new File("images/profile.png"));
+        Image image = SwingFXUtils.toFXImage(defaultProfileImage, null);
+        this.getProfileImageView().setImage(image);
+        //img_profile.setImage(new Image("dist/profile.png"));
+        colorAdjust.setBrightness(0.0);
+        IO.log(getClass().getName(), IO.TAG_INFO, "reloading homescreen view..");
     }
 
+    @Override
+    public void refreshModel()
+    {
+        IO.log(getClass().getName(), IO.TAG_INFO, "reloading homescreen data model..");
+    }
     /**
      * Initializes the controller class.
      */
     @Override
     public void initialize(URL url, ResourceBundle rb) 
     {
-        //try
-        {
-            //defaultProfileImage = ImageIO.read(new File("images/profile.png"));
-            Image image = SwingFXUtils.toFXImage(defaultProfileImage, null);
-            this.getProfileImageView().setImage(image);
-            //img_profile.setImage(new Image("dist/profile.png"));
-            colorAdjust.setBrightness(0.0);
-
-            refresh();
-        }/*catch (IOException ex)
-        {
-            Logger.getLogger(HomescreenController.class.getName()).log(Level.SEVERE, null, ex);
-        }*/
     }
     
     private Rectangle createTile()
@@ -119,8 +116,8 @@ public class HomescreenController extends Screen implements Initializable
     
     public void operationsClick()
     {
-        final ScreenManager screenManager = this.getScreenManager();
-        this.getScreenManager().showLoadingScreen(param ->
+        final ScreenManager screenManager = ScreenManager.getInstance();
+        ScreenManager.getInstance().showLoadingScreen(param ->
         {
             new Thread(new Runnable()
             {
@@ -131,8 +128,8 @@ public class HomescreenController extends Screen implements Initializable
                     {
                         if(screenManager.loadScreen(Screens.OPERATIONS.getScreen(),getClass().getResource("../views/"+Screens.OPERATIONS.getScreen())))
                         {
-                            Platform.runLater(() ->
-                                    screenManager.setScreen(Screens.OPERATIONS.getScreen()));
+                            //Platform.runLater(() ->
+                            screenManager.setScreen(Screens.OPERATIONS.getScreen());
                         } else IO.log(getClass().getName(), IO.TAG_ERROR, "could not load operations screen.");
                     } catch (IOException e)
                     {
@@ -152,9 +149,9 @@ public class HomescreenController extends Screen implements Initializable
             {
                 try
                 {
-                    this.getScreenManager().loadScreen(Screens.SAFETY.getScreen(),
+                    ScreenManager.getInstance().loadScreen(Screens.SAFETY.getScreen(),
                             HomescreenController.class.getResource("../views/" + Screens.SAFETY.getScreen()));
-                    this.getScreenManager().setScreen(Screens.SAFETY.getScreen());
+                    ScreenManager.getInstance().setScreen(Screens.SAFETY.getScreen());
                 } catch (IOException ex)
                 {
                     Logger.getLogger(HomescreenController.class.getName()).log(Level.SEVERE, null, ex);
@@ -213,8 +210,8 @@ public class HomescreenController extends Screen implements Initializable
     {
         try
         {
-            if(this.getScreenManager().loadScreen(Screens.HR.getScreen(),getClass().getResource("../views/"+Screens.HR.getScreen())))
-                this.getScreenManager().setScreen(Screens.HR.getScreen());
+            if(ScreenManager.getInstance().loadScreen(Screens.HR.getScreen(),getClass().getResource("../views/"+Screens.HR.getScreen())))
+                ScreenManager.getInstance().setScreen(Screens.HR.getScreen());
             else IO.log(getClass().getName(), IO.TAG_ERROR, "could not load human resources screen.");
         } catch (IOException e)
         {
@@ -225,8 +222,8 @@ public class HomescreenController extends Screen implements Initializable
     @FXML
     public void accountingClick()
     {
-        final ScreenManager screenManager = this.getScreenManager();
-        this.getScreenManager().showLoadingScreen(param ->
+        final ScreenManager screenManager = ScreenManager.getInstance();
+        ScreenManager.getInstance().showLoadingScreen(param ->
         {
             new Thread(new Runnable()
             {
@@ -255,8 +252,8 @@ public class HomescreenController extends Screen implements Initializable
     {
         try
         {
-            if(this.getScreenManager().loadScreen(Screens.FACILITIES.getScreen(),getClass().getResource("../views/"+Screens.FACILITIES.getScreen())))
-                this.getScreenManager().setScreen(Screens.FACILITIES.getScreen());
+            if(ScreenManager.getInstance().loadScreen(Screens.FACILITIES.getScreen(),getClass().getResource("../views/"+Screens.FACILITIES.getScreen())))
+                ScreenManager.getInstance().setScreen(Screens.FACILITIES.getScreen());
             else IO.log(getClass().getName(), IO.TAG_ERROR, "could not load facilities screen.");
         } catch (IOException e)
         {
@@ -269,8 +266,8 @@ public class HomescreenController extends Screen implements Initializable
     {
         try
         {
-            if(this.getScreenManager().loadScreen(Screens.SETTINGS.getScreen(),getClass().getResource("../views/"+Screens.SETTINGS.getScreen())))
-                this.getScreenManager().setScreen(Screens.SETTINGS.getScreen());
+            if(ScreenManager.getInstance().loadScreen(Screens.SETTINGS.getScreen(),getClass().getResource("../views/"+Screens.SETTINGS.getScreen())))
+                ScreenManager.getInstance().setScreen(Screens.SETTINGS.getScreen());
             else IO.log(getClass().getName(), IO.TAG_ERROR, "could not load settings screen.");
         } catch (IOException e)
         {

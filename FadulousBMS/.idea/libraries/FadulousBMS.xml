@@ -1,0 +1,10 @@
+<component name="libraryTable">
+  <library name="FadulousBMS">
+    <CLASSES>
+      <root url="jar://$PROJECT_DIR$/out/artifacts/FadulousBMS/FadulousBMS.jar!/" />
+      <root url="jar://$PROJECT_DIR$/out/artifacts/FadulousBMS/BMSPreloader.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES />
+  </library>
+</component>

@@ -8,6 +8,7 @@ package fadulousbms.auxilary;
 import fadulousbms.managers.QuoteManager;
 import fadulousbms.managers.ScreenManager;
 import fadulousbms.model.Screens;
+import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;
 import javafx.scene.image.ImageView;
@@ -26,7 +27,6 @@ import java.io.IOException;
  */
 public abstract class Screen
 {
-    private ScreenManager screen_mgr;
     @FXML
     private ImageView img_profile;
     @FXML
@@ -38,10 +38,6 @@ public abstract class Screen
     private Label lblOutput;
     @FXML
     private BorderPane loading_pane;
-    /*@FXML
-    private BorderPane loading_bpane;
-    @FXML
-    private Arc shpLoad;*/
 
     public Screen()
     {
@@ -51,33 +47,33 @@ public abstract class Screen
         //System.err.println(main_pane==null);
     }
 
-    /*public BorderPane getLoadingPane()
-    {
-        return this.loading_pane;
-    }*/
+    public abstract void refreshView();
 
-    public void setParent(ScreenManager mgr)
-    {
-        this.screen_mgr = mgr;
-    }
-
-    public abstract void refresh();
+    public abstract void refreshModel();
 
     public void refreshStatusBar(String msg)
     {
         try
         {
-            shpServerStatus.setStroke(Color.TRANSPARENT);
-            if(RemoteComms.pingServer())
-                shpServerStatus.setFill(Color.LIME);
-            else shpServerStatus.setFill(Color.RED);
+            boolean ping = RemoteComms.pingServer();
+            Platform.runLater(() ->
+            {
+                shpServerStatus.setStroke(Color.TRANSPARENT);
+                if(ping)
+                    shpServerStatus.setFill(Color.LIME);
+                else shpServerStatus.setFill(Color.RED);
+                lblOutput.setText(msg);
+            });
         } catch (IOException e)
         {
             if(Globals.DEBUG_ERRORS.getValue().equalsIgnoreCase("on"))
-                System.err.println("Could not refresh status bar: "+e.getMessage());
-            shpServerStatus.setFill(Color.RED);
+                IO.log(getClass().getName(), IO.TAG_ERROR, "could not refresh status bar: "+e.getMessage());
+            Platform.runLater(() ->
+            {
+                shpServerStatus.setFill(Color.RED);
+                lblOutput.setText(msg);
+            });
         }
-        lblOutput.setText(msg);
     }
 
     @FXML
@@ -85,8 +81,8 @@ public abstract class Screen
     {
         try
         {
-            if(this.getScreenManager().loadScreen(Screens.LOGIN.getScreen(),getClass().getResource("../views/"+Screens.LOGIN.getScreen())))
-                this.getScreenManager().setScreen(Screens.LOGIN.getScreen());
+            if(ScreenManager.getInstance().loadScreen(Screens.LOGIN.getScreen(),getClass().getResource("../views/"+Screens.LOGIN.getScreen())))
+                ScreenManager.getInstance().setScreen(Screens.LOGIN.getScreen());
             else IO.log(getClass().getName(), IO.TAG_ERROR, "could not load login screen.");
         } catch (IOException e)
         {
@@ -99,8 +95,8 @@ public abstract class Screen
     {
         try
         {
-            if(this.getScreenManager().loadScreen(Screens.HOME.getScreen(),getClass().getResource("../views/"+Screens.HOME.getScreen())))
-                this.getScreenManager().setScreen(Screens.HOME.getScreen());
+            if(ScreenManager.getInstance().loadScreen(Screens.HOME.getScreen(),getClass().getResource("../views/"+Screens.HOME.getScreen())))
+                ScreenManager.getInstance().setScreen(Screens.HOME.getScreen());
             else IO.log(getClass().getName(), IO.TAG_ERROR, "could not load home screen.");
         } catch (IOException e)
         {
@@ -113,8 +109,8 @@ public abstract class Screen
     {
         try
         {
-            if(this.getScreenManager().loadScreen(Screens.CREATE_ACCOUNT.getScreen(),getClass().getResource("../views/"+Screens.CREATE_ACCOUNT.getScreen())))
-                this.getScreenManager().setScreen(Screens.CREATE_ACCOUNT.getScreen());
+            if(ScreenManager.getInstance().loadScreen(Screens.CREATE_ACCOUNT.getScreen(),getClass().getResource("../views/"+Screens.CREATE_ACCOUNT.getScreen())))
+                ScreenManager.getInstance().setScreen(Screens.CREATE_ACCOUNT.getScreen());
             else IO.log(getClass().getName(), IO.TAG_ERROR, "could not load account creation screen.");
         } catch (IOException e)
         {
@@ -129,8 +125,8 @@ public abstract class Screen
         QuoteManager.getInstance().nullifySelected();
         try
         {
-            if(this.getScreenManager().loadScreen(Screens.NEW_QUOTE.getScreen(),getClass().getResource("../views/"+Screens.NEW_QUOTE.getScreen())))
-                this.getScreenManager().setScreen(Screens.NEW_QUOTE.getScreen());
+            if(ScreenManager.getInstance().loadScreen(Screens.NEW_QUOTE.getScreen(),getClass().getResource("../views/"+Screens.NEW_QUOTE.getScreen())))
+                ScreenManager.getInstance().setScreen(Screens.NEW_QUOTE.getScreen());
             else IO.log(getClass().getName(), IO.TAG_ERROR, "could not load new quotes screen.");
         } catch (IOException e)
         {
@@ -145,8 +141,8 @@ public abstract class Screen
         QuoteManager.getInstance().nullifySelected();
         try
         {
-            if(this.getScreenManager().loadScreen(Screens.NEW_GENERIC_QUOTE.getScreen(),getClass().getResource("../views/"+Screens.NEW_GENERIC_QUOTE.getScreen())))
-                this.getScreenManager().setScreen(Screens.NEW_GENERIC_QUOTE.getScreen());
+            if(ScreenManager.getInstance().loadScreen(Screens.NEW_GENERIC_QUOTE.getScreen(),getClass().getResource("../views/"+Screens.NEW_GENERIC_QUOTE.getScreen())))
+                ScreenManager.getInstance().setScreen(Screens.NEW_GENERIC_QUOTE.getScreen());
             else IO.log(getClass().getName(), IO.TAG_ERROR, "could not load generic quote creation screen.");
         } catch (IOException e)
         {
@@ -158,11 +154,6 @@ public abstract class Screen
     public void comingSoon()
     {
         IO.logAndAlert("Coming Soon", "This feature is currently being implemented.", IO.TAG_INFO);
-    }
-
-    public ScreenManager getScreenManager()
-    {
-        return  this.screen_mgr;
     }
 
     public ImageView getProfileImageView()
@@ -185,7 +176,7 @@ public abstract class Screen
     {
         try
         {
-            screen_mgr.setPreviousScreen();
+            ScreenManager.getInstance().setPreviousScreen();
         } catch (IOException e)
         {
             IO.log(getClass().getName(), IO.TAG_ERROR, e.getMessage());

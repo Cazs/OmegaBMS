@@ -8,14 +8,11 @@ package fadulousbms.controllers;
 import fadulousbms.auxilary.IO;
 import fadulousbms.auxilary.Screen;
 import fadulousbms.managers.AssetManager;
-import fadulousbms.managers.ResourceManager;
 import fadulousbms.managers.ScreenManager;
-import fadulousbms.managers.SessionManager;
 import fadulousbms.model.*;
 import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-import javafx.embed.swing.SwingFXUtils;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
@@ -24,7 +21,6 @@ import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.control.cell.TextFieldTableCell;
-import javafx.scene.image.Image;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
 import javafx.util.Callback;
@@ -47,22 +43,9 @@ public class AssetsController extends Screen implements Initializable
                         colQuantity,colDateAcquired,colDateExhausted,colOther,colAction;
 
     @Override
-    public void refresh()
+    public void refreshView()
     {
-        AssetManager.getInstance().initialize(this.getScreenManager());
-
-        //Set Employee name
-        /*Employee e = SessionManager.getInstance().getActiveEmployee();
-        if(e!=null)
-            this.getUserNameLabel().setText(e.toString());
-        else IO.log(getClass().getName(), IO.TAG_ERROR, "No active sessions.");
-        //Set Employee profile photo
-        //Set default profile photo
-        if(HomescreenController.defaultProfileImage!=null)
-        {
-            Image image = SwingFXUtils.toFXImage(HomescreenController.defaultProfileImage, null);
-            this.getProfileImageView().setImage(image);
-        }else IO.log(getClass().getName(), "default profile image is null.", IO.TAG_ERROR);*/
+        IO.log(getClass().getName(), IO.TAG_INFO, "reloading assets view..");
 
         colId.setMinWidth(100);
         colId.setCellValueFactory(new PropertyValueFactory<>("_id"));
@@ -154,40 +137,21 @@ public class AssetsController extends Screen implements Initializable
                 AssetManager.getInstance().setSelected(tblAssets.getSelectionModel().getSelectedItem()));
     }
 
+    @Override
+    public void refreshModel()
+    {
+        AssetManager.getInstance().initialize();
+    }
     /**
      * Initializes the controller class.
      */
     @Override
     public void initialize(URL url, ResourceBundle rb) 
     {
-        refresh();
-    }
-
-    @FXML
-    public void createAssetClick()
-    {
-        final ScreenManager screenManager = this.getScreenManager();
-        this.getScreenManager().showLoadingScreen(param ->
+        new Thread(() ->
         {
-            new Thread(new Runnable()
-            {
-                @Override
-                public void run()
-                {
-                    try
-                    {
-                        if(screenManager.loadScreen(Screens.NEW_ASSET.getScreen(),getClass().getResource("../views/"+Screens.NEW_ASSET.getScreen())))
-                        {
-                            Platform.runLater(() ->
-                                    screenManager.setScreen(Screens.NEW_ASSET.getScreen()));
-                        } else IO.log(getClass().getName(), IO.TAG_ERROR, "could not load asset creation screen.");
-                    } catch (IOException e)
-                    {
-                        IO.log(getClass().getName(), IO.TAG_ERROR, e.getMessage());
-                    }
-                }
-            }).start();
-            return null;
-        });
+            refreshModel();
+            Platform.runLater(() -> refreshView());
+        }).start();
     }
 }

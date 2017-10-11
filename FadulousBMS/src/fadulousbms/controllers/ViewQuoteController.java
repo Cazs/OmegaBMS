@@ -5,37 +5,24 @@
  */
 package fadulousbms.controllers;
 
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
 import fadulousbms.auxilary.*;
 import fadulousbms.managers.*;
 import fadulousbms.model.*;
-import javafx.beans.value.ChangeListener;
-import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
-import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.input.KeyCode;
-import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import javafx.util.Callback;
 
-import javax.swing.*;
-import java.io.IOException;
-import java.net.HttpURLConnection;
 import java.net.URL;
-import java.rmi.Remote;
-import java.text.SimpleDateFormat;
 import java.time.DateTimeException;
-import java.time.LocalDate;
 import java.util.*;
 
 /**
@@ -53,7 +40,7 @@ public class ViewQuoteController extends Screen implements Initializable
     private TableView<Employee> tblSaleReps;
     @FXML
     private TableColumn colFirstname,colLastname,colCell,colEmail,colTel,colGender,
-                        colActive,colAction,colEmployeeAction;
+                        colActive,colTotal,colAction,colEmployeeAction;
     @FXML
     private TableColumn colMarkup,colQuantity,colLabour;
     @FXML
@@ -67,10 +54,8 @@ public class ViewQuoteController extends Screen implements Initializable
     //private TableColumn<QuoteItem, String> col;
 
     @Override
-    public void refresh()
+    public void refreshView()
     {
-        ResourceManager.getInstance().initialize(this.getScreenManager());
-
         tblSaleReps.getItems().clear();
         tblQuoteItems.getItems().clear();
 
@@ -229,6 +214,8 @@ public class ViewQuoteController extends Screen implements Initializable
             }
         });
 
+        colTotal.setCellValueFactory(new PropertyValueFactory<>("total"));
+
         //Setup Sale Reps table
         colFirstname.setCellValueFactory(new PropertyValueFactory<>("firstname"));
         colLastname.setCellValueFactory(new PropertyValueFactory<>("lastname"));
@@ -357,21 +344,25 @@ public class ViewQuoteController extends Screen implements Initializable
                     IO.log(getClass().getName(), IO.TAG_INFO, "quote resource ["+item.get_id()+"] has no additional costs. skipping..");
                     continue;
                 }*/
-                for(String str_cost: item.getAdditional_costs().split(";"))
+                if(item.getAdditional_costs()!=null)
                 {
-                    String[] arr = str_cost.split("=");
-                    if (arr != null)
+                    for (String str_cost : item.getAdditional_costs().split(";"))
                     {
-                        if(arr.length>1)
+                        String[] arr = str_cost.split("=");
+                        if (arr != null)
                         {
-                            TableColumn col;
-                            //if column absent from map, add it
-                            if (map.get(arr[0].toLowerCase()) == null)
+                            if (arr.length > 1)
                             {
-                                col = new TableColumn(arr[0]);
-                                col.setPrefWidth(80);
-                                map.putIfAbsent(arr[0].toLowerCase(), col);
-                            } else col = map.get(arr[0].toLowerCase());
+                                TableColumn col;
+                                //if column absent from map, add it
+                                if (map.get(arr[0].toLowerCase()) == null)
+                                {
+                                    col = new TableColumn(arr[0]);
+                                    col.setPrefWidth(80);
+                                    map.putIfAbsent(arr[0].toLowerCase(), col);
+                                }
+                                else col = map.get(arr[0].toLowerCase());
+                            }
                         }
                     }
                 }
@@ -558,6 +549,12 @@ public class ViewQuoteController extends Screen implements Initializable
         }else IO.logAndAlert("View Quote", "Selected Quote is invalid.", IO.TAG_ERROR);
 
         computeQuoteTotal();
+    }
+
+    @Override
+    public void refreshModel()
+    {
+        ResourceManager.getInstance().initialize();
     }
 
     /**
@@ -1095,7 +1092,7 @@ public class ViewQuoteController extends Screen implements Initializable
             //QuoteManager.getInstance().updateQuote(selected, ((QuoteItem[]) tblQuoteItems.getItems().toArray()), ((Employee[])tblSaleReps.getItems().toArray()));
             QuoteManager.getInstance().updateQuote(selected, tblQuoteItems.getItems(), tblSaleReps.getItems());
 
-            refresh();
+            refreshView();
             //tblQuoteItems.refresh();
             //tblSaleReps.refresh();
         }

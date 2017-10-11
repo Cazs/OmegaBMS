@@ -1,14 +1,10 @@
 package fadulousbms.controllers;
 
 import fadulousbms.auxilary.IO;
-import fadulousbms.auxilary.PDF;
 import fadulousbms.auxilary.Screen;
 import fadulousbms.managers.AssetManager;
-import fadulousbms.managers.ScreenManager;
 import fadulousbms.managers.SessionManager;
 import fadulousbms.model.Employee;
-import fadulousbms.model.Screens;
-import javafx.application.Platform;
 import javafx.embed.swing.SwingFXUtils;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -36,7 +32,7 @@ public class JournalController extends Screen implements Initializable
     VBox vBox;
 
     @Override
-    public void refresh()
+    public void refreshView()
     {
         Employee e = SessionManager.getInstance().getActiveEmployee();
         if(e!=null)
@@ -68,6 +64,12 @@ public class JournalController extends Screen implements Initializable
         //bpDatePickerContainer.getChildren().add(vBox);
     }
 
+    @Override
+    public void refreshModel()
+    {
+
+    }
+
     /**
      * Initializes the controller class.
      */
@@ -76,7 +78,7 @@ public class JournalController extends Screen implements Initializable
     {
         try
         {
-            AssetManager.getInstance().initialize(this.getScreenManager());
+            AssetManager.getInstance().initialize();
             defaultProfileImage = ImageIO.read(new File("images/profile.png"));
             Image image = SwingFXUtils.toFXImage(defaultProfileImage, null);
             this.getProfileImageView().setImage(image);

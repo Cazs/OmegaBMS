@@ -1,0 +1,19 @@
+<component name="libraryTable">
+  <library name="lib">
+    <CLASSES>
+      <root url="jar://$PROJECT_DIR$/dist/bundles/FadulousBMS/runtime/lib/jsse.jar!/" />
+      <root url="jar://$PROJECT_DIR$/dist/bundles/FadulousBMS/runtime/lib/rt.jar!/" />
+      <root url="jar://$PROJECT_DIR$/dist/bundles/FadulousBMS/runtime/lib/jce.jar!/" />
+      <root url="jar://$PROJECT_DIR$/dist/bundles/FadulousBMS/runtime/lib/jfxswt.jar!/" />
+      <root url="jar://$PROJECT_DIR$/dist/bundles/FadulousBMS/runtime/lib/javaws.jar!/" />
+      <root url="jar://$PROJECT_DIR$/dist/bundles/FadulousBMS/runtime/lib/resources.jar!/" />
+      <root url="jar://$PROJECT_DIR$/dist/bundles/FadulousBMS/runtime/lib/management-agent.jar!/" />
+      <root url="jar://$PROJECT_DIR$/dist/bundles/FadulousBMS/runtime/lib/jfr.jar!/" />
+      <root url="jar://$PROJECT_DIR$/dist/bundles/FadulousBMS/runtime/lib/charsets.jar!/" />
+      <root url="jar://$PROJECT_DIR$/dist/bundles/FadulousBMS/runtime/lib/deploy.jar!/" />
+      <root url="jar://$PROJECT_DIR$/dist/bundles/FadulousBMS/runtime/lib/plugin.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES />
+  </library>
+</component>

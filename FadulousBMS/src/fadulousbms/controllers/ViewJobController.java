@@ -8,7 +8,6 @@ package fadulousbms.controllers;
 import fadulousbms.auxilary.Globals;
 import fadulousbms.auxilary.IO;
 import fadulousbms.auxilary.Screen;
-import fadulousbms.auxilary.Validators;
 import fadulousbms.managers.*;
 import fadulousbms.model.*;
 import javafx.collections.FXCollections;
@@ -23,7 +22,6 @@ import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import javafx.util.Callback;
 
-import javax.swing.*;
 import java.net.URL;
 import java.time.DateTimeException;
 import java.util.Date;
@@ -49,11 +47,8 @@ public class ViewJobController extends Screen implements Initializable
     private TextArea txtRequest;
 
     @Override
-    public void refresh()
+    public void refreshView()
     {
-        QuoteManager.getInstance().initialize(this.getScreenManager());
-        ResourceManager.getInstance().initialize(this.getScreenManager());
-
         tblEmployees.getItems().clear();
 
         //Setup Sale Reps table
@@ -111,6 +106,13 @@ public class ViewJobController extends Screen implements Initializable
             }
             else IO.log(getClass().getName(), IO.TAG_WARN, "job [" + selected.get_id() + "] has no representatives.");
         }else IO.logAndAlert("Job Viewer", "Selected Job is invalid.", IO.TAG_ERROR);
+    }
+
+    @Override
+    public void refreshModel()
+    {
+        QuoteManager.getInstance().initialize();
+        ResourceManager.getInstance().initialize();
     }
 
     /**

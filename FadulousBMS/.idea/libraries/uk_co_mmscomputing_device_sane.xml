@@ -1,9 +1,0 @@
-<component name="libraryTable">
-  <library name="uk.co.mmscomputing.device.sane">
-    <CLASSES>
-      <root url="jar://$PROJECT_DIR$/lib/uk.co.mmscomputing.device.sane.jar!/" />
-    </CLASSES>
-    <JAVADOC />
-    <SOURCES />
-  </library>
-</component>

@@ -11,7 +11,6 @@ import fadulousbms.managers.*;
 import fadulousbms.model.*;
 import javafx.application.Platform;
 import javafx.collections.FXCollections;
-import javafx.embed.swing.SwingFXUtils;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
@@ -20,14 +19,12 @@ import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.control.cell.TextFieldTableCell;
-import javafx.scene.image.Image;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
 import javafx.util.Callback;
 
 import java.io.IOException;
 import java.net.URL;
-import java.util.ArrayList;
 import java.util.ResourceBundle;
 
 /**
@@ -44,23 +41,9 @@ public class ExpensesController extends Screen implements Initializable
                             colDateLogged,colCreator,colAccount,colOther,colAction;
 
     @Override
-    public void refresh()
+    public void refreshView()
     {
-        //Set Employee name
-        /*Employee e = SessionManager.getInstance().getActiveEmployee();
-
-        if(e!=null)
-            this.getUserNameLabel().setText(e.toString());
-        else IO.log(getClass().getName(), IO.TAG_ERROR, "No active sessions.");
-        //Set default profile photo
-        if(HomescreenController.defaultProfileImage!=null)
-        {
-            Image image = SwingFXUtils.toFXImage(HomescreenController.defaultProfileImage, null);
-            this.getProfileImageView().setImage(image);
-        }else IO.log(getClass().getName(), "default profile image is null.", IO.TAG_ERROR);*/
-
-        ExpenseManager.getInstance().initialize(this.getScreenManager());
-        SupplierManager.getInstance().initialize(this.getScreenManager());
+        IO.log(getClass().getName(), IO.TAG_INFO, "reloading expenses view..");
 
         //Set up expenses table
         colId.setCellValueFactory(new PropertyValueFactory<>("_id"));
@@ -73,7 +56,6 @@ public class ExpensesController extends Screen implements Initializable
         CustomTableViewControls.makeEditableTableColumn(colAccount, TextFieldTableCell.forTableColumn(), 100, "account", "/api/expense");
         CustomTableViewControls.makeEditableTableColumn(colOther, TextFieldTableCell.forTableColumn(), 100, "extra", "/api/expense");
 
-        final ScreenManager screenManager = this.getScreenManager();
         Callback colGenericCellFactory
                 =
                 new Callback<TableColumn<Expense, String>, TableCell<Expense, String>>()
@@ -154,40 +136,23 @@ public class ExpensesController extends Screen implements Initializable
         tblExpenses.setItems(FXCollections.observableArrayList(ExpenseManager.getInstance().getExpenses()));
     }
 
+    @Override
+    public void refreshModel()
+    {
+        ExpenseManager.getInstance().initialize();
+        SupplierManager.getInstance().initialize();
+    }
+
     /**
      * Initializes the controller class.
      */
     @Override
     public void initialize(URL url, ResourceBundle rb) 
     {
-        refresh();
-    }
-
-    @FXML
-    public void newExpenseClick()
-    {
-        final ScreenManager screenManager = this.getScreenManager();
-        this.getScreenManager().showLoadingScreen(param ->
+        new Thread(() ->
         {
-            new Thread(new Runnable()
-            {
-                @Override
-                public void run()
-                {
-                    try
-                    {
-                        if(screenManager.loadScreen(Screens.NEW_EXPENSE.getScreen(),getClass().getResource("../views/"+Screens.NEW_EXPENSE.getScreen())))
-                        {
-                            Platform.runLater(() ->
-                                    screenManager.setScreen(Screens.NEW_EXPENSE.getScreen()));
-                        } else IO.log(getClass().getName(), IO.TAG_ERROR, "could not load expense creation screen.");
-                    } catch (IOException e)
-                    {
-                        IO.log(getClass().getName(), IO.TAG_ERROR, e.getMessage());
-                    }
-                }
-            }).start();
-            return null;
-        });
+            refreshModel();
+            Platform.runLater(() -> refreshView());
+        }).start();
     }
 }

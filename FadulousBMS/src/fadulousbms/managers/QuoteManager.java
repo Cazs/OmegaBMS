@@ -38,9 +38,8 @@ public class QuoteManager extends BusinessObjectManager
     }
 
     @Override
-    public void initialize(ScreenManager screenManager)
+    public void initialize()
     {
-        this.screenManager = screenManager;
         //init genders
         BusinessObject male = new Gender();
         male.set_id("male");
@@ -277,11 +276,11 @@ public class QuoteManager extends BusinessObjectManager
                                 this.serialize(ROOT_PATH+filename, quotes);
                             }else{
                                 IO.log(getClass().getName(), IO.TAG_ERROR, "no quotes found in database.");
-                                IO.showMessage("No quotes", "no quotes found in database.", IO.TAG_ERROR);
+                                //IO.showMessage("No quotes", "no quotes found in database.", IO.TAG_ERROR);
                             }
                         }else{
                             IO.log(getClass().getName(), IO.TAG_ERROR, "quotes object is null.");
-                            IO.showMessage("No quotes", "no quotes found in database.", IO.TAG_ERROR);
+                            //IO.showMessage("No quotes", "no quotes found in database.", IO.TAG_ERROR);
                         }
                     } else{
                         IO.log(this.getClass().getName(), IO.TAG_INFO, "binary object ["+ROOT_PATH+filename+"] on local disk is already up-to-date.");
@@ -489,26 +488,30 @@ public class QuoteManager extends BusinessObjectManager
                 {
                     //new quote_item
                     //prepare parameters for quote_item.
-                    ArrayList params = new ArrayList<>();
+                    /*ArrayList params = new ArrayList<>();
                     params.add(new AbstractMap.SimpleEntry<>("item_number", quoteItem.getItem_number()));
                     params.add(new AbstractMap.SimpleEntry<>("resource_id", quoteItem.getResource().get_id()));
                     params.add(new AbstractMap.SimpleEntry<>("quote_id", quote_id));
                     params.add(new AbstractMap.SimpleEntry<>("markup", quoteItem.getMarkup()));
                     params.add(new AbstractMap.SimpleEntry<>("labour", quoteItem.getLabour()));
                     params.add(new AbstractMap.SimpleEntry<>("quantity", quoteItem.getQuantity()));
-                    params.add(new AbstractMap.SimpleEntry<>("additional_costs", quoteItem.getAdditional_costs()));
+                    params.add(new AbstractMap.SimpleEntry<>("additional_costs", quoteItem.getAdditional_costs()));*/
 
-                    all_successful = createQuoteItem(quote_id, params, headers);
+
+                    quoteItem.setQuote_id(quote_id);
+                    quoteItem.setResource_id(quoteItem.getResource().get_id());
+
+                    all_successful = createQuoteItem(quote_id, quoteItem, headers);
                 }
             } else IO.log(getClass().getName(), IO.TAG_ERROR, "invalid[null] quote_item.");
         }
         return all_successful;
     }
 
-    public boolean createQuoteItem(String quote_id, ArrayList params,ArrayList<AbstractMap.SimpleEntry<String,String>> headers) throws IOException
+    public boolean createQuoteItem(String quote_id, QuoteItem quoteItem,ArrayList<AbstractMap.SimpleEntry<String,String>> headers) throws IOException
     {
         IO.log(getClass().getName(), IO.TAG_INFO, "attempting to create new quote_item for quote[" + quote_id + "].");
-        HttpURLConnection connection = RemoteComms.postData("/api/quote/resource/add", params, headers);
+        HttpURLConnection connection = RemoteComms.postData("/api/quote/resource/add", quoteItem.asUTFEncodedString(), headers);
 
         if (connection != null)
         {
@@ -533,10 +536,10 @@ public class QuoteManager extends BusinessObjectManager
         return false;
     }
 
-    public boolean createQuoteItem(String quote_id, QuoteItem item, ArrayList<AbstractMap.SimpleEntry<String,String>> headers) throws IOException
+    public boolean createQuoteItem(String quote_id, ArrayList params,ArrayList<AbstractMap.SimpleEntry<String,String>> headers) throws IOException
     {
         IO.log(getClass().getName(), IO.TAG_INFO, "attempting to create new quote_item for quote[" + quote_id + "].");
-        HttpURLConnection connection = RemoteComms.postData("/api/quote/resource/add", item.asUTFEncodedString(), headers);
+        HttpURLConnection connection = RemoteComms.postData("/api/quote/resource/add", params, headers);
 
         if (connection != null)
         {

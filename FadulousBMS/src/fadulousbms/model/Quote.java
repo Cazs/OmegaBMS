@@ -215,24 +215,7 @@ public class Quote implements BusinessObject, Serializable
         {
             for (QuoteItem item : this.getResources())
             {
-                //compute additional costs for each Quote Item
-                if (item.getAdditional_costs() != null)
-                {
-                    if (!item.getAdditional_costs().isEmpty())
-                    {
-                        String[] costs = item.getAdditional_costs().split(";");
-                        for (String str_cost : costs)
-                        {
-                            if (str_cost.contains("="))
-                            {
-                                double cost = Double.parseDouble(str_cost.split("=")[1]);
-                                total += cost;
-                            } else IO.log(getClass().getName(), IO.TAG_ERROR, "invalid Quote Item additional cost.");
-                        }
-                    }
-                }
-                //add Quote Item rate*quantity to total
-                total += item.getRateValue() * item.getQuantityValue() + item.getLabourCost();
+                total += item.getTotal();
             }
         }
         return total;

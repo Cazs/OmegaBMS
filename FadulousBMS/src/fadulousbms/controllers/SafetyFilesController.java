@@ -29,7 +29,6 @@ import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.net.URL;
 import java.util.AbstractMap;
@@ -49,11 +48,8 @@ public class SafetyFilesController extends Screen implements Initializable
     private TableColumn colIndex,colLabel,colPath,colRequired,colOptions,colType,colSelect,colAction;
 
     @Override
-    public void refresh()
+    public void refreshView()
     {
-        EmployeeManager.getInstance().initialize(this.getScreenManager());
-        SafetyManager.getInstance().initialize(this.getScreenManager());
-
         Employee e = SessionManager.getInstance().getActiveEmployee();
         if(e!=null)
             this.getUserNameLabel().setText(e.getFirstname() + " " + e.getLastname());
@@ -71,6 +67,13 @@ public class SafetyFilesController extends Screen implements Initializable
         ObservableList<FileMetadata> lst_safety = FXCollections.observableArrayList();
         lst_safety.addAll(SafetyManager.getInstance().getDocuments());
         tblSafety.setItems(lst_safety);
+    }
+
+    @Override
+    public void refreshModel()
+    {
+        EmployeeManager.getInstance().initialize();
+        SafetyManager.getInstance().initialize();
     }
 
     /**

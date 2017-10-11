@@ -94,7 +94,7 @@ public class IO
     public static void logAndAlert(String title, String msg, String type)
     {
         log(title, type, msg);
-        showMessage(title, msg, type);
+        //showMessage(title, msg, type);
     }
 
     public static String readStream(InputStream stream) throws IOException

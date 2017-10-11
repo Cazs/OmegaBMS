@@ -5,10 +5,12 @@ import fadulousbms.auxilary.RemoteComms;
 import fadulousbms.auxilary.Screen;
 import fadulousbms.auxilary.Validators;
 import fadulousbms.managers.ResourceManager;
+import fadulousbms.managers.ScreenManager;
 import fadulousbms.managers.SessionManager;
 import fadulousbms.managers.SupplierManager;
 import fadulousbms.model.Resource;
 import fadulousbms.model.ResourceType;
+import fadulousbms.model.Screens;
 import fadulousbms.model.Supplier;
 import javafx.collections.FXCollections;
 import javafx.fxml.FXML;
@@ -40,46 +42,15 @@ public class NewResourceController extends Screen implements Initializable
     private ComboBox<ResourceType> cbxResourceType;
 
     @Override
-    public void refresh()
+    public void refreshView()
+    {
+        cbxResourceType.setItems(FXCollections.observableArrayList(ResourceManager.getInstance().getResource_types()));
+    }
+
+    @Override
+    public void refreshModel()
     {
         ResourceManager.getInstance().loadDataFromServer();
-        /*cbxResourceType.setCellFactory(new Callback<ListView<ResourceType>, ListCell<ResourceType>>()
-        {
-            @Override
-            public ListCell<ResourceType> call(ListView<ResourceType> lst_resource_types)
-            {
-                return new ListCell<ResourceType>()
-                {
-                    @Override
-                    protected void updateItem(ResourceType resource_type, boolean empty)
-                    {
-                        super.updateItem(resource_type, empty);
-                        if(resource_type!=null && !empty)
-                        {
-                            setText(resource_type.getType_name());
-                        }else{
-                            setText("");
-                        }
-                    }
-                };
-            }
-        });
-        cbxResourceType.setButtonCell(new ListCell<ResourceType>()
-        {
-            @Override
-            protected void updateItem(ResourceType resource_type, boolean empty)
-            {
-                super.updateItem(resource_type, empty);
-                if(resource_type!=null && !empty)
-                {
-                    setText(resource_type.getType_name());
-                }else{
-                    setText("");
-                }
-            }
-        });*/
-        cbxResourceType.setItems(FXCollections.observableArrayList(ResourceManager.getInstance().getResource_types()));
-        //cbxResourceType.setItems(FXCollections.observableArrayList(new String[]{"vehicle","equipment"}));
     }
 
     /**
@@ -214,5 +185,33 @@ public class NewResourceController extends Screen implements Initializable
         {
             IO.logAndAlert(getClass().getName(), e.getMessage(), IO.TAG_ERROR);
         }
+    }
+
+    @FXML
+    public void previousScreen()
+    {
+        final ScreenManager screenManager = ScreenManager.getInstance();
+        ScreenManager.getInstance().showLoadingScreen(param ->
+        {
+            new Thread(new Runnable()
+            {
+                @Override
+                public void run()
+                {
+                    try
+                    {
+                        if(screenManager.loadScreen(Screens.OPERATIONS.getScreen(),getClass().getResource("../views/"+Screens.OPERATIONS.getScreen())))
+                        {
+                            //Platform.runLater(() ->
+                            screenManager.setScreen(Screens.OPERATIONS.getScreen());
+                        } else IO.log(getClass().getName(), IO.TAG_ERROR, "could not load operations screen.");
+                    } catch (IOException e)
+                    {
+                        IO.log(getClass().getName(), IO.TAG_ERROR, e.getMessage());
+                    }
+                }
+            }).start();
+            return null;
+        });
     }
 }

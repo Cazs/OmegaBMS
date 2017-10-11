@@ -17,7 +17,10 @@
                     <menus>
                         <Menu mnemonicParsing="false" text="File">
                             <items>
-                                <MenuItem mnemonicParsing="false" text="Close" />
+                                <MenuItem mnemonicParsing="false" onAction="#createAssetClick" text="New Asset" />
+                        <MenuItem mnemonicParsing="false" onAction="#newExpenseClick" text="New Expense" />
+                        <MenuItem mnemonicParsing="false" onAction="#newRevenueClick" text="New Additional Revenue" />
+                        <MenuItem mnemonicParsing="false" text="Close" />
                             </items>
                         </Menu>
                         <Menu mnemonicParsing="false" text="Selected">
@@ -90,7 +93,7 @@
         </BorderPane>
         <TabPane id="BMSTabs" stylesheets="@../styles/tabs.css" tabClosingPolicy="UNAVAILABLE" VBox.vgrow="ALWAYS" xmlns:fx="http://javafx.com/fxml">
             <tabs>
-                <fx:include source="InvoicesTab.fxml"/>
+                <fx:include source="InvoicesTab.fxml" />
                 <fx:include source="ExpensesTab.fxml" />
                 <fx:include source="IncomeTab.fxml" />
                 <fx:include source="AssetsTab.fxml" />

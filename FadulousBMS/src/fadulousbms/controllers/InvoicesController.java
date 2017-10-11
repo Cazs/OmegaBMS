@@ -45,25 +45,9 @@ public class InvoicesController extends Screen implements Initializable
                             colCreator,colExtra,colAction;
 
     @Override
-    public void refresh()
+    public void refreshView()
     {
-        //Set Employee name
-        /*Employee e = SessionManager.getInstance().getActiveEmployee();
-        if(e!=null)
-            this.getUserNameLabel().setText(e.toString());
-        else IO.log(getClass().getName(), IO.TAG_ERROR, "No active sessions.");
-        //Set Employee profile photo
-        //Set default profile photo
-        if(HomescreenController.defaultProfileImage!=null)
-        {
-            Image image = SwingFXUtils.toFXImage(HomescreenController.defaultProfileImage, null);
-            this.getProfileImageView().setImage(image);
-        }else IO.log(getClass().getName(), "default profile image is null.", IO.TAG_ERROR);*/
-
-        EmployeeManager.getInstance().loadDataFromServer();
-        InvoiceManager.getInstance().loadDataFromServer();
-        ClientManager.getInstance().loadDataFromServer();
-        JobManager.getInstance().loadDataFromServer();
+        IO.log(getClass().getName(), IO.TAG_INFO, "reloading invoices view..");
 
         colInvoiceNum.setMinWidth(140);
         colInvoiceNum.setCellValueFactory(new PropertyValueFactory<>("invoice_number"));
@@ -84,7 +68,7 @@ public class InvoicesController extends Screen implements Initializable
         lst_invoices.addAll(InvoiceManager.getInstance().getInvoices());
         tblInvoices.setItems(lst_invoices);
 
-        final ScreenManager screenManager = this.getScreenManager();
+        final ScreenManager screenManager = ScreenManager.getInstance();
         Callback<TableColumn<Invoice, String>, TableCell<Invoice, String>> cellFactory
                 =
                 new Callback<TableColumn<Invoice, String>, TableCell<Invoice, String>>()
@@ -271,62 +255,19 @@ public class InvoicesController extends Screen implements Initializable
     @Override
     public void initialize(URL url, ResourceBundle rb) 
     {
-        refresh();
-        /*colAction.setCellFactory(new ButtonTableCellFactory<>());
+        new Thread(() ->
+        {
+            refreshModel();
+            Platform.runLater(() -> refreshView());
+        }).start();
+    }
 
-        colAction.setCellValueFactory(new PropertyValueFactory<>(""));
-
-        Callback<TableColumn<QuoteItem, String>, TableCell<QuoteItem, String>> cellFactory
-                =
-                new Callback<TableColumn<QuoteItem, String>, TableCell<QuoteItem, String>>()
-                {
-                    @Override
-                    public TableCell call(final TableColumn<QuoteItem, String> param)
-                    {
-                        final TableCell<QuoteItem, String> cell = new TableCell<QuoteItem, String>()
-                        {
-                            final Button btnAdd = new Button("Add materials");
-                            final Button btnRemove = new Button("Remove item");
-
-                            @Override
-                            public void updateItem(String item, boolean empty)
-                            {
-                                super.updateItem(item, empty);
-
-                                if (empty)
-                                {
-                                    setGraphic(null);
-                                    setText(null);
-                                } else
-                                {
-                                    HBox hBox = new HBox(btnAdd, btnRemove);
-
-                                    btnAdd.setOnAction(event ->
-                                    {
-                                        QuoteItem quoteItem = getTableView().getItems().get(getIndex());
-                                        addQuoteItemAdditionalMaterial(quoteItem);
-                                        System.out.println("Successfully added material quote number " + quoteItem.getItem_number());
-                                    });
-
-                                    btnRemove.setOnAction(event ->
-                                    {
-                                        QuoteItem quoteItem = getTableView().getItems().get(getIndex());
-                                        getTableView().getItems().remove(quoteItem);
-                                        System.out.println("Successfully removed quote item " + quoteItem.getItem_number());
-                                    });
-
-                                    hBox.setFillHeight(true);
-                                    HBox.setHgrow(hBox, Priority.ALWAYS);
-                                    hBox.setSpacing(5);
-                                    setGraphic(hBox);
-                                    setText(null);
-                                }
-                            }
-                        };
-                    return cell;
-                    }
-                };
-
-        colAction.setCellFactory(cellFactory);*/
+    @Override
+    public void refreshModel()
+    {
+        EmployeeManager.getInstance().loadDataFromServer();
+        InvoiceManager.getInstance().loadDataFromServer();
+        ClientManager.getInstance().loadDataFromServer();
+        JobManager.getInstance().loadDataFromServer();
     }
 }

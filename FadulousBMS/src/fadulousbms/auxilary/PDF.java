@@ -468,12 +468,12 @@ public class PDF
         contents.lineTo(w-10, (line_pos-LINE_HEIGHT+(int)Math.ceil(LINE_HEIGHT/2)));
         contents.stroke();
 
-        int col_divider_start = line_pos;
+        int col_divider_start = line_pos-LINE_HEIGHT;
 
         //vertical line going through center of page
         contents.setStrokingColor(Color.BLACK);
         contents.moveTo((w/2), center_vert_line_start);
-        contents.lineTo((w/2),(col_divider_start+LINE_HEIGHT+(int)Math.ceil(LINE_HEIGHT/2)));
+        contents.lineTo((w/2),(col_divider_start+LINE_HEIGHT*2+(int)Math.ceil(LINE_HEIGHT/2)));
         contents.stroke();
         //
         contents.moveTo((w/2), (col_divider_start+(int)Math.ceil(LINE_HEIGHT/2)));
@@ -482,7 +482,7 @@ public class PDF
 
         contents.beginText();
         addTextToPageStream(contents,"Site Location: " + quote.getSitename(),PDType1Font.HELVETICA, 13,20, line_pos);
-        addTextToPageStream(contents,"Total Incl. VAT: "+String.valueOf(DecimalFormat.getCurrencyInstance().format(quote.getTotal()+quote.getTotal()*(Quote.VAT/100))), PDType1Font.COURIER_BOLD_OBLIQUE, 14, (int)((w/2)+15), line_pos);
+        //addTextToPageStream(contents,"Total Incl. VAT: "+String.valueOf(DecimalFormat.getCurrencyInstance().format(quote.getTotal()+quote.getTotal()*(Quote.VAT/100))), PDType1Font.COURIER_BOLD_OBLIQUE, 14, (int)((w/2)+15), line_pos);
         line_pos-=LINE_HEIGHT;//next line
 
         contents.endText();
@@ -567,16 +567,15 @@ public class PDF
                 addTextToPageStream(contents, String.valueOf(DecimalFormat.getCurrencyInstance().format(item.getLabourCost())), digit_font_size,col_pos+5, line_pos);
                 col_pos+=55;//next column
                 //Total col
-                double total = item.getQuantityValue()*item.getRateValue()+item.getLabourCost();
-                sub_total+=total;
-                addTextToPageStream(contents, String.valueOf(DecimalFormat.getCurrencyInstance().format(total)), digit_font_size,col_pos+5, line_pos);
+                sub_total+=item.getTotal();
+                addTextToPageStream(contents, String.valueOf(DecimalFormat.getCurrencyInstance().format(item.getTotal())), digit_font_size,col_pos+5, line_pos);
 
                 line_pos -= LINE_HEIGHT;//next line
             }
             IO.log(TAG, IO.TAG_INFO, "successfully created quote PDF.");
         }else IO.log(TAG, IO.TAG_INFO, "quote has no resources.");
         col_pos = 0;
-        line_pos -= LINE_HEIGHT;//skip another line
+        //line_pos -= LINE_HEIGHT;//skip another line
         /*if the page can't hold another 2 lines add a new page
         if(line_pos-LINE_HEIGHT*2<h-logo_h-(ROW_COUNT*LINE_HEIGHT) || temp_pos-LINE_HEIGHT*2<h-logo_h-(ROW_COUNT*LINE_HEIGHT))
         {
@@ -590,18 +589,55 @@ public class PDF
             line_pos = (int)h-logo_h;
             col_divider_start = line_pos+LINE_HEIGHT;
         }*/
+        //solid horizontal line
+        int col_divider_end= line_pos;
+
+        contents.endText();
+        contents.setStrokingColor(Color.BLACK);
+        contents.moveTo(10, line_pos+LINE_HEIGHT/2);
+        contents.lineTo(w-10, line_pos+LINE_HEIGHT/2);
+        contents.stroke();
+
+        contents.beginText();
         addTextToPageStream(contents, "Sub-Total Excl. VAT: ", PDType1Font.COURIER_BOLD_OBLIQUE, 14,col_pos+30, line_pos);
         addTextToPageStream(contents, String.valueOf(DecimalFormat.getCurrencyInstance().format(sub_total)), PDType1Font.COURIER_BOLD_OBLIQUE, 14,(int)(5+(w/2)), line_pos);
         line_pos -= LINE_HEIGHT;//next line
 
+        //solid horizontal line
+        contents.endText();
+        contents.setStrokingColor(Color.BLACK);
+        contents.moveTo(10, line_pos+LINE_HEIGHT/2);
+        contents.lineTo(w-10, line_pos+LINE_HEIGHT/2);
+        contents.stroke();
+
         double vat = sub_total*(Quote.VAT/100);
+        contents.beginText();
         addTextToPageStream(contents, "VAT: ", PDType1Font.COURIER_BOLD_OBLIQUE, 14,col_pos+30, line_pos);
         addTextToPageStream(contents, String.valueOf(DecimalFormat.getCurrencyInstance().format(vat)), PDType1Font.COURIER_BOLD_OBLIQUE, 14,(int)(5+(w/2)), line_pos);
-        contents.endText();
+        line_pos -= LINE_HEIGHT;//next line
 
-        int col_divider_end = line_pos;
-        line_pos -= LINE_HEIGHT*2;//next 2nd line
-        //solid horizontal lines after quote_items
+        //solid horizontal line
+        contents.endText();
+        contents.setStrokingColor(Color.BLACK);
+        contents.moveTo(10, line_pos+LINE_HEIGHT/2);
+        contents.lineTo(w-10, line_pos+LINE_HEIGHT/2);
+        contents.stroke();
+
+        contents.beginText();
+        addTextToPageStream(contents, "Total Incl. VAT: ", PDType1Font.COURIER_BOLD_OBLIQUE, 14,col_pos+30, line_pos);
+        addTextToPageStream(contents, String.valueOf(DecimalFormat.getCurrencyInstance().format(sub_total + vat)), PDType1Font.COURIER_BOLD_OBLIQUE, 14,(int)(5+(w/2)), line_pos);
+        contents.endText();
+        line_pos -= LINE_HEIGHT;//next line
+
+        //solid horizontal line
+        contents.setStrokingColor(Color.BLACK);
+        contents.moveTo(10, line_pos+LINE_HEIGHT/2);
+        contents.lineTo(w-10, line_pos+LINE_HEIGHT/2);
+        contents.stroke();
+
+        //int col_divider_end = line_pos;
+        line_pos -= LINE_HEIGHT*3;//next 3rd line
+        /*solid horizontal lines after quote_items
         contents.setStrokingColor(Color.BLACK);
         contents.moveTo(10, col_divider_end+LINE_HEIGHT+LINE_HEIGHT/2);
         contents.lineTo(w-10, col_divider_end+LINE_HEIGHT+LINE_HEIGHT/2);
@@ -611,7 +647,7 @@ public class PDF
         contents.stroke();
         contents.moveTo(10, col_divider_end-LINE_HEIGHT+LINE_HEIGHT/2);
         contents.lineTo(w-10, col_divider_end-LINE_HEIGHT+LINE_HEIGHT/2);
-        contents.stroke();
+        contents.stroke();*/
 
         //quote content column dividers
         //#1
@@ -621,7 +657,8 @@ public class PDF
         //vertical line going through center of page again
         contents.setStrokingColor(Color.BLACK);
         contents.moveTo((w/2), (col_divider_start-LINE_HEIGHT+(int)Math.ceil(LINE_HEIGHT/2)));
-        contents.lineTo((w/2),col_divider_end-LINE_HEIGHT/2);
+        contents.lineTo((w/2), col_divider_end+LINE_HEIGHT+LINE_HEIGHT/2);
+        //contents.lineTo((w/2),col_divider_end-LINE_HEIGHT/2);
         contents.stroke();
         //#3+
         for(int i=1;i<5;i++)//7 cols in total

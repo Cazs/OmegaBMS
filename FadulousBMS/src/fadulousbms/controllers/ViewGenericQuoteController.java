@@ -12,7 +12,6 @@ import fadulousbms.auxilary.Validators;
 import fadulousbms.managers.*;
 import fadulousbms.model.*;
 import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.*;
@@ -21,7 +20,6 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
 import javafx.util.Callback;
 
-import javax.swing.*;
 import java.io.IOException;
 import java.net.HttpURLConnection;
 import java.net.URL;
@@ -51,10 +49,8 @@ public class ViewGenericQuoteController extends Screen implements Initializable
     private ToggleButton btnStatus;
 
     @Override
-    public void refresh()
+    public void refreshView()
     {
-        QuoteManager.getInstance().initialize(this.getScreenManager());
-
         GenericQuote quote = GenericQuoteManager.getInstance().getSelectedGenericQuote();
         if(quote!=null)
         {
@@ -76,6 +72,12 @@ public class ViewGenericQuoteController extends Screen implements Initializable
             }
             tblGenericQuoteItems.setItems(FXCollections.observableArrayList(quote.getResources()));
         }
+    }
+
+    @Override
+    public void refreshModel()
+    {
+        QuoteManager.getInstance().initialize();
     }
 
     /**

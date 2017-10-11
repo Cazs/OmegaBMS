@@ -38,20 +38,13 @@ import java.util.logging.Logger;
 public class SafetyController extends Screen implements Initializable
 {
     @Override
-    public void refresh()
+    public void refreshView()
     {
         Employee e = SessionManager.getInstance().getActiveEmployee();
         if(e!=null)
             this.getUserNameLabel().setText(e.getFirstname() + " " + e.getLastname());
         else IO.log(getClass().getName(), IO.TAG_ERROR, "No active sessions.");
-    }
 
-    /**
-     * Initializes the controller class.
-     */
-    @Override
-    public void initialize(URL url, ResourceBundle rb) 
-    {
         try
         {
             //Set default profile photo
@@ -61,7 +54,7 @@ public class SafetyController extends Screen implements Initializable
             this.getProfileImageView().setImage(image);
 
             //Set current logged in employee
-            Employee e = SessionManager.getInstance().getActiveEmployee();
+            //Employee e = SessionManager.getInstance().getActiveEmployee();
             if(e!=null)
                 this.getUserNameLabel().setText(e.getFirstname() + " " + e.getLastname());
 
@@ -71,12 +64,26 @@ public class SafetyController extends Screen implements Initializable
         }
     }
 
+    @Override
+    public void refreshModel()
+    {
+
+    }
+
+    /**
+     * Initializes the controller class.
+     */
+    @Override
+    public void initialize(URL url, ResourceBundle rb) 
+    {
+    }
+
     public void safetyClick()
     {
         try
         {
-            if(this.getScreenManager().loadScreen(Screens.SAFETY_FILES.getScreen(),getClass().getResource("../views/"+Screens.SAFETY_FILES.getScreen())))
-                this.getScreenManager().setScreen(Screens.SAFETY_FILES.getScreen());
+            if(ScreenManager.getInstance().loadScreen(Screens.SAFETY_FILES.getScreen(),getClass().getResource("../views/"+Screens.SAFETY_FILES.getScreen())))
+                ScreenManager.getInstance().setScreen(Screens.SAFETY_FILES.getScreen());
             else IO.log(getClass().getName(), IO.TAG_ERROR, "could not load safety files screen.");
         } catch (IOException e)
         {

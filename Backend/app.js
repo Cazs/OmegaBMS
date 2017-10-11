@@ -47,6 +47,7 @@ const vericodes = require('./models/system/vericodes.js');
 const counters = require('./models/system/counters.js');
 const expenses = require('./models/expenses/expenses.js');
 const revenues = require('./models/revenue/revenue.js');
+const purchaseorders = require('./models/purchase_orders/purchase_orders.js');
 
 mongoose.connect('mongodb://localhost/fadulousbms');
 
@@ -82,6 +83,74 @@ app.get('/api/timestamp/:object_id', function(req, res)
   });
 });
 
+/**** Purchase orders route handlers ****/
+app.get('/api/purchaseorder/:object_id',function(req, res)
+{
+  get(req, res, purchaseorders, function(err, obj)
+  {
+    if(err)
+    {
+      errorAndCloseConnection(res,500,errors.INTERNAL_ERR);
+      logServerError(err);
+      return;
+    }
+    if(obj)
+    {
+      console.log('user with session_id [%s] requested purchase order [%s].', req.headers.cookie, obj._id);
+      res.json(obj);
+    }else{
+      console.log('database returned a null object for the request of %s', obj._id);
+      res.end();
+    }
+  });
+});
+
+app.get('/api/purchaseorders', function(req, res)
+{
+  getAll(req, res, purchaseorders, function(err, objs)
+  {
+    if(err)
+    {
+      errorAndCloseConnection(res,500,errors.INTERNAL_ERR);
+      logServerError(err);
+      return;
+    }
+    console.log('user with session_id [%s] requested all purchase orders in the database.', req.headers.cookie);
+    res.json(objs);
+  });
+});
+
+app.post('/api/purchaseorder/add',function(req, res)
+{
+  add(req, res, purchaseorders, function(err, purchaseorder)
+  {
+    if(err)
+    {
+      errorAndCloseConnection(res, 500, errors.INTERNAL_ERR);
+      logServerError(err);
+      return;
+    }
+    console.log('created new purchase order:\n %s',JSON.stringify(purchaseorder));
+    var id =purchaseorder._id;
+    res.json({"message":id.toString()});
+  });
+});
+
+app.post('/api/purchaseorder/update/:object_id',function(req, res)
+{
+  update(req, res, purchaseorders, function(err, purchaseorder)
+  {
+    if(err)
+    {
+      errorAndCloseConnection(res, 500, errors.INTERNAL_ERR);
+      logServerError(err);
+      return;
+    }
+    console.log('successfully updated purchase order[%s].\n', purchaseorder._id.toString());
+    res.json(quote);
+  });
+});
+
 /**** Quotes route handlers ****/
 app.get('/api/quote/:object_id',function(req, res)
 {
@@ -98,7 +167,7 @@ app.get('/api/quote/:object_id',function(req, res)
       console.log('user with session_id [%s] requested quote [%s].', req.headers.cookie, obj._id);
       res.json(obj);
     }else{
-      console.log('database returned a null object for the request of %s', obj_id);
+      console.log('database returned a null object for the request of %s', obj._id);
       res.end();
     }
   });
@@ -158,6 +227,7 @@ app.get('/api/quote/resources/:object_id',function(req, res)
 
 app.post('/api/quote/resource/add',function(req, res)
 {
+  console.log('attempting to create quote_resource: %s', req.params.body);
   add(req, res, quote_resources, function(err, quote_resource)
   {
     if(err)
@@ -1816,6 +1886,8 @@ createCounter('resources_timestamp');
 createCounter('assets_timestamp');
 createCounter('expenses_timestamp');
 createCounter('revenues_timestamp');
+createCounter('purchaseorders_timestamp');
+createCounter('purchaseorder_count');
 
 app.listen(PORT);
 console.log('..::%s server is now running at localhost on port %s::..',APP_NAME, PORT);

@@ -1,0 +1,13 @@
+<component name="libraryTable">
+  <library name="jars">
+    <CLASSES>
+      <root url="jar://$PROJECT_DIR$/lib/ImageJ/plugins/jars/Scan_.jar!/" />
+      <root url="jar://$PROJECT_DIR$/lib/ImageJ/plugins/jars/BeanShell.jar!/" />
+      <root url="jar://$PROJECT_DIR$/lib/ImageJ/plugins/jars/uk.co.mmscomputing.device.sane.jar!/" />
+      <root url="jar://$PROJECT_DIR$/lib/ImageJ/plugins/jars/uk.co.mmscomputing.device.twain.jar!/" />
+      <root url="jar://$PROJECT_DIR$/lib/ImageJ/plugins/jars/Auto_Threshold.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES />
+  </library>
+</component>

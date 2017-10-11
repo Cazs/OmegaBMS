@@ -5,33 +5,25 @@
  */
 package fadulousbms.controllers;
 
-import fadulousbms.auxilary.Globals;
 import fadulousbms.auxilary.IO;
 import fadulousbms.auxilary.Screen;
 import fadulousbms.managers.*;
 import fadulousbms.model.*;
+import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-import javafx.embed.swing.SwingFXUtils;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
-import javafx.scene.Group;
-import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.control.cell.TextFieldTableCell;
-import javafx.scene.image.Image;
-import javafx.scene.image.ImageView;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
-import javafx.stage.Stage;
 import javafx.util.Callback;
 
 import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 /**
  * views Controller class
@@ -48,22 +40,9 @@ public class ClientsController extends Screen implements Initializable
                             colClientDatePartnered,colClientWebsite,colClientOther,colAction;
 
     @Override
-    public void refresh()
+    public void refreshView()
     {
-        ClientManager.getInstance().initialize(this.getScreenManager());
-
-        //Set Employee name
-        /*Employee e = SessionManager.getInstance().getActiveEmployee();
-        if(e!=null)
-            this.getUserNameLabel().setText(e.toString());
-        else IO.log(getClass().getName(), IO.TAG_ERROR, "No active sessions.");
-        //Set Employee profile photo
-        //Set default profile photo
-        if(HomescreenController.defaultProfileImage!=null)
-        {
-            Image image = SwingFXUtils.toFXImage(HomescreenController.defaultProfileImage, null);
-            this.getProfileImageView().setImage(image);
-        }else IO.log(getClass().getName(), "default profile image is null.", IO.TAG_ERROR);*/
+        IO.log(getClass().getName(), IO.TAG_INFO, "reloading clients view..");
 
         colClientId.setMinWidth(100);
         colClientId.setCellValueFactory(new PropertyValueFactory<>("_id"));
@@ -81,7 +60,7 @@ public class ClientsController extends Screen implements Initializable
         lst_clients.addAll(ClientManager.getInstance().getClients());
         tblClients.setItems(lst_clients);
 
-        final ScreenManager screenManager = this.getScreenManager();
+        final ScreenManager screenManager = ScreenManager.getInstance();
         Callback<TableColumn<Client, String>, TableCell<Client, String>> cellFactory
                 =
                 new Callback<TableColumn<Client, String>, TableCell<Client, String>>()
@@ -154,13 +133,24 @@ public class ClientsController extends Screen implements Initializable
                 ClientManager.getInstance().setSelected(tblClients.getSelectionModel().getSelectedItem()));
     }
 
+    @Override
+    public void refreshModel()
+    {
+        IO.log(getClass().getName(), IO.TAG_INFO, "reloading clients data model..");
+        ClientManager.getInstance().initialize();
+    }
+
     /**
      * Initializes the controller class.
      */
     @Override
     public void initialize(URL url, ResourceBundle rb) 
     {
-        refresh();
+        new Thread(() ->
+        {
+            refreshModel();
+            Platform.runLater(() -> refreshView());
+        }).start();
     }
 
     @FXML
@@ -168,8 +158,8 @@ public class ClientsController extends Screen implements Initializable
     {
         try
         {
-            if(this.getScreenManager().loadScreen(Screens.NEW_CLIENT.getScreen(),getClass().getResource("../views/"+Screens.NEW_CLIENT.getScreen())))
-                this.getScreenManager().setScreen(Screens.NEW_CLIENT.getScreen());
+            if(ScreenManager.getInstance().loadScreen(Screens.NEW_CLIENT.getScreen(),getClass().getResource("../views/"+Screens.NEW_CLIENT.getScreen())))
+                ScreenManager.getInstance().setScreen(Screens.NEW_CLIENT.getScreen());
             else IO.log(getClass().getName(), IO.TAG_ERROR, "could not load client creation screen.");
         } catch (IOException e)
         {

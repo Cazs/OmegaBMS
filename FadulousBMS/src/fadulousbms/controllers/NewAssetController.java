@@ -6,11 +6,9 @@ import fadulousbms.auxilary.Screen;
 import fadulousbms.auxilary.Validators;
 import fadulousbms.managers.AssetManager;
 import fadulousbms.managers.ResourceManager;
+import fadulousbms.managers.ScreenManager;
 import fadulousbms.managers.SessionManager;
-import fadulousbms.model.Asset;
-import fadulousbms.model.AssetType;
-import fadulousbms.model.Resource;
-import fadulousbms.model.ResourceType;
+import fadulousbms.model.*;
 import javafx.collections.FXCollections;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -42,46 +40,15 @@ public class NewAssetController extends Screen implements Initializable
     private ComboBox<AssetType> cbxAssetType;
 
     @Override
-    public void refresh()
+    public void refreshView()
     {
-        AssetManager.getInstance().loadDataFromServer();
-        /*cbxResourceType.setCellFactory(new Callback<ListView<ResourceType>, ListCell<ResourceType>>()
-        {
-            @Override
-            public ListCell<ResourceType> call(ListView<ResourceType> lst_resource_types)
-            {
-                return new ListCell<ResourceType>()
-                {
-                    @Override
-                    protected void updateItem(ResourceType resource_type, boolean empty)
-                    {
-                        super.updateItem(resource_type, empty);
-                        if(resource_type!=null && !empty)
-                        {
-                            setText(resource_type.getType_name());
-                        }else{
-                            setText("");
-                        }
-                    }
-                };
-            }
-        });
-        cbxResourceType.setButtonCell(new ListCell<ResourceType>()
-        {
-            @Override
-            protected void updateItem(ResourceType resource_type, boolean empty)
-            {
-                super.updateItem(resource_type, empty);
-                if(resource_type!=null && !empty)
-                {
-                    setText(resource_type.getType_name());
-                }else{
-                    setText("");
-                }
-            }
-        });*/
         cbxAssetType.setItems(FXCollections.observableArrayList(AssetManager.getInstance().getAsset_types()));
-        //cbxResourceType.setItems(FXCollections.observableArrayList(new String[]{"vehicle","equipment"}));
+    }
+
+    @Override
+    public void refreshModel()
+    {
+        AssetManager.getInstance().initialize();
     }
 
     /**

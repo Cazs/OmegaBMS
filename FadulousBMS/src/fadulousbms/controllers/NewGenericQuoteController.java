@@ -44,10 +44,16 @@ public class NewGenericQuoteController extends Screen implements Initializable
     private TextArea txtRequest;
 
     @Override
-    public void refresh()
+    public void refreshView()
     {
-        QuoteManager.getInstance().initialize(this.getScreenManager());
-        ResourceManager.getInstance().initialize(this.getScreenManager());
+
+    }
+
+    @Override
+    public void refreshModel()
+    {
+        QuoteManager.getInstance().initialize();
+        ResourceManager.getInstance().initialize();
     }
 
     /**

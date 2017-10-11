@@ -121,25 +121,7 @@ public class FadulousBMS extends Application
         {
             IO.log(getClass().getName(), ex.getMessage(), IO.TAG_ERROR);
         }
-        //screen_mgr.loadScreen("loading.fxml",getClass().getResource("views/loading.fxml"));
-        //screen_mgr.loadScreen(Screens.LOGIN.getScreen(),getClass().getResource("views/"+Screens.LOGIN.getScreen()));
-        //screen_mgr.loadScreen(Screens.SETTINGS.getScreen(),getClass().getResource("views/"+Screens.SETTINGS.getScreen()));
-        //screen_mgr.loadScreen(Screens.CREATE_ACCOUNT.getScreen(),getClass().getResource("views/"+Screens.CREATE_ACCOUNT.getScreen()));
-        //screen_mgr.loadScreen(Screens.RESET_PWD.getScreen(),getClass().getResource("views/"+Screens.RESET_PWD.getScreen()));
-        //screen_mgr.loadScreen(Screens.NEW_QUOTE.getScreen(),getClass().getResource("views/"+Screens.NEW_QUOTE.getScreen()));
-        //screen_mgr.loadScreen(Screens.QUOTES.getScreen(),getClass().getResource("views/"+Screens.QUOTES.getScreen()));
-        //screen_mgr.loadScreen(Screens.VIEW_QUOTE.getScreen(),getClass().getResource("views/"+Screens.VIEW_QUOTE.getScreen()));
-        //screen_mgr.loadScreen(Screens.JOBS.getScreen(),getClass().getResource("views/"+Screens.JOBS.getScreen()));
-        //screen_mgr.loadScreen(Screens.VIEW_JOB.getScreen(),getClass().getResource("views/"+Screens.VIEW_JOB.getScreen()));
-        //screen_mgr.loadScreen(Screens.NEW_GENERIC_QUOTE.getScreen(),getClass().getResource("views/"+Screens.NEW_GENERIC_QUOTE.getScreen()));
-        //screen_mgr.loadScreen(Screens.VIEW_GENERIC_QUOTE.getScreen(),getClass().getResource("views/"+Screens.VIEW_GENERIC_QUOTE.getScreen()));
-        //screen_mgr.loadScreen(Screens.CLIENTS.getScreen(),getClass().getResource("views/"+Screens.CLIENTS.getScreen()));
-        //screen_mgr.loadScreen(Screens.SUPPLIERS.getScreen(),getClass().getResource("views/"+Screens.SUPPLIERS.getScreen()));
-        //screen_mgr.loadScreen(Screens.RESOURCES.getScreen(),getClass().getResource("views/"+Screens.RESOURCES.getScreen()));
-        //screen_mgr.loadScreen(Screens.GENERIC_QUOTES.getScreen(),getClass().getResource("views/"+Screens.GENERIC_QUOTES.getScreen()));
-        //screen_mgr.loadScreen(Screens.REJECTED_QUOTES.getScreen(),getClass().getResource("views/"+Screens.REJECTED_QUOTES.getScreen()));
 
-        //screen_mgr.loadScreen("loading.fxml", getClass().getResource("views/loading.fxml"));
         if(screen_mgr.loadScreen(Screens.LOGIN.getScreen(),getClass().getResource("views/"+Screens.LOGIN.getScreen())))
         {
             screen_mgr.setScreen(Screens.LOGIN.getScreen());
@@ -161,7 +143,7 @@ public class FadulousBMS extends Application
             stage.show();
         }else
         {
-            IO.log(getClass().getName(), IO.TAG_ERROR, "screens were not successfully loaded.");
+            IO.log(getClass().getName(), IO.TAG_ERROR, "login screen was not successfully loaded.");
         }
     }
 
