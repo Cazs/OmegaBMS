@@ -116,7 +116,7 @@
                     <PropertyValueFactory property="resource_description" />
                 </cellValueFactory>
             </TableColumn>
-            <TableColumn fx:id="colValue" maxWidth="1.7976931348623157E308" minWidth="150.0" prefWidth="-1.0" text="Value">
+            <TableColumn fx:id="colValue" maxWidth="1.7976931348623157E308" minWidth="150.0" prefWidth="-1.0" text="Cost">
                 <cellValueFactory>
                     <PropertyValueFactory property="resource_value" />
                 </cellValueFactory>

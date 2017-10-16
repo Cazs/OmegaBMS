@@ -20,6 +20,7 @@ import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
+import javafx.util.Callback;
 
 import javax.swing.*;
 import java.io.File;
@@ -125,37 +126,35 @@ public class ClientManager extends BusinessObjectManager
         }
     }
 
-    public void handleNewClient(Stage parentStage)
+    public void newClientWindow(Callback callback)
     {
-        parentStage.setAlwaysOnTop(false);
         Stage stage = new Stage();
-        stage.setTitle(Globals.APP_NAME.getValue() + " - Add New Client");
+        stage.setTitle(Globals.APP_NAME.getValue() + " - Create New Client");
         stage.setMinWidth(320);
-        stage.setMinHeight(350);
-        //stage.setHeight(700);
-        //stage.setAlwaysOnTop(true);
+        stage.setHeight(400);
+        stage.setAlwaysOnTop(true);
 
         VBox vbox = new VBox(1);
 
         final TextField txt_client_name = new TextField();
         txt_client_name.setMinWidth(200);
         txt_client_name.setMaxWidth(Double.MAX_VALUE);
-        HBox client_name = CustomTableViewControls.getLabelledNode("Client name", 200, txt_client_name);
+        HBox client_name = CustomTableViewControls.getLabelledNode("Client Name", 200, txt_client_name);
 
         final TextArea txt_physical_address = new TextArea();
         txt_physical_address.setMinWidth(200);
         txt_physical_address.setMaxWidth(Double.MAX_VALUE);
-        HBox physical_address = CustomTableViewControls.getLabelledNode("Client physical address", 200, txt_physical_address);
+        HBox physical_address = CustomTableViewControls.getLabelledNode("Physical Address", 200, txt_physical_address);
 
         final TextArea txt_postal_address = new TextArea();
         txt_postal_address.setMinWidth(200);
         txt_postal_address.setMaxWidth(Double.MAX_VALUE);
-        HBox postal_address = CustomTableViewControls.getLabelledNode("Client postal address", 200, txt_postal_address);
+        HBox postal_address = CustomTableViewControls.getLabelledNode("Postal Address", 200, txt_postal_address);
 
         final TextField txt_tel = new TextField();
         txt_tel.setMinWidth(200);
         txt_tel.setMaxWidth(Double.MAX_VALUE);
-        HBox tel = CustomTableViewControls.getLabelledNode("Client tel number", 200, txt_tel);
+        HBox tel = CustomTableViewControls.getLabelledNode("Tel Number", 200, txt_tel);
 
         final CheckBox chbx_active = new CheckBox();
         chbx_active.setMinWidth(200);
@@ -165,12 +164,12 @@ public class ClientManager extends BusinessObjectManager
         final DatePicker dpk_date_partnered = new DatePicker();
         dpk_date_partnered.setMinWidth(200);
         dpk_date_partnered.setMaxWidth(Double.MAX_VALUE);
-        HBox date_partnered = CustomTableViewControls.getLabelledNode("Date partnered", 200, dpk_date_partnered);
+        HBox date_partnered = CustomTableViewControls.getLabelledNode("Date Partnered", 200, dpk_date_partnered);
 
         final TextField txt_website = new TextField();
         txt_website.setMinWidth(200);
         txt_website.setMaxWidth(Double.MAX_VALUE);
-        HBox website = CustomTableViewControls.getLabelledNode("Client website", 200, txt_website);
+        HBox website = CustomTableViewControls.getLabelledNode("Website", 200, txt_website);
 
         final TextArea txt_other = new TextArea();
         txt_other.setMinWidth(200);
@@ -232,11 +231,12 @@ public class ClientManager extends BusinessObjectManager
                 {
                     if(connection.getResponseCode()==HttpURLConnection.HTTP_OK)
                     {
-                        JOptionPane.showMessageDialog(null, "Successfully added new client!", "Success", JOptionPane.INFORMATION_MESSAGE);
-                    }else
-                    {
-                        JOptionPane.showMessageDialog(null, connection.getResponseCode(), "Error", JOptionPane.INFORMATION_MESSAGE);
+                        IO.logAndAlert("Success", "Successfully added new client!", IO.TAG_INFO);
+                        callback.call(null);
+                    }else{
+                        IO.logAndAlert( "ERROR_" + connection.getResponseCode(),  IO.readStream(connection.getErrorStream()), IO.TAG_ERROR);
                     }
+                    connection.disconnect();
                 }
             } catch (IOException e)
             {

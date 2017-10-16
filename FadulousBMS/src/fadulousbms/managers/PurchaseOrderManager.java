@@ -81,7 +81,7 @@ public class PurchaseOrderManager extends BusinessObjectManager
                     headers.add(new AbstractMap.SimpleEntry<>("Cookie", smgr.getActive().getSessionId()));
 
                     //Get Timestamp
-                    String timestamp_json = RemoteComms.sendGetRequest("/api/timestamp/purchaseorders_timestamp", headers);
+                    String timestamp_json = RemoteComms.sendGetRequest("/api/timestamp/purchase_orders_timestamp", headers);
                     Counters cntr_timestamp = gson.fromJson(timestamp_json, Counters.class);
                     if(cntr_timestamp!=null)
                     {

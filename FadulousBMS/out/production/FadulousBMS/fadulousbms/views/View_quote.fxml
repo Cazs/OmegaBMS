@@ -39,6 +39,11 @@
                   <Insets right="5.0" />
                </HBox.margin>
             </Button>
+            <Button defaultButton="true" ellipsisString="x" layoutX="500.0" layoutY="10.0" minHeight="35.0" minWidth="100.0" mnemonicParsing="false" onMouseClicked="#createPDF" styleClass="btnDefault" stylesheets="@../styles/home.css" text="Generate PDF">
+               <HBox.margin>
+                  <Insets right="5.0" />
+               </HBox.margin>
+            </Button>
             <Button minHeight="35.0" minWidth="100.0" mnemonicParsing="false" onMouseClicked="#createJob" styleClass="btnAdd" stylesheets="@../styles/home.css" text="New Job" HBox.hgrow="ALWAYS">
                <HBox.margin>
                   <Insets right="5.0" />
@@ -96,7 +101,7 @@
                   <HBox prefHeight="100.0" prefWidth="200.0" GridPane.columnIndex="1" GridPane.hgrow="ALWAYS" GridPane.rowIndex="1">
                      <children>
                         <ComboBox fx:id="cbxClients" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minWidth="150.0" promptText="select client" HBox.hgrow="ALWAYS" />
-                        <Button minWidth="60.0" mnemonicParsing="false" styleClass="btnAdd" stylesheets="@../styles/home.css" text="New" HBox.hgrow="ALWAYS">
+                        <Button minWidth="60.0" mnemonicParsing="false" onMouseClicked="#newClient" styleClass="btnAdd" stylesheets="@../styles/home.css" text="New" HBox.hgrow="ALWAYS">
                            <HBox.margin>
                               <Insets left="10.0" />
                            </HBox.margin>

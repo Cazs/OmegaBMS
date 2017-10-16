@@ -1,5 +1,6 @@
 const mongoose = require('mongoose');
 var access_levels = require('../system/access_levels.js');
+var counters = require('../system/counters.js');
 
 const resourceTypeSchema = mongoose.Schema(
   {
@@ -24,7 +25,22 @@ module.exports.ACCESS_MODE = access_levels.NORMAL;//Required access level to exe
 
 module.exports.add = function (resource_type, callback)
 {
-  ResourceTypes.create(resource_type, callback);
+  console.log('attempting to create new resource_type.');
+  ResourceTypes.create(resource_type, function(error, res_obj)
+  {
+    if(error)
+    {
+      console.log(error);
+      if(callback)
+        callback(error);
+      return;
+    }
+    console.log('successfully created new resource_type.')
+    if(callback)
+      callback(error, res_obj);
+    //update timestamp
+    counters.timestamp('resources_timestamp');
+  });
 };
 
 module.exports.get = function (type_id, callback)
@@ -41,7 +57,21 @@ module.exports.getAll = function (callback)
 module.exports.update = function (type_id, resource_type, callback)
 {
   var query = {_id :type_id};
-  ResourceTypes.findOneAndUpdate(query, resource_type, {}, callback);
+  ResourceTypes.findOneAndUpdate(query, resource_type, {}, function(error, res_obj)
+  {
+    if(error)
+    {
+      console.log(error);
+      if(callback)
+        callback(error);
+      return;
+    }
+    console.log('successfully updated resource_type.')
+    if(callback)
+      callback(error, res_obj);
+    //update timestamp
+    counters.timestamp('resources_timestamp');
+  });
 };
 
 module.exports.isValid = function(resource_type)

@@ -16,17 +16,17 @@ public class PurchaseOrder implements BusinessObject, Serializable
     private String _id;
     private int number;
     private String supplier_id;
-    private String description;
-    private int quantity;
-    private double price;
-    private double discount;
+    private String contact_person_id;
     private double vat;
     private long date_logged;
     private String creator;
+    private String account;
+    private int status;
     private Employee creator_employee;
     private boolean marked;
     private String extra;
     public static final String TAG = "PurchaseOrder";
+    public PurchaseOrderItem[] resources;
 
     public StringProperty idProperty(){return new SimpleStringProperty(_id);}
 
@@ -88,62 +88,14 @@ public class PurchaseOrder implements BusinessObject, Serializable
         this.number = number;
     }
 
-    private StringProperty descriptionProperty(){return new SimpleStringProperty(description);}
-
-    public String getDescription()
-    {
-        return description;
-    }
-
-    public void setDescription(String description)
-    {
-        this.description = description;
-    }
-
-    private StringProperty quantityProperty(){return new SimpleStringProperty(String.valueOf(quantity));}
-
-    public String getQuantity()
-    {
-        return String.valueOf(quantity);
-    }
-
-    public int getQuantityValue()
-    {
-        return quantity;
-    }
-
-    public void setQuantity(int quantity)
-    {
-        this.quantity = quantity;
-    }
-
-    private StringProperty priceProperty(){return new SimpleStringProperty(String.valueOf(price));}
-
-    public double getPrice()
-    {
-        return price;
-    }
-
-    public void setPrice(double price)
-    {
-        this.price = price;
-    }
-
-    private StringProperty discountProperty(){return new SimpleStringProperty(String.valueOf(discount));}
-
-    public double getDiscount()
-    {
-        return discount;
-    }
-
-    public void setDiscount(double discount)
-    {
-        this.discount= discount;
-    }
-
     private StringProperty vatProperty(){return new SimpleStringProperty(String.valueOf(vat));}
 
-    public double getVat()
+    public String getVat()
+    {
+        return String.valueOf(vat);
+    }
+
+    public double getVatVal()
     {
         return vat;
     }
@@ -161,6 +113,36 @@ public class PurchaseOrder implements BusinessObject, Serializable
     public void setDate_logged(long date_logged)
     {
         this.date_logged = date_logged;
+    }
+
+    public String getSupplier_id()
+    {
+        return supplier_id;
+    }
+
+    public void setSupplier_id(String supplier_id)
+    {
+        this.supplier_id = supplier_id;
+    }
+
+    public String getContact_person_id()
+    {
+        return contact_person_id;
+    }
+
+    public void setContact_person_id(String contact_person_id)
+    {
+        this.contact_person_id = contact_person_id;
+    }
+
+    public PurchaseOrderItem[] getResources()
+    {
+        return resources;
+    }
+
+    public void setResources(PurchaseOrderItem[] resources)
+    {
+        this.resources = resources;
     }
 
     public StringProperty creatorProperty()
@@ -196,6 +178,30 @@ public class PurchaseOrder implements BusinessObject, Serializable
             setCreator(creator_employee.getUsr());
     }
 
+    private StringProperty accountProperty(){return new SimpleStringProperty(account);}
+
+    public String getAccount()
+    {
+        return account;
+    }
+
+    public void setAccount(String account)
+    {
+        this.account = account;
+    }
+
+    private StringProperty statusProperty(){return new SimpleStringProperty(String.valueOf(status));}
+
+    public int getStatus()
+    {
+        return status;
+    }
+
+    public void setStatus(int status)
+    {
+        this.status = status;
+    }
+
     private StringProperty extraProperty(){return new SimpleStringProperty(extra);}
 
     public String getExtra()
@@ -221,23 +227,14 @@ public class PurchaseOrder implements BusinessObject, Serializable
                 case "supplier_id":
                     supplier_id = String.valueOf(val);
                     break;
-                case "description":
-                    description = String.valueOf(val);
-                    break;
-                case "quantity":
-                    quantity = Integer.valueOf((String)val);
-                    break;
-                case "price":
-                    price = Double.valueOf((String)val);
-                    break;
-                case "discount":
-                    discount = Double.valueOf((String)val);
-                    break;
                 case "vat":
                     vat = Double.valueOf((String)val);
                     break;
                 case "date_logged":
                     date_logged = Long.valueOf((String)val);
+                    break;
+                case "status":
+                    status = Integer.valueOf((String)val);
                     break;
                 case "creator":
                     creator = (String)val;
@@ -266,20 +263,14 @@ public class PurchaseOrder implements BusinessObject, Serializable
                 return number;
             case "supplier_id":
                 return supplier_id;
-            case "description":
-                return description;
-            case "quantity":
-                return quantity;
-            case "price":
-                return price;
-            case "discount":
-                return discount;
             case "vat":
                 return vat;
             case "date_logged":
                 return date_logged;
             case "creator":
                 return creator;
+            case "status":
+                return status;
             case "extra":
                 return extra;
             default:
@@ -305,16 +296,14 @@ public class PurchaseOrder implements BusinessObject, Serializable
                     + URLEncoder.encode(String.valueOf(number), "UTF-8"));
             result.append("&" + URLEncoder.encode("supplier_id","UTF-8") + "="
                     + URLEncoder.encode(supplier_id, "UTF-8"));
-            result.append("&" + URLEncoder.encode("description","UTF-8") + "="
-                    + URLEncoder.encode(String.valueOf(description), "UTF-8"));
-            result.append("&" + URLEncoder.encode("quantity","UTF-8") + "="
-                    + URLEncoder.encode(String.valueOf(quantity), "UTF-8"));
-            result.append("&" + URLEncoder.encode("price","UTF-8") + "="
-                    + URLEncoder.encode(String.valueOf(price), "UTF-8"));
-            result.append("&" + URLEncoder.encode("discount","UTF-8") + "="
-                    + URLEncoder.encode(String.valueOf(discount), "UTF-8"));
+            result.append("&" + URLEncoder.encode("contact_person_id","UTF-8") + "="
+                    + URLEncoder.encode(contact_person_id, "UTF-8"));
             result.append("&" + URLEncoder.encode("vat","UTF-8") + "="
                     + URLEncoder.encode(String.valueOf(vat), "UTF-8"));
+            result.append("&" + URLEncoder.encode("status","UTF-8") + "="
+                    + URLEncoder.encode(String.valueOf(status), "UTF-8"));
+            result.append("&" + URLEncoder.encode("account","UTF-8") + "="
+                    + URLEncoder.encode(account, "UTF-8"));
             if(date_logged>0)
                 result.append("&" + URLEncoder.encode("date_logged","UTF-8") + "="
                         + URLEncoder.encode(String.valueOf(date_logged), "UTF-8"));

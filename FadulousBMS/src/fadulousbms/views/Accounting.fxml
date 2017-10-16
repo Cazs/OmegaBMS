@@ -20,6 +20,10 @@
                                 <MenuItem mnemonicParsing="false" onAction="#createAssetClick" text="New Asset" />
                         <MenuItem mnemonicParsing="false" onAction="#newExpenseClick" text="New Expense" />
                         <MenuItem mnemonicParsing="false" onAction="#newRevenueClick" text="New Additional Revenue" />
+                        <MenuItem mnemonicParsing="false" onAction="#generalJournalClick" text="Generate General Journal" />
+                        <MenuItem mnemonicParsing="false" onAction="#generalLedgerClick" text="Generate General Ledger" />
+                        <MenuItem mnemonicParsing="false" onAction="#newResource" text="New Material" />
+                        <MenuItem mnemonicParsing="false" onAction="#newResourceType" text="New Material Type" />
                         <MenuItem mnemonicParsing="false" text="Close" />
                             </items>
                         </Menu>
@@ -44,7 +48,7 @@
                     <center>
                         <VBox alignment="CENTER" BorderPane.alignment="CENTER">
                             <children>
-                                <Label text="Operations">
+                                <Label text="Accounting">
                                     <font>
                                         <Font size="24.0" />
                                     </font>

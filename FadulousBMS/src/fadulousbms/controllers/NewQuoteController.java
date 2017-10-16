@@ -8,6 +8,7 @@ package fadulousbms.controllers;
 import fadulousbms.auxilary.*;
 import fadulousbms.managers.*;
 import fadulousbms.model.*;
+import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -210,8 +211,8 @@ public class NewQuoteController extends Screen implements Initializable
     @Override
     public void refreshModel()
     {
-        QuoteManager.getInstance().initialize();
         ResourceManager.getInstance().initialize();
+        QuoteManager.getInstance().initialize();
     }
 
     /**
@@ -425,8 +426,15 @@ public class NewQuoteController extends Screen implements Initializable
                     btnAdd.setMinWidth(80);
                     btnAdd.setMinHeight(40);
                     btnAdd.setDefaultButton(true);
-                    btnAdd.getStyleClass().add("btnApply");
+                    btnAdd.getStyleClass().add("btnAdd");
                     btnAdd.getStylesheets().add(this.getClass().getResource("../styles/home.css").toExternalForm());
+
+                    Button btnNewMaterial = new Button("New Material");
+                    btnNewMaterial.setMinWidth(80);
+                    btnNewMaterial.setMinHeight(40);
+                    btnNewMaterial.setDefaultButton(true);
+                    btnNewMaterial.getStyleClass().add("btnAdd");
+                    btnNewMaterial.getStylesheets().add(this.getClass().getResource("../styles/home.css").toExternalForm());
 
                     Button btnCancel = new Button("Close");
                     btnCancel.setMinWidth(80);
@@ -438,7 +446,7 @@ public class NewQuoteController extends Screen implements Initializable
                     HBox.setHgrow(hBox, Priority.ALWAYS);
                     hBox.setSpacing(20);
 
-                    HBox hBoxButtons = new HBox(btnAdd, btnCancel);
+                    HBox hBoxButtons = new HBox(btnAdd, btnNewMaterial, btnCancel);
                     hBoxButtons.setHgrow(btnAdd, Priority.ALWAYS);
                     hBoxButtons.setHgrow(btnCancel, Priority.ALWAYS);
                     hBoxButtons.setSpacing(20);
@@ -455,6 +463,7 @@ public class NewQuoteController extends Screen implements Initializable
                     stage.setScene(new Scene(vBox));
                     stage.setAlwaysOnTop(true);
                     stage.show();
+
 
                     btnAdd.setOnAction(event ->
                     {
@@ -484,6 +493,17 @@ public class NewQuoteController extends Screen implements Initializable
                         } else IO.logAndAlert("New Quote Resource", "Invalid resource selected.", IO.TAG_ERROR);
                     });
 
+                    btnNewMaterial.setOnAction(event ->
+                            ResourceManager.getInstance().newResourceWindow(param ->
+                            {
+                                new Thread(() ->
+                                {
+                                    refreshModel();
+                                    Platform.runLater(() -> refreshView());
+                                }).start();
+                                return null;
+                            }));
+
                     btnCancel.setOnAction(event ->
                             stage.close());
                     return;
@@ -491,6 +511,20 @@ public class NewQuoteController extends Screen implements Initializable
             }
         }
         IO.logAndAlert("New Quote Resource", "No resources were found in the database, please add some resources first and try again.",IO.TAG_ERROR);
+    }
+
+    @FXML
+    public void newClient()
+    {
+        ClientManager.getInstance().newClientWindow(param ->
+        {
+            new Thread(() ->
+            {
+                refreshModel();
+                Platform.runLater(() -> refreshView());
+            }).start();
+            return null;
+        });
     }
 
     @FXML

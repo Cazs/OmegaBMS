@@ -12,6 +12,7 @@ import fadulousbms.model.Resource;
 import fadulousbms.model.ResourceType;
 import fadulousbms.model.Screens;
 import fadulousbms.model.Supplier;
+import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -44,7 +45,8 @@ public class NewResourceController extends Screen implements Initializable
     @Override
     public void refreshView()
     {
-        cbxResourceType.setItems(FXCollections.observableArrayList(ResourceManager.getInstance().getResource_types()));
+        if(ResourceManager.getInstance().getResource_types()!=null)
+            cbxResourceType.setItems(FXCollections.observableArrayList(ResourceManager.getInstance().getResource_types()));
     }
 
     @Override
@@ -59,6 +61,11 @@ public class NewResourceController extends Screen implements Initializable
     @Override
     public void initialize(URL url, ResourceBundle rb)
     {
+        new Thread(() ->
+        {
+            refreshModel();
+            Platform.runLater(() -> refreshView());
+        }).start();
     }
 
     @FXML
@@ -210,6 +217,20 @@ public class NewResourceController extends Screen implements Initializable
                         IO.log(getClass().getName(), IO.TAG_ERROR, e.getMessage());
                     }
                 }
+            }).start();
+            return null;
+        });
+    }
+
+    @FXML
+    public void newResourceType()
+    {
+        ResourceManager.getInstance().newResourceTypeWindow(param ->
+        {
+            new Thread(() ->
+            {
+                refreshModel();
+                Platform.runLater(() -> refreshView());
             }).start();
             return null;
         });

@@ -11,7 +11,7 @@
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.control.cell.PropertyValueFactory?>
 
-<VBox maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="fadulousbms.controllers.QuotesController">
+<VBox maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="fadulousbms.controllers.PurchaseOrdersController">
    <children>
       <HBox alignment="CENTER_LEFT" VBox.vgrow="NEVER">
          <children>
@@ -44,7 +44,7 @@
                <center>
                   <VBox alignment="CENTER" BorderPane.alignment="CENTER">
                      <children>
-                        <Label text="Accepted Quotes">
+                        <Label text="Quotes">
                            <font>
                               <Font size="24.0" />
                            </font>
@@ -95,16 +95,16 @@
          <children>
             <TableView fx:id="tblQuotes" editable="true" tableMenuButtonVisible="true" VBox.vgrow="ALWAYS">
               <columns>
-                <TableColumn fx:id="colId" maxWidth="1.7976931348623157E308" minWidth="80.0" prefWidth="-1.0" text="Quote ID" visible="false">
-                    <cellValueFactory>
-                        <PropertyValueFactory property="_id" />
-                    </cellValueFactory>
-                </TableColumn>
-                <TableColumn fx:id="colClient" maxWidth="1.7976931348623157E308" minWidth="180.0" prefWidth="-1.0" text="Client">
-                    <cellValueFactory>
-                        <PropertyValueFactory property="client_id" />
-                    </cellValueFactory>
-                </TableColumn>
+                  <TableColumn fx:id="colId" maxWidth="1.7976931348623157E308" minWidth="80.0" prefWidth="-1.0" text="Quote ID" visible="false">
+                      <cellValueFactory>
+                          <PropertyValueFactory property="_id" />
+                      </cellValueFactory>
+                  </TableColumn>
+                  <TableColumn fx:id="colClient" maxWidth="1.7976931348623157E308" minWidth="180.0" prefWidth="-1.0" text="Client">
+                      <cellValueFactory>
+                          <PropertyValueFactory property="client_id" />
+                      </cellValueFactory>
+                  </TableColumn>
                   <TableColumn fx:id="colRequest" maxWidth="1.7976931348623157E308" minWidth="250.0" prefWidth="-1.0" text="Request">
                       <cellValueFactory>
                           <PropertyValueFactory property="request" />
@@ -139,9 +139,9 @@
                       </cellValueFactory>
                   </TableColumn>
                   <TableColumn fx:id="colAction" maxWidth="1.7976931348623157E308" minWidth="220.0" prefWidth="-1.0" text="Action">
-                     <cellValueFactory>
-                        <PropertyValueFactory property="extra" />
-                     </cellValueFactory>
+                      <cellValueFactory>
+                          <PropertyValueFactory property="extra" />
+                      </cellValueFactory>
                   </TableColumn>
               </columns>
             </TableView>

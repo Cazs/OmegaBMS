@@ -198,6 +198,7 @@ public class QuotesController extends OperationsController implements Initializa
 
         EmployeeManager.getInstance().loadDataFromServer();
         ClientManager.getInstance().loadDataFromServer();
+        ResourceManager.getInstance().loadDataFromServer();
         QuoteManager.getInstance().loadDataFromServer();
     }
 

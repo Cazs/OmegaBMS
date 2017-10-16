@@ -207,6 +207,34 @@ public class OperationsController extends Screen implements Initializable
         });
     }
 
+    @FXML
+    public void createPurchaseOrderClick()
+    {
+        final ScreenManager screenManager = ScreenManager.getInstance();
+        ScreenManager.getInstance().showLoadingScreen(param ->
+        {
+            new Thread(new Runnable()
+            {
+                @Override
+                public void run()
+                {
+                    try
+                    {
+                        if(screenManager.loadScreen(Screens.NEW_PURCHASE_ORDER.getScreen(),getClass().getResource("../views/"+Screens.NEW_PURCHASE_ORDER.getScreen())))
+                        {
+                            Platform.runLater(() ->
+                                    screenManager.setScreen(Screens.NEW_PURCHASE_ORDER.getScreen()));
+                        } else IO.log(getClass().getName(), IO.TAG_ERROR, "could not load purchase order creation screen.");
+                    } catch (IOException e)
+                    {
+                        IO.log(getClass().getName(), IO.TAG_ERROR, e.getMessage());
+                    }
+                }
+            }).start();
+            return null;
+        });
+    }
+
     //nav
     @FXML
     public void productionClick()

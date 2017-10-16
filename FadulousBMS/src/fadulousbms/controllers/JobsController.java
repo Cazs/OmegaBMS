@@ -222,6 +222,7 @@ public class JobsController extends Screen implements Initializable
     public void refreshModel()
     {
         IO.log(getClass().getName(), IO.TAG_INFO, "reloading jobs data model..");
+        ResourceManager.getInstance().initialize();
         JobManager.getInstance().initialize();
     }
 

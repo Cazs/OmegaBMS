@@ -50,7 +50,9 @@ public enum Screens
     NEW_EXPENSE("NewExpense.fxml"),
     JOURNALS("Journals.fxml"),
     ADDITIONAL_REVENUE("Revenue.fxml"),
-    NEW_REVENUE("NewRevenue.fxml");
+    NEW_REVENUE("NewRevenue.fxml"),
+    PURCHASE_ORDER("PurchaseOrders.fxml"),
+    NEW_PURCHASE_ORDER("NewPurchaseOrder.fxml");
 
     private String screen;
     

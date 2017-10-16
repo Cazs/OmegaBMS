@@ -6,6 +6,7 @@
 package fadulousbms.controllers;
 
 import fadulousbms.auxilary.IO;
+import fadulousbms.auxilary.PDF;
 import fadulousbms.auxilary.Screen;
 import fadulousbms.managers.*;
 import fadulousbms.model.*;
@@ -228,7 +229,15 @@ public class InvoicesController extends Screen implements Initializable
                                         //IO.log(getClass().getName(), IO.TAG_INFO, "successfully removed quote: " + quote.get_id());
                                     });
 
-                                    //TODO: btnPDF.setOnAction(event -> InvoiceManager.generatePDF(invoice));
+                                    btnPDF.setOnAction(event -> {
+                                        try
+                                        {
+                                            PDF.createInvoicePdf(invoice);
+                                        } catch (IOException ex)
+                                        {
+                                            IO.log(getClass().getName(), IO.TAG_ERROR, ex.getMessage());
+                                        }
+                                    });
 
                                     hBox.setFillHeight(true);
                                     HBox.setHgrow(hBox, Priority.ALWAYS);

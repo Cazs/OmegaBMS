@@ -42,35 +42,20 @@ public class PurchaseOrdersController extends Screen implements Initializable
     @FXML
     private TableView tblPurchaseOrders;
     @FXML
-    private TableColumn colId,colNumber,colSupplier,colDescription,colQuantity,colPrice,
-                        colDateGenerated,colDiscount,colVat,colExtra,colAction;
+    private TableColumn colId,colPONumber,colSupplier,colDateLogged,colStatus,colCreator,colAccount,colVat,colTotal,colExtra,colAction;
 
     @Override
     public void refreshView()
     {
-        //Set Employee name
-        /*Employee e = SessionManager.getInstance().getActiveEmployee();
-        if(e!=null)
-            this.getUserNameLabel().setText(e.toString());
-        else IO.log(getClass().getName(), IO.TAG_ERROR, "No active sessions.");
-        //Set Employee profile photo
-        //Set default profile photo
-        if(HomescreenController.defaultProfileImage!=null)
-        {
-            Image image = SwingFXUtils.toFXImage(HomescreenController.defaultProfileImage, null);
-            this.getProfileImageView().setImage(image);
-        }else IO.log(getClass().getName(), "default profile image is null.", IO.TAG_ERROR);*/
-
         colId.setMinWidth(100);
         colId.setCellValueFactory(new PropertyValueFactory<>("_id"));
-        CustomTableViewControls.makeEditableTableColumn(colNumber, TextFieldTableCell.forTableColumn(), 215, "number", "/api/purchaseorder");
+        colPONumber.setCellValueFactory(new PropertyValueFactory<>("number"));
         CustomTableViewControls.makeComboBoxTableColumn(colSupplier, SupplierManager.getInstance().getSuppliers(), "supplier_id", "supplier_name", "/api/purchaseorder", 120);
-        CustomTableViewControls.makeEditableTableColumn(colDescription, TextFieldTableCell.forTableColumn(), 215, "description", "/api/purchaseorder");
-        CustomTableViewControls.makeEditableTableColumn(colQuantity, TextFieldTableCell.forTableColumn(), 50, "quantity", "/api/purchaseorder");
-        CustomTableViewControls.makeEditableTableColumn(colPrice, TextFieldTableCell.forTableColumn(), 80, "price", "/api/purchaseorder");
-        CustomTableViewControls.makeEditableTableColumn(colDiscount, TextFieldTableCell.forTableColumn(), 80, "discount", "/api/purchaseorder");
+        CustomTableViewControls.makeEditableTableColumn(colAccount, TextFieldTableCell.forTableColumn(), 80, "account", "/api/purchaseorder");
         CustomTableViewControls.makeEditableTableColumn(colVat, TextFieldTableCell.forTableColumn(), 50, "vat", "/api/purchaseorder");
-        CustomTableViewControls.makeLabelledDatePickerTableColumn(colDateGenerated, "date_logged", "/api/purchaseorder");
+        CustomTableViewControls.makeLabelledDatePickerTableColumn(colDateLogged, "date_logged", "/api/purchaseorder");
+        colStatus.setCellValueFactory(new PropertyValueFactory<>("status"));
+        colCreator.setCellValueFactory(new PropertyValueFactory<>("creator"));
         CustomTableViewControls.makeEditableTableColumn(colExtra, TextFieldTableCell.forTableColumn(), 215, "extra", "/api/purchaseorder");
 
         ObservableList<PurchaseOrder> lst_po = FXCollections.observableArrayList();
@@ -161,34 +146,11 @@ public class PurchaseOrdersController extends Screen implements Initializable
     @Override
     public void initialize(URL url, ResourceBundle rb) 
     {
-        //refreshView();
-    }
-
-    @FXML
-    public void createPurchaseOrderClick()
-    {
-        final ScreenManager screenManager = ScreenManager.getInstance();
-        ScreenManager.getInstance().showLoadingScreen(param ->
+        new Thread(() ->
         {
-            new Thread(new Runnable()
-            {
-                @Override
-                public void run()
-                {
-                    try
-                    {
-                        if(screenManager.loadScreen(Screens.NEW_RESOURCE.getScreen(),getClass().getResource("../views/"+Screens.NEW_RESOURCE.getScreen())))
-                        {
-                            Platform.runLater(() ->
-                                    screenManager.setScreen(Screens.NEW_RESOURCE.getScreen()));
-                        } else IO.log(getClass().getName(), IO.TAG_ERROR, "could not load resource creation screen.");
-                    } catch (IOException e)
-                    {
-                        IO.log(getClass().getName(), IO.TAG_ERROR, e.getMessage());
-                    }
-                }
-            }).start();
-            return null;
-        });
+            refreshModel();
+            if(PurchaseOrderManager.getInstance().getPurchaseOrders()!=null)
+                Platform.runLater(() -> refreshView());
+        }).start();
     }
 }

@@ -67,7 +67,7 @@ public abstract class Screen
         } catch (IOException e)
         {
             if(Globals.DEBUG_ERRORS.getValue().equalsIgnoreCase("on"))
-                IO.log(getClass().getName(), IO.TAG_ERROR, "could not refresh status bar: "+e.getMessage());
+                System.out.println(getClass().getName() + ">" + IO.TAG_ERROR + ">" + "could not refresh status bar: "+e.getMessage());
             Platform.runLater(() ->
             {
                 shpServerStatus.setFill(Color.RED);

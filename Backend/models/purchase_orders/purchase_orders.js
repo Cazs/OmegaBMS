@@ -2,7 +2,7 @@ const mongoose = require('mongoose');
 var access_levels = require('../system/access_levels.js');
 var counters = require('../system/counters.js');
 
-const purchaseOrderSchema = mongoose.Schema(
+const purchase_orderSchema = mongoose.Schema(
   {
     number:{
       type:Number,
@@ -12,23 +12,19 @@ const purchaseOrderSchema = mongoose.Schema(
       type:String,
       required:true
     },
-    description:{
+    contact_person_id:{
       type:String,
       required:true
     },
-    quantity:{
-      type:Number,
-      required:true
-    },
-    price:{
-      type:Number,
-      required:true
-    },
-    discount:{
-      type:Number,
-      required:true
-    },
     vat:{
+      type:Number,
+      required:true
+    },
+    account:{
+      type:String,
+      required:true
+    },
+    status:{
       type:Number,
       required:true
     },
@@ -47,14 +43,14 @@ const purchaseOrderSchema = mongoose.Schema(
     }
   });
 
-  const PurchaseOrders = module.exports = mongoose.model('purchaseorders',purchaseOrderSchema);
+  const purchase_orders = module.exports = mongoose.model('purchase_orders',purchase_orderSchema);
 
   module.exports.ACCESS_MODE = access_levels.NORMAL;//Required access level to execute these methods
 
-  module.exports.add = function(purchaseorder, callback)
+  module.exports.add = function(purchase_order, callback)
   {
     console.log('attempting to create new purchase order.');
-    PurchaseOrders.create(purchaseorder, function(error, res_obj)
+    purchase_orders.create(purchase_order, function(error, res_obj)
     {
       if(error)
       {
@@ -63,30 +59,30 @@ const purchaseOrderSchema = mongoose.Schema(
           callback(error);
         return;
       }
-      console.log('successfully created new purchaseorder.')
+      console.log('successfully created new purchase_order.')
       if(callback)
         callback(error, res_obj);
       //update timestamp
-      counters.timestamp('purchaseorders_timestamp');
+      counters.timestamp('purchase_orders_timestamp');
     });
   }
 
   module.exports.get = function(record_id, callback)
   {
     var query = {_id:record_id};
-    PurchaseOrders.find(query, callback);
+    purchase_orders.find(query, callback);
   }
 
   module.exports.getAll = function(callback)
   {
-    PurchaseOrders.find({}, callback);
+    purchase_orders.find({}, callback);
   }
 
-  module.exports.update = function(record_id, purchaseorder, callback)
+  module.exports.update = function(record_id, purchase_order, callback)
   {
     var query = {_id:record_id};
     console.log('attempting to update purchase order[%s].', record_id);
-    PurchaseOrders.findOneAndUpdate(query, purchaseorder, {}, function(error, res_obj)
+    purchase_orders.findOneAndUpdate(query, purchase_order, {}, function(error, res_obj)
     {
       if(error)
       {
@@ -99,31 +95,31 @@ const purchaseOrderSchema = mongoose.Schema(
       if(callback)
         callback(error, res_obj);
       //update timestamp
-      counters.timestamp('purchaseorders_timestamp');
+      counters.timestamp('purchase_orders_timestamp');
     });
   }
 
-  module.exports.isValid = function(purchaseorder)
+  module.exports.isValid = function(purchase_order)
   {
-    console.log('validating purchase order object:\n%s', JSON.stringify(purchaseorder));
+    console.log('validating purchase_order object:\n%s', JSON.stringify(purchase_order));
 
-    if(isNullOrEmpty(purchaseorder))
+    if(isNullOrEmpty(purchase_order))
       return false;
 
     //attribute validation
-    if(isNullOrEmpty(purchaseorder.supplier_id))
+    if(isNullOrEmpty(purchase_order.supplier_id))
       return false;
-    if(isNullOrEmpty(purchaseorder.description))
+    /*if(isNullOrEmpty(purchase_order.resource_id) && isNullOrEmpty(purchase_order.asset_id))
+      return false;*/
+    if(isNullOrEmpty(purchase_order.vat))
       return false;
-    if(isNullOrEmpty(purchaseorder.quantity))
+    if(isNullOrEmpty(purchase_order.status))
       return false;
-    if(isNullOrEmpty(purchaseorder.price))
+    if(isNullOrEmpty(purchase_order.contact_person_id))
       return false;
-    if(isNullOrEmpty(purchaseorder.discount))
+    if(isNullOrEmpty(purchase_order.account))
       return false;
-    if(isNullOrEmpty(purchaseorder.vat))
-      return false;
-    if(isNullOrEmpty(purchaseorder.creator))
+    if(isNullOrEmpty(purchase_order.creator))
       return false;
     
     console.log('valid purchase order object.');

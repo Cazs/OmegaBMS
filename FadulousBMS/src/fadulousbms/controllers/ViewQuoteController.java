@@ -8,6 +8,7 @@ package fadulousbms.controllers;
 import fadulousbms.auxilary.*;
 import fadulousbms.managers.*;
 import fadulousbms.model.*;
+import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -21,6 +22,7 @@ import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import javafx.util.Callback;
 
+import java.io.IOException;
 import java.net.URL;
 import java.time.DateTimeException;
 import java.util.*;
@@ -51,7 +53,6 @@ public class ViewQuoteController extends Screen implements Initializable
     private TextField txtCell,txtTel,txtTotal,txtQuoteId,txtFax,txtEmail,txtSite,txtDateGenerated,txtExtra;
     @FXML
     private TextArea txtRequest;
-    //private TableColumn<QuoteItem, String> col;
 
     @Override
     public void refreshView()
@@ -131,6 +132,7 @@ public class ViewQuoteController extends Screen implements Initializable
             }
         });
 
+        //TODO: Fix update quote item
         colQuantity.setCellValueFactory(new PropertyValueFactory<>("quantity"));
         //colQuantity.setCellFactory(col -> new fadulousbms.model.TextFieldTableCell("quantity", "quantity", callback));
         colQuantity.setCellFactory(param -> new TableCell()
@@ -880,6 +882,13 @@ public class ViewQuoteController extends Screen implements Initializable
                     btnAdd.getStyleClass().add("btnApply");
                     btnAdd.getStylesheets().add(this.getClass().getResource("../styles/home.css").toExternalForm());
 
+                    Button btnNewMaterial = new Button("New Material");
+                    btnNewMaterial.setMinWidth(80);
+                    btnNewMaterial.setMinHeight(40);
+                    btnNewMaterial.setDefaultButton(true);
+                    btnNewMaterial.getStyleClass().add("btnAdd");
+                    btnNewMaterial.getStylesheets().add(this.getClass().getResource("../styles/home.css").toExternalForm());
+
                     Button btnCancel = new Button("Close");
                     btnCancel.setMinWidth(80);
                     btnCancel.setMinHeight(40);
@@ -890,7 +899,7 @@ public class ViewQuoteController extends Screen implements Initializable
                     HBox.setHgrow(hBox, Priority.ALWAYS);
                     hBox.setSpacing(20);
 
-                    HBox hBoxButtons = new HBox(btnAdd, btnCancel);
+                    HBox hBoxButtons = new HBox(btnAdd, btnNewMaterial, btnCancel);
                     hBoxButtons.setHgrow(btnAdd, Priority.ALWAYS);
                     hBoxButtons.setHgrow(btnCancel, Priority.ALWAYS);
                     hBoxButtons.setSpacing(20);
@@ -934,6 +943,17 @@ public class ViewQuoteController extends Screen implements Initializable
 
                         } else IO.logAndAlert("New Quote Resource", "Invalid resource selected.", IO.TAG_ERROR);
                     });
+
+                    btnNewMaterial.setOnAction(event ->
+                            ResourceManager.getInstance().newResourceWindow(param ->
+                            {
+                                new Thread(() ->
+                                {
+                                    refreshModel();
+                                    Platform.runLater(() -> refreshView());
+                                }).start();
+                                return null;
+                            }));
 
                     btnCancel.setOnAction(event ->
                             stage.close());
@@ -1031,6 +1051,7 @@ public class ViewQuoteController extends Screen implements Initializable
         }else IO.showMessage("Session Expired", "No active sessions.", IO.TAG_ERROR);
     }
 
+    @FXML
     public void updateQuote()
     {
         cbxClients.getStylesheets().add(this.getClass().getResource("../styles/home.css").toExternalForm());
@@ -1098,79 +1119,7 @@ public class ViewQuoteController extends Screen implements Initializable
         }
     }
 
-    public void newJob()
-    {
-        SessionManager smgr = SessionManager.getInstance();
-        if(smgr.getActive()!=null)
-        {
-            if(!smgr.getActive().isExpired())
-            {
-                //Update Quote if already been added
-                if(txtQuoteId.getText()!=null)
-                {
-                    if(!txtQuoteId.getText().isEmpty())
-                    {
-                        cbxClients.getStylesheets().add(this.getClass().getResource("../styles/home.css").toExternalForm());
-                        if(cbxClients.getValue()==null)
-                        {
-                            cbxClients.getStyleClass().remove("form-control-default");
-                            cbxClients.getStyleClass().add("control-input-error");
-                            return;
-                        }else{
-                            cbxClients.getStyleClass().remove("control-input-error");
-                            cbxClients.getStyleClass().add("form-control-default");
-                        }
-
-                        cbxContactPerson.getStylesheets().add(this.getClass().getResource("../styles/home.css").toExternalForm());
-                        if(cbxContactPerson.getValue()==null)
-                        {
-                            cbxContactPerson.getStyleClass().remove("form-control-default");
-                            cbxContactPerson.getStyleClass().add("control-input-error");
-                            return;
-                        }else{
-                            cbxContactPerson.getStyleClass().remove("control-input-error");
-                            cbxContactPerson.getStyleClass().add("form-control-default");
-                        }
-                        if(!Validators.isValidNode(txtSite, txtSite.getText(), 1, ".+"))
-                        {
-                            txtSite.getStylesheets().add(this.getClass().getResource("../styles/home.css").toExternalForm());
-                            return;
-                        }
-                        //
-                        List<QuoteItem> quoteItems = tblQuoteItems.getItems();
-
-                        if(quoteItems==null)
-                        {
-                            IO.logAndAlert("Cannot Create Sale", "Can't create sale because this quote items list is null.", IO.TAG_ERROR);
-                            return;
-                        }
-                        if(quoteItems.size()<=0)
-                        {
-                            IO.logAndAlert("Cannot Create Sale", "Can't create sale because this quote has no items/resources", IO.TAG_ERROR);
-                            return;
-                        }
-
-                        List<Employee> quoteReps = tblSaleReps.getItems();
-                        if(quoteReps==null)
-                        {
-                            IO.logAndAlert("Cannot Create Sale", "Can't create sale because this quote has no representatives.", IO.TAG_ERROR);
-                            return;
-                        }
-                        if(quoteReps.size()<=0)
-                        {
-                            IO.logAndAlert("Cannot Create Sale", "Can't create sale because this quote has no representatives", IO.TAG_ERROR);
-                            return;
-                        }
-                        if(QuoteManager.getInstance().getSelectedQuote()!=null)
-                        {
-                            createJob();
-                        }else IO.logAndAlert("Cannot Create Sale", "Cannot create sale because the selected quote is invalid.", IO.TAG_ERROR);
-                    }
-                } else IO.logAndAlert("Invalid Quote", "Cannot create sale from this quote because the quote data is invalid.", IO.TAG_ERROR);
-            }else IO.showMessage("Session Expired", "Active session has expired.", IO.TAG_ERROR);
-        }else IO.showMessage("Session Expired", "No active sessions.", IO.TAG_ERROR);
-    }
-
+    @FXML
     public void createJob()
     {
         SessionManager smgr = SessionManager.getInstance();
@@ -1188,11 +1137,66 @@ public class ViewQuoteController extends Screen implements Initializable
                     else job.setJob_number(0);*/
 
                     if(JobManager.getInstance().createJob(job))
+                    {
                         IO.logAndAlert("Success", "Successfully created a new job.", IO.TAG_INFO);
-                    else IO.logAndAlert("Error", "Could not successfully create a new job.", IO.TAG_INFO);
+                    }else IO.logAndAlert("Error", "Could not successfully create a new job.", IO.TAG_INFO);
                 }else IO.logAndAlert("Cannot Create Job", "Cannot create job because the selected quote is invalid.", IO.TAG_ERROR);
             }else IO.showMessage("Session Expired", "Active session has expired.", IO.TAG_ERROR);
         }else IO.showMessage("Session Expired", "No active sessions.", IO.TAG_ERROR);
+    }
+
+    @FXML
+    public void newClient()
+    {
+        ClientManager.getInstance().newClientWindow(param ->
+        {
+            new Thread(() ->
+            {
+                refreshModel();
+                Platform.runLater(() -> refreshView());
+            }).start();
+            return null;
+        });
+    }
+
+    @FXML
+    public void createPDF()
+    {
+        try
+        {
+            PDF.createQuotePdf(QuoteManager.getInstance().getSelectedQuote());
+        } catch (IOException ex)
+        {
+            IO.log(getClass().getName(), IO.TAG_ERROR, ex.getMessage());
+        }
+    }
+
+    @FXML
+    public void previousScreen()
+    {
+        final ScreenManager screenManager = ScreenManager.getInstance();
+        ScreenManager.getInstance().showLoadingScreen(param ->
+        {
+            new Thread(new Runnable()
+            {
+                @Override
+                public void run()
+                {
+                    try
+                    {
+                        if(screenManager.loadScreen(Screens.OPERATIONS.getScreen(),getClass().getResource("../views/"+Screens.OPERATIONS.getScreen())))
+                        {
+                            //Platform.runLater(() ->
+                            screenManager.setScreen(Screens.OPERATIONS.getScreen());
+                        } else IO.log(getClass().getName(), IO.TAG_ERROR, "could not load operations screen.");
+                    } catch (IOException e)
+                    {
+                        IO.log(getClass().getName(), IO.TAG_ERROR, e.getMessage());
+                    }
+                }
+            }).start();
+            return null;
+        });
     }
 
     class ComboBoxTableCell extends TableCell<BusinessObject, String>

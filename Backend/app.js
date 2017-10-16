@@ -47,7 +47,8 @@ const vericodes = require('./models/system/vericodes.js');
 const counters = require('./models/system/counters.js');
 const expenses = require('./models/expenses/expenses.js');
 const revenues = require('./models/revenue/revenue.js');
-const purchaseorders = require('./models/purchase_orders/purchase_orders.js');
+const purchase_orders = require('./models/purchase_orders/purchase_orders.js');
+const purchase_order_items = require('./models/purchase_orders/purchase_order_items.js');
 
 mongoose.connect('mongodb://localhost/fadulousbms');
 
@@ -86,7 +87,7 @@ app.get('/api/timestamp/:object_id', function(req, res)
 /**** Purchase orders route handlers ****/
 app.get('/api/purchaseorder/:object_id',function(req, res)
 {
-  get(req, res, purchaseorders, function(err, obj)
+  get(req, res, purchase_orders, function(err, obj)
   {
     if(err)
     {
@@ -94,20 +95,14 @@ app.get('/api/purchaseorder/:object_id',function(req, res)
       logServerError(err);
       return;
     }
-    if(obj)
-    {
-      console.log('user with session_id [%s] requested purchase order [%s].', req.headers.cookie, obj._id);
-      res.json(obj);
-    }else{
-      console.log('database returned a null object for the request of %s', obj._id);
-      res.end();
-    }
+    console.log('user with session_id [%s] requested purchase order [%s].', req.headers.cookie, obj._id);
+    res.json(obj);
   });
 });
 
 app.get('/api/purchaseorders', function(req, res)
 {
-  getAll(req, res, purchaseorders, function(err, objs)
+  getAll(req, res, purchase_orders, function(err, objs)
   {
     if(err)
     {
@@ -122,7 +117,7 @@ app.get('/api/purchaseorders', function(req, res)
 
 app.post('/api/purchaseorder/add',function(req, res)
 {
-  add(req, res, purchaseorders, function(err, purchaseorder)
+  add(req, res, purchase_orders, function(err, purchaseorder)
   {
     if(err)
     {
@@ -138,7 +133,7 @@ app.post('/api/purchaseorder/add',function(req, res)
 
 app.post('/api/purchaseorder/update/:object_id',function(req, res)
 {
-  update(req, res, purchaseorders, function(err, purchaseorder)
+  update(req, res, purchase_orders, function(err, purchaseorder)
   {
     if(err)
     {
@@ -147,6 +142,68 @@ app.post('/api/purchaseorder/update/:object_id',function(req, res)
       return;
     }
     console.log('successfully updated purchase order[%s].\n', purchaseorder._id.toString());
+    res.json(quote);
+  });
+});
+
+/**** Purchase orders items route handlers ****/
+app.get('/api/purchaseorder/item/:object_id', function(req, res)
+{
+  get(req, res, purchase_order_items, function(err, obj)
+  {
+    if(err)
+    {
+      errorAndCloseConnection(res,500,errors.INTERNAL_ERR);
+      logServerError(err);
+      return;
+    }
+    console.log('user with session_id [%s] requested Purchase Order Item [%s].', req.headers.cookie, obj._id);
+    res.json(obj);
+  });
+});
+
+app.get('/api/purchaseorder/items/:object_id', function(req, res)
+{
+  getAll(req, res, purchase_order_items, function(err, objs)
+  {
+    if(err)
+    {
+      errorAndCloseConnection(res,500,errors.INTERNAL_ERR);
+      logServerError(err);
+      return;
+    }
+    console.log('user with session_id [%s] requested all Purchase Order Items for Purchase Order.', req.headers.cookie, req.params.object_id);
+    res.json(objs);
+  });
+});
+
+app.post('/api/purchaseorder/item/add',function(req, res)
+{
+  add(req, res, purchase_order_items, function(err, purchase_order_item)
+  {
+    if(err)
+    {
+      errorAndCloseConnection(res, 500, errors.INTERNAL_ERR);
+      logServerError(err);
+      return;
+    }
+    console.log('created new purchase_order_item:\n %s',JSON.stringify(purchase_order_item));
+    var id =purchase_order_item._id;
+    res.json({"message":id.toString()});
+  });
+});
+
+app.post('/api/purchaseorder/item/update/:object_id',function(req, res)
+{
+  update(req, res, purchase_order_items, function(err, purchase_order_item)
+  {
+    if(err)
+    {
+      errorAndCloseConnection(res, 500, errors.INTERNAL_ERR);
+      logServerError(err);
+      return;
+    }
+    console.log('successfully updated purchase_order_item [%s].\n', purchase_order_item._id.toString());
     res.json(quote);
   });
 });
@@ -327,6 +384,7 @@ app.post('/api/quote/generic/update/:object_id',function(req, res)
     res.json(quote);
   });
 });
+
 //Generic Quote Resources
 app.get('/api/quote/generic/resources/:object_id',function(req, res)
 {
@@ -589,37 +647,106 @@ app.post('/api/invoice/rep/update/:object_id',function(req, res)
 //Resource types handlers
 app.get('/api/resource/types',function(req, res)
 {
-  getAllObjects(req, res, resource_types);
+  getAll(req, res, resource_types, function(err, objs)
+  {
+    if(err)
+    {
+      errorAndCloseConnection(res,500,errors.INTERNAL_ERR);
+      logServerError(err);
+      return;
+    }
+    console.log('user with session_id [%s] requested all resource_types in the database.', req.headers.cookie);
+    res.json(objs);
+  });
 });
 
 app.post('/api/resource/type/add',function(req, res)
 {
-  addObject(req, res, resource_types);
+  add(req, res, resource_types, function(err, resource_type)
+  {
+    if(err)
+    {
+      console.log(err);
+      return;
+    }
+    console.log('created new resource_type:\n%s\n', JSON.stringify(resource_type));
+    res.json({'message':'successfully created new resource_type.'});
+  });
 });
 
 app.post('/api/resource/type/update/:object_id',function(req, res)
 {
-  updateObject(req, res, resource_types);
+  update(req, res, resource_types, function(err, resource_type)
+  {
+    if(err)
+    {
+      errorAndCloseConnection(res, 500, errors.INTERNAL_ERR);
+      logServerError(err);
+      return;
+    }
+    console.log('successfully updated resource_type [%s].\n', resource_type._id);
+    res.json(invoice);
+  });
 });
+
 //Actual Resource handlers
 app.get('/api/resource/:object_id',function(req, res)
 {
-  getObject(req, res, resources);
+  get(req, res, resources, function(err, obj)
+  {
+    if(err)
+    {
+      errorAndCloseConnection(res,500,errors.INTERNAL_ERR);
+      logServerError(err);
+      return;
+    }
+    console.log('user with session_id [%s] requested resource [%s].', req.headers.cookie, req.params.object_id);
+    res.json(obj);
+  });
 });
 
 app.get('/api/resources',function(req, res)
 {
-  getAllObjects(req, res, resources);
+  getAll(req, res, resources, function(err, objs)
+  {
+    if(err)
+    {
+      errorAndCloseConnection(res,500,errors.INTERNAL_ERR);
+      logServerError(err);
+      return;
+    }
+    console.log('user with session_id [%s] requested all resources in the database.', req.headers.cookie);
+    res.json(objs);
+  });
 });
 
 app.post('/api/resource/add',function(req, res)
 {
-  addObject(req, res, resources);
+  add(req, res, resources, function(err, resource)
+  {
+    if(err)
+    {
+      console.log(err);
+      return;
+    }
+    console.log('created new resource:\n%s\n', JSON.stringify(resource));
+    res.json({'message':'successfully created new resource.'});
+  });
 });
 
 app.post('/api/resource/update/:object_id',function(req, res)
 {
-  updateObject(req, res, resources);
+  update(req, res, resources, function(err, resource)
+  {
+    if(err)
+    {
+      errorAndCloseConnection(res, 500, errors.INTERNAL_ERR);
+      logServerError(err);
+      return;
+    }
+    console.log('successfully updated resources [%s].\n', resource._id);
+    res.json(invoice);
+  });
 });
 
 /**** Assets route handlers ****/
@@ -1886,7 +2013,7 @@ createCounter('resources_timestamp');
 createCounter('assets_timestamp');
 createCounter('expenses_timestamp');
 createCounter('revenues_timestamp');
-createCounter('purchaseorders_timestamp');
+createCounter('purchase_orders_timestamp');
 createCounter('purchaseorder_count');
 
 app.listen(PORT);

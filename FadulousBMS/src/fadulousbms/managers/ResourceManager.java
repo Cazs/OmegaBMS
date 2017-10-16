@@ -39,7 +39,6 @@ public class ResourceManager extends BusinessObjectManager
 {
     private Resource[] resources;
     private Resource selected;
-    private TableView tblResources;
     private Gson gson;
     private static ResourceManager resource_manager = new ResourceManager();
 
@@ -150,13 +149,12 @@ public class ResourceManager extends BusinessObjectManager
         }
     }
 
-    public void handleNewResource(Stage parentStage)
+    public void newResourceWindow(Callback callback)
     {
-        parentStage.setAlwaysOnTop(false);
         Stage stage = new Stage();
-        stage.setTitle(Globals.APP_NAME.getValue() + " - Add New Resource");
+        stage.setTitle(Globals.APP_NAME.getValue() + " - Create New Resource");
         stage.setMinWidth(320);
-        stage.setMinHeight(350);
+        stage.setHeight(400);
         //stage.setAlwaysOnTop(true);
 
         VBox vbox = new VBox(10);
@@ -220,17 +218,7 @@ public class ResourceManager extends BusinessObjectManager
         final TextField txt_resource_value = new TextField();
         txt_resource_value.setMinWidth(200);
         txt_resource_value.setMaxWidth(Double.MAX_VALUE);
-        HBox resource_value = CustomTableViewControls.getLabelledNode("Value", 200, txt_resource_value);
-
-        final TextField txt_markup = new TextField();
-        txt_markup.setMinWidth(200);
-        txt_markup.setMaxWidth(Double.MAX_VALUE);
-        HBox markup = CustomTableViewControls.getLabelledNode("Markup", 200, txt_markup);
-
-        final TextField txt_labour = new TextField();
-        txt_labour.setMinWidth(200);
-        txt_labour.setMaxWidth(Double.MAX_VALUE);
-        HBox labour = CustomTableViewControls.getLabelledNode("Labour", 200, txt_labour);
+        HBox resource_value = CustomTableViewControls.getLabelledNode("Cost", 200, txt_resource_value);
 
         final TextField txt_quantity = new TextField();
         txt_quantity.setMinWidth(200);
@@ -252,6 +240,10 @@ public class ResourceManager extends BusinessObjectManager
         dpk_date_exhausted.setMaxWidth(Double.MAX_VALUE);
         HBox date_exhausted = CustomTableViewControls.getLabelledNode("Date exhausted", 200, dpk_date_exhausted);
 
+        final TextField txt_account = new TextField();
+        txt_account.setMinWidth(200);
+        txt_account.setMaxWidth(Double.MAX_VALUE);
+        HBox account = CustomTableViewControls.getLabelledNode("Account", 200, txt_account);
 
         final TextField txt_other = new TextField();
         txt_other.setMinWidth(200);
@@ -273,20 +265,14 @@ public class ResourceManager extends BusinessObjectManager
                 return;
             if(!Validators.isValidNode(txt_resource_value, txt_resource_value.getText(), 1, ".+"))
                 return;
-            if(!Validators.isValidNode(txt_markup, txt_markup.getText(), 1, ".+"))
-                return;
-            if(!Validators.isValidNode(txt_labour, txt_labour.getText(), 1, ".+"))
-                return;
             if(!Validators.isValidNode(txt_quantity, txt_quantity.getText(), 1, ".+"))
                 return;
             if(!Validators.isValidNode(txt_unit, txt_unit.getText(), 1, ".+"))
                 return;
             if(!Validators.isValidNode(dpk_date_acquired, dpk_date_acquired.getValue()==null?"":dpk_date_acquired.getValue().toString(), 4, date_regex))
                 return;
-            /*if(!Validators.isValidNode(dpk_date_exhausted, dpk_date_exhausted.getValue()==null?"":dpk_date_exhausted.getValue().toString(), 4, date_regex))
+            if(!Validators.isValidNode(txt_account, txt_account.getText(), 1, ".+"))
                 return;
-            if(!Validators.isValidNode(txt_other, txt_other.getText(), 1, ".+"))
-                return;*/
 
             long date_acquired_in_sec, date_exhausted_in_sec=0;
             String str_resource_name = txt_resource_name.getText();
@@ -294,10 +280,7 @@ public class ResourceManager extends BusinessObjectManager
             String str_resource_serial = txt_resource_serial.getText();
             String str_resource_type = cbx_resource_type.getValue().get_id();
             String str_resource_value = txt_resource_value.getText();
-            String str_markup = txt_markup.getText();
-            String str_labour = txt_labour.getText();
-            String str_quantity = txt_markup.getText();
-            String str_unit = txt_markup.getText();
+            String str_quantity = txt_quantity.getText();
             date_acquired_in_sec = dpk_date_acquired.getValue().atStartOfDay(ZoneId.systemDefault()).toEpochSecond();
             if(dpk_date_exhausted.getValue()!=null)
                 date_exhausted_in_sec = dpk_date_exhausted.getValue().atStartOfDay(ZoneId.systemDefault()).toEpochSecond();
@@ -309,14 +292,13 @@ public class ResourceManager extends BusinessObjectManager
             params.add(new AbstractMap.SimpleEntry<>("resource_serial", str_resource_serial));
             params.add(new AbstractMap.SimpleEntry<>("resource_type", str_resource_type));
             params.add(new AbstractMap.SimpleEntry<>("resource_value", str_resource_value));
-            params.add(new AbstractMap.SimpleEntry<>("markup", str_markup));
-            params.add(new AbstractMap.SimpleEntry<>("labour", str_labour));
             params.add(new AbstractMap.SimpleEntry<>("quantity", str_quantity));
-            params.add(new AbstractMap.SimpleEntry<>("unit", str_unit));
+            params.add(new AbstractMap.SimpleEntry<>("unit", txt_unit.getText()));
             params.add(new AbstractMap.SimpleEntry<>("date_acquired", String.valueOf(date_acquired_in_sec)));
+            params.add(new AbstractMap.SimpleEntry<>("account", txt_account.getText()));
             if(date_exhausted_in_sec>0)
                 params.add(new AbstractMap.SimpleEntry<>("date_exhausted", String.valueOf(date_exhausted_in_sec)));
-            params.add(new AbstractMap.SimpleEntry<>("other", str_other));
+            params.add(new AbstractMap.SimpleEntry<>("extra", str_other));
 
             try
             {
@@ -335,6 +317,7 @@ public class ResourceManager extends BusinessObjectManager
                     if(connection.getResponseCode()==HttpURLConnection.HTTP_OK)
                     {
                         IO.logAndAlert("Success", "Successfully added a new resource!", IO.TAG_INFO);
+                        callback.call(null);
                     }else
                     {
                         //Get error message
@@ -356,12 +339,11 @@ public class ResourceManager extends BusinessObjectManager
         vbox.getChildren().add(resource_serial);
         vbox.getChildren().add(resource_type);
         vbox.getChildren().add(resource_value);
-        vbox.getChildren().add(markup);
-        vbox.getChildren().add(labour);
         vbox.getChildren().add(quantity);
         vbox.getChildren().add(unit);
         vbox.getChildren().add(date_acquired);
         vbox.getChildren().add(date_exhausted);
+        vbox.getChildren().add(account);
         vbox.getChildren().add(other);
         vbox.getChildren().add(submit);
 
@@ -380,13 +362,12 @@ public class ResourceManager extends BusinessObjectManager
         stage.setResizable(true);
     }
 
-    public void handleNewResourceType(Stage parentStage)
+    public void newResourceTypeWindow(Callback callback)
     {
-        parentStage.setAlwaysOnTop(false);
         Stage stage = new Stage();
-        stage.setTitle(Globals.APP_NAME.getValue() + " - Add New Resource Type");
+        stage.setTitle(Globals.APP_NAME.getValue() + " - Create New Resource Type");
         stage.setMinWidth(320);
-        stage.setMinHeight(200);
+        stage.setHeight(200);
         //stage.setAlwaysOnTop(true);
 
         VBox vbox = new VBox(10);
@@ -411,7 +392,7 @@ public class ResourceManager extends BusinessObjectManager
         {
             if(!Validators.isValidNode(txt_type_name, txt_type_name.getText(), 1, "\\w+"))
             {
-                JOptionPane.showMessageDialog(null, "Please make sure that the resource type name doesn't have any spaces.", "Error", JOptionPane.ERROR_MESSAGE);
+                IO.logAndAlert("Error", "Please make sure that the resource type name doesn't have any spaces.", IO.TAG_ERROR);
                 return;
             }
 
@@ -431,7 +412,7 @@ public class ResourceManager extends BusinessObjectManager
                     headers.add(new AbstractMap.SimpleEntry<>("Cookie", SessionManager.getInstance().getActive().getSessionId()));
                 else
                 {
-                    JOptionPane.showMessageDialog(null, "No active sessions.", "Session expired", JOptionPane.ERROR_MESSAGE);
+                    IO.logAndAlert("Session expired", "No active sessions.", IO.TAG_ERROR);
                     return;
                 }
 
@@ -440,15 +421,18 @@ public class ResourceManager extends BusinessObjectManager
                 {
                     if(connection.getResponseCode()==HttpURLConnection.HTTP_OK)
                     {
-                        JOptionPane.showMessageDialog(null, "Successfully added new resource type!", "Success", JOptionPane.INFORMATION_MESSAGE);
+                        IO.logAndAlert("Success", "Successfully added new resource type!", IO.TAG_INFO);
+                        callback.call(null);
                     }else{
-                        JOptionPane.showMessageDialog(null, connection.getResponseCode(), "Error", JOptionPane.ERROR_MESSAGE);
+                        IO.logAndAlert( "ERROR_" + connection.getResponseCode(),  IO.readStream(connection.getErrorStream()), IO.TAG_ERROR);
                     }
+                    connection.disconnect();
                 }
             } catch (IOException e)
             {
                 IO.log(TAG, IO.TAG_ERROR, e.getMessage());
             }
+
         });
 
         //Add form controls vertically on the scene

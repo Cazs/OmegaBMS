@@ -5,6 +5,7 @@ import fadulousbms.auxilary.IO;
 import fadulousbms.auxilary.PDF;
 import fadulousbms.auxilary.Screen;
 import fadulousbms.managers.AssetManager;
+import fadulousbms.managers.ResourceManager;
 import fadulousbms.managers.ScreenManager;
 import fadulousbms.managers.SessionManager;
 import fadulousbms.model.Employee;
@@ -424,6 +425,34 @@ public class AccountingController extends Screen implements Initializable
                         IO.log(getClass().getName(), IO.TAG_ERROR, e.getMessage());
                     }
                 }
+            }).start();
+            return null;
+        });
+    }
+
+    @FXML
+    public void newResource()
+    {
+        ResourceManager.getInstance().newResourceWindow(param ->
+        {
+            new Thread(() ->
+            {
+                refreshModel();
+                Platform.runLater(() -> refreshView());
+            }).start();
+            return null;
+        });
+    }
+
+    @FXML
+    public void newResourceType()
+    {
+        ResourceManager.getInstance().newResourceTypeWindow(param ->
+        {
+            new Thread(() ->
+            {
+                refreshModel();
+                Platform.runLater(() -> refreshView());
             }).start();
             return null;
         });
