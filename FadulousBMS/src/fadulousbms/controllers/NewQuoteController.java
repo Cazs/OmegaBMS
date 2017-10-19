@@ -55,6 +55,13 @@ public class NewQuoteController extends Screen implements Initializable
     @Override
     public void refreshView()
     {
+        if(EmployeeManager.getInstance().getEmployees()==null)
+        {
+            IO.logAndAlert(getClass().getName(), "no employees found in the database.", IO.TAG_ERROR);
+            return;
+        }
+        Employee[] employees = (Employee[]) EmployeeManager.getInstance().getEmployees().values().toArray();
+
         tblSaleReps.getItems().clear();
         tblQuoteItems.getItems().clear();
 
@@ -168,7 +175,7 @@ public class NewQuoteController extends Screen implements Initializable
             }
         });
         cbxContactPerson.setButtonCell(null);
-        cbxContactPerson.setItems(FXCollections.observableArrayList(EmployeeManager.getInstance().getEmployees()));
+        cbxContactPerson.setItems(FXCollections.observableArrayList(employees));
         cbxContactPerson.setOnAction(event ->
         {
             Employee employee = cbxContactPerson.getValue();
@@ -182,29 +189,19 @@ public class NewQuoteController extends Screen implements Initializable
         });
 
         //Populate fields
-        if(QuoteManager.getInstance().fromGeneric())
+        Quote selected = QuoteManager.getInstance().getSelectedQuote();
+        if (selected != null)
         {
-            GenericQuote quote = GenericQuoteManager.getInstance().getSelectedGenericQuote();
-            if(quote!=null)
-            {
-                txtRequest.setText(quote.getRequest());
-                txtSite.setText(quote.getSitename());
-            }
-        }else{
-            Quote selected = QuoteManager.getInstance().getSelectedQuote();
-            if (selected != null)
-            {
-                cbxClients.setValue(selected.getClient());
-                cbxContactPerson.setValue(selected.getContactPerson());
+            cbxClients.setValue(selected.getClient());
+            cbxContactPerson.setValue(selected.getContactPerson());
 
-                if (selected.getResources() != null)
-                    tblQuoteItems.setItems(FXCollections.observableArrayList(selected.getResources()));
-                else IO.log(getClass().getName(), IO.TAG_WARN, "quote [" + selected.get_id() + "] has no resources.");
-                if (selected.getRepresentatives() != null)
-                    tblSaleReps.setItems(FXCollections.observableArrayList(selected.getRepresentatives()));
-                else
-                    IO.log(getClass().getName(), IO.TAG_WARN, "quote [" + selected.get_id() + "] has no representatives.");
-            }
+            if (selected.getResources() != null)
+                tblQuoteItems.setItems(FXCollections.observableArrayList(selected.getResources()));
+            else IO.log(getClass().getName(), IO.TAG_WARN, "quote [" + selected.get_id() + "] has no resources.");
+            if (selected.getRepresentatives() != null)
+                tblSaleReps.setItems(FXCollections.observableArrayList(selected.getRepresentatives()));
+            else
+                IO.log(getClass().getName(), IO.TAG_WARN, "quote [" + selected.get_id() + "] has no representatives.");
         }
     }
 
@@ -415,11 +412,11 @@ public class NewQuoteController extends Screen implements Initializable
         {
             if(ResourceManager.getInstance().getResources()!=null)
             {
-                if(ResourceManager.getInstance().getResources().length>0)
+                if(ResourceManager.getInstance().getResources().size()>0)
                 {
                     ComboBox<Resource> resourceComboBox = new ComboBox<>();
                     resourceComboBox.setMinWidth(120);
-                    resourceComboBox.setItems(FXCollections.observableArrayList(ResourceManager.getInstance().getResources()));
+                    resourceComboBox.setItems(FXCollections.observableArrayList(ResourceManager.getInstance().getResources().values()));
                     HBox.setHgrow(resourceComboBox, Priority.ALWAYS);
 
                     Button btnAdd = new Button("Add");
@@ -534,11 +531,11 @@ public class NewQuoteController extends Screen implements Initializable
         {
             if(EmployeeManager.getInstance().getEmployees()!=null)
             {
-                if(EmployeeManager.getInstance().getEmployees().length>0)
+                if(EmployeeManager.getInstance().getEmployees().size()>0)
                 {
                     ComboBox<Employee> employeeComboBox = new ComboBox<>();
                     employeeComboBox.setMinWidth(120);
-                    employeeComboBox.setItems(FXCollections.observableArrayList(EmployeeManager.getInstance().getEmployees()));
+                    employeeComboBox.setItems(FXCollections.observableArrayList((Employee[]) EmployeeManager.getInstance().getEmployees().values().toArray()));
                     HBox.setHgrow(employeeComboBox, Priority.ALWAYS);
 
                     Button btnAdd = new Button("Add");

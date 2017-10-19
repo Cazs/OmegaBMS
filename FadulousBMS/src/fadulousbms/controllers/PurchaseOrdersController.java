@@ -8,11 +8,10 @@ package fadulousbms.controllers;
 import fadulousbms.auxilary.IO;
 import fadulousbms.auxilary.Screen;
 import fadulousbms.managers.PurchaseOrderManager;
+import fadulousbms.managers.QuoteManager;
 import fadulousbms.managers.ScreenManager;
 import fadulousbms.managers.SupplierManager;
-import fadulousbms.model.CustomTableViewControls;
-import fadulousbms.model.PurchaseOrder;
-import fadulousbms.model.Screens;
+import fadulousbms.model.*;
 import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -47,10 +46,21 @@ public class PurchaseOrdersController extends Screen implements Initializable
     @Override
     public void refreshView()
     {
-        colId.setMinWidth(100);
+        IO.log(getClass().getName(), IO.TAG_INFO, "reloading purchase orders view..");
+
+        if(SupplierManager.getInstance().getSuppliers()==null)
+        {
+            IO.log(getClass().getName(), IO.TAG_ERROR, "no suppliers found in the database.");
+            return;
+        }
+        Supplier[] suppliers = new Supplier[SupplierManager.getInstance().getSuppliers().values().toArray().length];
+        SupplierManager.getInstance().getSuppliers().values().toArray(suppliers);
+
         colId.setCellValueFactory(new PropertyValueFactory<>("_id"));
+        colId.setPrefWidth(100);
         colPONumber.setCellValueFactory(new PropertyValueFactory<>("number"));
-        CustomTableViewControls.makeComboBoxTableColumn(colSupplier, SupplierManager.getInstance().getSuppliers(), "supplier_id", "supplier_name", "/api/purchaseorder", 120);
+        colPONumber.setPrefWidth(80);
+        CustomTableViewControls.makeComboBoxTableColumn(colSupplier, suppliers, "supplier_id", "supplier_name", "/api/purchaseorder", 120);
         CustomTableViewControls.makeEditableTableColumn(colAccount, TextFieldTableCell.forTableColumn(), 80, "account", "/api/purchaseorder");
         CustomTableViewControls.makeEditableTableColumn(colVat, TextFieldTableCell.forTableColumn(), 50, "vat", "/api/purchaseorder");
         CustomTableViewControls.makeLabelledDatePickerTableColumn(colDateLogged, "date_logged", "/api/purchaseorder");
@@ -59,7 +69,7 @@ public class PurchaseOrdersController extends Screen implements Initializable
         CustomTableViewControls.makeEditableTableColumn(colExtra, TextFieldTableCell.forTableColumn(), 215, "extra", "/api/purchaseorder");
 
         ObservableList<PurchaseOrder> lst_po = FXCollections.observableArrayList();
-        lst_po.addAll(PurchaseOrderManager.getInstance().getPurchaseOrders());
+        lst_po.addAll(PurchaseOrderManager.getInstance().getPurchaseOrders().values());
         tblPurchaseOrders.setItems(lst_po);
 
         Callback<TableColumn<PurchaseOrder, String>, TableCell<PurchaseOrder, String>> cellFactory
@@ -101,9 +111,34 @@ public class PurchaseOrdersController extends Screen implements Initializable
 
                                     btnView.setOnAction(event ->
                                     {
-                                        //System.out.println("Successfully added material quote number " + quoteItem.getItem_number());
-                                        PurchaseOrderManager.getInstance().setSelected(po);
-                                        //screenManager.setScreen(Screens.VIEW_JOB.getScreen());
+                                        if(po==null)
+                                        {
+                                            IO.logAndAlert("Error " + getClass().getName(), "Purchase Order object is not set", IO.TAG_ERROR);
+                                            return;
+                                        }
+
+                                        ScreenManager.getInstance().showLoadingScreen(param ->
+                                        {
+                                            new Thread(new Runnable()
+                                            {
+                                                @Override
+                                                public void run()
+                                                {
+                                                    PurchaseOrderManager.getInstance().setSelected(po);
+                                                    try
+                                                    {
+                                                        if(ScreenManager.getInstance().loadScreen(Screens.VIEW_PURCHASE_ORDER.getScreen(),getClass().getResource("../views/"+Screens.VIEW_PURCHASE_ORDER.getScreen())))
+                                                        {
+                                                            Platform.runLater(() -> ScreenManager.getInstance().setScreen(Screens.VIEW_PURCHASE_ORDER.getScreen()));
+                                                        } else IO.log(getClass().getName(), IO.TAG_ERROR, "could not load purchase order viewer screen.");
+                                                    } catch (IOException e)
+                                                    {
+                                                        IO.log(getClass().getName(), IO.TAG_ERROR, e.getMessage());
+                                                    }
+                                                }
+                                            }).start();
+                                            return null;
+                                        });
                                     });
 
                                     btnRemove.setOnAction(event ->

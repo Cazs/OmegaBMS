@@ -77,7 +77,7 @@ public class RevenueManager extends BusinessObjectManager
                             for (Revenue revenue : revenues)
                             {
                                 //Set Expense creator
-                                for (Employee employee : EmployeeManager.getInstance().getEmployees())
+                                for (Employee employee : (Employee[]) EmployeeManager.getInstance().getEmployees().values().toArray())
                                 {
                                     if (employee.getUsr().equals(revenue.getCreator()))
                                     {

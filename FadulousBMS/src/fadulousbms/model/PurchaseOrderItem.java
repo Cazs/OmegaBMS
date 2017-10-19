@@ -2,6 +2,8 @@ package fadulousbms.model;
 
 import fadulousbms.auxilary.Globals;
 import fadulousbms.auxilary.IO;
+import fadulousbms.managers.AssetManager;
+import fadulousbms.managers.ResourceManager;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 
@@ -12,7 +14,7 @@ import java.net.URLEncoder;
 /**
  * Created by ghost on 2017/01/21.
  */
-public class PurchaseOrderItem implements BusinessObject, Serializable
+public abstract class PurchaseOrderItem implements BusinessObject, Serializable
 {
     private String _id;
     private int item_number;
@@ -24,6 +26,7 @@ public class PurchaseOrderItem implements BusinessObject, Serializable
     private BusinessObject item;
     private boolean marked;
     private String extra;
+    private String type;
     public static final String TAG = "PurchaseOrderItem";
 
     public StringProperty idProperty(){return new SimpleStringProperty(_id);}
@@ -69,7 +72,7 @@ public class PurchaseOrderItem implements BusinessObject, Serializable
     @Override
     public void setMarked(boolean marked){this.marked=marked;}
 
-    private StringProperty item_numberProperty(){return new SimpleStringProperty(String.valueOf(item_number));}
+    public StringProperty item_numberProperty(){return new SimpleStringProperty(String.valueOf(item_number));}
 
     public String getItem_number()
     {
@@ -86,7 +89,7 @@ public class PurchaseOrderItem implements BusinessObject, Serializable
         this.item_number = item_number;
     }
 
-    private StringProperty purchase_order_idProperty(){return new SimpleStringProperty(purchase_order_id);}
+    public StringProperty purchase_order_idProperty(){return new SimpleStringProperty(purchase_order_id);}
 
     public String getPurchase_order_id()
     {
@@ -98,7 +101,17 @@ public class PurchaseOrderItem implements BusinessObject, Serializable
         this.purchase_order_id = purchase_order_id;
     }
 
-    private StringProperty item_idProperty(){return new SimpleStringProperty(item_id);}
+    public String getType()
+    {
+        return type;
+    }
+
+    public void setType(String type)
+    {
+        this.type = type;
+    }
+
+    public StringProperty item_idProperty(){return new SimpleStringProperty(item_id);}
 
     public String getItem_id()
     {
@@ -120,59 +133,20 @@ public class PurchaseOrderItem implements BusinessObject, Serializable
         this.date_logged = date_logged;
     }
 
-    private StringProperty item_nameProperty()
+    public StringProperty item_nameProperty()
     {
         return new SimpleStringProperty(getItem_name());
     }
 
-    public String getItem_name()
-    {
-        if(item!=null)
-        {
-            if(item instanceof Resource)
-            {
-                return ((Resource)item).getResource_name();
-            }else if(item instanceof Asset)
-            {
-                return ((Asset)item).getAsset_name();
-            }else IO.log(TAG, IO.TAG_ERROR, "unknown PurchaseOrderItem item type.");
-        }else IO.log(TAG, IO.TAG_ERROR, "PurchaseOrderItem item is not set.");
-        return "N/A";
-    }
+    public abstract String getItem_name();
 
-    private StringProperty item_descriptionProperty(){return new SimpleStringProperty(getItem_description());}
+    public StringProperty item_descriptionProperty(){return new SimpleStringProperty(getItem_description());}
 
-    public String getItem_description()
-    {
-        if(item!=null)
-        {
-            if(item instanceof Resource)
-            {
-                return ((Resource)item).getResource_description();
-            }else if(item instanceof Asset)
-            {
-                return ((Asset)item).getAsset_description();
-            }else IO.log(TAG, IO.TAG_ERROR, "unknown PurchaseOrderItem item type.");
-        }else IO.log(TAG, IO.TAG_ERROR, "PurchaseOrderItem item is not set.");
-        return "N/A";
-    }
+    public abstract String getItem_description();
 
     private StringProperty unitProperty(){return new SimpleStringProperty(getUnit());}
 
-    public String getUnit()
-    {
-        if(item!=null)
-        {
-            if(item instanceof Resource)
-            {
-                return ((Resource)item).getUnit();
-            }else if(item instanceof Asset)
-            {
-                return ((Asset)item).getUnit();
-            }else IO.log(TAG, IO.TAG_ERROR, "unknown PurchaseOrderItem item type.");
-        }else IO.log(TAG, IO.TAG_ERROR, "PurchaseOrderItem item is not set.");
-        return "N/A";
-    }
+    public abstract String getUnit();
 
     private StringProperty quantityProperty(){return new SimpleStringProperty(getQuantity());}
 
@@ -198,20 +172,7 @@ public class PurchaseOrderItem implements BusinessObject, Serializable
         return String.valueOf(getCostValue());
     }
 
-    public double getCostValue()
-    {
-        if(item!=null)
-        {
-            if(item instanceof Resource)
-            {
-                return ((Resource)item).getResource_value();
-            }else if(item instanceof Asset)
-            {
-                return ((Asset)item).getAsset_value();
-            }else IO.log(TAG, IO.TAG_ERROR, "unknown PurchaseOrderItem item type.");
-        }else IO.log(TAG, IO.TAG_ERROR, "PurchaseOrderItem item is not set.");
-        return 0;
-    }
+    public abstract double getCostValue();
 
     private StringProperty discountProperty(){return new SimpleStringProperty(String.valueOf(discount));}
 
@@ -233,12 +194,9 @@ public class PurchaseOrderItem implements BusinessObject, Serializable
         this.extra = extra;
     }
 
-    public BusinessObject getResource()
-    {
-        return item;
-    }
+    public abstract BusinessObject getItem();
 
-    public void setResource(BusinessObject item)
+    public void setItem(BusinessObject item)
     {
         this.item=item;
     }
@@ -251,22 +209,22 @@ public class PurchaseOrderItem implements BusinessObject, Serializable
             switch (var.toLowerCase())
             {
                 case "purchase_order_id":
-                    purchase_order_id = String.valueOf(val);
+                    setPurchase_order_id(String.valueOf(val));
                     break;
                 case "item_id":
-                    item_id = String.valueOf(val);
+                    setItem_id(String.valueOf(val));
                     break;
                 case "item_number":
-                    item_number = Integer.valueOf((String)val);
+                    setItem_number(Integer.valueOf((String)val));
                     break;
                 case "quantity":
-                    quantity = Integer.valueOf((String)val);
+                    setQuantity(Integer.valueOf((String)val));
                     break;
                 case "discount":
-                    discount = Double.parseDouble((String) val);
+                    setDiscount(Double.parseDouble((String) val));
                     break;
                 case "extra":
-                    extra = String.valueOf(val);
+                    setExtra(String.valueOf(val));
                     break;
                 default:
                     IO.log(getClass().getName(), IO.TAG_ERROR, "Unknown PurchaseOrderItem attribute '" + var + "'.");
@@ -284,29 +242,31 @@ public class PurchaseOrderItem implements BusinessObject, Serializable
         switch (var.toLowerCase())
         {
             case "_id":
-                return _id;
-            case "quote_id":
-                return purchase_order_id;
+                return get_id();
+            case "purchase_order_id":
+                return getPurchase_order_id();
             case "item_id":
-                return item_id;
+                return getItem_id();
             case "item_number":
-                return item_number;
+                return getItem_number();
+            case "item_name":
+                return getItem_name();
+            case "cost":
+                return getCost();
+            case "item_description":
+                return getItem_description();
+            case "unit":
+                return getUnit();
             case "quantity":
-                return quantity;
+                return getQuantity();
             case "discount":
-                return discount;
+                return getDiscount();
             case "extra":
                 return extra;
             default:
-                System.err.println("Unknown PurchaseOrderItem attribute '" + var + "'.");
+                IO.log(getClass().getName(), IO.TAG_ERROR, "Unknown PurchaseOrderItem attribute '" + var + "'.");
                 return null;
         }
-    }
-
-    @Override
-    public String apiEndpoint()
-    {
-        return "/api/purchaseorder/item";
     }
 
     @Override

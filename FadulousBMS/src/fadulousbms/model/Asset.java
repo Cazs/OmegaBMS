@@ -1,5 +1,6 @@
 package fadulousbms.model;
 
+import fadulousbms.auxilary.Globals;
 import fadulousbms.auxilary.IO;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
@@ -105,7 +106,7 @@ public class Asset implements BusinessObject, Serializable
         this.asset_type = asset_type;
     }
 
-    public StringProperty asset_valueProperty(){return new SimpleStringProperty(String.valueOf(asset_value));}
+    public StringProperty asset_valueProperty(){return new SimpleStringProperty(String.valueOf(Globals.CURRENCY_SYMBOL.getValue() + " " + getAsset_value()));}
 
     public double getAsset_value()
     {
@@ -190,47 +191,6 @@ public class Asset implements BusinessObject, Serializable
     }
 
     @Override
-    public String asUTFEncodedString()
-    {
-        //Return encoded URL parameters in UTF-8 charset
-        StringBuilder result = new StringBuilder();
-        try
-        {
-            result.append("&" + URLEncoder.encode("asset_name","UTF-8") + "="
-                    + URLEncoder.encode(asset_name, "UTF-8"));
-            result.append("&" + URLEncoder.encode("asset_type","UTF-8") + "="
-                    + URLEncoder.encode(asset_type, "UTF-8"));
-            result.append("&" + URLEncoder.encode("asset_description","UTF-8") + "="
-                    + URLEncoder.encode(asset_description, "UTF-8"));
-            result.append("&" + URLEncoder.encode("asset_serial","UTF-8") + "="
-                    + URLEncoder.encode(String.valueOf(asset_serial), "UTF-8"));
-            result.append("&" + URLEncoder.encode("asset_value","UTF-8") + "="
-                    + URLEncoder.encode(String.valueOf(asset_value), "UTF-8"));
-            result.append("&" + URLEncoder.encode("account","UTF-8") + "="
-                    + URLEncoder.encode(account, "UTF-8"));
-            if(date_acquired>0)
-                result.append("&" + URLEncoder.encode("date_acquired","UTF-8") + "="
-                        + URLEncoder.encode(String.valueOf(date_acquired), "UTF-8"));
-            if(date_exhausted>0)
-                result.append("&" +  URLEncoder.encode("date_exhausted","UTF-8") + "="
-                        + URLEncoder.encode(String.valueOf(date_exhausted), "UTF-8"));
-            result.append("&" + URLEncoder.encode("quantity","UTF-8") + "="
-                    + URLEncoder.encode(String.valueOf(quantity), "UTF-8"));
-            result.append("&" + URLEncoder.encode("unit","UTF-8") + "="
-                    + URLEncoder.encode(String.valueOf(unit), "UTF-8"));
-            if(other!=null)
-                result.append("&" + URLEncoder.encode("other","UTF-8") + "="
-                        + URLEncoder.encode(other, "UTF-8"));
-
-            return result.toString();
-        } catch (UnsupportedEncodingException e)
-        {
-            IO.log(getClass().getName(), e.getMessage(), IO.TAG_ERROR);
-        }
-        return null;
-    }
-
-    @Override
     public void parse(String var, Object val)
     {
         switch (var.toLowerCase())
@@ -279,16 +239,20 @@ public class Asset implements BusinessObject, Serializable
     {
         switch (var.toLowerCase())
         {
+            case "name":
             case "asset_name":
-                return asset_name;
+                return getAsset_name();
             case "asset_type":
                 return asset_type;
+            case "description":
             case "asset_description":
-                return asset_description;
+                return getAsset_description();
             case "asset_serial":
                 return asset_serial;
+            case "cost":
+            case "value":
             case "asset_value":
-                return asset_value;
+                return getAsset_value();
             case "account":
                 return account;
             case "date_acquired":
@@ -308,8 +272,55 @@ public class Asset implements BusinessObject, Serializable
     }
 
     @Override
+    public String asUTFEncodedString()
+    {
+        //Return encoded URL parameters in UTF-8 charset
+        StringBuilder result = new StringBuilder();
+        try
+        {
+            result.append("&" + URLEncoder.encode("asset_name","UTF-8") + "="
+                    + URLEncoder.encode(asset_name, "UTF-8"));
+            result.append("&" + URLEncoder.encode("asset_type","UTF-8") + "="
+                    + URLEncoder.encode(asset_type, "UTF-8"));
+            result.append("&" + URLEncoder.encode("asset_description","UTF-8") + "="
+                    + URLEncoder.encode(asset_description, "UTF-8"));
+            result.append("&" + URLEncoder.encode("asset_serial","UTF-8") + "="
+                    + URLEncoder.encode(String.valueOf(asset_serial), "UTF-8"));
+            result.append("&" + URLEncoder.encode("asset_value","UTF-8") + "="
+                    + URLEncoder.encode(String.valueOf(asset_value), "UTF-8"));
+            result.append("&" + URLEncoder.encode("account","UTF-8") + "="
+                    + URLEncoder.encode(account, "UTF-8"));
+            if(date_acquired>0)
+                result.append("&" + URLEncoder.encode("date_acquired","UTF-8") + "="
+                        + URLEncoder.encode(String.valueOf(date_acquired), "UTF-8"));
+            if(date_exhausted>0)
+                result.append("&" +  URLEncoder.encode("date_exhausted","UTF-8") + "="
+                        + URLEncoder.encode(String.valueOf(date_exhausted), "UTF-8"));
+            result.append("&" + URLEncoder.encode("quantity","UTF-8") + "="
+                    + URLEncoder.encode(String.valueOf(quantity), "UTF-8"));
+            result.append("&" + URLEncoder.encode("unit","UTF-8") + "="
+                    + URLEncoder.encode(String.valueOf(unit), "UTF-8"));
+            if(other!=null)
+                result.append("&" + URLEncoder.encode("other","UTF-8") + "="
+                        + URLEncoder.encode(other, "UTF-8"));
+
+            return result.toString();
+        } catch (UnsupportedEncodingException e)
+        {
+            IO.log(getClass().getName(), e.getMessage(), IO.TAG_ERROR);
+        }
+        return null;
+    }
+
+    @Override
     public String apiEndpoint()
     {
         return "/api/asset";
+    }
+
+    @Override
+    public String toString()
+    {
+        return getAsset_name();
     }
 }

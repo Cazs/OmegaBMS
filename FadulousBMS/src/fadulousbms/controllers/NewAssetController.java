@@ -4,17 +4,16 @@ import fadulousbms.auxilary.IO;
 import fadulousbms.auxilary.RemoteComms;
 import fadulousbms.auxilary.Screen;
 import fadulousbms.auxilary.Validators;
-import fadulousbms.managers.AssetManager;
-import fadulousbms.managers.ResourceManager;
-import fadulousbms.managers.ScreenManager;
-import fadulousbms.managers.SessionManager;
+import fadulousbms.managers.*;
 import fadulousbms.model.*;
+import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.DatePicker;
 import javafx.scene.control.TextField;
+import javafx.util.Callback;
 
 import java.io.IOException;
 import java.net.HttpURLConnection;
@@ -42,7 +41,13 @@ public class NewAssetController extends Screen implements Initializable
     @Override
     public void refreshView()
     {
-        cbxAssetType.setItems(FXCollections.observableArrayList(AssetManager.getInstance().getAsset_types()));
+        if(AssetManager.getInstance().getAsset_types()==null)
+        {
+            IO.logAndAlert(getClass().getName(), "no asset types found in database.", IO.TAG_ERROR);
+            return;
+        }
+
+        cbxAssetType.setItems(FXCollections.observableArrayList(AssetManager.getInstance().getAsset_types().values()));
     }
 
     @Override
@@ -57,6 +62,12 @@ public class NewAssetController extends Screen implements Initializable
     @Override
     public void initialize(URL url, ResourceBundle rb)
     {
+        new Thread(() ->
+        {
+            refreshModel();
+            if(PurchaseOrderManager.getInstance().getPurchaseOrders()!=null)
+                Platform.runLater(() -> refreshView());
+        }).start();
     }
 
     @FXML
@@ -183,5 +194,20 @@ public class NewAssetController extends Screen implements Initializable
         {
             IO.logAndAlert(getClass().getName(), e.getMessage(), IO.TAG_ERROR);
         }
+    }
+
+    @FXML
+    public void createAssetType()
+    {
+        AssetManager.getInstance().createNewAssetType(param ->
+        {
+            new Thread(() ->
+            {
+                refreshModel();
+                if(PurchaseOrderManager.getInstance().getPurchaseOrders()!=null)
+                    Platform.runLater(() -> refreshView());
+            }).start();
+            return null;
+        });
     }
 }

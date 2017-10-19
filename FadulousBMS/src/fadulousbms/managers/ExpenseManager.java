@@ -76,7 +76,7 @@ public class ExpenseManager extends BusinessObjectManager
                             for (Expense expense : expenses)
                             {
                                 //Set Expense creator
-                                for (Employee employee : EmployeeManager.getInstance().getEmployees())
+                                for (Employee employee : EmployeeManager.getInstance().getEmployees().values())
                                 {
                                     if (employee.getUsr().equals(expense.getCreator()))
                                     {
@@ -87,7 +87,7 @@ public class ExpenseManager extends BusinessObjectManager
                                 //Load Expense Suppliers
                                 if(SupplierManager.getInstance().getSuppliers()!=null)
                                 {
-                                    for (Supplier supplier : SupplierManager.getInstance().getSuppliers())
+                                    for (Supplier supplier : SupplierManager.getInstance().getSuppliers().values())
                                     {
                                         if (supplier.get_id().equals(expense.getSupplier()))
                                         {

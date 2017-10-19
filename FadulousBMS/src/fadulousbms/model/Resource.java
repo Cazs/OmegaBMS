@@ -283,16 +283,19 @@ public class Resource implements BusinessObject, Serializable
     {
         switch (var.toLowerCase())
         {
+            case "name":
             case "resource_name":
-                return resource_name;
+                return getResource_name();
             case "resource_type":
                 return resource_type;
             case "resource_description":
                 return resource_description;
             case "resource_serial":
                 return resource_serial;
+            case "cost":
+            case "value":
             case "resource_value":
-                return resource_value;
+                return getResource_value();
             case "account":
                 return account;
             case "markup":
@@ -342,10 +345,12 @@ public class Resource implements BusinessObject, Serializable
                     + URLEncoder.encode(account, "UTF-8"));
             result.append("&" + URLEncoder.encode("markup","UTF-8") + "="
                     + URLEncoder.encode(String.valueOf(markup), "UTF-8"));
-            result.append("&" + URLEncoder.encode("date_acquired","UTF-8") + "="
-                    + URLEncoder.encode(String.valueOf(date_acquired), "UTF-8"));
-            result.append("&" + URLEncoder.encode("date_exhausted","UTF-8") + "="
-                    + URLEncoder.encode(String.valueOf(date_exhausted), "UTF-8"));
+            if(date_acquired>0)
+                result.append("&" + URLEncoder.encode("date_acquired","UTF-8") + "="
+                        + URLEncoder.encode(String.valueOf(date_acquired), "UTF-8"));
+            if(date_exhausted>0)
+                result.append("&" + URLEncoder.encode("date_exhausted","UTF-8") + "="
+                        + URLEncoder.encode(String.valueOf(date_exhausted), "UTF-8"));
             result.append("&" + URLEncoder.encode("unit","UTF-8") + "="
                     + URLEncoder.encode(unit, "UTF-8"));
             result.append("&" + URLEncoder.encode("labour","UTF-8") + "="
@@ -368,6 +373,6 @@ public class Resource implements BusinessObject, Serializable
     @Override
     public String toString()
     {
-        return resource_name;
+        return getResource_name();
     }
 }

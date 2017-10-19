@@ -45,12 +45,20 @@ public class ExpensesController extends Screen implements Initializable
     {
         IO.log(getClass().getName(), IO.TAG_INFO, "reloading expenses view..");
 
+        if(SupplierManager.getInstance().getSuppliers()==null)
+        {
+            IO.logAndAlert(getClass().getName(), "no suppliers found in the database.", IO.TAG_ERROR);
+            return;
+        }
+        Supplier[] suppliers = new Supplier[SupplierManager.getInstance().getSuppliers().size()];
+        SupplierManager.getInstance().getSuppliers().values().toArray(suppliers);
+
         //Set up expenses table
         colId.setCellValueFactory(new PropertyValueFactory<>("_id"));
         CustomTableViewControls.makeEditableTableColumn(colTitle, TextFieldTableCell.forTableColumn(), 100, "expense_title", "/api/expense");
         CustomTableViewControls.makeEditableTableColumn(colDescription, TextFieldTableCell.forTableColumn(), 100, "expense_description", "/api/expense");
         CustomTableViewControls.makeEditableTableColumn(colValue, TextFieldTableCell.forTableColumn(), 100, "expense_value", "/api/expense");
-        CustomTableViewControls.makeComboBoxTableColumn(colSupplier, SupplierManager.getInstance().getSuppliers(), "supplier", "supplier_name", "/api/expense", 160);
+        CustomTableViewControls.makeComboBoxTableColumn(colSupplier, suppliers, "supplier", "supplier_name", "/api/expense", 160);
         CustomTableViewControls.makeDatePickerTableColumn(colDateLogged, "date_logged", "/api/expense");
         colCreator.setCellValueFactory(new PropertyValueFactory<>("creator"));
         CustomTableViewControls.makeEditableTableColumn(colAccount, TextFieldTableCell.forTableColumn(), 100, "account", "/api/expense");

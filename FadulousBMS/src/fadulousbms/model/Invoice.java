@@ -211,11 +211,14 @@ public class Invoice implements BusinessObject, Serializable
     {
         if(EmployeeManager.getInstance().getEmployees()==null)
         {
-            IO.logAndAlert("Error " + getClass().getName(), "Employees array is not set", IO.TAG_ERROR);
+            IO.logAndAlert("Error " + getClass().getName(), "No employees were found in the database.", IO.TAG_ERROR);
             return new SimpleStringProperty(creator);
         }
 
-        for(Employee employee : EmployeeManager.getInstance().getEmployees())
+        Employee[] employees = new Employee[EmployeeManager.getInstance().getEmployees().size()];
+        EmployeeManager.getInstance().getEmployees().values().toArray(employees);
+
+        for(Employee employee : employees)
             if(employee.getUsr().equals(creator))
                 return new SimpleStringProperty(employee.toString());
         return new SimpleStringProperty(creator);

@@ -73,7 +73,21 @@ module.exports.getAll = function(callback)
 module.exports.get = function(id,callback)
 {
   var query = {usr:id};
-  Employees.findOne(query, callback);
+  Employees.findOne(query, function(err,user)
+  {
+    if(err)
+    {
+      console.log(err);
+      callback(err);
+    }
+    if(user)
+    {
+      callback(err, user);
+    }else{
+      //check with id
+      Employees.findOne({_id:id}, callback);
+    }
+  });
 };
 
 module.exports.add = function(employee, callback)

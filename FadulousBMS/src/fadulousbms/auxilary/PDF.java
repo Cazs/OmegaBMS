@@ -1313,10 +1313,10 @@ public class PDF
 
         ArrayList<Transaction> transactions = new ArrayList<>();
         //Load assets
-        for(Asset asset : AssetManager.getInstance().getAssets())
+        for(Asset asset : AssetManager.getInstance().getAssets().values())
             transactions.add(new Transaction(asset.get_id(), asset.getDate_acquired(), asset));
         //Load Resources/Stock
-        for(Resource resource : ResourceManager.getInstance().getResources())
+        for(Resource resource : ResourceManager.getInstance().getResources().values())
             transactions.add(new Transaction(resource.get_id(), resource.getDate_acquired(), resource));
         //Load additional Expenses
         for(Expense expense: ExpenseManager.getInstance().getExpenses())
@@ -1616,10 +1616,10 @@ public class PDF
 
         ArrayList<Transaction> transactions = new ArrayList<>();
         //Load assets
-        for(Asset asset : AssetManager.getInstance().getAssets())
+        for(Asset asset : AssetManager.getInstance().getAssets().values())
             transactions.add(new Transaction(asset.get_id(), asset.getDate_acquired(), asset));
         //Load Resources/Stock
-        for(Resource resource : ResourceManager.getInstance().getResources())
+        for(Resource resource : ResourceManager.getInstance().getResources().values())
             transactions.add(new Transaction(resource.get_id(), resource.getDate_acquired(), resource));
         //Load additional Expenses
         for(Expense expense: ExpenseManager.getInstance().getExpenses())

@@ -6,7 +6,6 @@
 package fadulousbms.controllers;
 
 import fadulousbms.auxilary.IO;
-import fadulousbms.auxilary.PDF;
 import fadulousbms.auxilary.RemoteComms;
 import fadulousbms.auxilary.Validators;
 import fadulousbms.managers.*;
@@ -18,7 +17,6 @@ import javafx.fxml.Initializable;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
-import javafx.scene.control.cell.TextFieldTableCell;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
@@ -43,8 +41,7 @@ public class NewPurchaseOrderController extends OperationsController implements 
     @FXML
     private TableView<PurchaseOrderItem>    tblPurchaseOrderItems;
     @FXML
-    private TableColumn     colId,colItemNumber,colName,colDescription,colQuantity,colValue,colDiscount,
-                            colCreator,colAction;
+    private TableColumn     colId,colItemNumber,colName,colDescription,colQuantity,colValue,colDiscount,colUnit,colCreator,colAction;
     @FXML
     private TextField txtVat,txtAccount;
     @FXML
@@ -56,20 +53,36 @@ public class NewPurchaseOrderController extends OperationsController implements 
     public void refreshView()
     {
         IO.log(getClass().getName(), IO.TAG_INFO, "reloading new purchase order view..");
+        if(SupplierManager.getInstance().getSuppliers()==null)
+        {
+            IO.logAndAlert(getClass().getName(), "no suppliers found in the database.", IO.TAG_ERROR);
+            return;
+        }
+        if(EmployeeManager.getInstance().getEmployees()==null)
+        {
+            IO.logAndAlert(getClass().getName(), "no employees found in the database.", IO.TAG_ERROR);
+            return;
+        }
+        Employee[] employees = new Employee[EmployeeManager.getInstance().getEmployees().size()];
+        EmployeeManager.getInstance().getEmployees().values().toArray(employees);
+        Supplier[] suppliers = new Supplier[SupplierManager.getInstance().getSuppliers().size()];
+        SupplierManager.getInstance().getSuppliers().values().toArray(suppliers);
 
         //setup suppliers combo box
-        cbxSuppliers.setItems(FXCollections.observableArrayList(SupplierManager.getInstance().getSuppliers()));
+        cbxSuppliers.setItems(FXCollections.observableArrayList(suppliers));
 
         //setup employees combo box
-        cbxContactPerson.setItems(FXCollections.observableArrayList(EmployeeManager.getInstance().getEmployees()));
+        cbxContactPerson.setItems(FXCollections.observableArrayList(employees));
 
         //set up PurchaseOrderItems table
         colId.setCellValueFactory(new PropertyValueFactory<>("_id"));
         colItemNumber.setCellValueFactory(new PropertyValueFactory<>("item_number"));
-        colName.setCellValueFactory(new PropertyValueFactory<>("item_name"));
-        colDescription.setCellValueFactory(new PropertyValueFactory<>("item_description"));
-        colValue.setCellValueFactory(new PropertyValueFactory<>("cost"));
-        //colCreator.setCellValueFactory(new PropertyValueFactory<>("creator"));
+        colName.setCellFactory(col -> new fadulousbms.model.TextFieldTableCell("item_name", "item_name", null));
+        colDescription.setCellFactory(col -> new fadulousbms.model.TextFieldTableCell("item_description", "item_description", null));
+        colValue.setCellFactory(col -> new fadulousbms.model.TextFieldTableCell("cost", "cost", null));
+        colUnit.setCellFactory(col -> new fadulousbms.model.TextFieldTableCell("unit", "unit", null));
+        colQuantity.setCellFactory(col -> new fadulousbms.model.TextFieldTableCell("quantity", "quantity", null));
+        colDiscount.setCellFactory(col -> new fadulousbms.model.TextFieldTableCell("discount", "discount", null));
 
         Callback<TableColumn<PurchaseOrder, String>, TableCell<PurchaseOrder, String>> cellFactory
                 =
@@ -196,7 +209,9 @@ public class NewPurchaseOrderController extends OperationsController implements 
 
         EmployeeManager.getInstance().loadDataFromServer();
         ResourceManager.getInstance().loadDataFromServer();
+        AssetManager.getInstance().loadDataFromServer();
         SupplierManager.getInstance().loadDataFromServer();
+        PurchaseOrderManager.getInstance().loadDataFromServer();
     }
 
     /**
@@ -213,17 +228,17 @@ public class NewPurchaseOrderController extends OperationsController implements 
     }
 
     @FXML
-    public void newPurchaseOrderItem()
+    public void newResourcePurchaseOrderItem()
     {
-        if(ResourceManager.getInstance()!=null)
+        if (ResourceManager.getInstance() != null)
         {
-            if(ResourceManager.getInstance().getResources()!=null)
+            if (ResourceManager.getInstance().getResources() != null)
             {
-                if(ResourceManager.getInstance().getResources().length>0)
+                if (ResourceManager.getInstance().getResources().size() > 0)
                 {
                     ComboBox<Resource> resourceComboBox = new ComboBox<>();
                     resourceComboBox.setMinWidth(120);
-                    resourceComboBox.setItems(FXCollections.observableArrayList(ResourceManager.getInstance().getResources()));
+                    resourceComboBox.setItems(FXCollections.observableArrayList(ResourceManager.getInstance().getResources().values()));
                     HBox.setHgrow(resourceComboBox, Priority.ALWAYS);
 
                     Button btnAdd = new Button("Add");
@@ -238,7 +253,8 @@ public class NewPurchaseOrderController extends OperationsController implements 
                     btnNewMaterial.setMinHeight(40);
                     btnNewMaterial.setDefaultButton(true);
                     btnNewMaterial.getStyleClass().add("btnAdd");
-                    btnNewMaterial.getStylesheets().add(this.getClass().getResource("../styles/home.css").toExternalForm());
+                    btnNewMaterial.getStylesheets()
+                            .add(this.getClass().getResource("../styles/home.css").toExternalForm());
 
                     Button btnCancel = new Button("Close");
                     btnCancel.setMinWidth(80);
@@ -263,7 +279,7 @@ public class NewPurchaseOrderController extends OperationsController implements 
 
                     Stage stage = new Stage();
                     stage.setMaxWidth(300);
-                    stage.setTitle("New Purchase Order Resource");
+                    stage.setTitle("Resource Purchase Order");
                     stage.setScene(new Scene(vBox));
                     stage.setAlwaysOnTop(true);
                     stage.show();
@@ -271,22 +287,23 @@ public class NewPurchaseOrderController extends OperationsController implements 
 
                     btnAdd.setOnAction(event ->
                     {
-                        if(resourceComboBox.getValue()!=null)
+                        if (resourceComboBox.getValue() != null)
                         {
-                            PurchaseOrderItem purchaseOrderItem = new PurchaseOrderItem();
-                            //purchaseOrderItem.setItem_number(tblPurchaseOrderItems.getItems().size());//let server set this
-                            purchaseOrderItem.setResource(resourceComboBox.getValue());
-                            purchaseOrderItem.setItem_id(resourceComboBox.getValue().get_id());
-                            purchaseOrderItem.setQuantity(1);
-                            purchaseOrderItem.setDiscount(0);
-                            tblPurchaseOrderItems.getItems().add(purchaseOrderItem);
+                            PurchaseOrderResource purchaseOrderResource = new PurchaseOrderResource();
+                            purchaseOrderResource.setItem_number(tblPurchaseOrderItems.getItems().size());
+                            purchaseOrderResource.setItem(resourceComboBox.getValue());
+                            purchaseOrderResource.setItem_id(resourceComboBox.getValue().get_id());
+                            purchaseOrderResource.setQuantity(1);
+                            purchaseOrderResource.setDiscount(0);
+                            tblPurchaseOrderItems.getItems().add(purchaseOrderResource);
                             tblPurchaseOrderItems.refresh();
 
                             //itemsModified = true;
 
                             //computeQuoteTotal();
 
-                        } else IO.logAndAlert("New Purchase Order item", "Invalid item selected.", IO.TAG_ERROR);
+                        }
+                        else IO.logAndAlert("Purchase Order Item Addition", "Invalid item selected.", IO.TAG_ERROR);
                     });
 
                     btnNewMaterial.setOnAction(event ->
@@ -306,7 +323,106 @@ public class NewPurchaseOrderController extends OperationsController implements 
                 }
             }
         }
-        IO.logAndAlert("New Purchase Order Item", "No resources were found in the database, please add some resources first and try again.",IO.TAG_ERROR);
+        IO.logAndAlert("Add Purchase Order Item", "No resources were found in the database, please add some resources first and try again.", IO.TAG_ERROR);
+    }
+
+    @FXML
+    public void newAssetPurchaseOrderItem()
+    {
+        if (AssetManager.getInstance() != null)
+        {
+            if (AssetManager.getInstance().getAssets() != null)
+            {
+                if (AssetManager.getInstance().getAssets().size() > 0)
+                {
+                    ComboBox<Asset> assetComboBox = new ComboBox<>();
+                    assetComboBox.setMinWidth(120);
+                    assetComboBox.setItems(FXCollections.observableArrayList(AssetManager.getInstance().getAssets().values()));
+                    HBox.setHgrow(assetComboBox, Priority.ALWAYS);
+
+                    Button btnAdd = new Button("Add");
+                    btnAdd.setMinWidth(80);
+                    btnAdd.setMinHeight(40);
+                    btnAdd.setDefaultButton(true);
+                    btnAdd.getStyleClass().add("btnAdd");
+                    btnAdd.getStylesheets().add(this.getClass().getResource("../styles/home.css").toExternalForm());
+
+                    Button btnNew = new Button("New Asset");
+                    btnNew.setMinWidth(80);
+                    btnNew.setMinHeight(40);
+                    btnNew.setDefaultButton(true);
+                    btnNew.getStyleClass().add("btnAdd");
+                    btnNew.getStylesheets()
+                            .add(this.getClass().getResource("../styles/home.css").toExternalForm());
+
+                    Button btnCancel = new Button("Close");
+                    btnCancel.setMinWidth(80);
+                    btnCancel.setMinHeight(40);
+                    btnCancel.getStyleClass().add("btnBack");
+                    btnCancel.getStylesheets().add(this.getClass().getResource("../styles/home.css").toExternalForm());
+
+                    HBox hBox = new HBox(new Label("Asset: "), assetComboBox);
+                    HBox.setHgrow(hBox, Priority.ALWAYS);
+                    hBox.setSpacing(20);
+
+                    HBox hBoxButtons = new HBox(btnAdd, btnNew, btnCancel);
+                    hBoxButtons.setHgrow(btnAdd, Priority.ALWAYS);
+                    hBoxButtons.setHgrow(btnCancel, Priority.ALWAYS);
+                    hBoxButtons.setSpacing(20);
+
+                    VBox vBox = new VBox(hBox, hBoxButtons);
+                    VBox.setVgrow(vBox, Priority.ALWAYS);
+                    vBox.setSpacing(20);
+                    HBox.setHgrow(vBox, Priority.ALWAYS);
+                    vBox.setFillWidth(true);
+
+                    Stage stage = new Stage();
+                    stage.setMaxWidth(300);
+                    stage.setTitle("Asset Purchase Order");
+                    stage.setScene(new Scene(vBox));
+                    stage.setAlwaysOnTop(true);
+                    stage.show();
+
+
+                    btnAdd.setOnAction(event ->
+                    {
+                        if (assetComboBox.getValue() != null)
+                        {
+                            PurchaseOrderAsset purchaseOrderAsset = new PurchaseOrderAsset();
+                            purchaseOrderAsset.setItem_number(tblPurchaseOrderItems.getItems().size());
+                            purchaseOrderAsset.setItem(assetComboBox.getValue());
+                            purchaseOrderAsset.setItem_id(assetComboBox.getValue().get_id());
+                            purchaseOrderAsset.setQuantity(1);
+                            purchaseOrderAsset.setDiscount(0);
+                            tblPurchaseOrderItems.getItems().add(purchaseOrderAsset);
+                            tblPurchaseOrderItems.refresh();
+
+                            //itemsModified = true;
+
+                            //computeQuoteTotal();
+
+                        }
+                        else IO.logAndAlert("Purchase Order Item Addition", "Invalid item selected.", IO.TAG_ERROR);
+                    });
+
+                    btnNew.setOnAction(event ->
+                            ResourceManager.getInstance().newResourceWindow(param ->
+                            {
+                                new Thread(() ->
+                                {
+                                    refreshModel();
+                                    Platform.runLater(() -> refreshView());
+                                }).start();
+                                return null;
+                            }));
+
+                    btnCancel.setOnAction(event ->
+                            stage.close());
+                    return;
+                }
+            }
+        }
+        IO.logAndAlert("Asset Purchase Order", "No assets were found in the database, please add some assets first and try again.", IO.TAG_ERROR);
     }
 
     @FXML
@@ -367,7 +483,7 @@ public class NewPurchaseOrderController extends OperationsController implements 
         try
         {
             str_supplier = cbxSuppliers.getValue().get_id();
-            str_contact = cbxContactPerson.getValue().get_id();
+            str_contact = cbxContactPerson.getValue().getUsr();
             str_vat = txtVat.getText();
             str_account = txtAccount.getText();
         }catch (NumberFormatException e)
@@ -387,7 +503,7 @@ public class NewPurchaseOrderController extends OperationsController implements 
 
         PurchaseOrderItem[] items = new PurchaseOrderItem[purchaseOrderItems.size()];
         purchaseOrderItems.toArray(items);
-        purchaseOrder.setResources(items);
+        purchaseOrder.setItems(items);
 
         try
         {
@@ -428,10 +544,15 @@ public class NewPurchaseOrderController extends OperationsController implements 
                     boolean added_all_po_items = true;
                     for(PurchaseOrderItem purchaseOrderItem: tblPurchaseOrderItems.getItems())
                     {
-                        //prepare parameters for purchase order item.
+                        //prepare parameters for purchase order asset.
                         purchaseOrderItem.setPurchase_order_id(response);
 
-                        connection = RemoteComms.postData("/api/purchaseorder/item/add", purchaseOrderItem.asUTFEncodedString(), headers);
+                        if(purchaseOrderItem instanceof PurchaseOrderAsset)
+                            connection = RemoteComms.postData("/api/purchaseorder/asset/add", purchaseOrderItem.asUTFEncodedString(), headers);
+                        else if(purchaseOrderItem instanceof PurchaseOrderResource)
+                            connection = RemoteComms.postData("/api/purchaseorder/item/add", purchaseOrderItem.asUTFEncodedString(), headers);
+                        else IO.logAndAlert("Purchase Order Item Creation Error", "unknown purchase order item type ["+purchaseOrderItem+"].", IO.TAG_ERROR);
+
                         if (connection != null)
                         {
                             if (connection.getResponseCode() == HttpURLConnection.HTTP_OK)
@@ -448,14 +569,41 @@ public class NewPurchaseOrderController extends OperationsController implements 
                     }
                     if(added_all_po_items)
                     {
-                        //set selected quote
-                        //quote.set_id(response);
-                        purchaseOrder.setResources(((PurchaseOrderItem[])purchaseOrderItems.toArray()));
+                        //System.out.println("po_id: "+response);
+                        /*purchaseOrder.set_id(response);
+                        PurchaseOrderItem[] arr_items = new PurchaseOrderItem[purchaseOrderItems.size()];
+                        purchaseOrderItems.toArray(arr_items);
+                        purchaseOrder.setItems(arr_items);
                         PurchaseOrderManager.getInstance().loadDataFromServer();
                         PurchaseOrderManager.getInstance().setSelected(purchaseOrder);
-                        tblPurchaseOrderItems.setItems(FXCollections.observableArrayList(PurchaseOrderManager.getInstance().getSelected().getResources()));
+                        //tblPurchaseOrderItems.setItems(FXCollections.observableArrayList(PurchaseOrderManager.getInstance().getSelected().getItems()));*/
 
                         IO.logAndAlert("New Purchase Order Creation Success", "Successfully created a new Purchase Order.", IO.TAG_INFO);
+
+                        PurchaseOrderManager.getInstance().loadDataFromServer();
+                        PurchaseOrderManager.getInstance().setSelected(PurchaseOrderManager.getInstance().getPurchaseOrders().get(response));
+
+                        ScreenManager.getInstance().showLoadingScreen(param ->
+                        {
+                            new Thread(new Runnable()
+                            {
+                                @Override
+                                public void run()
+                                {
+                                    try
+                                    {
+                                        if(ScreenManager.getInstance().loadScreen(Screens.VIEW_PURCHASE_ORDER.getScreen(),getClass().getResource("../views/"+Screens.VIEW_PURCHASE_ORDER.getScreen())))
+                                        {
+                                            Platform.runLater(() -> ScreenManager.getInstance().setScreen(Screens.VIEW_PURCHASE_ORDER.getScreen()));
+                                        } else IO.log(getClass().getName(), IO.TAG_ERROR, "could not load purchase order viewer screen.");
+                                    } catch (IOException e)
+                                    {
+                                        IO.log(getClass().getName(), IO.TAG_ERROR, e.getMessage());
+                                    }
+                                }
+                            }).start();
+                            return null;
+                        });
                         //itemsModified = false;
                     } else IO.logAndAlert("New Purchase Order Creation Failure", "Could not add items to Purchase Order.", IO.TAG_ERROR);
                 }else
@@ -472,73 +620,6 @@ public class NewPurchaseOrderController extends OperationsController implements 
             IO.logAndAlert(getClass().getName(), e.getMessage(), IO.TAG_ERROR);
         }
     }
-
-    /*public void updateQuote()
-    {
-        cbxClients.getStylesheets().add(this.getClass().getResource("../styles/home.css").toExternalForm());
-        if(cbxClients.getValue()==null)
-        {
-            cbxClients.getStyleClass().remove("form-control-default");
-            cbxClients.getStyleClass().add("control-input-error");
-            return;
-        }else{
-            cbxClients.getStyleClass().remove("control-input-error");
-            cbxClients.getStyleClass().add("form-control-default");
-        }
-
-        cbxContactPerson.getStylesheets().add(this.getClass().getResource("../styles/home.css").toExternalForm());
-        if(cbxContactPerson.getValue()==null)
-        {
-            cbxContactPerson.getStyleClass().remove("form-control-default");
-            cbxContactPerson.getStyleClass().add("control-input-error");
-            return;
-        }else{
-            cbxContactPerson.getStyleClass().remove("control-input-error");
-            cbxContactPerson.getStyleClass().add("form-control-default");
-        }
-
-        if(!Validators.isValidNode(txtCell, txtCell.getText(), 1, ".+"))
-        {
-            txtCell.getStylesheets().add(this.getClass().getResource("../styles/home.css").toExternalForm());
-            return;
-        }
-        if(!Validators.isValidNode(txtTel, txtTel.getText(), 1, ".+"))
-        {
-            txtTel.getStylesheets().add(this.getClass().getResource("../styles/home.css").toExternalForm());
-            return;
-        }
-        if(!Validators.isValidNode(txtEmail, txtEmail.getText(), 1, ".+"))
-        {
-            txtEmail.getStylesheets().add(this.getClass().getResource("../styles/home.css").toExternalForm());
-            return;
-        }
-        if(!Validators.isValidNode(txtSite, txtSite.getText(), 1, ".+"))
-        {
-            txtSite.getStylesheets().add(this.getClass().getResource("../styles/home.css").toExternalForm());
-            return;
-        }
-
-        String str_site = txtSite.getText();
-        //String str_extra = txtExtra.getText();
-
-
-        Quote selected = QuoteManager.getInstance().getSelectedQuote();
-        if(selected!=null)
-        {
-            selected.setClient_id(cbxClients.getValue().get_id());
-            selected.setContact_person_id(cbxContactPerson.getValue().get_id());
-            selected.setSitename(str_site);
-            selected.setRequest(txtRequest.getText());
-            /*if (str_extra != null)
-                selected.parse("extra", str_extra);*
-            //QuoteManager.getInstance().updateQuote(selected, ((QuoteItem[]) tblQuoteItems.getItems().toArray()), ((Employee[])tblSaleReps.getItems().toArray()));
-            QuoteManager.getInstance().updateQuote(selected, tblQuoteItems.getItems(), tblSaleReps.getItems());
-
-            refreshView();
-            //tblQuoteItems.refresh();
-            //tblSaleReps.refresh();
-        }
-    }*/
 
     @FXML
     public void previousScreen()

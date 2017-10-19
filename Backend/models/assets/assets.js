@@ -30,7 +30,7 @@ const assetSchema = mongoose.Schema(
     },
     date_acquired:{
       type:Number,
-      required:true
+      required:false
     },
     date_exhausted:{
       type:Number,
@@ -85,6 +85,7 @@ module.exports.getAll = function (callback)
 
 module.exports.update = function (asset_id, asset, callback)
 {
+  console.log('attempting to update asset [%s].', asset_id);
   var query = {_id :asset_id};
   Assets.findOneAndUpdate(query, asset, {}, function(err, asset_obj)
   {
@@ -94,6 +95,7 @@ module.exports.update = function (asset_id, asset, callback)
       return;
     }
     //asset was successfully updated
+    console.log('successfully updated asset.');
     callback(err, asset_obj);
     //update timestamp
     counters.timestamp('assets_timestamp');
@@ -102,6 +104,8 @@ module.exports.update = function (asset_id, asset, callback)
 
 module.exports.isValid = function(asset)
 {
+  console.log('validating asset object:\n%s', JSON.stringify(asset));
+
   if(isNullOrEmpty(asset))
     return false;
   //attribute validation
@@ -119,8 +123,8 @@ module.exports.isValid = function(asset)
     return false;
   /*if(isNullOrEmpty(resource.date_exhausted))
     return false;*/
-
-    return true;
+  console.log('valid asset.');
+  return true;
 }
 
 isNullOrEmpty = function(obj)

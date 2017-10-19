@@ -86,8 +86,8 @@ module.exports.getAll = function(callback)
 
 module.exports.update = function(record_id, quote, callback)
 {
-  var query = {_id:record_id};
   console.log('attempting to update quote[%s].', record_id);
+  var query = {_id:record_id};
 
   Quotes.findOneAndUpdate(query, quote, {}, function(error, res_obj)
   {
@@ -126,7 +126,7 @@ module.exports.update = function(record_id, quote, callback)
 
 module.exports.isValid = function(quote)
 {
-  console.log('\nvalidating quote:\n%s', JSON.stringify(quote));
+  console.log('validating quote:\n%s', JSON.stringify(quote));
 
   if(isNullOrEmpty(quote))
     return false;

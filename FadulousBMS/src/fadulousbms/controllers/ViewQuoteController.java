@@ -57,6 +57,13 @@ public class ViewQuoteController extends Screen implements Initializable
     @Override
     public void refreshView()
     {
+        if(EmployeeManager.getInstance().getEmployees()==null)
+        {
+            IO.logAndAlert(getClass().getName(), "no employees found in the database.", IO.TAG_ERROR);
+            return;
+        }
+        Employee[] employees = (Employee[]) EmployeeManager.getInstance().getEmployees().values().toArray();
+
         tblSaleReps.getItems().clear();
         tblQuoteItems.getItems().clear();
 
@@ -282,7 +289,7 @@ public class ViewQuoteController extends Screen implements Initializable
             }
         });
         cbxContactPerson.setButtonCell(null);
-        cbxContactPerson.setItems(FXCollections.observableArrayList(EmployeeManager.getInstance().getEmployees()));
+        cbxContactPerson.setItems(FXCollections.observableArrayList(employees));
         cbxContactPerson.setOnAction(event ->
         {
             Employee employee = cbxContactPerson.getValue();
@@ -868,11 +875,11 @@ public class ViewQuoteController extends Screen implements Initializable
         {
             if(ResourceManager.getInstance().getResources()!=null)
             {
-                if(ResourceManager.getInstance().getResources().length>0)
+                if(ResourceManager.getInstance().getResources().size()>0)
                 {
                     ComboBox<Resource> resourceComboBox = new ComboBox<>();
                     resourceComboBox.setMinWidth(120);
-                    resourceComboBox.setItems(FXCollections.observableArrayList(ResourceManager.getInstance().getResources()));
+                    resourceComboBox.setItems(FXCollections.observableArrayList(ResourceManager.getInstance().getResources().values()));
                     HBox.setHgrow(resourceComboBox, Priority.ALWAYS);
 
                     Button btnAdd = new Button("Add");
@@ -971,11 +978,11 @@ public class ViewQuoteController extends Screen implements Initializable
         {
             if(EmployeeManager.getInstance().getEmployees()!=null)
             {
-                if(EmployeeManager.getInstance().getEmployees().length>0)
+                if(EmployeeManager.getInstance().getEmployees().size()>0)
                 {
                     ComboBox<Employee> employeeComboBox = new ComboBox<>();
                     employeeComboBox.setMinWidth(120);
-                    employeeComboBox.setItems(FXCollections.observableArrayList(EmployeeManager.getInstance().getEmployees()));
+                    employeeComboBox.setItems(FXCollections.observableArrayList((Employee[]) EmployeeManager.getInstance().getEmployees().values().toArray()));
                     HBox.setHgrow(employeeComboBox, Priority.ALWAYS);
 
                     Button btnAdd = new Button("Add");

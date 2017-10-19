@@ -321,62 +321,6 @@ public class OperationsController extends Screen implements Initializable
         });
     }
 
-    @FXML
-    public void pendingQuotesClick()
-    {
-        final ScreenManager screenManager = ScreenManager.getInstance();
-        ScreenManager.getInstance().showLoadingScreen(param ->
-        {
-            new Thread(new Runnable()
-            {
-                @Override
-                public void run()
-                {
-                    try
-                    {
-                        if(screenManager.loadScreen(Screens.GENERIC_QUOTES.getScreen(),getClass().getResource("../views/"+Screens.GENERIC_QUOTES.getScreen())))
-                        {
-                            Platform.runLater(() ->
-                                    screenManager.setScreen(Screens.GENERIC_QUOTES.getScreen()));
-                        } else IO.log(getClass().getName(), IO.TAG_ERROR, "could not load generic quotes screen.");
-                    } catch (IOException e)
-                    {
-                        IO.log(getClass().getName(), IO.TAG_ERROR, e.getMessage());
-                    }
-                }
-            }).start();
-            return null;
-        });
-    }
-
-    @FXML
-    public void rejectedQuotesClick()
-    {
-        final ScreenManager screenManager = ScreenManager.getInstance();
-        ScreenManager.getInstance().showLoadingScreen(param ->
-        {
-            new Thread(new Runnable()
-            {
-                @Override
-                public void run()
-                {
-                    try
-                    {
-                        if(screenManager.loadScreen(Screens.REJECTED_QUOTES.getScreen(),getClass().getResource("../views/"+Screens.REJECTED_QUOTES.getScreen())))
-                        {
-                            Platform.runLater(() ->
-                                    screenManager.setScreen(Screens.REJECTED_QUOTES.getScreen()));
-                        } else IO.log(getClass().getName(), IO.TAG_ERROR, "could not load rejected quotes screen.");
-                    } catch (IOException e)
-                    {
-                        IO.log(getClass().getName(), IO.TAG_ERROR, e.getMessage());
-                    }
-                }
-            }).start();
-            return null;
-        });
-    }
-
     //Production event handlers
     @FXML
     public void suppliersClick()

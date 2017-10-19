@@ -96,8 +96,8 @@ public class ViewJobController extends Screen implements Initializable
                 IO.log(getClass().getName(), IO.TAG_ERROR, e.getMessage());
             }
 
-            /*if (selected.getResources() != null)
-                tblQuoteItems.setItems(FXCollections.observableArrayList(selected.getResources()));
+            /*if (selected.getItems() != null)
+                tblQuoteItems.setItems(FXCollections.observableArrayList(selected.getItems()));
             else IO.log(getClass().getName(), IO.TAG_WARN, "quote [" + selected.get_id() + "] has no resources.");*/
             if (selected.getAssigned_employees() != null)
             {
@@ -177,11 +177,11 @@ public class ViewJobController extends Screen implements Initializable
 
         if(EmployeeManager.getInstance().getEmployees()!=null)
         {
-            if(EmployeeManager.getInstance().getEmployees().length>0)
+            if(EmployeeManager.getInstance().getEmployees().size()>0)
             {
                 ComboBox<Employee> employeeComboBox = new ComboBox<>();
                 employeeComboBox.setMinWidth(120);
-                employeeComboBox.setItems(FXCollections.observableArrayList(EmployeeManager.getInstance().getEmployees()));
+                employeeComboBox.setItems(FXCollections.observableArrayList((Employee[]) EmployeeManager.getInstance().getEmployees().values().toArray()));
                 HBox.setHgrow(employeeComboBox, Priority.ALWAYS);
 
                 Button btnAdd = new Button("Add");

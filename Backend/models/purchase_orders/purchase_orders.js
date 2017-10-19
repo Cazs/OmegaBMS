@@ -50,20 +50,42 @@ const purchase_orderSchema = mongoose.Schema(
   module.exports.add = function(purchase_order, callback)
   {
     console.log('attempting to create new purchase order.');
-    purchase_orders.create(purchase_order, function(error, res_obj)
+    counters.get('purchaseorder_count', function(err, counter)
     {
-      if(error)
+      if(err)
       {
-        console.log(error);
-        if(callback)
-          callback(error);
+        callback(err);
         return;
       }
-      console.log('successfully created new purchase_order.')
-      if(callback)
-        callback(error, res_obj);
-      //update timestamp
-      counters.timestamp('purchase_orders_timestamp');
+      purchase_order.number = counter.count+1;
+      //create new purchase_order object
+      purchase_orders.create(purchase_order, function(error, res_obj)
+      {
+        if(error)
+        {
+          console.log(error);
+          if(callback)
+            callback(error);
+          return;
+        }
+        console.log('successfully created new purchase_order.')
+        if(callback)
+          callback(error, res_obj);
+        //update timestamp
+        counters.timestamp('purchase_orders_timestamp');
+
+        //update purchaseorder_count
+        counter.count++;
+        counters.update('purchaseorder_count', counter, function(err)
+        {
+          if(err)
+          {
+            console.log(err);
+            return;
+          }
+          console.log('successfully updated purchaseorder_count to %s', counter.count);
+        });
+      });
     });
   }
 

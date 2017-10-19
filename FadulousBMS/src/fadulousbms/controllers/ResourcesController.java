@@ -43,12 +43,14 @@ public class ResourcesController extends Screen implements Initializable
     public void refreshView()
     {
         IO.log(getClass().getName(), IO.TAG_INFO, "reloading resources/materials view..");
+        ResourceType[] res_types = new ResourceType[ResourceManager.getInstance().getResource_types().size()];
+        ResourceManager.getInstance().getResource_types().values().toArray(res_types);
 
         colId.setMinWidth(100);
         colId.setCellValueFactory(new PropertyValueFactory<>("_id"));
         CustomTableViewControls.makeEditableTableColumn(colName, TextFieldTableCell.forTableColumn(), 215, "resource_name", "/api/resource");
         CustomTableViewControls.makeEditableTableColumn(colSerial, TextFieldTableCell.forTableColumn(), 80, "resource_serial", "/api/resource");
-        CustomTableViewControls.makeComboBoxTableColumn(colType, ResourceManager.getInstance().getResource_types(), "resource_type", "type_name", "/api/resource", 120);
+        CustomTableViewControls.makeComboBoxTableColumn(colType, res_types, "resource_type", "type_name", "/api/resource", 120);
         CustomTableViewControls.makeEditableTableColumn(colDescription, TextFieldTableCell.forTableColumn(), 215, "resource_description", "/api/resource");
         CustomTableViewControls.makeEditableTableColumn(colValue, TextFieldTableCell.forTableColumn(), 80, "resource_value", "/api/resource");
         CustomTableViewControls.makeEditableTableColumn(colAccount, TextFieldTableCell.forTableColumn(), 80, "account", "/api/resource");
@@ -59,7 +61,7 @@ public class ResourcesController extends Screen implements Initializable
         CustomTableViewControls.makeEditableTableColumn(colOther, TextFieldTableCell.forTableColumn(), 215, "extra", "/api/resource");
 
         ObservableList<Resource> lst_resources = FXCollections.observableArrayList();
-        lst_resources.addAll(ResourceManager.getInstance().getResources());
+        lst_resources.addAll(ResourceManager.getInstance().getResources().values());
         tblResources.setItems(lst_resources);
 
         Callback<TableColumn<Resource, String>, TableCell<Resource, String>> cellFactory

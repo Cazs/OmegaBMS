@@ -5,30 +5,19 @@ import com.google.gson.GsonBuilder;
 import com.google.gson.JsonSyntaxException;
 import fadulousbms.auxilary.*;
 import fadulousbms.model.*;
-import fadulousbms.model.Error;
-import javafx.collections.FXCollections;
-import javafx.scene.Scene;
-import javafx.scene.control.*;
-import javafx.scene.layout.HBox;
-import javafx.scene.layout.VBox;
-import javafx.stage.Stage;
-import javafx.util.Callback;
 
-import javax.swing.*;
-import java.io.File;
 import java.io.IOException;
-import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
-import java.time.ZoneId;
 import java.util.AbstractMap;
 import java.util.ArrayList;
+import java.util.HashMap;
 
 /**
  * Created by ghost on 2017/01/13.
  */
 public class PurchaseOrderManager extends BusinessObjectManager
 {
-    private PurchaseOrder[] purchaseOrders;
+    private HashMap<String, PurchaseOrder> purchaseOrders;
     private PurchaseOrder selected;
     private Gson gson;
     private static PurchaseOrderManager po_manager = new PurchaseOrderManager();
@@ -36,6 +25,9 @@ public class PurchaseOrderManager extends BusinessObjectManager
     public static final String ROOT_PATH = "cache/purchase_orders/";
     public String filename = "";
     private long timestamp;
+    public static final int PO_STATUS_PENDING=0;
+    public static final int PO_STATUS_APPROVED=1;
+    public static final int PO_STATUS_ARCHIVED=2;
 
     private PurchaseOrderManager()
     {
@@ -46,7 +38,7 @@ public class PurchaseOrderManager extends BusinessObjectManager
         return po_manager;
     }
 
-    public PurchaseOrder[] getPurchaseOrders()
+    public HashMap<String, PurchaseOrder> getPurchaseOrders()
     {
         return purchaseOrders;
     }
@@ -96,14 +88,51 @@ public class PurchaseOrderManager extends BusinessObjectManager
                     if(!isSerialized(ROOT_PATH+filename))
                     {
                         String purchaseorders_json = RemoteComms.sendGetRequest("/api/purchaseorders", headers);
-                        purchaseOrders = gson.fromJson(purchaseorders_json, PurchaseOrder[].class);
+                        PurchaseOrder[] purchase_orders_arr = gson.fromJson(purchaseorders_json, PurchaseOrder[].class);
 
+                        purchaseOrders = new HashMap();
+                        for(PurchaseOrder po: purchase_orders_arr)
+                            purchaseOrders.put(po.get_id(), po);
+                        if(purchaseOrders!=null)
+                        {
+                            for (PurchaseOrder po : purchaseOrders.values())
+                            {
+                                //get po items from server and set them to local object
+                                String purchase_order_items_json = RemoteComms.sendGetRequest("/api/purchaseorder/items/" + po.get_id(), headers);
+                                PurchaseOrderResource[] purchaseOrderResources = gson.fromJson(purchase_order_items_json, PurchaseOrderResource[].class);
+
+                                String purchase_order_assets_json = RemoteComms.sendGetRequest("/api/purchaseorder/assets/" + po.get_id(), headers);
+                                PurchaseOrderAsset[] purchaseOrderAssets = gson.fromJson(purchase_order_assets_json, PurchaseOrderAsset[].class);
+
+                                PurchaseOrderItem[] purchaseOrderItems = new PurchaseOrderItem[purchaseOrderResources.length + purchaseOrderAssets.length];
+                                int i=0;
+
+                                for(PurchaseOrderResource item: purchaseOrderResources)
+                                {
+                                    //String resource_json = RemoteComms.sendGetRequest("/api/resource/" + item.getItem_id(), headers);
+                                    //System.out.println("po resource json: " + resource_json);
+                                    //item.setItem(gson.fromJson(resource_json, Resource.class));
+                                    //item.setType(Resource.class.getName());
+                                    purchaseOrderItems[i] = item;
+                                    i++;
+                                }
+
+                                for(PurchaseOrderItem item: purchaseOrderAssets)
+                                {
+                                    //String asset_json = RemoteComms.sendGetRequest("/api/asset/" + item.getItem_id(), headers);
+                                    //item.setItem(gson.fromJson(asset_json, Asset.class));
+                                    purchaseOrderItems[i] = item;
+                                    i++;
+                                }
+                                po.setItems(purchaseOrderItems);
+                            }
+                        }
                         IO.log(getClass().getName(), IO.TAG_INFO, "reloaded collection of purchase orders.");
 
                         this.serialize(ROOT_PATH+filename, purchaseOrders);
                     }else{
                         IO.log(this.getClass().getName(), IO.TAG_INFO, "binary object ["+ROOT_PATH+filename+"] on local disk is already up-to-date.");
-                        purchaseOrders = (PurchaseOrder[]) this.deserialize(ROOT_PATH+filename);
+                        purchaseOrders = (HashMap<String, PurchaseOrder>) this.deserialize(ROOT_PATH+filename);
                     }
                 } else IO.logAndAlert("Session Expired", "Active session has expired.", IO.TAG_ERROR);
             } else IO.logAndAlert("Session Expired", "No active sessions.", IO.TAG_ERROR);

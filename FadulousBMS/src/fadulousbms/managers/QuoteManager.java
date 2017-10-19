@@ -21,9 +21,7 @@ public class QuoteManager extends BusinessObjectManager
     private BusinessObject[] genders=null, domains=null;
     private Gson gson;
     private static QuoteManager quote_manager = new QuoteManager();
-    private ScreenManager screenManager = null;
     private Quote selected_quote;
-    private boolean fromGeneric = false;
     private long timestamp;
     public static final String ROOT_PATH = "cache/quotes/";
     public String filename = "";
@@ -85,10 +83,6 @@ public class QuoteManager extends BusinessObjectManager
         for(int i=0;i<suppliers.length;i++)
             organisations[++cursor]=suppliers[i];*/
     }
-
-    public void setFromGeneric(boolean b) {fromGeneric=b;}
-
-    public boolean fromGeneric(){return fromGeneric;}
 
     public Quote[] getQuotes()
     {
@@ -166,6 +160,9 @@ public class QuoteManager extends BusinessObjectManager
                         ResourceManager.getInstance().loadDataFromServer();
                         EmployeeManager.getInstance().loadDataFromServer();
 
+                        Employee[] employees = new Employee[EmployeeManager.getInstance().getEmployees().values().toArray().length];
+                        EmployeeManager.getInstance().getEmployees().values().toArray(employees);
+
                         if(quotes!=null)
                         {
                             if(quotes.length>0)
@@ -173,7 +170,7 @@ public class QuoteManager extends BusinessObjectManager
                                 for (Quote quote : quotes)
                                 {
                                     //Set Quote creator
-                                    for (Employee employee : EmployeeManager.getInstance().getEmployees())
+                                    for (Employee employee : employees)
                                     {
                                         if (employee.getUsr().equals(quote.getCreator()))
                                         {
@@ -257,7 +254,7 @@ public class QuoteManager extends BusinessObjectManager
                                         }
                                     }
                                     //Set Quote contact person[Employee] object
-                                    for (Employee employee : EmployeeManager.getInstance().getEmployees())
+                                    for (Employee employee : employees)
                                     {
                                         if (employee.get_id().equals(quote.getContact_person_id()))
                                         {

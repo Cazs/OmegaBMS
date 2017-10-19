@@ -62,9 +62,17 @@ public class QuotesController extends OperationsController implements Initializa
     {
         IO.log(getClass().getName(), IO.TAG_INFO, "reloading quotes view..");
 
+        if(EmployeeManager.getInstance().getEmployees()==null)
+        {
+            IO.logAndAlert(getClass().getName(), "no employees found in the database.", IO.TAG_ERROR);
+            return;
+        }
+        Employee[] employees = new Employee[EmployeeManager.getInstance().getEmployees().values().toArray().length];
+        EmployeeManager.getInstance().getEmployees().values().toArray(employees);
+
         colId.setCellValueFactory(new PropertyValueFactory<>("_id"));
         CustomTableViewControls.makeComboBoxTableColumn(colClient, ClientManager.getInstance().getClients(), "client_id", "client_name", "/api/quote", 180);
-        CustomTableViewControls.makeComboBoxTableColumn(colContactPerson, EmployeeManager.getInstance().getEmployees(), "contact_person_id", "firstname|lastname", "/api/quote", 160, true);
+        CustomTableViewControls.makeComboBoxTableColumn(colContactPerson, employees, "contact_person_id", "firstname|lastname", "/api/quote", 160, true);
         CustomTableViewControls.makeLabelledDatePickerTableColumn(colDateGenerated, "date_generated", "/api/quote");
         CustomTableViewControls.makeEditableTableColumn(colRequest, TextFieldTableCell.forTableColumn(), 100, "request", "/api/quote");
         CustomTableViewControls.makeEditableTableColumn(colSitename, TextFieldTableCell.forTableColumn(), 100, "sitename", "/api/quote");

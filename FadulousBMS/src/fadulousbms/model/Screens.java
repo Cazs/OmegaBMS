@@ -24,12 +24,9 @@ public enum Screens
     CREATE_ACCOUNT("Create_account.fxml"),
     RESET_PWD("ResetPassword.fxml"),
     NEW_QUOTE("New_quote.fxml"),
-    GENERIC_QUOTES("PendingQuotes.fxml"),
     REJECTED_QUOTES("RejectedQuotes.fxml"),
-    NEW_GENERIC_QUOTE("New_generic_quote.fxml"),
     QUOTES("Quotes.fxml"),
     VIEW_QUOTE("View_quote.fxml"),
-    VIEW_GENERIC_QUOTE("View_generic_quote.fxml"),
     SALES("Sales.fxml"),
     JOBS("Jobs.fxml"),
     VIEW_JOB("View_job.fxml"),
@@ -52,7 +49,8 @@ public enum Screens
     ADDITIONAL_REVENUE("Revenue.fxml"),
     NEW_REVENUE("NewRevenue.fxml"),
     PURCHASE_ORDER("PurchaseOrders.fxml"),
-    NEW_PURCHASE_ORDER("NewPurchaseOrder.fxml");
+    NEW_PURCHASE_ORDER("NewPurchaseOrder.fxml"),
+    VIEW_PURCHASE_ORDER("ViewPurchaseOrder.fxml");
 
     private String screen;
     

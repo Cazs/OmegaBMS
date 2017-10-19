@@ -41,16 +41,21 @@ public class NewExpenseController extends Screen implements Initializable
     @Override
     public void refreshView()
     {
-        SupplierManager.getInstance().initialize();
-        if(SupplierManager.getInstance().getSuppliers()!=null)
-            cbxSupplier.setItems(FXCollections.observableArrayList(SupplierManager.getInstance().getSuppliers()));
-        else IO.logAndAlert("No Suppliers Error", "No suppliers were found in the database.", IO.TAG_ERROR);
+        IO.log(getClass().getName(), IO.TAG_INFO, "reloading new purchase order view..");
+        if(SupplierManager.getInstance().getSuppliers()==null)
+        {
+            IO.logAndAlert(getClass().getName(), "no suppliers found in the database.", IO.TAG_ERROR);
+            return;
+        }
+        Supplier[] suppliers = (Supplier[]) SupplierManager.getInstance().getSuppliers().values().toArray();
+
+        cbxSupplier.setItems(FXCollections.observableArrayList(suppliers));
     }
 
     @Override
     public void refreshModel()
     {
-
+        SupplierManager.getInstance().initialize();
     }
 
     /**

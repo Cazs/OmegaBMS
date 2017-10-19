@@ -54,28 +54,26 @@ public class TextFieldTableCell extends TableCell<BusinessObject, String>
                 BusinessObject obj = (BusinessObject)getTableRow().getItem();
                 obj.parse(property,txt.getText());
 
-                callback.call(obj);
+                if(callback!=null)
+                    callback.call(obj);
 
                 getTableRow().setItem(obj);
-                getTableView().refresh();
+                //getTableView().refresh();
             }
-            if(event.getCode() == KeyCode.ESCAPE)
+            /*if(event.getCode() == KeyCode.ESCAPE)
             {
                 setGraphic(lbl);
                 getTableView().refresh();
-            }
+            }*/
         });
-        txt.textProperty().addListener((observable, oldValue, newValue) ->
-        {
-        });
-        txt.focusedProperty().addListener((observable, oldValue, newValue) ->
+        /*txt.focusedProperty().addListener((observable, oldValue, newValue) ->
         {
             if(oldValue && !newValue)//if was focused but not anymore then render label
             {
                 setGraphic(lbl);
                 getTableView().refresh();
             }
-        });
+        });*/
     }
 
     @Override
@@ -97,9 +95,15 @@ public class TextFieldTableCell extends TableCell<BusinessObject, String>
     protected void updateItem(String selected_id, boolean empty)
     {
         super.updateItem(selected_id, empty);
-        if(!empty && selected_id!=null)
-            lbl.setText(selected_id);
-        setGraphic(lbl);
+
+        if (getTableRow().getItem() instanceof BusinessObject)
+        {
+            BusinessObject bo = (BusinessObject) getTableRow().getItem();
+            Object val = bo.get(property);
+            if(val!=null)
+                txt.setText(val.toString());
+            setGraphic(txt);
+        } else IO.log(TAG, IO.TAG_ERROR, String.format("unknown row object: " + getTableRow().getItem()));
         //getTableView().refresh();
     }
 
@@ -107,8 +111,8 @@ public class TextFieldTableCell extends TableCell<BusinessObject, String>
     public void startEdit()
     {
         super.startEdit();
-        setEditable(true);
-        setGraphic(txt);
-        txt.requestFocus();
+        //setEditable(true);
+        //setGraphic(txt);
+        //txt.requestFocus();
     }
 }

@@ -44,6 +44,13 @@ public class SuppliersController extends Screen implements Initializable
     public void refreshView()
     {
         IO.log(getClass().getName(), IO.TAG_INFO, "reloading suppliers view..");
+        if(SupplierManager.getInstance().getSuppliers()==null)
+        {
+            IO.logAndAlert(getClass().getName(), "no suppliers found in the database.", IO.TAG_ERROR);
+            return;
+        }
+        Supplier[] suppliers = new Supplier[SupplierManager.getInstance().getSuppliers().values().toArray().length];
+        SupplierManager.getInstance().getSuppliers().values().toArray(suppliers);
 
         colSupplierId.setMinWidth(100);
         colSupplierId.setCellValueFactory(new PropertyValueFactory<>("_id"));
@@ -59,7 +66,7 @@ public class SuppliersController extends Screen implements Initializable
         CustomTableViewControls.makeEditableTableColumn(colSupplierOther, TextFieldTableCell.forTableColumn(), 215, "other", "/api/supplier");
 
         ObservableList<Supplier> lst_suppliers = FXCollections.observableArrayList();
-        lst_suppliers.addAll(SupplierManager.getInstance().getSuppliers());
+        lst_suppliers.addAll(suppliers);
         tblSuppliers.setItems(lst_suppliers);
 
         final ScreenManager screenManager = ScreenManager.getInstance();

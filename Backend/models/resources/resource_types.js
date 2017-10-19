@@ -56,6 +56,7 @@ module.exports.getAll = function (callback)
 
 module.exports.update = function (type_id, resource_type, callback)
 {
+  console.log('attempting to update resource_type[%s].', type_id);
   var query = {_id :type_id};
   ResourceTypes.findOneAndUpdate(query, resource_type, {}, function(error, res_obj)
   {
@@ -76,6 +77,8 @@ module.exports.update = function (type_id, resource_type, callback)
 
 module.exports.isValid = function(resource_type)
 {
+  console.log('validating resource_type:\n%s', JSON.stringify(resource_type));
+
   if(isNullOrEmpty(resource_type))
     return false;
   //attribute validation
@@ -84,7 +87,8 @@ module.exports.isValid = function(resource_type)
   if(isNullOrEmpty(resource_type.type_description))
     return false;
 
-    return true;
+  console.log('valid resource_type.');
+  return true;
 }
 
 isNullOrEmpty = function(obj)

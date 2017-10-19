@@ -17,7 +17,8 @@
                     <menus>
                         <Menu mnemonicParsing="false" text="File">
                             <items>
-                                <MenuItem mnemonicParsing="false" onAction="#newPurchaseOrderItem" text="Add Item" />
+                                <MenuItem mnemonicParsing="false" onAction="#newResourcePurchaseOrderItem" text="Add Resource/Material" />
+                        <MenuItem mnemonicParsing="false" onAction="#newAssetPurchaseOrderItem" text="Add Asset" />
                         <MenuItem mnemonicParsing="false" text="Close" />
                             </items>
                         </Menu>
@@ -61,7 +62,7 @@
                         <TextField fx:id="txtVat" GridPane.columnIndex="1" GridPane.rowIndex="3" />
                         <Label text="Account" GridPane.rowIndex="4" />
                         <TextField fx:id="txtAccount" GridPane.columnIndex="1" GridPane.rowIndex="4" />
-                        <Label text="Create Material Purchase Order" GridPane.columnSpan="2" GridPane.halignment="CENTER" GridPane.hgrow="ALWAYS" GridPane.valignment="CENTER" GridPane.vgrow="ALWAYS">
+                        <Label text="Create Purchase Order" GridPane.columnSpan="2" GridPane.halignment="CENTER" GridPane.hgrow="ALWAYS" GridPane.valignment="CENTER" GridPane.vgrow="ALWAYS">
                             <font>
                                 <Font name="System Bold" size="17.0" />
                             </font>

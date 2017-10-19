@@ -1,12 +1,22 @@
 package fadulousbms.model;
 
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import fadulousbms.auxilary.IO;
+import fadulousbms.auxilary.RemoteComms;
+import fadulousbms.managers.EmployeeManager;
+import fadulousbms.managers.SessionManager;
+import fadulousbms.managers.SupplierManager;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 
+import java.io.IOException;
 import java.io.Serializable;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
+import java.util.AbstractMap;
+import java.util.ArrayList;
+import java.util.HashMap;
 
 /**
  * Created by ghost on 2017/01/21.
@@ -23,10 +33,12 @@ public class PurchaseOrder implements BusinessObject, Serializable
     private String account;
     private int status;
     private Employee creator_employee;
+    private Supplier supplier;
+    private Employee contact_person;
     private boolean marked;
     private String extra;
     public static final String TAG = "PurchaseOrder";
-    public PurchaseOrderItem[] resources;
+    public PurchaseOrderItem[] items;
 
     public StringProperty idProperty(){return new SimpleStringProperty(_id);}
 
@@ -122,7 +134,14 @@ public class PurchaseOrder implements BusinessObject, Serializable
 
     public void setSupplier_id(String supplier_id)
     {
-        this.supplier_id = supplier_id;
+        SupplierManager.getInstance().loadDataFromServer();
+        HashMap<String, Supplier> suppliers = SupplierManager.getInstance().getSuppliers();
+        if(suppliers!=null)
+        {
+            setSupplier(suppliers.get(supplier_id));
+            System.out.println("set supplier>>> " + suppliers.get(supplier_id));
+            this.supplier_id = supplier_id;
+        }else IO.log(getClass().getName(), IO.TAG_ERROR, "no suppliers were found in database.");
     }
 
     public String getContact_person_id()
@@ -132,31 +151,76 @@ public class PurchaseOrder implements BusinessObject, Serializable
 
     public void setContact_person_id(String contact_person_id)
     {
-        this.contact_person_id = contact_person_id;
+        EmployeeManager.getInstance().loadDataFromServer();
+        HashMap<String, Employee> employees = EmployeeManager.getInstance().getEmployees();
+        if(employees!=null)
+        {
+            setContact_person(employees.get(contact_person_id));
+            this.contact_person_id=contact_person_id;
+        }
     }
 
-    public PurchaseOrderItem[] getResources()
+    public PurchaseOrderItem[] getItems()
     {
-        return resources;
+        /*Gson gson = new GsonBuilder().create();
+        ArrayList<AbstractMap.SimpleEntry<String, String>> headers = new ArrayList<>();
+        headers.add(new AbstractMap.SimpleEntry<>("Cookie", SessionManager.getInstance().getActive().getSessionId()));
+        String purchase_order_items_json = RemoteComms.sendGetRequest("/api/purchaseorder/items/" + get_id(), headers);
+        return gson.fromJson(purchase_order_items_json, PurchaseOrderItem[].class);*/
+        return items;
     }
 
-    public void setResources(PurchaseOrderItem[] resources)
+    public void setItems(PurchaseOrderItem[] items)
     {
-        this.resources = resources;
+        this.items = items;
+    }
+
+    public Supplier getSupplier()
+    {
+        SupplierManager.getInstance().loadDataFromServer();
+        HashMap<String, Supplier> suppliers = SupplierManager.getInstance().getSuppliers();
+        if(suppliers!=null)
+        {
+            return suppliers.get(supplier_id);
+        }else IO.log(getClass().getName(), IO.TAG_ERROR, "no suppliers were found in database.");
+        return null;
+    }
+
+    public void setSupplier(Supplier supplier)
+    {
+        this.supplier = supplier;
+    }
+
+    public Employee getContact_person()
+    {
+        EmployeeManager.getInstance().loadDataFromServer();
+        HashMap<String, Employee> employees = EmployeeManager.getInstance().getEmployees();
+        if(employees!=null)
+        {
+            return employees.get(contact_person_id);
+        }
+        return null;
+    }
+
+    public void setContact_person(Employee contact_person)
+    {
+        this.contact_person = contact_person;
     }
 
     public StringProperty creatorProperty()
     {
-        if(creator_employee==null)
-            return new SimpleStringProperty(String.valueOf(creator));
-        else return new SimpleStringProperty(String.valueOf(creator_employee.toString()));
+        return new SimpleStringProperty(getCreator());
     }
 
     public String getCreator()
     {
-        if(creator_employee==null)
-            return creator;
-        else return creator_employee.toString();
+        if(creator==null)
+            return "N/A";
+        else
+        {
+            EmployeeManager.getInstance().loadDataFromServer();
+            return EmployeeManager.getInstance().getEmployees().get(creator).toString();
+        }
     }
 
     public String getCreatorID(){return this.creator;}
@@ -222,25 +286,31 @@ public class PurchaseOrder implements BusinessObject, Serializable
             switch (var.toLowerCase())
             {
                 case "number":
-                    number = Integer.valueOf((String)val);
+                    setNumber(Integer.valueOf((String)val));
                     break;
                 case "supplier_id":
-                    supplier_id = String.valueOf(val);
+                    setSupplier_id(String.valueOf(val));
+                    break;
+                case "contact_person_id":
+                    setContact_person_id(String.valueOf(val));
                     break;
                 case "vat":
-                    vat = Double.valueOf((String)val);
+                    setVat(Double.valueOf((String)val));
+                    break;
+                case "account":
+                    setAccount((String)val);
                     break;
                 case "date_logged":
-                    date_logged = Long.valueOf((String)val);
+                    setDate_logged(Long.valueOf((String)val));
                     break;
                 case "status":
-                    status = Integer.valueOf((String)val);
+                    setStatus(Integer.valueOf((String)val));
                     break;
                 case "creator":
-                    creator = (String)val;
+                    setCreator((String)val);
                     break;
                 case "extra":
-                    extra = String.valueOf(val);
+                    setExtra(String.valueOf(val));
                     break;
                 default:
                     IO.log(getClass().getName(), IO.TAG_ERROR, "Unknown PurchaseOrder attribute '" + var + "'.");
@@ -258,23 +328,27 @@ public class PurchaseOrder implements BusinessObject, Serializable
         switch (var.toLowerCase())
         {
             case "_id":
-                return _id;
+                return get_id();
             case "number":
-                return number;
+                return getNumber();
             case "supplier_id":
-                return supplier_id;
+                return getSupplier_id();
+            case "contact_person_id":
+                return getContact_person_id();
             case "vat":
-                return vat;
+                return getVat();
+            case "account":
+                return getAccount();
             case "date_logged":
-                return date_logged;
+                return getDate_logged();
             case "creator":
-                return creator;
+                return getCreator();
             case "status":
-                return status;
+                return getStatus();
             case "extra":
-                return extra;
+                return getExtra();
             default:
-                System.err.println("Unknown PurchaseOrder attribute '" + var + "'.");
+                IO.log(getClass().getName(), IO.TAG_ERROR, "Unknown PurchaseOrder attribute '" + var + "'.");
                 return null;
         }
     }

@@ -47,22 +47,41 @@ public class AssetsController extends Screen implements Initializable
     {
         IO.log(getClass().getName(), IO.TAG_INFO, "reloading assets view..");
 
+        if(AssetManager.getInstance().getAssets()==null)
+        {
+            IO.logAndAlert(getClass().getName(), "no assets found in database.", IO.TAG_ERROR);
+            return;
+        }
+        if(AssetManager.getInstance().getAsset_types()==null)
+        {
+            IO.logAndAlert(getClass().getName(), "no asset types found in database.", IO.TAG_ERROR);
+            return;
+        }
+
+        Asset[] assets = new Asset[AssetManager.getInstance().getAssets().size()];
+        AssetManager.getInstance().getAssets().values().toArray(assets);
+
+        AssetType[] asset_types = new AssetType[AssetManager.getInstance().getAsset_types().size()];
+        AssetManager.getInstance().getAsset_types().values().toArray(asset_types);
+
         colId.setMinWidth(100);
         colId.setCellValueFactory(new PropertyValueFactory<>("_id"));
         CustomTableViewControls.makeEditableTableColumn(colName, TextFieldTableCell.forTableColumn(), 120, "asset_name", "/api/asset");
         CustomTableViewControls.makeEditableTableColumn(colSerial, TextFieldTableCell.forTableColumn(), 60, "asset_serial", "/api/asset");
-        CustomTableViewControls.makeComboBoxTableColumn(colType, AssetManager.getInstance().getAsset_types(), "asset_type", "type_name", "/api/asset", 150);
+        CustomTableViewControls.makeComboBoxTableColumn(colType, asset_types, "asset_type", "type_name", "/api/asset", 150);
         CustomTableViewControls.makeEditableTableColumn(colDescription, TextFieldTableCell.forTableColumn(), 215, "asset_description", "/api/asset");
         CustomTableViewControls.makeEditableTableColumn(colValue, TextFieldTableCell.forTableColumn(), 60, "asset_value", "/api/asset");
         CustomTableViewControls.makeEditableTableColumn(colAccount, TextFieldTableCell.forTableColumn(), 60, "account", "/api/asset");
         CustomTableViewControls.makeEditableTableColumn(colUnit, TextFieldTableCell.forTableColumn(), 50, "unit", "/api/asset");
-        CustomTableViewControls.makeEditableTableColumn(colQuantity, TextFieldTableCell.forTableColumn(), 50, "quantity", "/api/asset");
+        colQuantity.setMinWidth(80);
+        colQuantity.setCellValueFactory(new PropertyValueFactory<>("quantity"));
+        //CustomTableViewControls.makeEditableTableColumn(colQuantity, TextFieldTableCell.forTableColumn(), 50, "quantity", "/api/asset");
         CustomTableViewControls.makeLabelledDatePickerTableColumn(colDateAcquired, "date_acquired", "/api/asset");
         CustomTableViewControls.makeLabelledDatePickerTableColumn(colDateExhausted, "date_exhausted", "/api/asset");
         CustomTableViewControls.makeEditableTableColumn(colOther, TextFieldTableCell.forTableColumn(), 120, "other", "/api/asset");
 
         ObservableList<Asset> lst_assets = FXCollections.observableArrayList();
-        lst_assets.addAll(AssetManager.getInstance().getAssets());
+        lst_assets.addAll(AssetManager.getInstance().getAssets().values());
         tblAssets.setItems(lst_assets);
 
         Callback<TableColumn<Asset, String>, TableCell<Asset, String>> cellFactory

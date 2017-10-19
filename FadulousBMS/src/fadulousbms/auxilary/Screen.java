@@ -121,29 +121,12 @@ public abstract class Screen
     @FXML
     public void newQuote()
     {
-        QuoteManager.getInstance().setFromGeneric(false);
         QuoteManager.getInstance().nullifySelected();
         try
         {
             if(ScreenManager.getInstance().loadScreen(Screens.NEW_QUOTE.getScreen(),getClass().getResource("../views/"+Screens.NEW_QUOTE.getScreen())))
                 ScreenManager.getInstance().setScreen(Screens.NEW_QUOTE.getScreen());
             else IO.log(getClass().getName(), IO.TAG_ERROR, "could not load new quotes screen.");
-        } catch (IOException e)
-        {
-            IO.log(getClass().getName(), IO.TAG_ERROR, e.getMessage());
-        }
-    }
-
-    @FXML
-    public void newGenericQuote()
-    {
-        QuoteManager.getInstance().setFromGeneric(false);
-        QuoteManager.getInstance().nullifySelected();
-        try
-        {
-            if(ScreenManager.getInstance().loadScreen(Screens.NEW_GENERIC_QUOTE.getScreen(),getClass().getResource("../views/"+Screens.NEW_GENERIC_QUOTE.getScreen())))
-                ScreenManager.getInstance().setScreen(Screens.NEW_GENERIC_QUOTE.getScreen());
-            else IO.log(getClass().getName(), IO.TAG_ERROR, "could not load generic quote creation screen.");
         } catch (IOException e)
         {
             IO.log(getClass().getName(), IO.TAG_ERROR, e.getMessage());

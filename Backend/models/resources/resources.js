@@ -38,7 +38,7 @@ const resourceSchema = mongoose.Schema(
     },
     date_acquired:{
       type:Number,
-      required:true
+      required:false
     },
     date_exhausted:{
       type:Number,
@@ -89,7 +89,6 @@ module.exports.getAll = function (callback)
 module.exports.update = function (resource_id, resource, callback)
 {
   console.log('attempting to update resource [%s].', resource_id);
-  console.log('\resource object: %s\n', JSON.stringify(resource));
   var query = {_id :resource_id};
   Resources.findOneAndUpdate(query, resource, {}, function(error, res_obj)
   {
@@ -110,6 +109,8 @@ module.exports.update = function (resource_id, resource, callback)
 
 module.exports.isValid = function(resource)
 {
+  console.log('validating resource:\n%s', JSON.stringify(resource));
+
   if(isNullOrEmpty(resource))
     return false;
   //attribute validation
@@ -133,8 +134,8 @@ module.exports.isValid = function(resource)
     return false;
   /*if(isNullOrEmpty(resource.date_exhausted))
     return false;*/
-
-    return true;
+  console.log('valid resource.');
+  return true;
 }
 
 isNullOrEmpty = function(obj)

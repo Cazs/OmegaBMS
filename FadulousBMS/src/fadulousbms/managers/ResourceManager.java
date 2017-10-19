@@ -29,6 +29,7 @@ import java.net.MalformedURLException;
 import java.time.ZoneId;
 import java.util.AbstractMap;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -37,13 +38,15 @@ import java.util.logging.Logger;
  */
 public class ResourceManager extends BusinessObjectManager
 {
-    private Resource[] resources;
+    //private Resource[] resources;
+    private HashMap<String, Resource> resources;
     private Resource selected;
     private Gson gson;
     private static ResourceManager resource_manager = new ResourceManager();
 
     //public static final String[] RESOURCE_TYPES = {"VEHICLE", "EQUIPMENT"};
-    private ResourceType[] resource_types;
+    //private ResourceType[] resource_types;
+    private HashMap<String, ResourceType> resource_types;
     public static final String TAG = "ResourceManager";
     public static final String ROOT_PATH = "cache/resources/";
     public String filename = "";
@@ -58,14 +61,9 @@ public class ResourceManager extends BusinessObjectManager
         return resource_manager;
     }
 
-    public Resource[] getResources()
+    public HashMap<String, Resource> getResources()
     {
         return resources;
-    }
-
-    public ResourceType[] getResourceTypes()
-    {
-        return resource_types;
     }
 
     public void setSelected(Resource resource)
@@ -78,7 +76,7 @@ public class ResourceManager extends BusinessObjectManager
         return this.selected;
     }
 
-    public ResourceType[] getResource_types()
+    public HashMap<String, ResourceType> getResource_types()
     {
         return resource_types;
     }
@@ -118,10 +116,16 @@ public class ResourceManager extends BusinessObjectManager
                     if(!isSerialized(ROOT_PATH+filename))
                     {
                         String resources_json = RemoteComms.sendGetRequest("/api/resources", headers);
-                        resources = gson.fromJson(resources_json, Resource[].class);
+                        Resource[] arr_resources = gson.fromJson(resources_json, Resource[].class);
+                        resources = new HashMap<>();
+                        for(Resource res: arr_resources)
+                            resources.put(res.get_id(), res);
 
                         String resource_types_json = RemoteComms.sendGetRequest("/api/resource/types", headers);
-                        resource_types = gson.fromJson(resource_types_json, ResourceType[].class);
+                        ResourceType[] resourcetypes = gson.fromJson(resource_types_json, ResourceType[].class);
+                        resource_types = new HashMap<>();
+                        for(ResourceType resourceType: resourcetypes)
+                            resource_types.put(resourceType.get_id(), resourceType);
 
                         IO.log(getClass().getName(), IO.TAG_INFO, "reloaded collection of clients.");
 
@@ -129,8 +133,8 @@ public class ResourceManager extends BusinessObjectManager
                         this.serialize(ROOT_PATH+"resource_types.dat", resource_types);
                     }else{
                         IO.log(this.getClass().getName(), IO.TAG_INFO, "binary object ["+ROOT_PATH+filename+"] on local disk is already up-to-date.");
-                        resources = (Resource[]) this.deserialize(ROOT_PATH+filename);
-                        resource_types = (ResourceType[]) this.deserialize(ROOT_PATH+"resource_types.dat");
+                        resources = (HashMap<String, Resource>) this.deserialize(ROOT_PATH+filename);
+                        resource_types = (HashMap<String, ResourceType>) this.deserialize(ROOT_PATH+"resource_types.dat");
                     }
                 } else IO.logAndAlert("Session Expired", "Active session has expired.", IO.TAG_ERROR);
             } else IO.logAndAlert("Session Expired", "No active sessions.", IO.TAG_ERROR);
@@ -210,7 +214,9 @@ public class ResourceManager extends BusinessObjectManager
                 }
             }
         });
-        cbx_resource_type.setItems(FXCollections.observableArrayList(resource_types));
+        if(resource_types!=null)
+            cbx_resource_type.setItems(FXCollections.observableArrayList(resource_types.values()));
+        else IO.log(getClass().getName(), IO.TAG_ERROR, "resources map is not set.");
         cbx_resource_type.setMinWidth(200);
         cbx_resource_type.setMaxWidth(Double.MAX_VALUE);
         HBox resource_type = CustomTableViewControls.getLabelledNode("Resource type", 200, cbx_resource_type);
@@ -230,10 +236,10 @@ public class ResourceManager extends BusinessObjectManager
         txt_unit.setMaxWidth(Double.MAX_VALUE);
         HBox unit = CustomTableViewControls.getLabelledNode("Unit", 200, txt_unit);
 
-        DatePicker dpk_date_acquired = new DatePicker();
+        /*DatePicker dpk_date_acquired = new DatePicker();
         dpk_date_acquired.setMinWidth(200);
         dpk_date_acquired.setMaxWidth(Double.MAX_VALUE);
-        HBox date_acquired = CustomTableViewControls.getLabelledNode("Date acquired", 200, dpk_date_acquired);
+        HBox date_acquired = CustomTableViewControls.getLabelledNode("Date acquired", 200, dpk_date_acquired);*/
 
         DatePicker dpk_date_exhausted = new DatePicker();
         dpk_date_exhausted.setMinWidth(200);
@@ -269,8 +275,8 @@ public class ResourceManager extends BusinessObjectManager
                 return;
             if(!Validators.isValidNode(txt_unit, txt_unit.getText(), 1, ".+"))
                 return;
-            if(!Validators.isValidNode(dpk_date_acquired, dpk_date_acquired.getValue()==null?"":dpk_date_acquired.getValue().toString(), 4, date_regex))
-                return;
+            //if(!Validators.isValidNode(dpk_date_acquired, dpk_date_acquired.getValue()==null?"":dpk_date_acquired.getValue().toString(), 4, date_regex))
+            //    return;
             if(!Validators.isValidNode(txt_account, txt_account.getText(), 1, ".+"))
                 return;
 
@@ -281,7 +287,7 @@ public class ResourceManager extends BusinessObjectManager
             String str_resource_type = cbx_resource_type.getValue().get_id();
             String str_resource_value = txt_resource_value.getText();
             String str_quantity = txt_quantity.getText();
-            date_acquired_in_sec = dpk_date_acquired.getValue().atStartOfDay(ZoneId.systemDefault()).toEpochSecond();
+            //date_acquired_in_sec = dpk_date_acquired.getValue().atStartOfDay(ZoneId.systemDefault()).toEpochSecond();
             if(dpk_date_exhausted.getValue()!=null)
                 date_exhausted_in_sec = dpk_date_exhausted.getValue().atStartOfDay(ZoneId.systemDefault()).toEpochSecond();
             String str_other = txt_other.getText();
@@ -294,7 +300,7 @@ public class ResourceManager extends BusinessObjectManager
             params.add(new AbstractMap.SimpleEntry<>("resource_value", str_resource_value));
             params.add(new AbstractMap.SimpleEntry<>("quantity", str_quantity));
             params.add(new AbstractMap.SimpleEntry<>("unit", txt_unit.getText()));
-            params.add(new AbstractMap.SimpleEntry<>("date_acquired", String.valueOf(date_acquired_in_sec)));
+            //params.add(new AbstractMap.SimpleEntry<>("date_acquired", String.valueOf(date_acquired_in_sec)));
             params.add(new AbstractMap.SimpleEntry<>("account", txt_account.getText()));
             if(date_exhausted_in_sec>0)
                 params.add(new AbstractMap.SimpleEntry<>("date_exhausted", String.valueOf(date_exhausted_in_sec)));
@@ -341,7 +347,7 @@ public class ResourceManager extends BusinessObjectManager
         vbox.getChildren().add(resource_value);
         vbox.getChildren().add(quantity);
         vbox.getChildren().add(unit);
-        vbox.getChildren().add(date_acquired);
+        //vbox.getChildren().add(date_acquired);
         vbox.getChildren().add(date_exhausted);
         vbox.getChildren().add(account);
         vbox.getChildren().add(other);

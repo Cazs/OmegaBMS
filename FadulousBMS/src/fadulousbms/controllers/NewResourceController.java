@@ -46,7 +46,7 @@ public class NewResourceController extends Screen implements Initializable
     public void refreshView()
     {
         if(ResourceManager.getInstance().getResource_types()!=null)
-            cbxResourceType.setItems(FXCollections.observableArrayList(ResourceManager.getInstance().getResource_types()));
+            cbxResourceType.setItems(FXCollections.observableArrayList(ResourceManager.getInstance().getResource_types().values()));
     }
 
     @Override

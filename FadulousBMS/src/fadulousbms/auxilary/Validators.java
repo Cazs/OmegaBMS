@@ -44,6 +44,10 @@ public class Validators
         Matcher matcher = Pattern.compile(regex).matcher(str);
         if(str.length()<len)
             return false;
+        if(regex!=null)
+            return true;
+        if(regex.isEmpty())
+            return true;
         return matcher.matches();
     }
 

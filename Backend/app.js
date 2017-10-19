@@ -49,6 +49,7 @@ const expenses = require('./models/expenses/expenses.js');
 const revenues = require('./models/revenue/revenue.js');
 const purchase_orders = require('./models/purchase_orders/purchase_orders.js');
 const purchase_order_items = require('./models/purchase_orders/purchase_order_items.js');
+const purchase_order_assets = require('./models/purchase_orders/purchase_order_assets.js');
 
 mongoose.connect('mongodb://localhost/fadulousbms');
 
@@ -142,7 +143,7 @@ app.post('/api/purchaseorder/update/:object_id',function(req, res)
       return;
     }
     console.log('successfully updated purchase order[%s].\n', purchaseorder._id.toString());
-    res.json(quote);
+    res.json(purchaseorder);
   });
 });
 
@@ -164,7 +165,7 @@ app.get('/api/purchaseorder/item/:object_id', function(req, res)
 
 app.get('/api/purchaseorder/items/:object_id', function(req, res)
 {
-  getAll(req, res, purchase_order_items, function(err, objs)
+  get(req, res, purchase_order_items, function(err, objs)
   {
     if(err)
     {
@@ -204,7 +205,69 @@ app.post('/api/purchaseorder/item/update/:object_id',function(req, res)
       return;
     }
     console.log('successfully updated purchase_order_item [%s].\n', purchase_order_item._id.toString());
-    res.json(quote);
+    res.json(purchase_order_item);
+  });
+});
+
+/**** Purchase order assets route handlers ****/
+app.get('/api/purchaseorder/asset/:object_id', function(req, res)
+{
+  get(req, res, purchase_order_assets, function(err, obj)
+  {
+    if(err)
+    {
+      errorAndCloseConnection(res,500,errors.INTERNAL_ERR);
+      logServerError(err);
+      return;
+    }
+    console.log('user with session_id [%s] requested Purchase Order Asset [%s].', req.headers.cookie, obj._id);
+    res.json(obj);
+  });
+});
+
+app.get('/api/purchaseorder/assets/:object_id', function(req, res)
+{
+  get(req, res, purchase_order_assets, function(err, objs)
+  {
+    if(err)
+    {
+      errorAndCloseConnection(res,500,errors.INTERNAL_ERR);
+      logServerError(err);
+      return;
+    }
+    console.log('user with session_id [%s] requested all Purchase Order Assets for Purchase Order.', req.headers.cookie, req.params.object_id);
+    res.json(objs);
+  });
+});
+
+app.post('/api/purchaseorder/asset/add',function(req, res)
+{
+  add(req, res, purchase_order_assets, function(err, purchase_order_item)
+  {
+    if(err)
+    {
+      errorAndCloseConnection(res, 500, errors.INTERNAL_ERR);
+      logServerError(err);
+      return;
+    }
+    console.log('created new purchase_order_asset:\n %s',JSON.stringify(purchase_order_item));
+    var id =purchase_order_item._id;
+    res.json({"message":id.toString()});
+  });
+});
+
+app.post('/api/purchaseorder/asset/update/:object_id',function(req, res)
+{
+  update(req, res, purchase_order_assets, function(err, purchase_order_item)
+  {
+    if(err)
+    {
+      errorAndCloseConnection(res, 500, errors.INTERNAL_ERR);
+      logServerError(err);
+      return;
+    }
+    console.log('successfully updated purchase_order_asset [%s].\n', purchase_order_item._id.toString());
+    res.json(purchase_order_item);
   });
 });
 
@@ -685,7 +748,7 @@ app.post('/api/resource/type/update/:object_id',function(req, res)
       return;
     }
     console.log('successfully updated resource_type [%s].\n', resource_type._id);
-    res.json(invoice);
+    res.json(resource_type);
   });
 });
 
@@ -744,8 +807,8 @@ app.post('/api/resource/update/:object_id',function(req, res)
       logServerError(err);
       return;
     }
-    console.log('successfully updated resources [%s].\n', resource._id);
-    res.json(invoice);
+    console.log('successfully updated resource [%s].\n', resource._id);
+    res.json(resource);
   });
 });
 

@@ -26,6 +26,7 @@ import java.net.MalformedURLException;
 import java.time.ZoneId;
 import java.util.AbstractMap;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -35,7 +36,8 @@ import java.util.logging.Logger;
 public class SupplierManager extends BusinessObjectManager
 {
     private Gson gson;
-    private Supplier[] suppliers;
+    //private Supplier[] suppliers;
+    private HashMap<String, Supplier> suppliers;
     private Supplier selected;
     private TableView tblSuppliers;
     private static SupplierManager supplierManager = new SupplierManager();
@@ -53,7 +55,7 @@ public class SupplierManager extends BusinessObjectManager
         return supplierManager;
     }
 
-    public Supplier[] getSuppliers(){return suppliers;}
+    public HashMap<String, Supplier> getSuppliers(){return suppliers;}
 
     public void setSelected(Supplier supplier)
     {
@@ -71,7 +73,7 @@ public class SupplierManager extends BusinessObjectManager
         loadDataFromServer();
     }
 
-    public void newWindow()
+    /*public void newWindow()
     {
         SessionManager smgr = SessionManager.getInstance();
         if(smgr.getActive()!=null)
@@ -160,13 +162,13 @@ public class SupplierManager extends BusinessObjectManager
         }else{
             JOptionPane.showMessageDialog(null, "No active sessions.", "Session Expired", JOptionPane.ERROR_MESSAGE);
         }
-    }
+    }*/
 
     public void handleNewSupplier(Stage parentStage)
     {
         parentStage.setAlwaysOnTop(false);
         Stage stage = new Stage();
-        stage.setTitle(Globals.APP_NAME.getValue() + " - Add New Supplier");
+        stage.setTitle(Globals.APP_NAME.getValue() + " - Create New Supplier");
         stage.setMinWidth(320);
         stage.setMinHeight(350);
         stage.setHeight(700);
@@ -357,13 +359,17 @@ public class SupplierManager extends BusinessObjectManager
                     if(!isSerialized(ROOT_PATH+filename))
                     {
                         String suppliers_json = RemoteComms.sendGetRequest("/api/suppliers", headers);
-                        suppliers = gson.fromJson(suppliers_json, Supplier[].class);
+
+                        Supplier[] supps = gson.fromJson(suppliers_json, Supplier[].class);
+                        suppliers = new HashMap();
+                        for(Supplier supplier: supps)
+                            suppliers.put(supplier.get_id(), supplier);
 
                         IO.log(getClass().getName(), IO.TAG_INFO, "reloaded collection of suppliers.");
                         this.serialize(ROOT_PATH+filename, suppliers);
                     }else{
                         IO.log(this.getClass().getName(), IO.TAG_INFO, "binary object ["+ROOT_PATH+filename+"] on local disk is already up-to-date.");
-                        suppliers = (Supplier[]) this.deserialize(ROOT_PATH+filename);
+                        suppliers = (HashMap) this.deserialize(ROOT_PATH+filename);
                     }
                 }else JOptionPane.showMessageDialog(null, "Active session has expired.", "Session Expired", JOptionPane.ERROR_MESSAGE);
             }else JOptionPane.showMessageDialog(null, "No active sessions.", "Session Expired", JOptionPane.ERROR_MESSAGE);

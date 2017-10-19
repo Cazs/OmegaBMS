@@ -141,6 +141,27 @@ public class CustomTableViewControls
         }
     }
 
+    public static void makeEditableColumn(TableColumn<BusinessObject, String> col, Callback<TableColumn<BusinessObject, String>, TableCell<BusinessObject, String>> editable_control_callback, int min_width, String property, String api_call)
+    {
+        if(col!=null)
+        {
+            col.setMinWidth(min_width);
+            col.setCellValueFactory(new PropertyValueFactory<>(property));
+            col.setCellFactory(editable_control_callback);
+            col.setOnEditCommit(event ->
+            {
+                BusinessObject bo = event.getRowValue();
+                if(bo!=null)
+                {
+                    bo.parse(property, event.getNewValue());
+                    RemoteComms.updateBusinessObjectOnServer(bo, api_call, property);
+                }
+            });
+        }else{
+            IO.log(TAG, IO.TAG_ERROR, "Null table column!");
+        }
+    }
+
     public static void createEditableTableColumn(TableColumn<BusinessObject, String> col, Callback<TableColumn<BusinessObject, String>, TableCell<BusinessObject, String>> editable_control_callback, int min_width, String property, String api_call)
     {
         if(col!=null)

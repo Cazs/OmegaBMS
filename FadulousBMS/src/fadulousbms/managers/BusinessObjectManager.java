@@ -1,7 +1,6 @@
 package fadulousbms.managers;
 
 import fadulousbms.auxilary.IO;
-import fadulousbms.model.GenericQuote;
 
 import java.io.*;
 

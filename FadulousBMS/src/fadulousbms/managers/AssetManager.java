@@ -25,14 +25,15 @@ import java.net.MalformedURLException;
 import java.time.ZoneId;
 import java.util.AbstractMap;
 import java.util.ArrayList;
+import java.util.HashMap;
 
 /**
  * Created by ghost on 2017/02/01.
  */
 public class AssetManager extends BusinessObjectManager
 {
-    private Asset[] assets;
-    private AssetType[] asset_types;
+    private HashMap<String, Asset> assets;
+    private HashMap<String, AssetType> asset_types;
     private Asset selected;
     private static AssetManager asset_manager = new AssetManager();
     private Gson gson;
@@ -85,41 +86,47 @@ public class AssetManager extends BusinessObjectManager
                     if(!isSerialized(ROOT_PATH+filename))
                     {
                         String assets_json = RemoteComms.sendGetRequest("/api/assets", headers);
-                        assets = gson.fromJson(assets_json, Asset[].class);
+                        Asset[] arr_assets = gson.fromJson(assets_json, Asset[].class);
+                        assets = new HashMap<>();
+                        for(Asset asset: arr_assets)
+                            assets.put(asset.get_id(), asset);
 
                         String asset_types_json = RemoteComms.sendGetRequest("/api/asset/types", headers);
-                        asset_types = gson.fromJson(asset_types_json, AssetType[].class);
+                        AssetType[] arr_asset_types = gson.fromJson(asset_types_json, AssetType[].class);
+                        asset_types = new HashMap<>();
+                        for(AssetType asset_type: arr_asset_types)
+                            asset_types.put(asset_type.get_id(), asset_type);
 
                         IO.log(getClass().getName(), IO.TAG_INFO, "reloaded collection of jobs.");
 
                         this.serialize(ROOT_PATH+filename, assets);
                         this.serialize(ROOT_PATH+"asset_types.dat", asset_types);
-                    }else{
+                    }else
+                    {
                         IO.log(this.getClass().getName(), IO.TAG_INFO, "binary object ["+ROOT_PATH+filename+"] on local disk is already up-to-date.");
-                        assets = (Asset[]) this.deserialize(ROOT_PATH+filename);
-                        asset_types = (AssetType[]) this.deserialize(ROOT_PATH+"asset_types.dat");
+                        assets = (HashMap<String, Asset>) this.deserialize(ROOT_PATH+filename);
+                        asset_types = (HashMap<String, AssetType>) this.deserialize(ROOT_PATH+"asset_types.dat");
                     }
                 } else
                 {
-                    JOptionPane.showMessageDialog(null, "Active session has expired.", "Session Expired", JOptionPane.ERROR_MESSAGE);
+                    IO.logAndAlert("Active session has expired.", "Session Expired", IO.TAG_ERROR);
                 }
             } else
             {
-                JOptionPane.showMessageDialog(null, "No active sessions.", "Session Expired", JOptionPane.ERROR_MESSAGE);
+                IO.logAndAlert("No active sessions.", "Session Expired", IO.TAG_ERROR);
             }
         }catch (JsonSyntaxException ex)
         {
-            IO.log(TAG, IO.TAG_ERROR, ex.getMessage());
-            JOptionPane.showMessageDialog(null, ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+            IO.logAndAlert("JsonSyntax Error", ex.getMessage(), IO.TAG_ERROR);
         }catch (MalformedURLException ex)
         {
-            IO.log(TAG, IO.TAG_ERROR, ex.getMessage());
+            IO.logAndAlert("MalformedURL Error", ex.getMessage(), IO.TAG_ERROR);
         }catch (ClassNotFoundException e)
         {
-            IO.log(TAG, IO.TAG_ERROR, e.getMessage());
+            IO.logAndAlert("ClassNotFound Error", e.getMessage(), IO.TAG_ERROR);
         }catch (IOException ex)
         {
-            IO.log(TAG, IO.TAG_ERROR, ex.getMessage());
+            IO.logAndAlert("IO Error", ex.getMessage(), IO.TAG_ERROR);
         }
     }
 
@@ -206,12 +213,12 @@ public class AssetManager extends BusinessObjectManager
         }
     }*/
 
-    public Asset[] getAssets()
+    public HashMap<String, Asset> getAssets()
     {
         return assets;
     }
 
-    public AssetType[] getAsset_types()
+    public HashMap<String, AssetType> getAsset_types()
     {
         return asset_types;
     }
@@ -283,7 +290,7 @@ public class AssetManager extends BusinessObjectManager
                 }
             }
         });
-        cbx_asset_type.setItems(FXCollections.observableArrayList(asset_types));
+        cbx_asset_type.setItems(FXCollections.observableArrayList(asset_types.values()));
         cbx_asset_type.setMinWidth(200);
         cbx_asset_type.setMaxWidth(Double.MAX_VALUE);
         HBox asset_type = CustomTableViewControls.getLabelledNode("Asset type", 200, cbx_asset_type);
@@ -401,26 +408,25 @@ public class AssetManager extends BusinessObjectManager
         stage.setResizable(true);
     }
 
-    public void handleNewAssetType(Stage parentStage)
+    public void createNewAssetType(Callback callback)
     {
-        parentStage.setAlwaysOnTop(false);
         Stage stage = new Stage();
-        stage.setTitle(Globals.APP_NAME.getValue() + " - Add New Asset Type");
+        stage.setTitle(Globals.APP_NAME.getValue() + " - Create New Asset Type");
         stage.setMinWidth(320);
         stage.setMinHeight(200);
-        //stage.setAlwaysOnTop(true);
+        stage.setAlwaysOnTop(true);
 
         VBox vbox = new VBox(10);
 
         final TextField txt_type_name = new TextField();
         txt_type_name.setMinWidth(200);
         txt_type_name.setMaxWidth(Double.MAX_VALUE);
-        HBox type_name = CustomTableViewControls.getLabelledNode("Type name", 200, txt_type_name);
+        HBox type_name = CustomTableViewControls.getLabelledNode("Asset Type Name", 200, txt_type_name);
 
         final TextField txt_type_description = new TextField();
         txt_type_description.setMinWidth(200);
         txt_type_description.setMaxWidth(Double.MAX_VALUE);
-        HBox type_description = CustomTableViewControls.getLabelledNode("Asset type description", 200, txt_type_description);
+        HBox type_description = CustomTableViewControls.getLabelledNode("Asset Type Description", 200, txt_type_description);
 
         final TextField txt_other = new TextField();
         txt_other.setMinWidth(200);
@@ -432,7 +438,12 @@ public class AssetManager extends BusinessObjectManager
         {
             if(!Validators.isValidNode(txt_type_name, txt_type_name.getText(), 1, "\\w+"))
             {
-                JOptionPane.showMessageDialog(null, "Please make sure that the asset type name doesn't have any spaces.", "Error", JOptionPane.ERROR_MESSAGE);
+                IO.logAndAlert("Invalid Asset Type Name", "Please enter a valid type name.", IO.TAG_ERROR);
+                return;
+            }
+            if(!Validators.isValidNode(txt_type_description, txt_type_description.getText(), 1, ""))
+            {
+                IO.logAndAlert("Invalid Asset Type Description", "Please enter a valid type description.", IO.TAG_ERROR);
                 return;
             }
 
@@ -452,7 +463,7 @@ public class AssetManager extends BusinessObjectManager
                     headers.add(new AbstractMap.SimpleEntry<>("Cookie", SessionManager.getInstance().getActive().getSessionId()));
                 else
                 {
-                    JOptionPane.showMessageDialog(null, "No active sessions.", "Session expired", JOptionPane.ERROR_MESSAGE);
+                    IO.logAndAlert("No active sessions.", "Session expired", IO.TAG_ERROR);
                     return;
                 }
 
@@ -461,10 +472,12 @@ public class AssetManager extends BusinessObjectManager
                 {
                     if(connection.getResponseCode()==HttpURLConnection.HTTP_OK)
                     {
-                        JOptionPane.showMessageDialog(null, "Successfully added new asset type!", "Success", JOptionPane.INFORMATION_MESSAGE);
-                    }else{
-                        JOptionPane.showMessageDialog(null, connection.getResponseCode(), "Error", JOptionPane.ERROR_MESSAGE);
+                        IO.logAndAlert("Success", "Successfully added new asset type! [" + IO
+                                .readStream(connection.getInputStream()) + "]", IO.TAG_INFO);
+                        callback.call(null);
                     }
+                    else
+                        IO.logAndAlert("Error "+ connection.getResponseCode(), IO.readStream(connection.getErrorStream()), IO.TAG_ERROR);
                 }
             } catch (IOException e)
             {

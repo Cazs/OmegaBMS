@@ -27,13 +27,15 @@ import java.net.MalformedURLException;
 import java.time.ZoneId;
 import java.util.AbstractMap;
 import java.util.ArrayList;
+import java.util.HashMap;
 
 /**
  * Created by ghost on 2017/01/11.
  */
 public class EmployeeManager extends BusinessObjectManager
 {
-    private Employee[] employees;
+    //private Employee[] employees;
+    private HashMap<String, Employee> employees;
     private Gson gson;
     private static EmployeeManager employeeManager = new EmployeeManager();
 
@@ -41,7 +43,7 @@ public class EmployeeManager extends BusinessObjectManager
     {
     }
 
-    public Employee[] getEmployees(){return this.employees;}
+    public HashMap<String, Employee> getEmployees(){return this.employees;}
 
     public static EmployeeManager getInstance()
     {
@@ -68,7 +70,11 @@ public class EmployeeManager extends BusinessObjectManager
                     headers.add(new AbstractMap.SimpleEntry<>("Cookie", smgr.getActive().getSessionId()));
 
                     String employees_json = RemoteComms.sendGetRequest("/api/employees", headers);
-                    employees = gson.fromJson(employees_json, Employee[].class);
+                    Employee[] users = gson.fromJson(employees_json, Employee[].class);
+
+                    employees = new HashMap();
+                    for(Employee employee: users)
+                        employees.put(employee.getUsr(), employee);
 
                     IO.log(getClass().getName(), IO.TAG_INFO, "reloaded employee collection.");
                 }else{
