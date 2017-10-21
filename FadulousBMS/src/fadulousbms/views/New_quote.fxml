@@ -92,7 +92,7 @@
                   <HBox prefHeight="100.0" prefWidth="200.0" GridPane.columnIndex="1" GridPane.hgrow="ALWAYS" GridPane.rowIndex="2">
                      <children>
                         <ComboBox fx:id="cbxContactPerson" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minWidth="150.0" promptText="select contact" HBox.hgrow="ALWAYS" />
-                        <Button minWidth="60.0" mnemonicParsing="false" styleClass="btnAdd" stylesheets="@../styles/home.css" text="New" HBox.hgrow="ALWAYS">
+                        <Button minWidth="60.0" mnemonicParsing="false" onMouseClicked="#newEmployee" styleClass="btnAdd" stylesheets="@../styles/home.css" text="New" HBox.hgrow="ALWAYS">
                            <HBox.margin>
                               <Insets left="10.0" />
                            </HBox.margin>

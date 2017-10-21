@@ -2,6 +2,10 @@
 <?import javafx.scene.control.cell.*?>
 <?import javafx.scene.layout.*?>
 
+<?import javafx.scene.text.Font?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.image.Image?>
 <Tab text="Job Log Sheet" fx:id="jobsTab" fx:controller="fadulousbms.controllers.JobsController" xmlns:fx="http://javafx.com/fxml">
     <content>
         <TableView fx:id="tblJobs" editable="true" tableMenuButtonVisible="true" VBox.vgrow="ALWAYS">

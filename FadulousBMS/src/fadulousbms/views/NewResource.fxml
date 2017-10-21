@@ -55,7 +55,6 @@
                         <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
                         <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
                         <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-                        <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
                   <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
                         <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
                         <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
@@ -69,28 +68,26 @@
                         <TextField fx:id="txtSerial" GridPane.columnIndex="1" GridPane.rowIndex="3" />
                         <Label text="Resource Value" GridPane.rowIndex="4" />
                         <TextField fx:id="txtValue" GridPane.columnIndex="1" GridPane.rowIndex="4" />
-                        <Label text="Account" GridPane.rowIndex="5" />
-                        <TextField fx:id="txtAccount" GridPane.columnIndex="1" GridPane.rowIndex="5" />
-                        <Label text="Resource Type" GridPane.rowIndex="6" />
-                        <HBox GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.hgrow="ALWAYS" GridPane.rowIndex="6" GridPane.valignment="CENTER" GridPane.vgrow="SOMETIMES">
+                        <Label text="Resource Type" GridPane.rowIndex="5" />
+                        <HBox GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.hgrow="ALWAYS" GridPane.rowIndex="5" GridPane.valignment="CENTER" GridPane.vgrow="SOMETIMES">
                             <children>
                                 <ComboBox fx:id="cbxResourceType" minHeight="35.0" prefWidth="200.0" HBox.hgrow="ALWAYS" />
-                                <Button mnemonicParsing="false" onMouseClicked="#newResourceType" styleClass="btnAdd" stylesheets="@../styles/home.css" text="New">
+                                <Button mnemonicParsing="false" onMouseClicked="#newResourceType" prefHeight="35.0" prefWidth="70.0" styleClass="btnAdd" stylesheets="@../styles/home.css" text="New">
                                     <HBox.margin>
                                         <Insets left="20.0" />
                                     </HBox.margin>
                                 </Button>
                             </children>
                         </HBox>
-                        <Label text="Date Acquired" GridPane.rowIndex="7" />
-                        <DatePicker fx:id="dateAcquired" GridPane.columnIndex="1" GridPane.rowIndex="7" />
-                        <Label text="Date Exhausted" GridPane.rowIndex="8" />
-                        <DatePicker fx:id="dateExhausted" GridPane.columnIndex="1" GridPane.rowIndex="8" />
-                        <Label text="Resource Quantity" GridPane.rowIndex="9" />
-                        <TextField fx:id="txtQuantity" GridPane.columnIndex="1" GridPane.rowIndex="9" />
-                        <Label text="Resource Unit" GridPane.rowIndex="10" />
-                        <TextField fx:id="txtUnit" GridPane.columnIndex="1" GridPane.rowIndex="10" />
-                        <Label text="Create Resource" GridPane.columnSpan="2" GridPane.halignment="CENTER" GridPane.hgrow="ALWAYS" GridPane.valignment="CENTER" GridPane.vgrow="ALWAYS">
+                        <Label text="Date Acquired" GridPane.rowIndex="6" />
+                        <DatePicker fx:id="dateAcquired" GridPane.columnIndex="1" GridPane.rowIndex="6" />
+                        <Label text="Date Exhausted" GridPane.rowIndex="7" />
+                        <DatePicker fx:id="dateExhausted" GridPane.columnIndex="1" GridPane.rowIndex="7" />
+                        <Label text="Resource Quantity" GridPane.rowIndex="8" />
+                        <TextField fx:id="txtQuantity" GridPane.columnIndex="1" GridPane.rowIndex="8" />
+                        <Label text="Resource Unit" GridPane.rowIndex="9" />
+                        <TextField fx:id="txtUnit" GridPane.columnIndex="1" GridPane.rowIndex="9" />
+                        <Label text="Create New Resource" GridPane.columnSpan="2" GridPane.halignment="CENTER" GridPane.hgrow="ALWAYS" GridPane.valignment="CENTER" GridPane.vgrow="ALWAYS">
                             <font>
                                 <Font name="System Bold" size="17.0" />
                             </font>
