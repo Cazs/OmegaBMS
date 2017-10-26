@@ -21,7 +21,7 @@
                                 <MenuItem mnemonicParsing="false" onAction="#newSupplierClick" text="New Supplier" />
                                 <MenuItem mnemonicParsing="false" onAction="#newMaterialClick" text="New Material" />
                                 <MenuItem mnemonicParsing="false" onAction="#newQuoteClick" text="New Quote" />
-                        <MenuItem mnemonicParsing="false" onAction="#createPurchaseOrderClick" text="New Purchase Order" />
+                                <MenuItem mnemonicParsing="false" onAction="#createPurchaseOrderClick" text="New Purchase Order" />
                                 <MenuItem mnemonicParsing="false" text="Close" />
                             </items>
                         </Menu>
@@ -57,41 +57,76 @@
                     <left>
                         <HBox alignment="CENTER_LEFT" BorderPane.alignment="CENTER">
                             <children>
-                                <ImageView fx:id="img_profile" fitHeight="60.0" fitWidth="60.0" pickOnBounds="true" preserveRatio="true">
-                                    <image>
-                                        <Image url="@../../../images/profile.png" />
-                                    </image>
-                                </ImageView>
-                                <Label fx:id="user_name" text="not signed in" HBox.hgrow="ALWAYS">
-                                    <font>
-                                        <Font size="20.0" />
-                                    </font>
-                                </Label>
+                                <ImageView fx:id="btnBack" fitHeight="60.0" fitWidth="60.0" onMouseClicked="#previousScreen" pickOnBounds="true" preserveRatio="true" />
+                        <ImageView fx:id="btnNext" fitHeight="60.0" fitWidth="60.0" layoutX="10.0" layoutY="10.0" pickOnBounds="true" preserveRatio="true" />
+                        <ImageView fx:id="btnHome" fitHeight="60.0" fitWidth="60.0" onMouseClicked="#showMain" pickOnBounds="true" preserveRatio="true" />
                             </children>
                         </HBox>
                     </left>
                     <right>
                         <HBox alignment="CENTER_RIGHT" BorderPane.alignment="CENTER">
                             <children>
-                                <Button alignment="CENTER" contentDisplay="CENTER" minHeight="35.0" minWidth="70.0" mnemonicParsing="false" onMouseClicked="#showMain" styleClass="btnDefault" stylesheets="@../styles/home.css" text="home" />
-                                <Button minHeight="35.0" minWidth="70.0" mnemonicParsing="false" onMouseClicked="#showLogin" styleClass="btnAdd" stylesheets="@../styles/home.css" text="login">
-                                    <HBox.margin>
-                                        <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
-                                    </HBox.margin>
-                                </Button>
-                                <Button alignment="CENTER" contentDisplay="CENTER" minHeight="35.0" minWidth="70.0" mnemonicParsing="false" onMouseClicked="#previousScreen" styleClass="btnBack" stylesheets="@../styles/home.css" text="Back" HBox.hgrow="ALWAYS" />
+                        <HBox alignment="CENTER_LEFT">
+                           <children>
+                              <Label fx:id="user_name" text="not signed in" HBox.hgrow="ALWAYS">
+                                 <font>
+                                    <Font size="20.0" />
+                                 </font>
+                                 <HBox.margin>
+                                    <Insets right="10.0" />
+                                 </HBox.margin>
+                              </Label>
+                              <ImageView fx:id="img_profile" fitHeight="60.0" fitWidth="60.0" pickOnBounds="true" preserveRatio="true">
+                                 <image>
+                                    <Image url="@../../../images/profile.png" />
+                                 </image>
+                              </ImageView>
+                           </children>
+                        </HBox>
                             </children>
                         </HBox>
                     </right>
                 </BorderPane>
             </bottom>
-            <top>
-                <Label text="Airotek BMS" BorderPane.alignment="CENTER">
-                    <font>
-                        <Font size="38.0" />
-                    </font>
-                </Label>
-            </top>
+         <center>
+            <BorderPane style="-fx-border-insets: -50 -10 0 -10;" BorderPane.alignment="CENTER">
+               <center>
+                  <VBox alignment="CENTER" BorderPane.alignment="CENTER">
+                     <children>
+                        <Label fx:id="company_name" text="Enterprise Resource Engine">
+                           <font>
+                              <Font size="30.0" />
+                           </font>
+                        </Label>
+                     </children></VBox>
+               </center>
+               <left>
+                  <HBox alignment="CENTER_LEFT" BorderPane.alignment="CENTER">
+                     <children>
+                        <ImageView fx:id="img_profile1" fitHeight="60.0" fitWidth="60.0" pickOnBounds="true" preserveRatio="true">
+                           <image>
+                              <Image url="@../images/logo.png" />
+                           </image>
+                           <HBox.margin>
+                              <Insets left="10.0" />
+                           </HBox.margin>
+                        </ImageView>
+                     </children>
+                  </HBox>
+               </left>
+               <right>
+                  <HBox alignment="CENTER_RIGHT" BorderPane.alignment="CENTER">
+                     <children>
+                        <ImageView fx:id="btnLogin" fitHeight="60.0" fitWidth="60.0" onMouseClicked="#showLogin" pickOnBounds="true" preserveRatio="true">
+                           <HBox.margin>
+                              <Insets right="10.0" />
+                           </HBox.margin>
+                        </ImageView>
+                     </children>
+                  </HBox>
+               </right>
+            </BorderPane>
+         </center>
         </BorderPane>
         <TabPane id="BMSTabs" stylesheets="@../styles/tabs.css" tabClosingPolicy="UNAVAILABLE" VBox.vgrow="ALWAYS" xmlns:fx="http://javafx.com/fxml">
             <tabs>
@@ -100,7 +135,7 @@
                 <fx:include source="SuppliersTab.fxml" />
                 <fx:include source="MaterialsTab.fxml" />
                 <fx:include source="QuotesTab.fxml" />
-                <fx:include source="PurchaseOrdersTab.fxml"/>
+                <fx:include source="PurchaseOrdersTab.fxml" />
             </tabs>
         </TabPane>
         <HBox>

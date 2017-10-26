@@ -10,6 +10,8 @@ import fadulousbms.model.*;
 import fadulousbms.model.Error;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.CheckBoxTableCell;
@@ -17,6 +19,7 @@ import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.control.cell.TextFieldTableCell;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
+import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import javafx.util.Callback;
@@ -39,7 +42,8 @@ import java.util.logging.Logger;
 public class ResourceManager extends BusinessObjectManager
 {
     //private Resource[] resources;
-    private HashMap<String, Resource> resources;
+    private HashMap<String, Resource> resources;//resources that have been approved/acquired/delivered
+    private HashMap<String, Resource> all_resources;
     private Resource selected;
     private Gson gson;
     private static ResourceManager resource_manager = new ResourceManager();
@@ -61,9 +65,23 @@ public class ResourceManager extends BusinessObjectManager
         return resource_manager;
     }
 
+    /**
+     *
+     * @return Approved Resource objects.
+     */
     public HashMap<String, Resource> getResources()
     {
         return resources;
+    }
+
+    public HashMap<String, Resource> getAll_resources()
+    {
+        return all_resources;
+    }
+
+    public void setAll_resources(HashMap<String, Resource> all_resources)
+    {
+        this.all_resources = all_resources;
     }
 
     public void setSelected(Resource resource)
@@ -118,8 +136,15 @@ public class ResourceManager extends BusinessObjectManager
                         String resources_json = RemoteComms.sendGetRequest("/api/resources", headers);
                         Resource[] arr_resources = gson.fromJson(resources_json, Resource[].class);
                         resources = new HashMap<>();
+                        all_resources = new HashMap<>();
                         for(Resource res: arr_resources)
-                            resources.put(res.get_id(), res);
+                        {
+                            all_resources.put(res.get_id(), res);
+                            if(res.getDate_acquired()>0)
+                                resources.put(res.get_id(), res);
+                            else IO.log(getClass().getName(), IO.TAG_WARN, "resource ["+res+"] has not been approved yet. [date_acquired not set]");
+                        }
+
 
                         String resource_types_json = RemoteComms.sendGetRequest("/api/resource/types", headers);
                         ResourceType[] resourcetypes = gson.fromJson(resource_types_json, ResourceType[].class);
@@ -127,14 +152,22 @@ public class ResourceManager extends BusinessObjectManager
                         for(ResourceType resourceType: resourcetypes)
                             resource_types.put(resourceType.get_id(), resourceType);
 
-                        IO.log(getClass().getName(), IO.TAG_INFO, "reloaded collection of clients.");
+                        IO.log(getClass().getName(), IO.TAG_INFO, "reloaded collection of resources.");
 
-                        this.serialize(ROOT_PATH+filename, resources);
+                        this.serialize(ROOT_PATH+filename, all_resources);
                         this.serialize(ROOT_PATH+"resource_types.dat", resource_types);
                     }else{
                         IO.log(this.getClass().getName(), IO.TAG_INFO, "binary object ["+ROOT_PATH+filename+"] on local disk is already up-to-date.");
-                        resources = (HashMap<String, Resource>) this.deserialize(ROOT_PATH+filename);
-                        resource_types = (HashMap<String, ResourceType>) this.deserialize(ROOT_PATH+"resource_types.dat");
+                        all_resources = (HashMap<String, Resource>) this.deserialize(ROOT_PATH+filename);
+                        resource_types = (HashMap<String, ResourceType>) this.deserialize(ROOT_PATH + "resource_types.dat");
+
+                        resources = new HashMap<>();
+                        if(all_resources!=null)
+                        {
+                            for (Resource resource : all_resources.values())
+                                if (resource.getDate_acquired() > 0)
+                                    resources.put(resource.get_id(), resource);
+                        } else IO.log(getClass().getName(), IO.TAG_ERROR, "serialized resources are null.");
                     }
                 } else IO.logAndAlert("Session Expired", "Active session has expired.", IO.TAG_ERROR);
             } else IO.logAndAlert("Session Expired", "No active sessions.", IO.TAG_ERROR);
@@ -157,9 +190,13 @@ public class ResourceManager extends BusinessObjectManager
     {
         Stage stage = new Stage();
         stage.setTitle(Globals.APP_NAME.getValue() + " - Create New Resource");
-        stage.setMinWidth(320);
-        stage.setHeight(400);
-        //stage.setAlwaysOnTop(true);
+        stage.setWidth(520);
+        stage.setMaxWidth(520);
+        stage.setHeight(450);
+        stage.setMaxHeight(450);
+        stage.setResizable(false);
+        stage.setAlwaysOnTop(true);
+        stage.centerOnScreen();
 
         VBox vbox = new VBox(10);
 
@@ -216,10 +253,27 @@ public class ResourceManager extends BusinessObjectManager
         });
         if(resource_types!=null)
             cbx_resource_type.setItems(FXCollections.observableArrayList(resource_types.values()));
-        else IO.log(getClass().getName(), IO.TAG_ERROR, "resources map is not set.");
+        else IO.log(getClass().getName(), IO.TAG_ERROR, "resource_types map is not set.");
         cbx_resource_type.setMinWidth(200);
+        cbx_resource_type.setMinHeight(35);
         cbx_resource_type.setMaxWidth(Double.MAX_VALUE);
-        HBox resource_type = CustomTableViewControls.getLabelledNode("Resource type", 200, cbx_resource_type);
+
+        Button btnNewType = new Button("New");
+        btnNewType.getStylesheets().add(this.getClass().getResource("../styles/home.css").toExternalForm());
+        btnNewType.getStyleClass().add("btnAdd");
+        btnNewType.setMinWidth(70);
+        btnNewType.setMinHeight(35);
+        HBox.setHgrow(btnNewType, Priority.ALWAYS);
+        HBox resource_type = CustomTableViewControls.getLabelledNode("Resource type", 200, new HBox(cbx_resource_type, btnNewType));
+        btnNewType.setOnAction(event ->
+        {
+            stage.close();
+            ResourceManager.getInstance().newResourceTypeWindow(param ->
+            {
+                loadDataFromServer();
+                return null;
+            });
+        });
 
         final TextField txt_resource_value = new TextField();
         txt_resource_value.setMinWidth(200);
@@ -239,7 +293,7 @@ public class ResourceManager extends BusinessObjectManager
         /*DatePicker dpk_date_acquired = new DatePicker();
         dpk_date_acquired.setMinWidth(200);
         dpk_date_acquired.setMaxWidth(Double.MAX_VALUE);
-        HBox date_acquired = CustomTableViewControls.getLabelledNode("Date acquired", 200, dpk_date_acquired);*/
+        HBox date_acquired = CustomTableViewControls.getLabelledNode("Date acquired", 200, dpk_date_acquired);
 
         DatePicker dpk_date_exhausted = new DatePicker();
         dpk_date_exhausted.setMinWidth(200);
@@ -249,7 +303,7 @@ public class ResourceManager extends BusinessObjectManager
         final TextField txt_account = new TextField();
         txt_account.setMinWidth(200);
         txt_account.setMaxWidth(Double.MAX_VALUE);
-        HBox account = CustomTableViewControls.getLabelledNode("Account", 200, txt_account);
+        HBox account = CustomTableViewControls.getLabelledNode("Account", 200, txt_account);*/
 
         final TextField txt_other = new TextField();
         txt_other.setMinWidth(200);
@@ -257,7 +311,7 @@ public class ResourceManager extends BusinessObjectManager
         HBox other = CustomTableViewControls.getLabelledNode("Other", 200, txt_other);
 
         HBox submit;
-        submit = CustomTableViewControls.getSpacedButton("Submit", event ->
+        submit = CustomTableViewControls.getSpacedButton("Create Resource", event ->
         {
             String date_regex="\\d+(\\-|\\/|\\\\)\\d+(\\-|\\/|\\\\)\\d+";
 
@@ -277,8 +331,8 @@ public class ResourceManager extends BusinessObjectManager
                 return;
             //if(!Validators.isValidNode(dpk_date_acquired, dpk_date_acquired.getValue()==null?"":dpk_date_acquired.getValue().toString(), 4, date_regex))
             //    return;
-            if(!Validators.isValidNode(txt_account, txt_account.getText(), 1, ".+"))
-                return;
+            //if(!Validators.isValidNode(txt_account, txt_account.getText(), 1, ".+"))
+            //    return;
 
             long date_acquired_in_sec, date_exhausted_in_sec=0;
             String str_resource_name = txt_resource_name.getText();
@@ -288,8 +342,8 @@ public class ResourceManager extends BusinessObjectManager
             String str_resource_value = txt_resource_value.getText();
             String str_quantity = txt_quantity.getText();
             //date_acquired_in_sec = dpk_date_acquired.getValue().atStartOfDay(ZoneId.systemDefault()).toEpochSecond();
-            if(dpk_date_exhausted.getValue()!=null)
-                date_exhausted_in_sec = dpk_date_exhausted.getValue().atStartOfDay(ZoneId.systemDefault()).toEpochSecond();
+            //if(dpk_date_exhausted.getValue()!=null)
+            //    date_exhausted_in_sec = dpk_date_exhausted.getValue().atStartOfDay(ZoneId.systemDefault()).toEpochSecond();
             String str_other = txt_other.getText();
 
             ArrayList<AbstractMap.SimpleEntry<String, String>> params = new ArrayList<>();
@@ -301,7 +355,7 @@ public class ResourceManager extends BusinessObjectManager
             params.add(new AbstractMap.SimpleEntry<>("quantity", str_quantity));
             params.add(new AbstractMap.SimpleEntry<>("unit", txt_unit.getText()));
             //params.add(new AbstractMap.SimpleEntry<>("date_acquired", String.valueOf(date_acquired_in_sec)));
-            params.add(new AbstractMap.SimpleEntry<>("account", txt_account.getText()));
+            //params.add(new AbstractMap.SimpleEntry<>("account", txt_account.getText()));
             if(date_exhausted_in_sec>0)
                 params.add(new AbstractMap.SimpleEntry<>("date_exhausted", String.valueOf(date_exhausted_in_sec)));
             params.add(new AbstractMap.SimpleEntry<>("extra", str_other));
@@ -322,8 +376,9 @@ public class ResourceManager extends BusinessObjectManager
                 {
                     if(connection.getResponseCode()==HttpURLConnection.HTTP_OK)
                     {
-                        IO.logAndAlert("Success", "Successfully added a new resource!", IO.TAG_INFO);
-                        callback.call(null);
+                        IO.logAndAlert("Success", "Successfully created a new resource!", IO.TAG_INFO);
+                        if(callback!=null)
+                            callback.call(null);
                     }else
                     {
                         //Get error message
@@ -348,8 +403,8 @@ public class ResourceManager extends BusinessObjectManager
         vbox.getChildren().add(quantity);
         vbox.getChildren().add(unit);
         //vbox.getChildren().add(date_acquired);
-        vbox.getChildren().add(date_exhausted);
-        vbox.getChildren().add(account);
+        //vbox.getChildren().add(date_exhausted);
+        //vbox.getChildren().add(account);
         vbox.getChildren().add(other);
         vbox.getChildren().add(submit);
 
@@ -364,17 +419,19 @@ public class ResourceManager extends BusinessObjectManager
 
         stage.setScene(scene);
         stage.show();
-        stage.centerOnScreen();
-        stage.setResizable(true);
     }
 
     public void newResourceTypeWindow(Callback callback)
     {
         Stage stage = new Stage();
         stage.setTitle(Globals.APP_NAME.getValue() + " - Create New Resource Type");
-        stage.setMinWidth(320);
-        stage.setHeight(200);
-        //stage.setAlwaysOnTop(true);
+        stage.setWidth(520);
+        stage.setMaxWidth(520);
+        stage.setHeight(230);
+        stage.setMaxHeight(230);
+        stage.setResizable(false);
+        stage.setAlwaysOnTop(true);
+        stage.centerOnScreen();
 
         VBox vbox = new VBox(10);
 
@@ -394,7 +451,7 @@ public class ResourceManager extends BusinessObjectManager
         HBox other = CustomTableViewControls.getLabelledNode("Other", 200, txt_other);
 
         HBox submit;
-        submit = CustomTableViewControls.getSpacedButton("Submit", event ->
+        submit = CustomTableViewControls.getSpacedButton("Create Resource Type", event ->
         {
             if(!Validators.isValidNode(txt_type_name, txt_type_name.getText(), 1, "\\w+"))
             {
@@ -428,7 +485,8 @@ public class ResourceManager extends BusinessObjectManager
                     if(connection.getResponseCode()==HttpURLConnection.HTTP_OK)
                     {
                         IO.logAndAlert("Success", "Successfully added new resource type!", IO.TAG_INFO);
-                        callback.call(null);
+                        if(callback!=null)
+                            callback.call(null);
                     }else{
                         IO.logAndAlert( "ERROR_" + connection.getResponseCode(),  IO.readStream(connection.getErrorStream()), IO.TAG_ERROR);
                     }
@@ -458,7 +516,5 @@ public class ResourceManager extends BusinessObjectManager
 
         stage.setScene(scene);
         stage.show();
-        stage.centerOnScreen();
-        stage.setResizable(true);
     }
 }

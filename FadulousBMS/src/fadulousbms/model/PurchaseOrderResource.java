@@ -19,30 +19,41 @@ public class PurchaseOrderResource extends PurchaseOrderItem
 
     public String getItem_name()
     {
-        return getItem().getResource_name();
+        if(getItem()!=null)
+            return getItem().getResource_name();
+        return "N/A";
     }
 
     public String getItem_description()
     {
-        return getItem().getResource_description();
+        if(getItem()!=null)
+            return getItem().getResource_description();
+        return "N/A";
     }
 
     public String getUnit()
     {
-        return getItem().getUnit();
+        if(getItem()!=null)
+            return getItem().getUnit();
+        return "N/A";
     }
 
     public double getCostValue()
     {
-        return getItem().getResource_value();
+        if(getItem()!=null)
+            return getItem().getResource_value();
+        return 0;
     }
 
     public Resource getItem()
     {
+        if(super.getItem()!=null)
+            return (Resource) super.getItem();
+
         ResourceManager.getInstance().loadDataFromServer();
-        if (ResourceManager.getInstance().getResources() != null)
+        if (ResourceManager.getInstance().getAll_resources() != null)
         {
-            Resource resource = ResourceManager.getInstance().getResources().get(getItem_id());
+            Resource resource = ResourceManager.getInstance().getAll_resources().get(getItem_id());
             if (resource != null)
             {
                 return resource;

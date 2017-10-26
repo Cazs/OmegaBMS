@@ -37,21 +37,21 @@ import java.util.ResourceBundle;
 public class CreateAccountController extends Screen implements Initializable
 {
     @FXML
-    private TextField txtUsername;// = new TextField();
+    private TextField txtUsername;
     @FXML
-    private TextField txtPassword;// = new TextField();
+    private TextField txtPassword;
     @FXML
-    private TextField txtFirstname;// = new TextField();
+    private TextField txtFirstname;
     @FXML
-    private TextField txtLastname;// = new TextField();
+    private TextField txtLastname;
     @FXML
-    private ComboBox cbxSex, cbxAccessLevel;// = new ComboBox();
+    private ComboBox cbxSex, cbxAccessLevel;
     @FXML
-    private TextField txtEmail;// = new TextField();
+    private TextField txtEmail;
     @FXML
-    private TextField txtTelephone;// = new TextField();
+    private TextField txtTelephone;
     @FXML
-    private TextField txtCellphone;// = new TextField();
+    private TextField txtCellphone;
     @FXML
     private TextArea txtOther;// = new TextArea();
     private String[] access_levels = {"NONE", "NORMAL", "ADMIN", "SUPER"};

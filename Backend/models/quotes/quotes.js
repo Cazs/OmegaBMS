@@ -12,6 +12,11 @@ const quoteSchema = mongoose.Schema(
     type:String,
     required:true
   },
+  vat:{
+    type:Number,
+    required:true,
+    default:0
+  },
   sitename:{
     type:String,
     required:true
@@ -134,6 +139,8 @@ module.exports.isValid = function(quote)
   if(isNullOrEmpty(quote.client_id))
     return false;
   if(isNullOrEmpty(quote.contact_person_id))
+    return false;
+  if(isNullOrEmpty(quote.vat))
     return false;
   if(isNullOrEmpty(quote.sitename))
     return false;

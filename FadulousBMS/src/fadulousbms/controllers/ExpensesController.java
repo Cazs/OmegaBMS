@@ -58,7 +58,11 @@ public class ExpensesController extends Screen implements Initializable
         CustomTableViewControls.makeEditableTableColumn(colTitle, TextFieldTableCell.forTableColumn(), 100, "expense_title", "/api/expense");
         CustomTableViewControls.makeEditableTableColumn(colDescription, TextFieldTableCell.forTableColumn(), 100, "expense_description", "/api/expense");
         CustomTableViewControls.makeEditableTableColumn(colValue, TextFieldTableCell.forTableColumn(), 100, "expense_value", "/api/expense");
-        CustomTableViewControls.makeComboBoxTableColumn(colSupplier, suppliers, "supplier", "supplier_name", "/api/expense", 160);
+
+        colSupplier.setMinWidth(120);
+        colSupplier.setCellValueFactory(new PropertyValueFactory<>("supplier_id"));
+        colSupplier.setCellFactory(col -> new ComboBoxTableCell(SupplierManager.getInstance().getSuppliers(), "supplier_id", "/api/expense"));
+
         CustomTableViewControls.makeDatePickerTableColumn(colDateLogged, "date_logged", "/api/expense");
         colCreator.setCellValueFactory(new PropertyValueFactory<>("creator"));
         CustomTableViewControls.makeEditableTableColumn(colAccount, TextFieldTableCell.forTableColumn(), 100, "account", "/api/expense");

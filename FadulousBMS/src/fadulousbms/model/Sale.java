@@ -144,8 +144,8 @@ public class Sale implements BusinessObject
 
     public SimpleStringProperty contactProperty(){
         if(quote!=null)
-            if(quote.getContactPerson()!=null)
-                return new SimpleStringProperty(quote.getContactPerson().toString());
+            if(quote.getContact_person()!=null)
+                return new SimpleStringProperty(quote.getContact_person().toString());
             else return new SimpleStringProperty(quote.getContact_person_id());
         else return new SimpleStringProperty("N/A");
     }

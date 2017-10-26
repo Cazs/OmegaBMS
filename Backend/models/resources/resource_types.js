@@ -35,7 +35,7 @@ module.exports.add = function (resource_type, callback)
         callback(error);
       return;
     }
-    console.log('successfully created new resource_type.')
+    console.log('successfully created new resource_type.');
     if(callback)
       callback(error, res_obj);
     //update timestamp
@@ -67,7 +67,7 @@ module.exports.update = function (type_id, resource_type, callback)
         callback(error);
       return;
     }
-    console.log('successfully updated resource_type.')
+    console.log('successfully updated resource_type.');
     if(callback)
       callback(error, res_obj);
     //update timestamp

@@ -8,6 +8,7 @@ package fadulousbms.controllers;
 import fadulousbms.auxilary.IO;
 import fadulousbms.auxilary.Screen;
 import fadulousbms.managers.AssetManager;
+import fadulousbms.managers.EmployeeManager;
 import fadulousbms.managers.ScreenManager;
 import fadulousbms.model.*;
 import javafx.application.Platform;
@@ -68,7 +69,11 @@ public class AssetsController extends Screen implements Initializable
         colId.setCellValueFactory(new PropertyValueFactory<>("_id"));
         CustomTableViewControls.makeEditableTableColumn(colName, TextFieldTableCell.forTableColumn(), 120, "asset_name", "/api/asset");
         CustomTableViewControls.makeEditableTableColumn(colSerial, TextFieldTableCell.forTableColumn(), 60, "asset_serial", "/api/asset");
-        CustomTableViewControls.makeComboBoxTableColumn(colType, asset_types, "asset_type", "type_name", "/api/asset", 150);
+
+        colType.setMinWidth(120);
+        colType.setCellValueFactory(new PropertyValueFactory<>("asset_type"));
+        colType.setCellFactory(col -> new ComboBoxTableCell(AssetManager.getInstance().getAsset_types(), "asset_type", "/api/asset"));
+
         CustomTableViewControls.makeEditableTableColumn(colDescription, TextFieldTableCell.forTableColumn(), 215, "asset_description", "/api/asset");
         CustomTableViewControls.makeEditableTableColumn(colValue, TextFieldTableCell.forTableColumn(), 60, "asset_value", "/api/asset");
         CustomTableViewControls.makeEditableTableColumn(colAccount, TextFieldTableCell.forTableColumn(), 60, "account", "/api/asset");

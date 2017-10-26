@@ -32,7 +32,7 @@ public class NewAssetController extends Screen implements Initializable
 {
     private boolean itemsModified;
     @FXML
-    private TextField txtName,txtDescription,txtSerial,txtValue,txtAccount,txtUnit,txtQuantity;
+    private TextField txtName,txtDescription,txtSerial,txtValue,txtUnit,txtQuantity;
     @FXML
     private DatePicker dateAcquired,dateExhausted;
     @FXML
@@ -103,11 +103,6 @@ public class NewAssetController extends Screen implements Initializable
             txtValue.getStylesheets().add(this.getClass().getResource("../styles/home.css").toExternalForm());
             return;
         }
-        if(!Validators.isValidNode(txtAccount, txtAccount.getText(), 1, ".+"))
-        {
-            txtAccount.getStylesheets().add(this.getClass().getResource("../styles/home.css").toExternalForm());
-            return;
-        }
         if(cbxAssetType.getSelectionModel().getSelectedItem()==null)
         {
             //cbxResourceType.getStylesheets().add(this.getClass().getResource("../styles/home.css").toExternalForm());
@@ -144,7 +139,6 @@ public class NewAssetController extends Screen implements Initializable
         asset.setAsset_description(txtDescription.getText());
         asset.setAsset_serial(txtSerial.getText());
         asset.setAsset_value(Double.valueOf(txtValue.getText()));
-        asset.setAccount(txtAccount.getText());
         asset.setAsset_type(cbxAssetType.getSelectionModel().getSelectedItem().get_id());
         asset.setUnit(txtUnit.getText());
         asset.setQuantity(Long.valueOf(txtQuantity.getText()));

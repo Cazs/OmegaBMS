@@ -173,7 +173,7 @@ app.get('/api/purchaseorder/items/:object_id', function(req, res)
       logServerError(err);
       return;
     }
-    console.log('user with session_id [%s] requested all Purchase Order Items for Purchase Order.', req.headers.cookie, req.params.object_id);
+    console.log('user with session_id [%s] requested all Resources for Purchase Order [%s]', req.headers.cookie, req.params.object_id);
     res.json(objs);
   });
 });
@@ -188,7 +188,7 @@ app.post('/api/purchaseorder/item/add',function(req, res)
       logServerError(err);
       return;
     }
-    console.log('created new purchase_order_item:\n %s',JSON.stringify(purchase_order_item));
+    console.log('created new purchase_order_resource.');
     var id =purchase_order_item._id;
     res.json({"message":id.toString()});
   });
@@ -204,7 +204,7 @@ app.post('/api/purchaseorder/item/update/:object_id',function(req, res)
       logServerError(err);
       return;
     }
-    console.log('successfully updated purchase_order_item [%s].\n', purchase_order_item._id.toString());
+    console.log('successfully updated purchase_order_resource [%s].\n', purchase_order_item._id.toString());
     res.json(purchase_order_item);
   });
 });
@@ -235,7 +235,7 @@ app.get('/api/purchaseorder/assets/:object_id', function(req, res)
       logServerError(err);
       return;
     }
-    console.log('user with session_id [%s] requested all Purchase Order Assets for Purchase Order.', req.headers.cookie, req.params.object_id);
+    console.log('user with session_id [%s] requested all Assets for Purchase Order [%s]', req.headers.cookie, req.params.object_id);
     res.json(objs);
   });
 });
@@ -250,7 +250,7 @@ app.post('/api/purchaseorder/asset/add',function(req, res)
       logServerError(err);
       return;
     }
-    console.log('created new purchase_order_asset:\n %s',JSON.stringify(purchase_order_item));
+    console.log('created new purchase_order_asset.');
     var id =purchase_order_item._id;
     res.json({"message":id.toString()});
   });
@@ -812,6 +812,65 @@ app.post('/api/resource/update/:object_id',function(req, res)
   });
 });
 
+app.post('/api/resource/increment_quantity/:object_id',function(req, res)
+{
+  var obj_id = req.params.object_id;
+  var resource = req.body;
+  var quantity = resource.quantity;
+  var session_id = req.headers.cookie;
+  var session = sessions.search(session_id);
+
+  res.setHeader('Content-Type','application/json');
+
+  if(isNullOrEmpty(obj_id))
+  {
+    console.log('invalid object id: "%s".', JSON.stringify(obj_id));
+    errorAndCloseConnection(res, 503, errors.INVALID_DATA);
+    return;
+  }
+
+  //validate resource
+  if(!resources.isValid(resource))
+  {
+    console.log('invalid resource: %s.', resource)
+    errorAndCloseConnection(res, 503, errors.INVALID_DATA);
+    return;
+  }
+
+  if(isNullOrEmpty(quantity))
+  {
+    console.log('invalid quantity: "%s".', JSON.stringify(quantity));
+    errorAndCloseConnection(res, 503, errors.INVALID_DATA);
+    return;
+  }
+
+  if(session!=null)
+  {
+    if(!session.isExpired())
+    {
+      if(session.access_level>=resources.ACCESS_MODE)
+      {
+        resources.incrementQuantity(obj_id, resource, function(error, updated_resource)
+        {
+          if(error)
+          {
+            console.log(error);
+            errorAndCloseConnection(res, 500, errors.INTERNAL_ERR);
+            return;
+          }
+          res.json(updated_resource);
+        });
+      }else {
+        errorAndCloseConnection(res, 502, errors.UNAUTH);
+      }
+    }else {
+      errorAndCloseConnection(res, 501, errors.SESSION_EXPIRED);
+    }
+  }else{
+    errorAndCloseConnection(res, 501, errors.SESSION_EXPIRED);
+  }
+});
+
 /**** Assets route handlers ****/
 //Asset types handlers
 app.get('/api/asset/types',function(req, res)
@@ -916,6 +975,65 @@ app.post('/api/asset/update/:object_id',function(req, res)
     console.log('successfully updated asset [%s].\n', asset._id);
     res.json(asset);
   });
+});
+
+app.post('/api/asset/increment_quantity/:object_id',function(req, res)
+{
+  var obj_id = req.params.object_id;
+  var asset = req.body;
+  var quantity = asset.quantity;
+  var session_id = req.headers.cookie;
+  var session = sessions.search(session_id);
+
+  res.setHeader('Content-Type','application/json');
+
+  if(isNullOrEmpty(obj_id))
+  {
+    console.log('invalid object id: "%s".', JSON.stringify(obj_id));
+    errorAndCloseConnection(res, 503, errors.INVALID_DATA);
+    return;
+  }
+
+  //validate asset
+  if(!assets.isValid(asset))
+  {
+    console.log('invalid asset: %s.', asset)
+    errorAndCloseConnection(res, 503, errors.INVALID_DATA);
+    return;
+  }
+
+  if(isNullOrEmpty(quantity))
+  {
+    console.log('invalid quantity: "%s".', JSON.stringify(quantity));
+    errorAndCloseConnection(res, 503, errors.INVALID_DATA);
+    return;
+  }
+
+  if(session!=null)
+  {
+    if(!session.isExpired())
+    {
+      if(session.access_level>=assets.ACCESS_MODE)
+      {
+        assets.incrementQuantity(obj_id, asset, function(error, updated_asset)
+        {
+          if(error)
+          {
+            console.log(error);
+            errorAndCloseConnection(res, 500, errors.INTERNAL_ERR);
+            return;
+          }
+          res.json(updated_asset);
+        });
+      }else {
+        errorAndCloseConnection(res, 502, errors.UNAUTH);
+      }
+    }else {
+      errorAndCloseConnection(res, 501, errors.SESSION_EXPIRED);
+    }
+  }else{
+    errorAndCloseConnection(res, 501, errors.SESSION_EXPIRED);
+  }
 });
 
 /**** Suppliers route handlers ****/
@@ -1213,7 +1331,19 @@ app.get('/api/employees',function(req,res)
 
 app.post('/api/employee/add',function(req,res)
 {
-  var employee_obj = req.body;
+  /*add(req, res, employees, function(err, employee)
+  {
+    if(err)
+    {
+      errorAndCloseConnection(res, 500, errors.INTERNAL_ERR);
+      logServerError(err);
+      return;
+    }
+    console.log('created new employee:\n %s', JSON.stringify(employee));
+    res.json({"message":employee});
+  });*/
+
+  /*var employee_obj = req.body;
 
   res.setHeader('Content-Type','application/json');
   //validate obj
@@ -1243,12 +1373,34 @@ app.post('/api/employee/add',function(req,res)
         res.json({'message':'successfully created new user.'});
       });
     }
+  }*/
+  var obj = req.body;
+  //res.setHeader('Content-Type','application/json');
+
+  //validate employee obj
+  if(!employees.isValid(obj))
+  {
+    console.log('invalid employees.')
+    errorAndCloseConnection(res, 503, errors.INVALID_DATA);
+    return;
   }
+  employees.add(obj, function(err, employee)
+  {
+    if(err)
+    {
+      console.log(err);
+      errorAndCloseConnection(res, 500, errors.INTERNAL_ERR);
+      return;
+    }
+    console.log("successfully created new employee.");
+    res.json(employee);
+  });
 });
 
 app.post('/api/employee/update/:object_id',function(req,res)
 {
-  updateObject(req, res, employees);//TODO: only employee and authorized users can update
+  //TODO: only employee and authorized users can update
+  updateObject(req, res, employees);
 });
 
 app.post('/api/employee/pwdreset',function(req, res)

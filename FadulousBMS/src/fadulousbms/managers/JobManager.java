@@ -32,6 +32,7 @@ import java.net.URLEncoder;
 import java.time.ZoneId;
 import java.util.AbstractMap;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -40,8 +41,7 @@ import java.util.logging.Logger;
  */
 public class JobManager extends BusinessObjectManager
 {
-    private Job[] jobs;
-
+    private HashMap<String, Job> jobs;
     private BusinessObject[] genders=null, domains=null;
     private Gson gson;
     private ScreenManager screenManager = null;
@@ -116,23 +116,11 @@ public class JobManager extends BusinessObjectManager
                     if(!isSerialized(ROOT_PATH+filename))
                     {
                         String jobs_json = RemoteComms.sendGetRequest("/api/jobs", headers);
-                        jobs = gson.fromJson(jobs_json, Job[].class);
+                        Job[] jobs_arr = gson.fromJson(jobs_json, Job[].class);
 
-                        QuoteManager.getInstance().loadDataFromServer();
-
-                        for (Job job : jobs)
+                        jobs = new HashMap<>();
+                        for (Job job : jobs_arr)
                         {
-                            //for each Job get its Quotes
-                            QuoteManager.getInstance().loadDataFromServer();
-                            for (Quote quote : QuoteManager.getInstance().getQuotes())
-                            {
-                                if (quote.get_id().equals(job.getQuote_id()))
-                                {
-                                    job.setQuote(quote);
-                                    break;
-                                }
-                            }
-
                             //Load JobEmployee objects using Job_id
                             String jobemployees_json = RemoteComms.sendGetRequest("/api/job/employees/" + job.get_id(), headers);
                             JobEmployee[] jobemployees = gson.fromJson(jobemployees_json, JobEmployee[].class);
@@ -160,21 +148,17 @@ public class JobManager extends BusinessObjectManager
                                 safety_docs[i] = safety_doc;
                             }
                             job.setSafety_catalogue(safety_docs);
-
-                            //set Job quote object
-                            for(Quote quote : QuoteManager.getInstance().getQuotes())
-                                if(job.getQuote_id().equals(quote.get_id()))
-                                    job.setQuote(quote);
+                            jobs.put(job.get_id(), job);
                         }
                         IO.log(getClass().getName(), IO.TAG_INFO, "reloaded collection of jobs.");
                         this.serialize(ROOT_PATH+filename, jobs);
                     }else{
                         IO.log(this.getClass().getName(), IO.TAG_INFO, "binary object ["+ROOT_PATH+filename+"] on local disk is already up-to-date.");
-                        jobs = (Job[]) this.deserialize(ROOT_PATH+filename);
+                        jobs = (HashMap<String, Job>) this.deserialize(ROOT_PATH+filename);
                     }
                 }else JOptionPane.showMessageDialog(null, "Active session has expired.", "Session Expired", JOptionPane.ERROR_MESSAGE);
             }else JOptionPane.showMessageDialog(null, "No active sessions.", "Session Expired", JOptionPane.ERROR_MESSAGE);
-        }catch (MalformedURLException ex)
+        } catch (MalformedURLException ex)
         {
             IO.log(getClass().getName(), IO.TAG_ERROR, ex.getMessage());
             IO.showMessage("URL Error", ex.getMessage(), IO.TAG_ERROR);
@@ -189,7 +173,7 @@ public class JobManager extends BusinessObjectManager
         }
     }
 
-    public Job[] getJobs()
+    public HashMap<String, Job> getJobs()
     {
         return this.jobs;
     }
@@ -209,13 +193,14 @@ public class JobManager extends BusinessObjectManager
 
     public void setSelectedJob(String job_id)
     {
-        for(Job job : jobs)
+        if(jobs==null)
         {
-            if(job.get_id().equals(job_id))
-            {
-                setSelectedJob(job);
-                break;
-            }
+            IO.logAndAlert(getClass().getName(), IO.TAG_ERROR, "No jobs were found on the database.");
+            return;
+        }
+        if(jobs.get(job_id)!=null)
+        {
+            setSelectedJob(jobs.get(job_id));
         }
     }
 
@@ -259,6 +244,41 @@ public class JobManager extends BusinessObjectManager
         return false;
     }
 
+    public String createNewJob(Job job)
+    {
+        try
+        {
+            ArrayList<AbstractMap.SimpleEntry<String, String>> headers = new ArrayList<>();
+            headers.add(new AbstractMap.SimpleEntry<>("Cookie", SessionManager.getInstance().getActive().getSessionId()));
+
+            //create new job on database
+            HttpURLConnection connection = RemoteComms.postData("/api/job/add", job.asUTFEncodedString(), headers);
+            if(connection!=null)
+            {
+                if(connection.getResponseCode()==HttpURLConnection.HTTP_OK)
+                {
+                    String response = IO.readStream(connection.getInputStream());
+                    IO.log(getClass().getName(), IO.TAG_INFO, "successfully created a new job: " + response);
+
+                    if(connection!=null)
+                        connection.disconnect();
+                    return response;
+                }else{
+                    //Get error message
+                    String msg = IO.readStream(connection.getErrorStream());
+                    IO.logAndAlert("Error " +String.valueOf(connection.getResponseCode()), msg, IO.TAG_ERROR);
+                    if(connection!=null)
+                        connection.disconnect();
+                    return null;
+                }
+            }else IO.logAndAlert("Job Creation Failure", "Could not connect to server.", IO.TAG_ERROR);
+        } catch (IOException e)
+        {
+            IO.logAndAlert("Jobs Manager", e.getMessage(), IO.TAG_ERROR);
+        }
+        return null;
+    }
+
     public static boolean createJobRepresentative(String job_id, String usr)
     {
         try
@@ -270,8 +290,12 @@ public class JobManager extends BusinessObjectManager
             params.add(new AbstractMap.SimpleEntry<>("job_id", job_id));
             params.add(new AbstractMap.SimpleEntry<>("usr", usr));
 
+            String job_employee_object = URLEncoder.encode("job_id", "UTF-8") + "="
+                                        + URLEncoder.encode(job_id, "UTF-8")
+                                        + "&" + URLEncoder.encode("usr", "UTF-8") + "="
+                                        + URLEncoder.encode(usr, "UTF-8");
             //create new job on database
-            HttpURLConnection connection = RemoteComms.postData("/api/job/employee/add", params, headers);
+            HttpURLConnection connection = RemoteComms.postData("/api/job/employee/add", job_employee_object, headers);
             if(connection!=null)
             {
                 if(connection.getResponseCode()==HttpURLConnection.HTTP_OK)
@@ -839,7 +863,7 @@ public class JobManager extends BusinessObjectManager
             params.add(new AbstractMap.SimpleEntry<>("date_logged", String.valueOf(date_logged_in_sec)));
             params.add(new AbstractMap.SimpleEntry<>("invoice_id", str_invoice_id));
             params.add(new AbstractMap.SimpleEntry<>("job_completed", String.valueOf(is_complete)));
-            params.add(new AbstractMap.SimpleEntry<>("job_number", String.valueOf(jobs==null?0:jobs.length)));
+            //params.add(new AbstractMap.SimpleEntry<>("job_number", String.valueOf(jobs==null?0:jobs.length)));
             //Optional
             if(planned_start_date_in_sec>0)
                 params.add(new AbstractMap.SimpleEntry<>("planned_start_date", String.valueOf(planned_start_date_in_sec)));

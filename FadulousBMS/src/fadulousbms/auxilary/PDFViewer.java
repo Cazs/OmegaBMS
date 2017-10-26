@@ -44,6 +44,7 @@ import java.net.*;
 import java.nio.ByteBuffer;
 import java.nio.channels.FileChannel;
 
+import java.nio.file.Files;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.AbstractAction;
@@ -78,9 +79,7 @@ import java.lang.reflect.InvocationTargetException;
 /**
  * A demo PDF Viewer application.
  */
-public class PDFViewer extends JFrame
-        implements KeyListener, TreeSelectionListener,
-        PageChangeListener
+public class PDFViewer extends JFrame implements KeyListener, TreeSelectionListener,PageChangeListener
 {
 
     public final static String TITLE = Globals.APP_NAME.getValue() + " PDF Viewer";
@@ -122,6 +121,11 @@ public class PDFViewer extends JFrame
     JDialog olf;
     /** the document menu */
     JMenu docMenu;
+    RandomAccessFile raf;
+    URLConnection urlConnection;
+    FileChannel channel;
+    String filename;
+    private static PDFViewer viewer = new PDFViewer(true);
 
     /**
      * utility method to get an icon from the resources of this class
@@ -280,16 +284,38 @@ public class PDFViewer extends JFrame
      * panel.
      * @param useThumbs true if the thumb panel should exist, false if not.
      */
-    public PDFViewer(boolean useThumbs) {
+    private PDFViewer(boolean useThumbs)
+    {
         super(TITLE);
+        setDefaultCloseOperation(HIDE_ON_CLOSE);//EXIT_ON_CLOSE
         addWindowListener(new WindowAdapter() {
 
-            public void windowClosing(WindowEvent evt) {
-                doQuit();
+            public void windowClosing(WindowEvent evt)
+            {
+                try
+                {
+                    if(channel!=null)
+                        channel.close();
+                    if(raf!=null)
+                        raf.close();
+
+                    new File(filename).delete();
+                } catch (IOException e)
+                {
+                    IO.log(getClass().getName(), IO.TAG_ERROR, e.getMessage());
+                    e.printStackTrace();
+                }
+                doClose();
+                //doQuit();
             }
         });
         doThumb = useThumbs;
         init();
+    }
+
+    public static PDFViewer getInstance()
+    {
+        return viewer;
     }
 
     /**
@@ -570,9 +596,10 @@ public class PDFViewer extends JFrame
      * @throws java.io.IOException
      */
     public void openFile(URL url) throws IOException {
-        URLConnection urlConnection = url.openConnection();
+        urlConnection = url.openConnection();
         int contentLength = urlConnection.getContentLength();
         InputStream istr = urlConnection.getInputStream();
+
         byte[] byteBuf = new byte[contentLength];
         int offset = 0;
         int read = 0;
@@ -582,6 +609,7 @@ public class PDFViewer extends JFrame
                 offset += read;
             }
         }
+        istr.close();
         if (offset != contentLength) {
             throw new IOException("Could not read all of URL file.");
         }
@@ -602,14 +630,15 @@ public class PDFViewer extends JFrame
      */
     public void openFile(File file) throws IOException {
         // first open the file for random access
-        RandomAccessFile raf = new RandomAccessFile(file, "r");
+        raf = new RandomAccessFile(file, "r");
 
         // extract a file channel
-        FileChannel channel = raf.getChannel();
+        channel = raf.getChannel();
 
         // now memory-map a byte-buffer
-        ByteBuffer buf =
-                channel.map(FileChannel.MapMode.READ_ONLY, 0, channel.size());
+        ByteBuffer buf = channel.map(FileChannel.MapMode.READ_ONLY, 0, channel.size());
+        channel.close();
+        raf.close();
         openPDFByteBuffer(buf, file.getPath(), file.getName());
     }
 
@@ -752,7 +781,8 @@ public class PDFViewer extends JFrame
     /**
      * Ask the user for a PDF file to open from the local file system
      */
-    public void doOpen() {
+    public void doOpen()
+    {
         try {
             JFileChooser fc = new JFileChooser();
             fc.setCurrentDirectory(prevDirChoice);
@@ -785,6 +815,7 @@ public class PDFViewer extends JFrame
      */
     public void doOpen(String name)
     {
+        filename = name;
         try
         {
             URL url = new URL(name);

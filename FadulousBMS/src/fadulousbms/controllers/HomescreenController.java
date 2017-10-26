@@ -72,11 +72,11 @@ public class HomescreenController extends Screen implements Initializable
         if(e!=null)
         {
             this.getUserNameLabel().setText(e.getFirstname() + " " + e.getLastname());
-            if(e.getAccessLevel() >= AccessLevels.ADMIN.getLevel())
+            /*if(e.getAccessLevel() >= AccessLevels.ADMIN.getLevel())
             {
                 IO.log(getClass().getName(), IO.TAG_INFO, "enabling account creation button.");
                 btnCreateAccount.setDisable(false);
-            }
+            }*/
         }
         else IO.log(getClass().getName(), IO.TAG_ERROR, "No active sessions.");
 

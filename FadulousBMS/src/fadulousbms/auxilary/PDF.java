@@ -1,7 +1,5 @@
 package fadulousbms.auxilary;
 
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
 import fadulousbms.managers.*;
 import fadulousbms.model.*;
 import org.apache.pdfbox.cos.COSName;
@@ -48,36 +46,6 @@ public class PDF
     private static final int ROW_COUNT = 35;
     private static final Insets page_margins = new Insets(100,10,100,10);
     private static int quote_page_count=1;
-
-    public static void viewPDF(String path) throws IOException
-    {
-        int w = 640, h = 480;
-        File file = new File(path);
-
-        PDDocument doc = PDDocument.load(file);
-        PDFRenderer renderer = new BMSPDFRenderer(doc);
-        BufferedImage image = renderer.renderImageWithDPI(0, 320);
-        Canvas image_container = new Canvas(image, w, h);
-        image_container.repaint();
-        JFrame viewer = new JFrame();
-        viewer.setSize(new Dimension(w,h));
-        //viewer.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
-        viewer.setTitle("PDF Viewer");
-        viewer.setLocationRelativeTo(null);
-        viewer.add(image_container);
-        viewer.setVisible(true);
-
-        viewer.addComponentListener(new ComponentAdapter()
-        {
-            @Override
-            public void componentResized(ComponentEvent e)
-            {
-                super.componentResized(e);
-                image_container.setWidth(viewer.getWidth());
-                image_container.setHeight(viewer.getHeight());
-            }
-        });
-    }
 
     public static void printPDF(final byte[] byteStream) throws PrintException
     {
@@ -222,7 +190,7 @@ public class PDF
         document.save(path);
         document.close();
 
-        PDFViewer pdfViewer = new PDFViewer(true);
+        PDFViewer pdfViewer = PDFViewer.getInstance();
         pdfViewer.doOpen(path);
         pdfViewer.setVisible(true);
     }
@@ -276,6 +244,424 @@ public class PDF
             contents.beginText();
     }
 
+    public static void createPurchaseOrderPdf(PurchaseOrder purchaseOrder) throws IOException
+    {
+        if(purchaseOrder==null)
+        {
+            IO.logAndAlert("PDF Viewer", "PurchaseOrder object passed is null.", IO.TAG_ERROR);
+            return;
+        }
+        //Prepare PDF data from database.
+        //Load PurchaseOrder Supplier
+        Supplier supplier = purchaseOrder.getSupplier();
+        if(supplier==null)
+        {
+            IO.logAndAlert("PDF Viewer Error", "PurchaseOrder has no Supplier assigned to it.", IO.TAG_ERROR);
+            return;
+        }
+        //Load PurchaseOrder contact person
+        Employee employee = purchaseOrder.getContact_person();
+        if(employee==null)
+        {
+            IO.logAndAlert("PDF Viewer Error", "PurchaseOrder has no contact person assigned to it.", IO.TAG_ERROR);
+            return;
+        }
+        //Load PurchaseOrder contact person
+        PurchaseOrderItem[] purchaseOrderItems = purchaseOrder.getItems();
+        if(purchaseOrderItems==null)
+        {
+            IO.logAndAlert("PDF Viewer Error", "PurchaseOrder has no PurchaseOrderItems assigned to it.", IO.TAG_ERROR);
+            return;
+        }
+
+        // Create a new document with an empty page.
+        PDDocument document = new PDDocument();
+        PDPage page = new PDPage(PDRectangle.A4);
+        document.addPage(page);
+
+        // Adobe Acrobat uses Helvetica as a default font and
+        // stores that under the name '/Helv' in the resources dictionary
+        PDFont font = PDType1Font.HELVETICA;
+        PDResources resources = new PDResources();
+        resources.put(COSName.getPDFName("Helv"), font);
+
+        PDPageContentStream contents = new PDPageContentStream(document, page);
+        int logo_h = 60;
+        PDImageXObject logo = PDImageXObject.createFromFile("images/logo.png", document);
+        contents.drawImage(logo, 10, 770, 160, logo_h);
+
+        float w = page.getBBox().getWidth();
+        float h = page.getBBox().getHeight();
+        int line_pos = (int)h-logo_h-20;
+        int digit_font_size=9;
+
+        /**Draw lines**/
+        int center_vert_line_start = line_pos;
+        int bottom_line = (int)h-logo_h-(ROW_COUNT+1)*LINE_HEIGHT;
+        createLinesAndBordersOnPage(contents, (int)w, line_pos, bottom_line);
+
+        /** begin text from the top**/
+        contents.beginText();
+        contents.setFont(font, 12);
+        line_pos-=LINE_HEIGHT/2;
+
+        int temp_pos = line_pos;
+        //right text
+        addTextToPageStream(contents,"Creator: " + purchaseOrder.getCreator(), PDType1Font.COURIER_BOLD_OBLIQUE, 12, (int)(w/2)+5, line_pos);
+        line_pos-=LINE_HEIGHT;//next line
+        addTextToPageStream(contents,"Tel    :  " + purchaseOrder.getContact_person().getTel(), PDType1Font.HELVETICA_BOLD, 12,(int)(w/2)+5, line_pos);
+        line_pos-=LINE_HEIGHT;//next line
+        addTextToPageStream(contents,"Cell   :  " + purchaseOrder.getContact_person().getCell(), PDType1Font.HELVETICA_BOLD, 12,(int)(w/2)+5, line_pos);
+        line_pos-=LINE_HEIGHT;//next line
+        addTextToPageStream(contents,"eMail :  " + purchaseOrder.getContact_person().getEmail(), PDType1Font.HELVETICA_BOLD, 12,(int)(w/2)+5, line_pos);
+
+        line_pos=temp_pos;//revert to original line
+        //line_pos-=LINE_HEIGHT;//next line
+
+        //left text
+        addTextToPageStream(contents,"Purchase Order No.", PDType1Font.COURIER_BOLD_OBLIQUE, 15,(int)((w/2)/4), line_pos);
+        line_pos-=LINE_HEIGHT;//next line
+        addTextToPageStream(contents,"Date Generated:  " + (new SimpleDateFormat("yyyy-MM-dd").format(new Date(purchaseOrder.getDate_logged()*1000))), 12, (int)((w/2)/4), line_pos);
+        line_pos-=LINE_HEIGHT;//next line
+        addTextToPageStream(contents,"Overall Discount:  " + "###", 12,(int)((w/2)/4) , line_pos);
+        line_pos-=LINE_HEIGHT;//next line
+        addTextToPageStream(contents,"VAT:  " + "###", 12,(int)((w/2)/4) , line_pos);
+
+        line_pos=temp_pos;//revert to original line
+        line_pos-=LINE_HEIGHT;//next line
+        temp_pos=line_pos;
+
+        //Company Info
+        //Left Text: From
+        addTextToPageStream(contents,"FROM", 12,20, line_pos);
+        line_pos-=LINE_HEIGHT;//next line
+        addTextToPageStream(contents,Globals.COMPANY.getValue(), PDType1Font.HELVETICA_BOLD, 16,(int)((w/2)+((w/2)/4)), line_pos);
+        line_pos-=LINE_HEIGHT;//next line
+        addTextToPageStream(contents,"VAT No.: #############", 12,20, line_pos);
+        line_pos-=LINE_HEIGHT;//next line
+        addTextToPageStream(contents,"POSTAL ADDRESS: ##########", 12,20, line_pos);
+        line_pos-=LINE_HEIGHT;//next line
+        addTextToPageStream(contents,"\tCITY: ##########", 12,20, line_pos);
+        line_pos-=LINE_HEIGHT;//next line
+        addTextToPageStream(contents,"\tPOSTAL CODE: ####", 12,20, line_pos);
+
+        line_pos-=LINE_HEIGHT*2;//next 2ND line
+
+        addTextToPageStream(contents,"PHYSICAL ADDRESS: ########", 12,20, line_pos);
+        line_pos-=LINE_HEIGHT;//next line
+        addTextToPageStream(contents,"\tCITY: ########", 12,20, line_pos);
+        line_pos-=LINE_HEIGHT;//next line
+        addTextToPageStream(contents,"\tPROVINCE/STATE: #######", 12,20, line_pos);
+        line_pos-=LINE_HEIGHT;//next line
+        addTextToPageStream(contents,"\tPOSTAL CODE: ####", 12,20, line_pos);
+
+        line_pos=temp_pos;//revert to original line
+        line_pos-=LINE_HEIGHT;//next line
+        temp_pos=line_pos;
+
+        //Right Text: To
+        addTextToPageStream(contents,"TO", 12,20, line_pos);
+        line_pos-=LINE_HEIGHT;//next line
+        addTextToPageStream(contents,Globals.COMPANY.getValue(), PDType1Font.HELVETICA_BOLD, 16,(int)((w/2)+((w/2)/4)), line_pos);
+        line_pos-=LINE_HEIGHT;//next line
+        addTextToPageStream(contents,"VAT No.: #############", 12,20, line_pos);
+        line_pos-=LINE_HEIGHT;//next line
+        addTextToPageStream(contents,"POSTAL ADDRESS: ##########", 12,20, line_pos);
+        line_pos-=LINE_HEIGHT;//next line
+        addTextToPageStream(contents,"\tCITY: ##########", 12,20, line_pos);
+        line_pos-=LINE_HEIGHT;//next line
+        addTextToPageStream(contents,"\tPOSTAL CODE: ####", 12,20, line_pos);
+
+        line_pos-=LINE_HEIGHT*2;//next 2ND line
+
+        addTextToPageStream(contents,"PHYSICAL ADDRESS: ########", 12,20, line_pos);
+        line_pos-=LINE_HEIGHT;//next line
+        addTextToPageStream(contents,"\tCITY: ########", 12,20, line_pos);
+        line_pos-=LINE_HEIGHT;//next line
+        addTextToPageStream(contents,"\tPROVINCE/STATE: #######", 12,20, line_pos);
+        line_pos-=LINE_HEIGHT;//next line
+        addTextToPageStream(contents,"\tPOSTAL CODE: ####", 12,20, line_pos);
+
+        //horizontal solid line after company details
+        contents.endText();
+        contents.setStrokingColor(Color.BLACK);
+        contents.moveTo(10, line_pos-LINE_HEIGHT/2);
+        contents.lineTo(w-10, line_pos-LINE_HEIGHT/2);
+        contents.stroke();
+        contents.beginText();
+
+        line_pos-=LINE_HEIGHT;//next line
+
+        //horizontal solid line
+        contents.endText();
+        contents.setStrokingColor(Color.BLACK);
+        contents.moveTo(10, line_pos-LINE_HEIGHT/2);
+        contents.lineTo(w-10, line_pos-LINE_HEIGHT/2);
+        contents.stroke();
+        contents.beginText();
+
+        line_pos-=LINE_HEIGHT;//next line
+        contents.endText();
+
+        //horizontal solid line after reps
+        /*contents.setStrokingColor(Color.BLACK);
+        contents.moveTo(10, line_pos+LINE_HEIGHT+LINE_HEIGHT/2);
+        contents.lineTo(w-10, line_pos+LINE_HEIGHT+LINE_HEIGHT/2);
+        contents.stroke();
+        //horizontal solid line after request
+        contents.setStrokingColor(Color.BLACK);
+        contents.moveTo(10, line_pos+LINE_HEIGHT/2);
+        contents.lineTo(w-10, line_pos+LINE_HEIGHT/2);
+        contents.stroke();
+        //solid horizontal line after site location, before quote_items
+        contents.setStrokingColor(Color.BLACK);
+        contents.moveTo(10, (line_pos-LINE_HEIGHT+(int)Math.ceil(LINE_HEIGHT/2)));
+        contents.lineTo(w-10, (line_pos-LINE_HEIGHT+(int)Math.ceil(LINE_HEIGHT/2)));
+        contents.stroke();*/
+
+        int col_divider_start = line_pos-LINE_HEIGHT;
+
+        //vertical line going through center of page
+        contents.setStrokingColor(Color.BLACK);
+        contents.moveTo((w/2), center_vert_line_start);
+        contents.lineTo((w/2),(col_divider_start+LINE_HEIGHT*2+(int)Math.ceil(LINE_HEIGHT/2)));
+        contents.stroke();
+        //
+        contents.moveTo((w/2), (col_divider_start+(int)Math.ceil(LINE_HEIGHT/2)));
+        contents.lineTo((w/2),(col_divider_start-LINE_HEIGHT+(int)Math.ceil(LINE_HEIGHT/2)));
+        contents.stroke();
+
+        contents.beginText();
+
+        //Column headings
+        int col_pos = 10;
+        addTextToPageStream(contents,"Item No.", PDType1Font.COURIER_BOLD,14,15, line_pos);
+        col_pos += 80;
+        addTextToPageStream(contents,"Equipment description", PDType1Font.COURIER_BOLD,14,col_pos+20, line_pos);
+        col_pos = (int)(w/2);
+        String[] cols = {"Unit", "Qty", "Rate", "Labour", "Total"};
+        for(int i=0;i<5;i++)//7 cols in total
+            addTextToPageStream(contents,cols[i], PDType1Font.COURIER_BOLD, 12,col_pos+(55*i)+10, line_pos);
+        line_pos-=LINE_HEIGHT;//next line
+
+        //Actual quote information
+        /*col_pos = 10;
+        double sub_total = 0;
+        if(quote.getResources()!=null)
+        {
+            for(QuoteItem item: quote.getResources())
+            {
+                //quote content column dividers
+                contents.endText();
+                //#1
+                contents.moveTo(80, (col_divider_start+(int)Math.ceil(LINE_HEIGHT/2)));
+                contents.lineTo(80, line_pos-LINE_HEIGHT/2);
+                contents.stroke();
+                //vertical line going through center of page
+                contents.setStrokingColor(Color.BLACK);
+                contents.moveTo((w/2), (col_divider_start-LINE_HEIGHT+(int)Math.ceil(LINE_HEIGHT/2)));
+                contents.lineTo((w/2),line_pos-LINE_HEIGHT/2);
+                contents.stroke();
+                //#3+
+                for(int i=1;i<5;i++)//7 cols in total
+                {
+                    contents.moveTo((w/2)+55*i, (col_divider_start+(int)Math.ceil(LINE_HEIGHT/2)));
+                    contents.lineTo((w/2)+55*i,line_pos-LINE_HEIGHT/2);
+                    contents.stroke();
+                }
+                contents.beginText();
+                //end draw columns
+
+                //if the page can't hold another 4 lines[current item, blank, sub-total, vat] add a new page
+                if(line_pos-LINE_HEIGHT<h-logo_h-(ROW_COUNT*LINE_HEIGHT))
+                {
+                    addTextToPageStream(contents, "Page "+quote_page_count, PDType1Font.COURIER_OBLIQUE, 14,(int)(w/2)-20, 30);
+                    //add new page
+                    page = new PDPage(PDRectangle.A4);
+                    document.addPage(page);
+                    //TODO: setup page, i.e. draw lines and stuff
+                    contents.close();
+                    contents = new PDPageContentStream(document, page);
+                    contents.beginText();
+                    line_pos = (int)h-logo_h;
+                    col_divider_start = line_pos+LINE_HEIGHT;
+                    createLinesAndBordersOnPage(contents, (int)w, line_pos+LINE_HEIGHT/2, bottom_line);
+                    quote_page_count++;
+                }
+
+                col_pos =0;//first column
+                //Item col
+                addTextToPageStream(contents, item.getItem_number(), 12,col_pos+30, line_pos);
+                col_pos += 80;//next column
+                //Description col
+                addTextToPageStream(contents, item.getResource().getResource_name(), 12,col_pos+5, line_pos);
+                col_pos = (int)w/2;//next column - starts at middle of page
+                //Unit col
+                addTextToPageStream(contents,item.getUnit(), 12,col_pos+5, line_pos);
+                col_pos+=55;//next column
+                //Quantity col
+                addTextToPageStream(contents,item.getQuantity(), digit_font_size,col_pos+5, line_pos);
+                col_pos+=55;//next column
+                //Rate col
+                addTextToPageStream(contents, String.valueOf(DecimalFormat.getCurrencyInstance().format(item.getRate())), digit_font_size,col_pos+5, line_pos);
+                col_pos+=55;//next column
+                //Labour col
+                addTextToPageStream(contents, String.valueOf(DecimalFormat.getCurrencyInstance().format(item.getLabourCost())), digit_font_size,col_pos+5, line_pos);
+                col_pos+=55;//next column
+                //Total col
+                sub_total+=item.getTotal();
+                addTextToPageStream(contents, String.valueOf(DecimalFormat.getCurrencyInstance().format(item.getTotal())), digit_font_size,col_pos+5, line_pos);
+
+                line_pos -= LINE_HEIGHT;//next line
+            }
+            IO.log(TAG, IO.TAG_INFO, "successfully created quote PDF.");
+        }else IO.log(TAG, IO.TAG_INFO, "quote has no resources.");
+        col_pos = 0;*/
+        //line_pos -= LINE_HEIGHT;//skip another line
+        /*if the page can't hold another 2 lines add a new page
+        if(line_pos-LINE_HEIGHT*2<h-logo_h-(ROW_COUNT*LINE_HEIGHT) || temp_pos-LINE_HEIGHT*2<h-logo_h-(ROW_COUNT*LINE_HEIGHT))
+        {
+            //add new page
+            page = new PDPage(PDRectangle.A4);
+            document.addPage(page);
+            //TODO: setup page, i.e. draw lines and stuff
+            contents.close();
+            contents = new PDPageContentStream(document, page);
+            contents.beginText();
+            line_pos = (int)h-logo_h;
+            col_divider_start = line_pos+LINE_HEIGHT;
+        }*/
+        //solid horizontal line
+        int col_divider_end= line_pos;
+
+        contents.endText();
+        contents.setStrokingColor(Color.BLACK);
+        contents.moveTo(10, line_pos+LINE_HEIGHT/2);
+        contents.lineTo(w-10, line_pos+LINE_HEIGHT/2);
+        contents.stroke();
+
+        /*contents.beginText();
+        addTextToPageStream(contents, "Sub-Total Excl. VAT: ", PDType1Font.COURIER_BOLD_OBLIQUE, 14,col_pos+30, line_pos);
+        addTextToPageStream(contents, String.valueOf(DecimalFormat.getCurrencyInstance().format(sub_total)), PDType1Font.COURIER_BOLD_OBLIQUE, 14,(int)(5+(w/2)), line_pos);
+        line_pos -= LINE_HEIGHT;//next line
+
+        //solid horizontal line
+        contents.endText();
+        contents.setStrokingColor(Color.BLACK);
+        contents.moveTo(10, line_pos+LINE_HEIGHT/2);
+        contents.lineTo(w-10, line_pos+LINE_HEIGHT/2);
+        contents.stroke();
+
+        double vat = sub_total*(quote.getVat()/100);
+        contents.beginText();
+        addTextToPageStream(contents, "VAT: ", PDType1Font.COURIER_BOLD_OBLIQUE, 14,col_pos+30, line_pos);
+        addTextToPageStream(contents, String.valueOf(DecimalFormat.getCurrencyInstance().format(vat)), PDType1Font.COURIER_BOLD_OBLIQUE, 14,(int)(5+(w/2)), line_pos);
+        line_pos -= LINE_HEIGHT;//next line
+
+        //solid horizontal line
+        contents.endText();
+        contents.setStrokingColor(Color.BLACK);
+        contents.moveTo(10, line_pos+LINE_HEIGHT/2);
+        contents.lineTo(w-10, line_pos+LINE_HEIGHT/2);
+        contents.stroke();
+
+        contents.beginText();
+        addTextToPageStream(contents, "Total Incl. VAT: ", PDType1Font.COURIER_BOLD_OBLIQUE, 14,col_pos+30, line_pos);
+        addTextToPageStream(contents, String.valueOf(DecimalFormat.getCurrencyInstance().format(sub_total + vat)), PDType1Font.COURIER_BOLD_OBLIQUE, 14,(int)(5+(w/2)), line_pos);
+        contents.endText();
+        line_pos -= LINE_HEIGHT;//next line
+
+        //solid horizontal line
+        contents.setStrokingColor(Color.BLACK);
+        contents.moveTo(10, line_pos+LINE_HEIGHT/2);
+        contents.lineTo(w-10, line_pos+LINE_HEIGHT/2);
+        contents.stroke();
+
+        //int col_divider_end = line_pos;
+        line_pos -= LINE_HEIGHT*3;//next 3rd line
+        /*solid horizontal lines after quote_items
+        contents.setStrokingColor(Color.BLACK);
+        contents.moveTo(10, col_divider_end+LINE_HEIGHT+LINE_HEIGHT/2);
+        contents.lineTo(w-10, col_divider_end+LINE_HEIGHT+LINE_HEIGHT/2);
+        contents.stroke();
+        contents.moveTo(10, col_divider_end+LINE_HEIGHT/2);
+        contents.lineTo(w-10, col_divider_end+LINE_HEIGHT/2);
+        contents.stroke();
+        contents.moveTo(10, col_divider_end-LINE_HEIGHT+LINE_HEIGHT/2);
+        contents.lineTo(w-10, col_divider_end-LINE_HEIGHT+LINE_HEIGHT/2);
+        contents.stroke();*/
+
+        //quote content column dividers
+        //#1
+        contents.moveTo(80, (col_divider_start-LINE_HEIGHT+(int)Math.ceil(LINE_HEIGHT/2)));
+        contents.lineTo(80, col_divider_end+LINE_HEIGHT+LINE_HEIGHT/2);
+        contents.stroke();
+        //vertical line going through center of page again
+        contents.setStrokingColor(Color.BLACK);
+        contents.moveTo((w/2), (col_divider_start-LINE_HEIGHT+(int)Math.ceil(LINE_HEIGHT/2)));
+        contents.lineTo((w/2), col_divider_end+LINE_HEIGHT+LINE_HEIGHT/2);
+        //contents.lineTo((w/2),col_divider_end-LINE_HEIGHT/2);
+        contents.stroke();
+        //#3+
+        for(int i=1;i<5;i++)//7 cols in total
+        {
+            contents.moveTo((w/2)+55*i, (col_divider_start-LINE_HEIGHT+(int)Math.ceil(LINE_HEIGHT/2)));
+            contents.lineTo((w/2)+55*i,col_divider_end+LINE_HEIGHT+LINE_HEIGHT/2);
+            contents.stroke();
+        }
+
+        contents.beginText();
+
+        if(purchaseOrder.getExtra()!=null)
+            addTextToPageStream(contents, "P.S. "+purchaseOrder.getExtra(), PDType1Font.TIMES_ITALIC, 14,col_pos+5, line_pos);
+
+        line_pos -= LINE_HEIGHT;//next line
+        //if the page can't hold another 9 lines add a new page
+        if(line_pos-(LINE_HEIGHT*4)<h-logo_h-(ROW_COUNT*LINE_HEIGHT))
+        {
+            addTextToPageStream(contents, "Page "+quote_page_count, PDType1Font.COURIER_OBLIQUE, 14,(int)(w/2)-20, 30);
+            //add new page
+            page = new PDPage(PDRectangle.A4);
+            document.addPage(page);
+            contents.close();
+            contents = new PDPageContentStream(document, page);
+            contents.beginText();
+            line_pos = (int)h-logo_h;
+            createLinesAndBordersOnPage(contents, (int)w, line_pos+LINE_HEIGHT/2, bottom_line);
+            quote_page_count++;
+        }
+        addTextToPageStream(contents, "TERMS AND CONDITIONS OF SALE", PDType1Font.HELVETICA_BOLD, 14,(int)(w/2)-130, line_pos);
+        contents.endText();
+        contents.setStrokingColor(Color.BLACK);
+        contents.moveTo((int)(w/2)-140, line_pos-LINE_HEIGHT/2);
+        contents.lineTo((w/2)+120, line_pos-LINE_HEIGHT/2);
+        contents.stroke();
+        contents.beginText();
+
+
+        addTextToPageStream(contents, "Page "+quote_page_count, PDType1Font.COURIER_OBLIQUE, 14,(int)(w/2)-20, 30);
+        contents.endText();
+        contents.close();
+
+        String path = "bin/pdf/purchase_order_" + purchaseOrder.getNumber() + ".pdf";
+        int i=1;
+        while(new File(path).exists())
+        {
+            path = "bin/pdf/purchase_order_" + purchaseOrder.getNumber() + "." + i + ".pdf";
+            i++;
+        }
+
+        //Files.delete(Paths.get(path));//delete previous versions
+
+        document.save(path);
+        document.close();
+
+        PDFViewer pdfViewer = PDFViewer.getInstance();
+        pdfViewer.setVisible(true);
+
+        pdfViewer.doOpen(path);
+    }
+
     public static void createQuotePdf(Quote quote) throws IOException
     {
         if(quote==null)
@@ -298,7 +684,7 @@ public class PDF
             IO.logAndAlert("PDF Viewer Error", "Quote has no representatives(employees) assigned to it.", IO.TAG_ERROR);
             return;
         }
-        Employee contact = quote.getContactPerson();
+        Employee contact = quote.getContact_person();
         if(contact==null)
         {
             IO.logAndAlert("PDF Viewer Error", "Quote has no client contact person assigned to it.", IO.TAG_ERROR);
@@ -446,12 +832,6 @@ public class PDF
 
         contents.endText();
 
-        //erase middle line by request field
-        /*contents.setStrokingColor(Color.BLACK);
-        contents.moveTo(10, line_pos+LINE_HEIGHT/2);
-        contents.lineTo(w-10, line_pos+LINE_HEIGHT/2);
-        contents.stroke();*/
-
         //horizontal solid line after reps
         contents.setStrokingColor(Color.BLACK);
         contents.moveTo(10, line_pos+LINE_HEIGHT+LINE_HEIGHT/2);
@@ -513,22 +893,23 @@ public class PDF
                 //quote content column dividers
                 contents.endText();
                 //#1
-                contents.moveTo(80, (col_divider_start-LINE_HEIGHT+(int)Math.ceil(LINE_HEIGHT/2)));
-                contents.lineTo(80, line_pos+LINE_HEIGHT/2);
+                contents.moveTo(80, (col_divider_start+(int)Math.ceil(LINE_HEIGHT/2)));
+                contents.lineTo(80, line_pos-LINE_HEIGHT/2);
                 contents.stroke();
                 //vertical line going through center of page
                 contents.setStrokingColor(Color.BLACK);
                 contents.moveTo((w/2), (col_divider_start-LINE_HEIGHT+(int)Math.ceil(LINE_HEIGHT/2)));
-                contents.lineTo((w/2),line_pos+LINE_HEIGHT/2);
+                contents.lineTo((w/2),line_pos-LINE_HEIGHT/2);
                 contents.stroke();
                 //#3+
                 for(int i=1;i<5;i++)//7 cols in total
                 {
-                    contents.moveTo((w/2)+55*i, (col_divider_start-LINE_HEIGHT+(int)Math.ceil(LINE_HEIGHT/2)));
-                    contents.lineTo((w/2)+55*i,line_pos+LINE_HEIGHT/2);
+                    contents.moveTo((w/2)+55*i, (col_divider_start+(int)Math.ceil(LINE_HEIGHT/2)));
+                    contents.lineTo((w/2)+55*i,line_pos-LINE_HEIGHT/2);
                     contents.stroke();
                 }
                 contents.beginText();
+                //end draw columns
 
                 //if the page can't hold another 4 lines[current item, blank, sub-total, vat] add a new page
                 if(line_pos-LINE_HEIGHT<h-logo_h-(ROW_COUNT*LINE_HEIGHT))
@@ -561,7 +942,7 @@ public class PDF
                 addTextToPageStream(contents,item.getQuantity(), digit_font_size,col_pos+5, line_pos);
                 col_pos+=55;//next column
                 //Rate col
-                addTextToPageStream(contents, String.valueOf(DecimalFormat.getCurrencyInstance().format(item.getRateValue())), digit_font_size,col_pos+5, line_pos);
+                addTextToPageStream(contents, String.valueOf(DecimalFormat.getCurrencyInstance().format(item.getRate())), digit_font_size,col_pos+5, line_pos);
                 col_pos+=55;//next column
                 //Labour col
                 addTextToPageStream(contents, String.valueOf(DecimalFormat.getCurrencyInstance().format(item.getLabourCost())), digit_font_size,col_pos+5, line_pos);
@@ -610,9 +991,9 @@ public class PDF
         contents.lineTo(w-10, line_pos+LINE_HEIGHT/2);
         contents.stroke();
 
-        double vat = sub_total*(Quote.VAT/100);
+        double vat = sub_total*(quote.getVat()/100);
         contents.beginText();
-        addTextToPageStream(contents, "VAT: ", PDType1Font.COURIER_BOLD_OBLIQUE, 14,col_pos+30, line_pos);
+        addTextToPageStream(contents, "VAT [" + quote.getVat() + "%]: ", PDType1Font.COURIER_BOLD_OBLIQUE, 14,col_pos+30, line_pos);
         addTextToPageStream(contents, String.valueOf(DecimalFormat.getCurrencyInstance().format(vat)), PDType1Font.COURIER_BOLD_OBLIQUE, 14,(int)(5+(w/2)), line_pos);
         line_pos -= LINE_HEIGHT;//next line
 
@@ -717,12 +1098,23 @@ public class PDF
         contents.endText();
         contents.close();
 
-        document.save("bin/pdf/quote_"+quote.get_id()+".pdf");
+        String path = "bin/pdf/quote_" + quote.get_id() + ".pdf";
+        int i=1;
+        while(new File(path).exists())
+        {
+            path = "bin/pdf/quote_" + quote.get_id() + "." + i + ".pdf";
+            i++;
+        }
+
+        //Files.delete(Paths.get("bin/pdf/quote_"+quote.get_id()+".pdf"));//delete previous versions
+
+        document.save(path);
         document.close();
 
-        PDFViewer pdfViewer = new PDFViewer(true);
+        PDFViewer pdfViewer = PDFViewer.getInstance();
         pdfViewer.setVisible(true);
-        pdfViewer.doOpen("bin/pdf/quote_" + quote.get_id() + ".pdf");
+
+        pdfViewer.doOpen(path);//"bin/pdf/quote_" + quote.get_id() + ".pdf"
     }
 
     public static void createInvoicePdf(Invoice invoice) throws IOException
@@ -759,7 +1151,7 @@ public class PDF
             IO.logAndAlert("PDF Viewer Error", "Quote has no representatives(employees) assigned to it.", IO.TAG_ERROR);
             return;
         }
-        Employee contact = quote.getContactPerson();
+        Employee contact = quote.getContact_person();
         if(contact==null)
         {
             IO.logAndAlert("PDF Viewer Error", "Quote has no client contact person assigned to it.", IO.TAG_ERROR);
@@ -1021,7 +1413,7 @@ public class PDF
                 addTextToPageStream(contents,item.getQuantity(), digit_font_size,col_pos+5, line_pos);
                 col_pos+=55;//next column
                 //Rate col
-                addTextToPageStream(contents, String.valueOf(DecimalFormat.getCurrencyInstance().format(item.getRateValue())), digit_font_size,col_pos+5, line_pos);
+                //addTextToPageStream(contents, String.valueOf(DecimalFormat.getCurrencyInstance().format(item.getRateValue())), digit_font_size,col_pos+5, line_pos);
                 col_pos+=55;//next column
                 //Labour col
                 addTextToPageStream(contents, String.valueOf(DecimalFormat.getCurrencyInstance().format(item.getLabourCost())), digit_font_size,col_pos+5, line_pos);
@@ -1070,7 +1462,7 @@ public class PDF
         contents.lineTo(w-10, line_pos+LINE_HEIGHT/2);
         contents.stroke();
 
-        double vat = sub_total*(Quote.VAT/100);
+        double vat = sub_total*(quote.getVat()/100);
         contents.beginText();
         addTextToPageStream(contents, "VAT: ", PDType1Font.COURIER_BOLD_OBLIQUE, 14,col_pos+30, line_pos);
         addTextToPageStream(contents, String.valueOf(DecimalFormat.getCurrencyInstance().format(vat)), PDType1Font.COURIER_BOLD_OBLIQUE, 14,(int)(5+(w/2)), line_pos);
@@ -1177,81 +1569,21 @@ public class PDF
         contents.endText();
         contents.close();
 
-        document.save("bin/pdf/quote_"+quote.get_id()+".pdf");
+        String path = "bin/pdf/invoice_" + job.get_id() + ".pdf";
+        int i=1;
+        while(new File(path).exists())
+        {
+            path = "bin/pdf/invoice_" + job.get_id() + "." + i + ".pdf";
+            i++;
+        }
+
+        document.save(path);
         document.close();
 
-        PDFViewer pdfViewer = new PDFViewer(true);
+        PDFViewer pdfViewer = PDFViewer.getInstance();
         pdfViewer.setVisible(true);
-        pdfViewer.doOpen("bin/pdf/quote_" + quote.get_id() + ".pdf");
+        pdfViewer.doOpen(path);
     }
-
-    /*private static String[] getSortingAttr(Transaction[] transactions, int index)
-    {
-        String sorting_attr = "date_logged";
-        Object val = objects[index].get("date_logged");
-        if(val==null)
-        {
-            val = objects[index].get("date_acquired");
-            sorting_attr = "date_acquired";
-        }
-        if(val==null)
-        {
-            val = objects[index].get("date_generated");
-            sorting_attr = "date_generated";
-        }
-        if(val==null)
-        {
-            IO.log("Array Partioner", IO.TAG_ERROR, "pivot attribute is null.");
-            return null;
-        }else return new String[]{sorting_attr, String.valueOf(val)};
-    }*/
-
-    /*static int partition(Transaction[] transactions, int left, int right)
-    {
-        int i = left, j = right;
-        Transaction tmp;
-        /*String[] pivot_data = getSortingAttr(transactions, (left + right) / 2);
-        if(pivot_data==null)
-        {
-            return 0;
-        }*
-        //String sorting_attr = pivot_data[0];
-        //Object val = pivot_data[1];
-        double pivot = transactions[(left + right) / 2].getDate();
-
-        //IO.log("Array Partitioner", IO.TAG_INFO, "Sorting attribute: " + sorting_attr);
-        IO.log("Array Partitioner", IO.TAG_INFO, "Pivot: " + pivot);
-
-        while (i <= j)
-        {
-            //String[] obj_i_data = getSortingAttr(objects, i);
-            //String[] obj_j_data = getSortingAttr(objects, j);
-
-            //Object obj_i = objects[i].get(sorting_attr);
-            //Object obj_j = objects[j].get(sorting_attr);
-            //IO.log("Array Partitioner", IO.TAG_INFO, "obj_i sorting attr: " + obj_i_data[0]);
-            IO.log("Array Partitioner", IO.TAG_INFO, "obj_i value: " + transactions[i].getDate());
-            //IO.log("Array Partitioner", IO.TAG_INFO, "obj_j sorting attr: " + obj_j_data[0]);
-            IO.log("Array Partitioner", IO.TAG_INFO, "obj_j value: " + transactions[j].getDate());
-
-            double date_i = transactions[i].getDate();
-            double date_j = transactions[j].getDate();
-
-            while (date_i < pivot)
-                i++;
-            while (date_j > pivot)
-                j--;
-            if (i <= j)
-            {
-                tmp = transactions[i];
-                transactions[i] = transactions[j];
-                transactions[j] = tmp;
-                i++;
-                j--;
-            }
-        }
-        return i;
-    }*/
 
     static int partition(Transaction arr[], int left, int right)
     {
@@ -1287,22 +1619,6 @@ public class PDF
             quickSort(transactions, index, right);
     }
 
-    public static Transaction[] selectionSort(Transaction[] arr){
-
-        for (int i = 0; i < arr.length - 1; i++)
-        {
-            int index = i;
-            for (int j = i + 1; j < arr.length; j++)
-                if (arr[j].getDate() < arr[index].getDate())
-                    index = j;
-
-            Transaction lowerVal = arr[index];
-            arr[index] = arr[i];
-            arr[i] = lowerVal;
-        }
-        return arr;
-    }
-
     public static void createGeneralJournalPdf(long start, long end) throws IOException
     {
         //Init managers and load data to memory
@@ -1322,7 +1638,7 @@ public class PDF
         for(Expense expense: ExpenseManager.getInstance().getExpenses())
             transactions.add(new Transaction(expense.get_id(), expense.getDate_logged(), expense));
         //Load Service income (Invoices)
-        for(Invoice invoice: InvoiceManager.getInstance().getInvoices())
+        for(Invoice invoice: InvoiceManager.getInstance().getInvoices().values())
             transactions.add(new Transaction(invoice.get_id(), invoice.getDate_generated(), invoice));
 
         Transaction[] transactions_arr = new Transaction[transactions.size()];
@@ -1331,8 +1647,8 @@ public class PDF
         quickSort(transactions_arr, 0, transactions.size()-1);
         //Arrays.sort(transactions_arr);
         //transactions_arr = selectionSort(transactions_arr);
-        System.out.println("Sorted in: "+ (System.currentTimeMillis()-start_ms) + "ms");
-        System.out.println("Transaction count: "+ transactions_arr.length);
+        IO.log("PDF Creator> generateGeneralJournal",IO.TAG_INFO, "Sorted in: "+ (System.currentTimeMillis()-start_ms) + "ms");
+        IO.log("PDF Creator> generateGeneralJournal",IO.TAG_INFO, "Transaction count: "+ transactions_arr.length);
 
         // Create a new document with an empty page.
         PDDocument document = new PDDocument();
@@ -1493,7 +1809,7 @@ public class PDF
                     addTextToPageStream(contents, Globals.CURRENCY_SYMBOL.getValue() + " " + String.valueOf(((Asset) t.getBusinessObject()).getAsset_value()), PDType1Font.HELVETICA, 15, (int) w - 180, line_pos);
                     line_pos -= LINE_HEIGHT;//next line
                     //account
-                    addTextToPageStream(contents, ((Asset) t.getBusinessObject()).getAccount(), PDType1Font.HELVETICA, 15, 150, line_pos);
+                    //addTextToPageStream(contents, ((Asset) t.getBusinessObject()).getAccount(), PDType1Font.HELVETICA, 15, 150, line_pos);
                     //credit
                     addTextToPageStream(contents, Globals.CURRENCY_SYMBOL.getValue() + " " + String.valueOf(((Asset) t.getBusinessObject()).getAsset_value()), PDType1Font.HELVETICA, 15, (int) w - 100, line_pos);
                 } else if (t.getBusinessObject() instanceof Resource)
@@ -1510,7 +1826,7 @@ public class PDF
                     addTextToPageStream(contents, Globals.CURRENCY_SYMBOL.getValue() + " " + String.valueOf(((Resource) t.getBusinessObject()).getResource_value()), PDType1Font.HELVETICA, 15, (int) w - 180, line_pos);
                     line_pos -= LINE_HEIGHT;//next line
                     //account
-                    addTextToPageStream(contents, ((Resource) t.getBusinessObject()).getAccount(), PDType1Font.HELVETICA, 15, 150, line_pos);
+                    //addTextToPageStream(contents, ((Resource) t.getBusinessObject()).getAccount(), PDType1Font.HELVETICA, 15, 150, line_pos);
                     //credit
                     addTextToPageStream(contents, Globals.CURRENCY_SYMBOL.getValue() + " " + String.valueOf(((Resource) t.getBusinessObject()).getResource_value()), PDType1Font.HELVETICA, 15, (int) w - 100, line_pos);
                 }
@@ -1529,13 +1845,21 @@ public class PDF
         contents.lineTo(w, line_pos-LINE_HEIGHT/2);
         contents.stroke();
 
+        String path = "bin/pdf/general_journal.pdf";
+        int i=1;
+        while(new File(path).exists())
+        {
+            path = "bin/pdf/general_journal" + "." + i + ".pdf";
+            i++;
+        }
+
         contents.close();
-        document.save("bin/pdf/general_journal.pdf");
+        document.save(path);
         document.close();
 
-        PDFViewer pdfViewer = new PDFViewer(true);
+        PDFViewer pdfViewer = PDFViewer.getInstance();
         pdfViewer.setVisible(true);
-        pdfViewer.doOpen("bin/pdf/general_journal.pdf");
+        pdfViewer.doOpen(path);
     }
 
     private static PDPageContentStream initLedgerPage(PDDocument document,String account, long start, long end) throws IOException
@@ -1625,7 +1949,7 @@ public class PDF
         for(Expense expense: ExpenseManager.getInstance().getExpenses())
             transactions.add(new Transaction(expense.get_id(), expense.getDate_logged(), expense));
         //Load Service revenue (Invoices)
-        for(Invoice invoice: InvoiceManager.getInstance().getInvoices())
+        for(Invoice invoice: InvoiceManager.getInstance().getInvoices().values())
             transactions.add(new Transaction(invoice.get_id(), invoice.getDate_generated(), invoice));
         //Load Additional income/revenue
         for(Revenue revenue: RevenueManager.getInstance().getRevenues())
@@ -1662,7 +1986,7 @@ public class PDF
             }else if(t.getBusinessObject() instanceof Asset)
             {
                 Asset asset = ((Asset)t.getBusinessObject());
-                String str_acc = asset.getAccount();
+                String str_acc = "%ACCOUNT";//asset.getAccount();
                 Account acc = accounts_map.get(str_acc.toLowerCase());
                 if(acc==null)
                 {
@@ -1678,7 +2002,7 @@ public class PDF
             }else if(t.getBusinessObject() instanceof Resource)
             {
                 Resource resource = ((Resource)t.getBusinessObject());
-                String str_acc = resource.getAccount();
+                String str_acc = "%ACCOUNT";//resource.getAccount();
                 Account acc = accounts_map.get(str_acc.toLowerCase());
                 if(acc==null)
                 {
@@ -1962,13 +2286,21 @@ public class PDF
             addTextToPageStream(contents, "page " + pages, PDType1Font.HELVETICA, 18, (w/2)-50, 30);
         }
 
+        String path = "bin/pdf/general_ledger.pdf";
+        int i=1;
+        while(new File(path).exists())
+        {
+            path = "bin/pdf/general_ledger" + "." + i + ".pdf";
+            i++;
+        }
+
         contents.close();
-        document.save("bin/pdf/general_ledger.pdf");
+        document.save(path);
         document.close();
 
-        PDFViewer pdfViewer = new PDFViewer(true);
+        PDFViewer pdfViewer = PDFViewer.getInstance();
         pdfViewer.setVisible(true);
-        pdfViewer.doOpen("bin/pdf/general_ledger.pdf");
+        pdfViewer.doOpen(path);
     }
 
     public static void createJobCardPdf(Job job) throws IOException
@@ -2063,9 +2395,9 @@ public class PDF
                 addTextToPageStream(contents, "SITENAME: " + job.getQuote().getSitename(), 12, 20, line_pos);
                 addTextToPageStream(contents, "STATUS: " + (job.isJob_completed()?"completed":"pending"), 12, (int)(w/2)+30, line_pos);
                 line_pos -= LINE_HEIGHT;//next line
-                addTextToPageStream(contents, "CONTACT: " + job.getQuote().getContactPerson(), 12, 20, line_pos);
-                addTextToPageStream(contents, "CELL: " + job.getQuote().getContactPerson().getCell(), 12, (int)(w/2)+30, line_pos);
-                addTextToPageStream(contents, "TEL: " + job.getQuote().getContactPerson().getTel(), 12, (int)(w/2)+150, line_pos);
+                addTextToPageStream(contents, "CONTACT: " + job.getQuote().getContact_person(), 12, 20, line_pos);
+                addTextToPageStream(contents, "CELL: " + job.getQuote().getContact_person().getCell(), 12, (int)(w/2)+30, line_pos);
+                addTextToPageStream(contents, "TEL: " + job.getQuote().getContact_person().getTel(), 12, (int)(w/2)+150, line_pos);
                 line_pos -= LINE_HEIGHT;//next line
 
                 //addTextToPageStream(contents, "Date Logged: " + LocalDate.parse(formatter.format(new Date(job.getDate_logged()*1000))), 12, 10, line_pos);
@@ -2136,12 +2468,20 @@ public class PDF
             return;
         }
 
-        document.save("bin/pdf/job_card_"+job.get_id()+".pdf");
+        String path = "bin/pdf/job_card_" + job.get_id() + ".pdf";
+        int i=1;
+        while(new File(path).exists())
+        {
+            path = "bin/pdf/job_card_" + job.get_id() + "." + i + ".pdf";
+            i++;
+        }
+
+        document.save(path);
         document.close();
 
-        PDFViewer pdfViewer = new PDFViewer(true);
+        PDFViewer pdfViewer = PDFViewer.getInstance();
         pdfViewer.setVisible(true);
-        pdfViewer.doOpen("bin/pdf/job_card_" + job.get_id() + ".pdf");
+        pdfViewer.doOpen(path);
     }
 
     public static void addTextToPageStream(PDPageContentStream contents, String text, int font_size, int x, int y) throws IOException

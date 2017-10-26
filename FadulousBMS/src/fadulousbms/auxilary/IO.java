@@ -7,6 +7,13 @@ import fadulousbms.managers.ScreenManager;
 import fadulousbms.managers.SessionManager;
 import fadulousbms.model.FileMetadata;
 import fadulousbms.model.Message;
+import javafx.application.Platform;
+import javafx.scene.Scene;
+import javafx.scene.control.Button;
+import javafx.scene.control.Label;
+import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.VBox;
+import javafx.stage.Stage;
 
 import javax.print.PrintException;
 import javax.swing.*;
@@ -73,28 +80,50 @@ public class IO
 
     public static void showMessage(String title, String msg, String type)
     {
-        switch (type.toLowerCase())
+        Platform.runLater(() ->
         {
-            case TAG_INFO:
-                JOptionPane.showMessageDialog(null, msg, title, JOptionPane.INFORMATION_MESSAGE);
-                break;
-            case TAG_WARN:
-                JOptionPane.showMessageDialog(null, msg, title, JOptionPane.WARNING_MESSAGE);
-                break;
-            case TAG_ERROR:
-                JOptionPane.showMessageDialog(null, msg, title, JOptionPane.ERROR_MESSAGE);
-                break;
-            default:
-                System.err.println("IO> unknown message type '" + type + "'");
-                JOptionPane.showMessageDialog(null, msg, title, JOptionPane.PLAIN_MESSAGE);
-                break;
-        }
+            Stage stage = new Stage();
+            stage.setTitle(title);
+            stage.setResizable(false);
+            stage.setAlwaysOnTop(true);
+            stage.centerOnScreen();
+
+            Label label = new Label(msg);
+            Button btn = new Button("Confirm");
+
+            BorderPane borderPane= new BorderPane();
+            borderPane.setTop(label);
+            borderPane.setCenter(btn);
+            //VBox vBox = new VBox(label, btn);
+            stage.setScene(new Scene(borderPane));
+
+            stage.show();
+
+            btn.setOnAction(event -> stage.close());
+
+            /*switch (type.toLowerCase())
+            {
+                case TAG_INFO:
+                    JOptionPane.showMessageDialog(null, msg, title, JOptionPane.INFORMATION_MESSAGE);
+                    break;
+                case TAG_WARN:
+                    JOptionPane.showMessageDialog(null, msg, title, JOptionPane.WARNING_MESSAGE);
+                    break;
+                case TAG_ERROR:
+                    JOptionPane.showMessageDialog(null, msg, title, JOptionPane.ERROR_MESSAGE);
+                    break;
+                default:
+                    System.err.println("IO> unknown message type '" + type + "'");
+                    JOptionPane.showMessageDialog(null, msg, title, JOptionPane.PLAIN_MESSAGE);
+                    break;
+            }*/
+        });
     }
 
     public static void logAndAlert(String title, String msg, String type)
     {
         log(title, type, msg);
-        //showMessage(title, msg, type);
+        showMessage(title, msg, type);
     }
 
     public static String readStream(InputStream stream) throws IOException

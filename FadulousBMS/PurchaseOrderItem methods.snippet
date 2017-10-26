@@ -1,0 +1,150 @@
+/*public String getItem_name()
+    {
+        if(type==null)
+        {
+            IO.log(TAG, IO.TAG_ERROR, "purchase order item type is not set.");
+            return "N/A";
+        }
+        if(type.toLowerCase().equals(Resource.class.getName().toLowerCase()))
+        {
+            ResourceManager.getInstance().loadDataFromServer();
+            if (ResourceManager.getInstance().getResources() != null)
+            {
+                Resource resource = ResourceManager.getInstance().getResources().get(item_id);
+                if (resource != null)
+                {
+                    return resource.getResource_name();
+                }
+                else IO.log(TAG, IO.TAG_ERROR, "key returns null po item object.");
+            }
+            else IO.log(TAG, IO.TAG_ERROR, "no resources on database.");
+        }else if(type.toLowerCase().equals(Asset.class.getName().toLowerCase()))
+        {
+            AssetManager.getInstance().loadDataFromServer();
+            if(AssetManager.getInstance().getAssets()!=null)
+            {
+                Asset asset = AssetManager.getInstance().getAssets().get(item_id);
+                if(asset!=null)
+                {
+                    return asset.getAsset_name();
+                }else IO.log(TAG, IO.TAG_ERROR, "key returns null po item object.");
+            }else IO.log(TAG, IO.TAG_ERROR, "no assets on database.");
+        } else IO.log(TAG, IO.TAG_ERROR, "unknown purchase order item type: " + item);
+        return "N/A";
+    }*/
+
+
+
+if(item instanceof Resource)
+        {
+            ResourceManager.getInstance().loadDataFromServer();
+            if(ResourceManager.getInstance().getResources()!=null)
+            {
+                Resource resource = ResourceManager.getInstance().getResources().get(item_id);
+                if(resource!=null)
+                {
+                    return resource.getResource_description();
+                }else IO.log(TAG, IO.TAG_ERROR, "key returns null po item object.");
+            }else IO.log(TAG, IO.TAG_ERROR, "no resources on database.");
+        }else if(item instanceof Asset)
+        {
+            AssetManager.getInstance().loadDataFromServer();
+            if(AssetManager.getInstance().getAssets()!=null)
+            {
+                Asset asset = AssetManager.getInstance().getAssets().get(item_id);
+                if(asset!=null)
+                {
+                    return asset.getAsset_description();
+                }else IO.log(TAG, IO.TAG_ERROR, "key returns null po item object.");
+            }else IO.log(TAG, IO.TAG_ERROR, "no assets on database.");
+        } else IO.log(TAG, IO.TAG_ERROR, "unknown purchase order item type: " + item);
+        return "N/A";
+
+
+
+if(item instanceof Resource)
+        {
+            ResourceManager.getInstance().loadDataFromServer();
+            if(ResourceManager.getInstance().getResources()!=null)
+            {
+                Resource resource = ResourceManager.getInstance().getResources().get(item_id);
+                if(resource!=null)
+                {
+                    return resource.getUnit();
+                }else IO.log(TAG, IO.TAG_ERROR, "key returns null po item object.");
+            }else IO.log(TAG, IO.TAG_ERROR, "no resources on database.");
+        }else if(item instanceof Asset)
+        {
+            AssetManager.getInstance().loadDataFromServer();
+            if(AssetManager.getInstance().getAssets()!=null)
+            {
+                Asset asset = AssetManager.getInstance().getAssets().get(item_id);
+                if(asset!=null)
+                {
+                    return asset.getUnit();
+                }else IO.log(TAG, IO.TAG_ERROR, "key returns null po item object.");
+            }else IO.log(TAG, IO.TAG_ERROR, "no assets on database.");
+        } else IO.log(TAG, IO.TAG_ERROR, "unknown purchase order item type: " + item);
+        return "N/A";
+
+
+if(item instanceof Resource)
+        {
+            ResourceManager.getInstance().loadDataFromServer();
+            if (ResourceManager.getInstance().getResources() != null)
+            {
+                Resource resource = ResourceManager.getInstance().getResources().get(item_id);
+                if (resource != null)
+                {
+                    return resource.getResource_value();
+                }
+                else IO.log(TAG, IO.TAG_ERROR, "key returns null po item object.");
+            }
+            else IO.log(TAG, IO.TAG_ERROR, "no resources on database.");
+        }else if(item instanceof Asset)
+        {
+            AssetManager.getInstance().loadDataFromServer();
+            if(AssetManager.getInstance().getAssets()!=null)
+            {
+                Asset asset = AssetManager.getInstance().getAssets().get(item_id);
+                if(asset!=null)
+                {
+                    return asset.getAsset_value();
+                }else IO.log(TAG, IO.TAG_ERROR, "key returns null po item object.");
+            }else IO.log(TAG, IO.TAG_ERROR, "no assets on database.");
+        } else IO.log(TAG, IO.TAG_ERROR, "unknown purchase order item type: " + item);
+        return 0;
+
+
+//return item;
+        if(type==null)
+        {
+            IO.log(TAG, IO.TAG_ERROR, "purchase order item type is not set.");
+            return null;
+        }
+        if(type.toLowerCase().equals(Resource.class.getName().toLowerCase()))
+        {
+            ResourceManager.getInstance().loadDataFromServer();
+            if (ResourceManager.getInstance().getResources() != null)
+            {
+                Resource resource = ResourceManager.getInstance().getResources().get(item_id);
+                if (resource != null)
+                {
+                    return resource;
+                }
+                else IO.log(TAG, IO.TAG_ERROR, "key returns null po item object.");
+            }
+            else IO.log(TAG, IO.TAG_ERROR, "no resources on database.");
+        }else if(type.toLowerCase().equals(Asset.class.getName().toLowerCase()))
+        {
+            AssetManager.getInstance().loadDataFromServer();
+            if(AssetManager.getInstance().getAssets()!=null)
+            {
+                Asset asset = AssetManager.getInstance().getAssets().get(item_id);
+                if(asset!=null)
+                {
+                    return asset;
+                }else IO.log(TAG, IO.TAG_ERROR, "key returns null po item object.");
+            }else IO.log(TAG, IO.TAG_ERROR, "no assets on database.");
+        } else IO.log(TAG, IO.TAG_ERROR, "unknown purchase order item type: " + item);
+        return null;

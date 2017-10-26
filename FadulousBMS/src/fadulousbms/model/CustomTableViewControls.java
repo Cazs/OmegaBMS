@@ -28,6 +28,7 @@ import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.AbstractMap;
 import java.util.ArrayList;
+import java.util.HashMap;
 
 /**
  * Created by ghost on 2017/01/11.
@@ -36,7 +37,7 @@ public class CustomTableViewControls
 {
     public static final String TAG = "CustomTableViewControls";
 
-    public static void makeComboBoxTableColumn(TableColumn<BusinessObject, String> comboBox_col, BusinessObject[] combo_box_items, String property, String label_property, String api_method, int pref_width)
+    /*public static void makeComboBoxTableColumn(TableColumn<BusinessObject, String> comboBox_col, HashMap<String, BusinessObject> combo_box_items, String property, String label_property, String api_method, int pref_width)
     {
         comboBox_col.setMinWidth(120);
         comboBox_col.setPrefWidth(pref_width);
@@ -50,19 +51,18 @@ public class CustomTableViewControls
         });
     }
 
-    public static void makeComboBoxTableColumn(TableColumn<BusinessObject, String> comboBox_col, BusinessObject[] combo_box_items, String property, String label_property, String api_method, int pref_width, boolean is_multi_types)
+    public static void makeComboBoxTableColumn(TableColumn<BusinessObject, String> comboBox_col, HashMap<String, BusinessObject> combo_box_items, String property, String label_property, String api_method, int pref_width, boolean is_multi_types)
     {
         comboBox_col.setMinWidth(120);
         comboBox_col.setPrefWidth(pref_width);
         comboBox_col.setCellValueFactory(new PropertyValueFactory<>(property));
-        comboBox_col.setCellFactory(col -> new ComboBoxTableCell(combo_box_items, property, label_property, api_method, is_multi_types));
+        comboBox_col.setCellFactory(col -> new ComboBoxTableCell(combo_box_items, property, label_property, api_method));
         //comboBox_col.setEditable(true);
         comboBox_col.setOnEditCommit(event ->
         {
             event.getRowValue().parse(property, event.getNewValue());
-            System.out.println("ComboBox edit commit!");
         });
-    }
+    }*/
 
     /*public static void makeComboBoxTableColumn(TableColumn<BusinessObject, String> comboBox_col, String[] combo_box_items, String property, String label_var, String api_method)
     {
@@ -507,7 +507,7 @@ public class CustomTableViewControls
                                 {
                                     long ellapsed = System.currentTimeMillis()-start;
                                     IO.log(TAG, IO.TAG_INFO, "File ["+filename+"] download complete, size: "+file.length+" bytes in "+ellapsed+"msec.");
-                                    PDFViewer pdfViewer = new PDFViewer(true);
+                                    PDFViewer pdfViewer = PDFViewer.getInstance();
                                     pdfViewer.setVisible(true);
 
                                     FileOutputStream out = new FileOutputStream(new File("out/temp.pdf"));

@@ -2,6 +2,7 @@ package fadulousbms.model;
 
 import fadulousbms.auxilary.Globals;
 import fadulousbms.auxilary.IO;
+import fadulousbms.managers.ResourceManager;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 
@@ -9,6 +10,7 @@ import java.io.Serializable;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.util.ArrayList;
+import java.util.HashMap;
 
 /**
  * Created by ghost on 2017/01/21.
@@ -17,16 +19,10 @@ public class QuoteItem implements BusinessObject, Serializable
 {
     private String _id;
     private int item_number;
-    private String equipment_name;
-    private String equipment_description;
-    private String unit;
     private int quantity;
-    private double rate;
     private double labour;
-    private double value;
     private double markup;
     private String additional_costs;
-    private Resource resource;
     private boolean marked;
     private String quote_id;
     private String resource_id;
@@ -93,18 +89,6 @@ public class QuoteItem implements BusinessObject, Serializable
         this.item_number = item_number;
     }
 
-    private StringProperty equipment_descriptionProperty(){return new SimpleStringProperty(equipment_description);}
-
-    public String getEquipment_description()
-    {
-        return equipment_description;
-    }
-
-    public void setEquipment_description(String equipment_description)
-    {
-        this.equipment_description = equipment_description;
-    }
-
     private StringProperty quote_idProperty(){return new SimpleStringProperty(quote_id);}
 
     public String getQuote_id()
@@ -129,16 +113,24 @@ public class QuoteItem implements BusinessObject, Serializable
         this.resource_id = resource_id;
     }
 
-    private StringProperty equipment_nameProperty(){return new SimpleStringProperty(equipment_name);}
+    private StringProperty equipment_nameProperty(){return new SimpleStringProperty(getEquipment_name());}
 
     public String getEquipment_name()
     {
-        return equipment_name;
+        Resource resource = getResource();
+        if(resource!=null)
+            return resource.getResource_name();
+        return "N/A";
     }
 
-    public void setEquipment_name(String equipment_name)
+    private StringProperty equipment_descriptionProperty(){return new SimpleStringProperty(getEquipment_description());}
+
+    public String getEquipment_description()
     {
-        this.equipment_name = equipment_name;
+        Resource resource = getResource();
+        if(resource!=null)
+            return resource.getResource_description();
+        return "N/A";
     }
 
     private StringProperty additional_costsProperty(){return new SimpleStringProperty(additional_costs);}
@@ -153,16 +145,14 @@ public class QuoteItem implements BusinessObject, Serializable
         this.additional_costs = additional_costs;
     }
 
-    private StringProperty unitProperty(){return new SimpleStringProperty(unit);}
+    private StringProperty unitProperty(){return new SimpleStringProperty(getUnit());}
 
     public String getUnit()
     {
-        return unit;
-    }
-
-    public void setUnit(String unit)
-    {
-        this.unit = unit;
+        Resource resource = getResource();
+        if(resource!=null)
+            return resource.getUnit();
+        return "N/A";
     }
 
     private StringProperty quantityProperty(){return new SimpleStringProperty(String.valueOf(quantity));}
@@ -182,22 +172,7 @@ public class QuoteItem implements BusinessObject, Serializable
         this.quantity = quantity;
     }
 
-    public String getRate()
-    {
-        return String.valueOf(rate);
-    }
-
-    public double getRateValue()
-    {
-        return rate;
-    }
-
-    public void setRate(double rate)
-    {
-        this.rate = rate;
-    }
-
-    private StringProperty labourProperty(){return new SimpleStringProperty(String.valueOf(labour));}
+    private StringProperty labourProperty() {return new SimpleStringProperty(String.valueOf(labour));}
 
     public String getLabour()
     {
@@ -214,21 +189,19 @@ public class QuoteItem implements BusinessObject, Serializable
         this.labour = labour;
     }
 
-    private StringProperty valueProperty(){return new SimpleStringProperty(String.valueOf(value));}
+    private StringProperty valueProperty(){return new SimpleStringProperty(String.valueOf(getValue()));}
 
     public String getValue()
     {
-        return String.valueOf(value);
+        return String.valueOf(getCost());
     }
 
-    public double getVal()
+    public double getCost()
     {
-        return value;
-    }
-
-    public void setValue(double value)
-    {
-        this.value = value;
+        Resource resource = getResource();
+        if(resource!=null)
+            return resource.getResource_value();
+        return 0;
     }
 
     private StringProperty markupProperty(){return new SimpleStringProperty(String.valueOf(markup));}
@@ -251,45 +224,24 @@ public class QuoteItem implements BusinessObject, Serializable
         this.extra = extra;
     }
 
-    /*public Resource[] getAdditionalResources()
-    {
-        return additional_resources;
-    }
-
-    public void setAdditionalResources(Resource[] resources)
-    {
-        this.additional_resources=resources;
-    }
-
-    public void setAdditionalResources(ArrayList<Resource> resources)
-    {
-        this.additional_resources = new Resource[resources.size()];
-        for(int i=0;i<resources.size();i++)
-        {
-            this.additional_resources[i] = resources.get(i);
-        }
-    }*/
-
     public Resource getResource()
     {
-        return resource;
+        ResourceManager.getInstance().loadDataFromServer();
+        HashMap<String, Resource> resources = ResourceManager.getInstance().getResources();
+        if(resources!=null)
+            return resources.get(getResource_id());
+        return null;
     }
 
-    public void setResource(Resource resource)
+    public StringProperty rateProperty()
     {
-        this.resource=resource;
+        return new SimpleStringProperty(Globals.CURRENCY_SYMBOL.getValue() + " " + getRate());
     }
 
-    public StringProperty totalProperty()
+    public double getRate()
     {
-        return new SimpleStringProperty(Globals.CURRENCY_SYMBOL.getValue() + " " + getTotal());
-    }
-
-    public double getTotal()
-    {
-        //Compute total
-        double rate = value + value*(markup/100);
-        double total = rate*quantity;
+        double marked_up = getCost() + getCost()*(markup/100);
+        double total = marked_up;
         total += labour;
 
         //check additional costs
@@ -320,6 +272,56 @@ public class QuoteItem implements BusinessObject, Serializable
         return total;
     }
 
+    public StringProperty totalProperty()
+    {
+        return new SimpleStringProperty(Globals.CURRENCY_SYMBOL.getValue() + " " + getTotal());
+    }
+
+    public double getTotal()
+    {
+        return getRate()*getQuantityValue();
+    }
+
+    @Override
+    public String apiEndpoint()
+    {
+        return "/api/quote/resource";
+    }
+
+    @Override
+    public String asUTFEncodedString()
+    {
+        //Return encoded URL parameters in UTF-8 charset
+        StringBuilder result = new StringBuilder();
+        try
+        {
+            result.append(URLEncoder.encode("quote_id","UTF-8") + "="
+                    + URLEncoder.encode(quote_id, "UTF-8") + "&");
+            result.append(URLEncoder.encode("resource_id","UTF-8") + "="
+                    + URLEncoder.encode(resource_id, "UTF-8") + "&");
+            result.append(URLEncoder.encode("item_number","UTF-8") + "="
+                    + URLEncoder.encode(String.valueOf(item_number), "UTF-8") + "&");
+            if(additional_costs!=null)
+                result.append(URLEncoder.encode("additional_costs","UTF-8") + "="
+                        + URLEncoder.encode(additional_costs, "UTF-8") + "&");
+            result.append(URLEncoder.encode("quantity","UTF-8") + "="
+                    + URLEncoder.encode(String.valueOf(quantity), "UTF-8") + "&");
+            result.append(URLEncoder.encode("labour","UTF-8") + "="
+                    + URLEncoder.encode(String.valueOf(labour), "UTF-8") + "&");
+            result.append(URLEncoder.encode("markup","UTF-8") + "="
+                    + URLEncoder.encode(String.valueOf(markup), "UTF-8"));
+            if(extra!=null)
+                if(!extra.isEmpty())
+                    result.append("&" + URLEncoder.encode("extra","UTF-8") + "="
+                            + URLEncoder.encode(extra, "UTF-8"));
+            return result.toString();
+        } catch (UnsupportedEncodingException e)
+        {
+            IO.log(TAG, IO.TAG_ERROR, e.getMessage());
+        }
+        return null;
+    }
+
     @Override
     public void parse(String var, Object val)
     {
@@ -336,26 +338,14 @@ public class QuoteItem implements BusinessObject, Serializable
                 case "item_number":
                     item_number = Integer.valueOf((String)val);
                     break;
-                case "equipment_description":
-                    equipment_description = (String)val;
-                    break;
                 case "additional_costs":
                     additional_costs = (String)val;
-                    break;
-                case "unit":
-                    unit = (String)val;
                     break;
                 case "quantity":
                     quantity = Integer.valueOf((String)val);
                     break;
                 case "labour":
                     labour = Double.valueOf((String)val);
-                    break;
-                case "rate":
-                    rate = Double.valueOf((String)val);
-                    break;
-                case "value":
-                    value = Double.parseDouble((String)val);
                     break;
                 case "markup":
                     markup = Double.parseDouble((String) val);
@@ -379,82 +369,34 @@ public class QuoteItem implements BusinessObject, Serializable
         switch (var.toLowerCase())
         {
             case "_id":
-                return _id;
+                return get_id();
             case "quote_id":
-                return quote_id;
+                return getQuote_id();
             case "resource_id":
-                return resource_id;
+                return getResource_id();
             case "item_number":
-                return item_number;
+                return getItem_number();
+            case "equipment_name":
+                return getEquipment_name();
             case "equipment_description":
-                return equipment_description;
+                return getEquipment_description();
             case "additional_costs":
-                return additional_costs;
+                return getAdditional_costs();
             case "unit":
-                return unit;
+                return getUnit();
             case "quantity":
-                return quantity;
+                return getQuantityValue();
             case "labour":
-                return labour;
-            case "rate":
-                return rate;
+                return getLabourCost();
             case "value":
-                return value;
+                return getCost();
             case "markup":
-                return markup;
+                return getMarkupValue();
             case "extra":
-                return extra;
+                return getExtra();
             default:
-                System.err.println("Unknown QuoteItem attribute '" + var + "'.");
+                IO.log(TAG, IO.TAG_ERROR, "Unknown QuoteItem attribute '" + var + "'.");
                 return null;
         }
-    }
-
-    @Override
-    public String apiEndpoint()
-    {
-        return "/api/quote/resource";
-    }
-
-    @Override
-    public String asUTFEncodedString()
-    {
-        //Return encoded URL parameters in UTF-8 charset
-        StringBuilder result = new StringBuilder();
-        try
-        {
-            result.append(URLEncoder.encode("quote_id","UTF-8") + "="
-                    + URLEncoder.encode(quote_id, "UTF-8") + "&");
-            result.append(URLEncoder.encode("resource_id","UTF-8") + "="
-                    + URLEncoder.encode(resource_id, "UTF-8") + "&");
-            result.append(URLEncoder.encode("item_number","UTF-8") + "="
-                    + URLEncoder.encode(String.valueOf(item_number), "UTF-8") + "&");
-            result.append(URLEncoder.encode("equipment_description","UTF-8") + "="
-                    + URLEncoder.encode(equipment_description, "UTF-8") + "&");
-            if(additional_costs!=null)
-                result.append(URLEncoder.encode("additional_costs","UTF-8") + "="
-                        + URLEncoder.encode(additional_costs, "UTF-8") + "&");
-            result.append(URLEncoder.encode("unit","UTF-8") + "="
-                    + URLEncoder.encode(unit, "UTF-8") + "&");
-            result.append(URLEncoder.encode("quantity","UTF-8") + "="
-                    + URLEncoder.encode(String.valueOf(quantity), "UTF-8") + "&");
-            result.append(URLEncoder.encode("labour","UTF-8") + "="
-                    + URLEncoder.encode(String.valueOf(labour), "UTF-8") + "&");
-            result.append(URLEncoder.encode("rate","UTF-8") + "="
-                    + URLEncoder.encode(String.valueOf(rate), "UTF-8") + "&");
-            result.append(URLEncoder.encode("value","UTF-8") + "="
-                    + URLEncoder.encode(String.valueOf(value), "UTF-8") + "&");
-            result.append(URLEncoder.encode("markup","UTF-8") + "="
-                    + URLEncoder.encode(String.valueOf(markup), "UTF-8"));
-            if(extra!=null)
-                if(!extra.isEmpty())
-                    result.append("&" + URLEncoder.encode("extra","UTF-8") + "="
-                            + URLEncoder.encode(extra, "UTF-8"));
-            return result.toString();
-        } catch (UnsupportedEncodingException e)
-        {
-            IO.log(TAG, IO.TAG_ERROR, e.getMessage());
-        }
-        return null;
     }
 }

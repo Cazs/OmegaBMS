@@ -1,8 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.lang.*?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.control.cell.*?>
 <?import javafx.scene.layout.*?>
+<?import javafx.scene.text.Font?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.image.Image?>
 
-<Tab text="Job Log Sheet" fx:id="jobsTab" fx:controller="fadulousbms.controllers.JobsController" xmlns:fx="http://javafx.com/fxml">
+<Tab fx:id="jobsTab" text="Job Log Sheet" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/8" fx:controller="fadulousbms.controllers.JobsController">
     <content>
         <TableView fx:id="tblJobs" editable="true" tableMenuButtonVisible="true" VBox.vgrow="ALWAYS">
             <columns>
@@ -11,12 +18,12 @@
                         <PropertyValueFactory property="_id" />
                     </cellValueFactory>
                 </TableColumn>
-                <TableColumn fx:id="colClient" maxWidth="1.7976931348623157E308" minWidth="180.0" prefWidth="-1.0" text="Client">
+                <TableColumn fx:id="colClient" maxWidth="1.7976931348623157E308" minWidth="80.0" prefWidth="-1.0" text="Client">
                     <cellValueFactory>
                         <PropertyValueFactory property="client_name" />
                     </cellValueFactory>
                 </TableColumn>
-                <TableColumn fx:id="colRequest" maxWidth="1.7976931348623157E308" minWidth="250.0" prefWidth="-1.0" text="Description">
+                <TableColumn fx:id="colRequest" maxWidth="1.7976931348623157E308" minWidth="120.0" prefWidth="-1.0" text="Description">
                     <cellValueFactory>
                         <PropertyValueFactory property="request" />
                     </cellValueFactory>
@@ -57,13 +64,13 @@
                     </cellValueFactory>
                 </TableColumn>
                 <TableColumn fx:id="colCreator" maxWidth="1.7976931348623157E308" minWidth="150.0" prefWidth="-1.0" text="Creator" visible="false" />
-                <TableColumn fx:id="colTotal" maxWidth="1.7976931348623157E308" minWidth="150.0" prefWidth="-1.0" text="Total" />
+                <TableColumn fx:id="colTotal" maxWidth="1.7976931348623157E308" minWidth="120.0" prefWidth="-1.0" text="Total" />
                 <TableColumn fx:id="colExtra" maxWidth="1.7976931348623157E308" minWidth="80.0" prefWidth="-1.0" text="Extra" visible="false">
                     <cellValueFactory>
                         <PropertyValueFactory property="extra" />
                     </cellValueFactory>
                 </TableColumn>
-                <TableColumn fx:id="colAction" maxWidth="1.7976931348623157E308" minWidth="220.0" prefWidth="-1.0" text="Action"/>
+                <TableColumn fx:id="colAction" maxWidth="1.7976931348623157E308" minWidth="400.0" prefWidth="-1.0" text="Action" />
             </columns>
         </TableView>
     </content>

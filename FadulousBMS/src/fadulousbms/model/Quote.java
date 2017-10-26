@@ -2,6 +2,9 @@ package fadulousbms.model;
 
 import fadulousbms.auxilary.Globals;
 import fadulousbms.auxilary.IO;
+import fadulousbms.managers.ClientManager;
+import fadulousbms.managers.EmployeeManager;
+import fadulousbms.managers.SupplierManager;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 
@@ -9,6 +12,7 @@ import java.io.Serializable;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.util.ArrayList;
+import java.util.HashMap;
 
 /**
  * Created by ghost on 2017/01/21.
@@ -20,17 +24,18 @@ public class Quote implements BusinessObject, Serializable
     private String contact_person_id;
     private String sitename;
     private String request;
+    private double vat;
     private long date_generated;
     private String creator;
     private double revision;
     private String extra;
     private int status;
-    private Client client;
-    private Employee contact_person;
-    private Employee creator_employee;
+    //private Client client;
+    //private Employee contact_person;
+    //private Employee creator_employee;
     private QuoteItem[] resources;
-    private Employee[] representatives;
-    public static double VAT = 14.0;
+    private QuoteRep[] representatives;
+    //public static double VAT = 14.0;
 
     private boolean marked;
     public static final String TAG = "Quote";
@@ -148,18 +153,38 @@ public class Quote implements BusinessObject, Serializable
         this.status = status;
     }
 
+    public StringProperty vatProperty()
+    {
+        return new SimpleStringProperty(String.valueOf(getVat()));
+    }
+
+    public double getVat()
+    {
+        return vat;
+    }
+
+    public void setVat(double vat)
+    {
+        this.vat = vat;
+    }
+
     public StringProperty creatorProperty()
     {
-        if(creator_employee==null)
-            return new SimpleStringProperty(String.valueOf(creator));
-        else return new SimpleStringProperty(String.valueOf(creator_employee.toString()));
+        return new SimpleStringProperty(String.valueOf(getCreator()));
     }
 
     public String getCreator()
     {
-        if(creator_employee==null)
-            return creator;
-        else return creator_employee.toString();
+        if(creator==null)
+            return "N/A";
+        else
+        {
+            EmployeeManager.getInstance().loadDataFromServer();
+            Employee employee = EmployeeManager.getInstance().getEmployees().get(creator);
+            if(employee!=null)
+                return employee.toString();
+            else return "N/A";
+        }
     }
 
     public String getCreatorID(){return this.creator;}
@@ -167,18 +192,6 @@ public class Quote implements BusinessObject, Serializable
     public void setCreator(String creator)
     {
         this.creator = creator;
-    }
-
-    public Employee getCreatorEmployee()
-    {
-        return this.creator_employee;
-    }
-
-    public void setCreator(Employee creator_employee)
-    {
-        this.creator_employee = creator_employee;
-        if(creator_employee!=null)
-            setCreator(creator_employee.getUsr());
     }
 
     public StringProperty revisionProperty(){return new SimpleStringProperty(String.valueOf(revision));}
@@ -218,7 +231,129 @@ public class Quote implements BusinessObject, Serializable
                 total += item.getTotal();
             }
         }
-        return total;
+        return total * (getVat()/100) + total;
+    }
+
+    public QuoteItem[] getResources()
+    {
+        return resources;
+    }
+
+    public void setResources(QuoteItem[] resources)
+    {
+        this.resources=resources;
+    }
+
+    public Employee[] getRepresentatives()
+    {
+        if(representatives==null)
+        {
+            IO.log(getClass().getName(), IO.TAG_ERROR, "quote ["+_id+"] has no representatives.");
+            return null;
+        }
+        Employee[] reps = new Employee[representatives.length];
+        EmployeeManager.getInstance().loadDataFromServer();
+        HashMap<String, Employee> employees = EmployeeManager.getInstance().getEmployees();
+        if(employees!=null)
+        {
+            int i=0;
+            for(Employee employee: employees.values())
+            {
+                employees.get(contact_person_id);
+                reps[i] = employee;
+            }
+            return reps;
+        }else IO.log(getClass().getName(), IO.TAG_ERROR, "no employees were found in database.");
+        return  null;
+    }
+
+    public void setRepresentatives(QuoteRep[] representatives)
+    {
+        this.representatives=representatives;
+    }
+
+    public Client getClient()
+    {
+        ClientManager.getInstance().loadDataFromServer();
+        HashMap<String, Client> clients = ClientManager.getInstance().getClients();
+        if(clients!=null)
+        {
+            return clients.get(client_id);
+        }else IO.log(getClass().getName(), IO.TAG_ERROR, "no clients were found in database.");
+        return null;
+    }
+
+    public Employee getContact_person()
+    {
+        EmployeeManager.getInstance().loadDataFromServer();
+        HashMap<String, Employee> employees = EmployeeManager.getInstance().getEmployees();
+        if(employees!=null)
+        {
+            return employees.get(contact_person_id);
+        }
+        return null;
+    }
+
+    public SimpleStringProperty quoteProperty()
+    {
+        if(this!=null)
+            if(this.getContact_person()!=null)
+            {
+                String quote_number = this.getContact_person().getFirstname() + "-"
+                        + this.getContact_person().getInitials() + this.get_id().substring(0,8)
+                        + " REV" + String.valueOf(this.getRevision()).substring(0,3);
+                return new SimpleStringProperty(quote_number);
+            }else return new SimpleStringProperty(this.getContact_person_id());
+        else return new SimpleStringProperty("N/A");
+    }
+
+    @Override
+    public String apiEndpoint()
+    {
+        return "/api/quote";
+    }
+
+    @Override
+    public String asUTFEncodedString()
+    {
+        //Return encoded URL parameters in UTF-8 charset
+        StringBuilder result = new StringBuilder();
+        try
+        {
+            result.append(URLEncoder.encode("client_id","UTF-8") + "="
+                    + URLEncoder.encode(client_id, "UTF-8") + "&");
+            result.append(URLEncoder.encode("contact_person_id","UTF-8") + "="
+                    + URLEncoder.encode(contact_person_id, "UTF-8") + "&");
+            result.append(URLEncoder.encode("date_generated","UTF-8") + "="
+                    + URLEncoder.encode(String.valueOf(date_generated), "UTF-8"));
+            result.append("&" + URLEncoder.encode("sitename","UTF-8") + "="
+                    + URLEncoder.encode(sitename, "UTF-8"));
+            result.append("&" + URLEncoder.encode("request","UTF-8") + "="
+                    + URLEncoder.encode(request, "UTF-8"));
+            result.append("&" + URLEncoder.encode("status","UTF-8") + "="
+                    + URLEncoder.encode(String.valueOf(status), "UTF-8"));
+            result.append("&" + URLEncoder.encode("vat","UTF-8") + "="
+                    + URLEncoder.encode(String.valueOf(vat), "UTF-8"));
+            result.append("&" + URLEncoder.encode("creator","UTF-8") + "="
+                    + URLEncoder.encode(creator, "UTF-8"));
+            result.append("&" + URLEncoder.encode("revision","UTF-8") + "="
+                    + URLEncoder.encode(String.valueOf(revision), "UTF-8"));
+            if(extra!=null)
+                if(!extra.isEmpty())
+                    result.append("&" + URLEncoder.encode("extra","UTF-8") + "="
+                            + URLEncoder.encode(extra, "UTF-8"));
+            return result.toString();
+        } catch (UnsupportedEncodingException e)
+        {
+            IO.log(TAG, IO.TAG_ERROR, e.getMessage());
+        }
+        return null;
+    }
+
+    @Override
+    public String toString()
+    {
+        return this._id;
     }
 
     @Override
@@ -252,11 +387,14 @@ public class Quote implements BusinessObject, Serializable
                 case "revision":
                     revision = Integer.parseInt(String.valueOf(val));
                     break;
+                case "vat":
+                    vat = Double.parseDouble(String.valueOf(val));
+                    break;
                 case "extra":
                     extra = String.valueOf(val);
                     break;
                 default:
-                    System.err.println("Unknown Quote attribute '" + var + "'.");
+                    IO.log(getClass().getName(), IO.TAG_ERROR, "Unknown Quote attribute '" + var + "'.");
                     break;
             }
         }catch (NumberFormatException e)
@@ -284,130 +422,15 @@ public class Quote implements BusinessObject, Serializable
                 return status;
             case "creator":
                 return creator;
+            case "vat":
+                return vat;
             case "revision":
                 return revision;
             case "extra":
                 return extra;
             default:
-                System.err.println("Unknown Quote attribute '" + var + "'.");
+                IO.log(getClass().getName(), IO.TAG_ERROR, "Unknown Quote attribute '" + var + "'.");
                 return null;
         }
-    }
-
-    public QuoteItem[] getResources()
-    {
-        return resources;
-    }
-
-    public void setResources(QuoteItem[] resources)
-    {
-        this.resources=resources;
-    }
-
-    public void setResources(ArrayList<QuoteItem> resources)
-    {
-        this.resources = new QuoteItem[resources.size()];
-        for(int i=0;i<resources.size();i++)
-        {
-            this.resources[i] = resources.get(i);
-        }
-    }
-
-    public Employee[] getRepresentatives()
-    {
-        return representatives;
-    }
-
-    public void setRepresentatives(Employee[] representatives)
-    {
-        this.representatives=representatives;
-    }
-
-    public void setRepresentatives(ArrayList<Employee> reps)
-    {
-        this.representatives = new Employee[reps.size()];
-        for(int i=0;i<reps.size();i++)
-        {
-            this.representatives[i] = reps.get(i);
-        }
-    }
-
-    public Client getClient()
-    {
-        return client;
-    }
-
-    public void setClient(Client client)
-    {
-        this.client = client;
-    }
-
-    public Employee getContactPerson()
-    {
-        return contact_person;
-    }
-
-    public void setContactPerson(Employee contact_person)
-    {
-        this.contact_person = contact_person;
-    }
-
-    public SimpleStringProperty quoteProperty(){
-        if(this!=null)
-            if(this.getContactPerson()!=null)
-            {
-                String quote_number = this.getContactPerson().getFirstname() + "-"
-                        + this.getContactPerson().getInitials() + this.get_id().substring(0,8)
-                        + " REV" + String.valueOf(this.getRevision()).substring(0,3);
-                return new SimpleStringProperty(quote_number);
-            }else return new SimpleStringProperty(this.getContact_person_id());
-        else return new SimpleStringProperty("N/A");
-    }
-
-    @Override
-    public String apiEndpoint()
-    {
-        return "/api/quote";
-    }
-
-    @Override
-    public String asUTFEncodedString()
-    {
-        //Return encoded URL parameters in UTF-8 charset
-        StringBuilder result = new StringBuilder();
-        try
-        {
-            result.append(URLEncoder.encode("client_id","UTF-8") + "="
-                    + URLEncoder.encode(client_id, "UTF-8") + "&");
-            result.append(URLEncoder.encode("contact_person_id","UTF-8") + "="
-                    + URLEncoder.encode(contact_person_id, "UTF-8") + "&");
-            result.append(URLEncoder.encode("date_generated","UTF-8") + "="
-                    + URLEncoder.encode(String.valueOf(date_generated), "UTF-8"));
-            result.append("&" + URLEncoder.encode("sitename","UTF-8") + "="
-                    + URLEncoder.encode(sitename, "UTF-8"));
-            result.append("&" + URLEncoder.encode("request","UTF-8") + "="
-                    + URLEncoder.encode(request, "UTF-8"));
-            result.append("&" + URLEncoder.encode("status","UTF-8") + "="
-                    + URLEncoder.encode(String.valueOf(status), "UTF-8"));
-            result.append("&" + URLEncoder.encode("creator","UTF-8") + "="
-                    + URLEncoder.encode(creator, "UTF-8"));
-            result.append("&" + URLEncoder.encode("revision","UTF-8") + "="
-                    + URLEncoder.encode(String.valueOf(revision), "UTF-8"));
-            if(extra!=null)
-                if(!extra.isEmpty())
-                    result.append("&" + URLEncoder.encode("extra","UTF-8") + "="
-                            + URLEncoder.encode(extra, "UTF-8"));
-            return result.toString();
-        } catch (UnsupportedEncodingException e)
-        {
-            IO.log(TAG, IO.TAG_ERROR, e.getMessage());
-        }
-        return null;
-    }
-
-    @Override
-    public String toString()
-    {
-        return this._id;
     }
 }

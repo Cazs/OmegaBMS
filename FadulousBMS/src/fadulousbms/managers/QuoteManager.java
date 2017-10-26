@@ -11,13 +11,15 @@ import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.util.AbstractMap;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
 
 /**
  * Created by ghost on 2017/01/21.
  */
 public class QuoteManager extends BusinessObjectManager
 {
-    private Quote[] quotes= null;
+    private HashMap<String, Quote> quotes;
     private BusinessObject[] genders=null, domains=null;
     private Gson gson;
     private static QuoteManager quote_manager = new QuoteManager();
@@ -84,7 +86,7 @@ public class QuoteManager extends BusinessObjectManager
             organisations[++cursor]=suppliers[i];*/
     }
 
-    public Quote[] getQuotes()
+    public HashMap<String, Quote> getQuotes()
     {
         return quotes;
     }
@@ -100,13 +102,14 @@ public class QuoteManager extends BusinessObjectManager
 
     public void setSelectedQuote(String quote_id)
     {
-        for(Quote quote : quotes)
+        if(quotes==null)
         {
-            if(quote.get_id().equals(quote_id))
-            {
-                setSelectedQuote(quote);
-                break;
-            }
+            IO.logAndAlert(getClass().getName(), IO.TAG_ERROR, "No quotes were found on the database.");
+            return;
+        }
+        if(quotes.get(quote_id)!=null)
+        {
+            setSelectedQuote(quotes.get(quote_id));
         }
     }
 
@@ -153,31 +156,18 @@ public class QuoteManager extends BusinessObjectManager
                     {
                         //Load Quotes
                         String quotes_json = RemoteComms.sendGetRequest("/api/quotes", headers);
-                        quotes = gson.fromJson(quotes_json, Quote[].class);
-
-                        ClientManager.getInstance().loadDataFromServer();
-                        //SupplierManager.getInstance().loadDataFromServer();
-                        ResourceManager.getInstance().loadDataFromServer();
-                        EmployeeManager.getInstance().loadDataFromServer();
+                        Quote[] quotes_arr = gson.fromJson(quotes_json, Quote[].class);
+                        quotes = new HashMap<>();
 
                         Employee[] employees = new Employee[EmployeeManager.getInstance().getEmployees().values().toArray().length];
                         EmployeeManager.getInstance().getEmployees().values().toArray(employees);
 
                         if(quotes!=null)
                         {
-                            if(quotes.length>0)
+                            if(quotes_arr.length>0)
                             {
-                                for (Quote quote : quotes)
+                                for (Quote quote : quotes_arr)
                                 {
-                                    //Set Quote creator
-                                    for (Employee employee : employees)
-                                    {
-                                        if (employee.getUsr().equals(quote.getCreator()))
-                                        {
-                                            quote.setCreator(employee);
-                                            break;
-                                        }
-                                    }
                                     //Load Quote Resources
                                     String quote_item_ids_json = RemoteComms.sendGetRequest("/api/quote/resources/" + quote.get_id(), headers);
                                     if (quote_item_ids_json != null)
@@ -185,26 +175,6 @@ public class QuoteManager extends BusinessObjectManager
                                         if (!quote_item_ids_json.equals("[]"))
                                         {
                                             QuoteItem[] quote_items = gson.fromJson(quote_item_ids_json, QuoteItem[].class);
-                                            //double total=0;//compute quote total
-                                            for (QuoteItem item : quote_items)
-                                            {
-                                                //Load QuoteItem Resources
-                                                String quote_resources_json = RemoteComms.sendGetRequest("/api/resource/" + item.getResource_id(), headers);
-                                                if (!quote_resources_json.equals("[]"))//if the resource exists add it to the list of the quote's resources.
-                                                {
-                                                    Resource resource = gson.fromJson(quote_resources_json, Resource.class);
-                                                    item.setResource(resource);
-                                                    item.setValue(resource.getResource_value());
-                                                    item.setEquipment_name(resource.getResource_name());
-                                                    item.setEquipment_description(resource.getResource_description());
-                                                    item.setUnit(resource.getUnit());
-                                                    double rate = (resource.getResource_value() * (item.getMarkupValue() / 100) +
-                                                            resource.getResource_value()) + item.getLabourCost();
-                                                    item.setRate(rate);
-                                                    IO.log(getClass().getName(), IO.TAG_INFO, String.format("added Resource [%s] for QuoteItem [%s].", resource.get_id(), item.get_id()));
-                                                } else
-                                                    IO.log(getClass().getName(), IO.TAG_ERROR, String.format("resource '%s does not exist!", item.getResource_id()));
-                                            }
                                             quote.setResources(quote_items);
                                         } else
                                             IO.log(getClass().getName(), IO.TAG_WARN, String.format("quote '%s does not have any resources.", quote.get_id()));
@@ -212,62 +182,24 @@ public class QuoteManager extends BusinessObjectManager
                                         IO.log(getClass().getName(), IO.TAG_WARN, String.format("quote '%s does not have any resources.", quote.get_id()));
 
                                     //Load Quote Representatives
-                                    ArrayList<QuoteRep> quoteRepIds = new ArrayList<>();
-                                    ArrayList<Employee> quoteReps;
-
-                                    //get IDs from server
                                     String quote_rep_ids_json = RemoteComms.sendGetRequest("/api/quote/reps/" + quote.get_id(), headers);
                                     if (quote_rep_ids_json != null)
                                     {
                                         if (!quote_rep_ids_json.equals("[]"))
                                         {
                                             QuoteRep[] quote_reps = gson.fromJson(quote_rep_ids_json, QuoteRep[].class);
-                                            for (QuoteRep qr : quote_reps)
-                                                quoteRepIds.add(qr);
-
-                                            //load actual Employee objects from server
-                                            quoteReps = new ArrayList<>();
-                                            for (QuoteRep quote_rep : quote_reps)
-                                            {
-                                                //send request for Employee objects in JSON format
-                                                String quote_reps_json = RemoteComms.sendGetRequest("/api/employee/" + quote_rep.get("usr"), headers);
-                                                if (!quote_reps_json.equals("[]") && !quote_reps_json.equals("null"))//if the resource exists add it to the list of the quote's resources.
-                                                {
-                                                    quoteReps.add(gson.fromJson(quote_reps_json, Employee.class));
-                                                    IO.log(getClass().getName(), IO.TAG_INFO, String.format("added rep '%s' for quote '%s'.", quote_rep.get("usr"), quote_rep.get("quote_id")));
-                                                } else IO.log(getClass().getName(), IO.TAG_ERROR, String.format("employee '%s' does not exist!", quote_rep.get("usr")));
-                                            }
-                                            quote.setRepresentatives(quoteReps);
+                                            quote.setRepresentatives(quote_reps);
                                             IO.log(getClass().getName(), IO.TAG_INFO, String.format("set reps for quote '%s'.", quote.get_id()));
-                                        } else
-                                            IO.log(getClass().getName(), IO.TAG_WARN, String.format("quote '%s does not have any representatives.", quote.get_id()));
-                                    } else
-                                        IO.log(getClass().getName(), IO.TAG_WARN, String.format("quote '%s does not have any representatives.", quote.get_id()));
+                                        } else IO.log(getClass().getName(), IO.TAG_WARN, String.format("quote '%s does not have any representatives.", quote.get_id()));
+                                    } else IO.log(getClass().getName(), IO.TAG_WARN, String.format("quote '%s does not have any representatives.", quote.get_id()));
 
-                                    //Set Quote Client object
-                                    for (Client client : ClientManager.getInstance().getClients())
-                                    {
-                                        if (client.get_id().equals(quote.getClient_id()))
-                                        {
-                                            quote.setClient(client);
-                                            break;
-                                        }
-                                    }
-                                    //Set Quote contact person[Employee] object
-                                    for (Employee employee : employees)
-                                    {
-                                        if (employee.get_id().equals(quote.getContact_person_id()))
-                                        {
-                                            quote.setContactPerson(employee);
-                                            break;
-                                        }
-                                    }
                                     //Update selected quote data
                                     if(selected_quote!=null)
                                     {
                                         if (quote.get_id().equals(selected_quote.get_id()))
                                             selected_quote = quote;
                                     }
+                                    quotes.put(quote.get_id(), quote);
                                 }
                                 IO.log(getClass().getName(), IO.TAG_INFO, "reloaded collection of quotes.");
                                 this.serialize(ROOT_PATH+filename, quotes);
@@ -281,7 +213,7 @@ public class QuoteManager extends BusinessObjectManager
                         }
                     } else{
                         IO.log(this.getClass().getName(), IO.TAG_INFO, "binary object ["+ROOT_PATH+filename+"] on local disk is already up-to-date.");
-                        quotes = (Quote[]) this.deserialize(ROOT_PATH+filename);
+                        quotes = (HashMap<String, Quote>) this.deserialize(ROOT_PATH+filename);
                     }
                 }else IO.showMessage("Session Expired", "Active session has expired.", IO.TAG_ERROR);
             }else IO.showMessage("Session Expired", "No active sessions.", IO.TAG_ERROR);
@@ -305,26 +237,16 @@ public class QuoteManager extends BusinessObjectManager
         //compute total
         double total=0;
         for(QuoteItem item:  quote.getResources())
-        {
-            //compute additional costs for each Quote Item
-            if(item.getAdditional_costs()!=null)
-            {
-                if(!item.getAdditional_costs().isEmpty())
-                {
-                    String[] costs = item.getAdditional_costs().split(";");
-                    for(String str_cost:costs)
-                    {
-                        if(str_cost.contains("="))
-                        {
-                            double cost = Double.parseDouble(str_cost.split("=")[1]);
-                            total+=cost;
-                        }else IO.log("Quote Manager", IO.TAG_ERROR, "invalid Quote Item additional cost.");
-                    }
-                }
-            }
-            //add Quote Item rate*quantity to total
-            total += item.getRateValue() * item.getQuantityValue();
-        }
+            total += item.getTotal();
+        return total;
+    }
+
+    public static double computeQuoteTotal(List<QuoteItem> quoteItems)
+    {
+        //compute total
+        double total=0;
+        for(QuoteItem item:  quoteItems)
+            total += item.getTotal();
         return total;
     }
 

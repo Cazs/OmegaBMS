@@ -17,7 +17,7 @@
                <center>
                   <VBox alignment="CENTER" BorderPane.alignment="CENTER">
                      <children>
-                        <Label text="::Loading::">
+                        <Label text=".::Loading::.">
                            <font>
                               <Font size="24.0" />
                            </font>

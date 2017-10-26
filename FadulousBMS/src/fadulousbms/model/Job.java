@@ -7,6 +7,7 @@ package fadulousbms.model;
 
 import fadulousbms.auxilary.Globals;
 import fadulousbms.auxilary.IO;
+import fadulousbms.managers.QuoteManager;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 
@@ -35,7 +36,6 @@ public class Job implements BusinessObject, Serializable
     private String invoice_id;
     private String quote_id;
     private boolean marked;
-    private Quote quote;
     private Employee[] assigned_employees;
     private FileMetadata[] safety_catalogue;
     //private Client client;//Client requesting the Job
@@ -247,12 +247,11 @@ public class Job implements BusinessObject, Serializable
 
     public Quote getQuote()
     {
-        return quote;
-    }
-
-    public void setQuote(Quote quote)
-    {
-        this.quote = quote;
+        QuoteManager.getInstance().initialize();
+        if(QuoteManager.getInstance().getQuotes()!=null)
+            return QuoteManager.getInstance().getQuotes().get(quote_id);
+        else IO.logAndAlert(getClass().getName(), IO.TAG_ERROR, "No quotes were found on the database.");
+        return null;
     }
 
     public StringProperty invoice_idProperty()
@@ -272,44 +271,105 @@ public class Job implements BusinessObject, Serializable
 
     public StringProperty job_descriptionProperty()
     {
+        Quote quote = getQuote();
         if(quote!=null)
             return new SimpleStringProperty(quote.getRequest());
-        else return new SimpleStringProperty("n/a");
+        else return new SimpleStringProperty("N/A");
     }
 
     public StringProperty client_nameProperty()
     {
+        Quote quote = getQuote();
         if(quote!=null)
             if(quote.getClient()!=null)
                 return new SimpleStringProperty(quote.getClient().getClient_name());
-            else return new SimpleStringProperty("n/a");
-        else return new SimpleStringProperty("n/a");
+            else return new SimpleStringProperty("N/A");
+        else return new SimpleStringProperty("N/A");
     }
 
     public StringProperty sitenameProperty()
     {
+        Quote quote = getQuote();
         if(quote!=null)
             return new SimpleStringProperty(quote.getSitename());
-        else return new SimpleStringProperty("n/a");
+        else return new SimpleStringProperty("N/A");
     }
 
     public StringProperty contact_personProperty()
     {
+        Quote quote = getQuote();
         if(quote!=null)
-            if(quote.getContactPerson()!=null)
-                return new SimpleStringProperty(quote.getContactPerson().toString());
-            else return new SimpleStringProperty("n/a");
-        else return new SimpleStringProperty("n/a");
+            if(quote.getContact_person()!=null)
+                return new SimpleStringProperty(quote.getContact_person().toString());
+            else return new SimpleStringProperty("N/A");
+        else return new SimpleStringProperty("N/A");
     }
 
     public SimpleStringProperty totalProperty(){return new SimpleStringProperty(Globals.CURRENCY_SYMBOL.getValue() + " " + String.valueOf(getTotal()));}
 
     public double getTotal()
     {
-        //Compute total
+        Quote quote = getQuote();
+        //Compute job total
         if(quote!=null)
             return quote.getTotal();
         else return 0;
+    }
+
+    @Override
+    public String apiEndpoint()
+    {
+        return "/api/job";
+    }
+
+    @Override
+    public String asUTFEncodedString()
+    {
+        //Return encoded URL parameters in UTF-8 charset
+        StringBuilder result = new StringBuilder();
+        try
+        {
+            /*result.append(URLEncoder.encode("job_number","UTF-8") + "="
+                    + URLEncoder.encode(String.valueOf(job_number), "UTF-8"));*/
+            result.append(URLEncoder.encode("quote_id","UTF-8") + "="
+                    + URLEncoder.encode(quote_id, "UTF-8"));
+            if(date_logged>0)
+                result.append("&" + URLEncoder.encode("date_logged","UTF-8") + "="
+                        + URLEncoder.encode(String.valueOf(date_logged), "UTF-8"));
+            if(date_assigned>0)
+                result.append("&" + URLEncoder.encode("date_assigned","UTF-8") + "="
+                        + URLEncoder.encode(String.valueOf(date_assigned), "UTF-8"));
+            if(planned_start_date>0)
+                result.append("&" + URLEncoder.encode("planned_start_date","UTF-8") + "="
+                        + URLEncoder.encode(String.valueOf(planned_start_date), "UTF-8"));
+            if(date_started>0)
+                result.append("&" + URLEncoder.encode("date_started","UTF-8") + "="
+                        + URLEncoder.encode(String.valueOf(date_started), "UTF-8"));
+            if(date_completed>0)
+                result.append("&" + URLEncoder.encode("date_completed","UTF-8") + "="
+                        + URLEncoder.encode(String.valueOf(date_completed), "UTF-8"));
+            if(invoice_id!=null)
+                result.append("&" + URLEncoder.encode("invoice_id","UTF-8") + "="
+                        + URLEncoder.encode(invoice_id, "UTF-8"));
+            /*if(assigned_employees!=null)
+                result.append("&" + URLEncoder.encode("assigned_employees","UTF-8") + "="
+                        + URLEncoder.encode(String.valueOf(assigned_employees.length), "UTF-8"));
+            if(safety_catalogue!=null)
+                result.append("&" + URLEncoder.encode("safety_catalogue","UTF-8") + "="
+                        + URLEncoder.encode(String.valueOf(safety_catalogue.length), "UTF-8"));*/
+
+            return result.toString();
+        } catch (UnsupportedEncodingException e)
+        {
+            IO.log(getClass().getName(), IO.TAG_ERROR, e.getMessage());
+        }
+        return null;
+    }
+
+    @Override
+    public String toString()
+    {
+        return "Job #"+job_number;
     }
 
     @Override
@@ -393,130 +453,5 @@ public class Job implements BusinessObject, Serializable
                 return null;
         }
     }
-
-    @Override
-    public String apiEndpoint()
-    {
-        return "/api/job";
-    }
-
-    @Override
-    public String asUTFEncodedString()
-    {
-        //Return encoded URL parameters in UTF-8 charset
-        StringBuilder result = new StringBuilder();
-        try
-        {
-            /*result.append(URLEncoder.encode("job_number","UTF-8") + "="
-                    + URLEncoder.encode(String.valueOf(job_number), "UTF-8"));*/
-            result.append(URLEncoder.encode("quote_id","UTF-8") + "="
-                    + URLEncoder.encode(quote_id, "UTF-8"));
-            if(date_logged>0)
-                result.append(URLEncoder.encode("date_logged","UTF-8") + "="
-                        + URLEncoder.encode(String.valueOf(date_logged), "UTF-8"));
-            if(date_assigned>0)
-                result.append("&" + URLEncoder.encode("date_assigned","UTF-8") + "="
-                        + URLEncoder.encode(String.valueOf(date_assigned), "UTF-8"));
-            if(planned_start_date>0)
-                result.append("&" + URLEncoder.encode("planned_start_date","UTF-8") + "="
-                        + URLEncoder.encode(String.valueOf(planned_start_date), "UTF-8"));
-            if(date_started>0)
-                result.append("&" + URLEncoder.encode("date_started","UTF-8") + "="
-                        + URLEncoder.encode(String.valueOf(date_started), "UTF-8"));
-            if(date_completed>0)
-                result.append("&" + URLEncoder.encode("date_completed","UTF-8") + "="
-                        + URLEncoder.encode(String.valueOf(date_completed), "UTF-8"));
-            if(invoice_id!=null)
-                result.append("&" + URLEncoder.encode("invoice_id","UTF-8") + "="
-                        + URLEncoder.encode(invoice_id, "UTF-8"));
-            /*if(assigned_employees!=null)
-                result.append("&" + URLEncoder.encode("assigned_employees","UTF-8") + "="
-                        + URLEncoder.encode(String.valueOf(assigned_employees.length), "UTF-8"));
-            if(safety_catalogue!=null)
-                result.append("&" + URLEncoder.encode("safety_catalogue","UTF-8") + "="
-                        + URLEncoder.encode(String.valueOf(safety_catalogue.length), "UTF-8"));*/
-
-            return result.toString();
-        } catch (UnsupportedEncodingException e)
-        {
-            IO.log(getClass().getName(), IO.TAG_ERROR, e.getMessage());
-        }
-        return null;
-    }
-
-    @Override
-    public String toString()
-    {
-        return "Job #"+job_number;
-    }
-    /*public Employee[] getAssignedEmployees() 
-    {
-        return assigned_employees;
-    }
-
-    public void setAssignedEmployees(Employee[] assigned_employees) 
-    {
-        this.assigned_employees = assigned_employees;
-    }
-
-    public Client getClient() 
-    {
-        return client;
-    }
-
-    public void setClient(Client client) 
-    {
-        this.client = client;
-    }
-
-    public Person getClientRep() 
-    {
-        return client_rep;
-    }
-
-    public void setClientRep(Person client_rep) 
-    {
-        this.client_rep = client_rep;
-    }
-    
-    public Comment[] getEmployeeComments() 
-    {
-        return employee_comments;
-    }
-
-    public void setEmployeeComments(Comment[] employee_comments) 
-    {
-        this.employee_comments = employee_comments;
-    }
-
-    public Comment[] getClientsComments() 
-    {
-        return clients_comments;
-    }
-
-    public void setClientsComments(Comment[] clients_comments) 
-    {
-        this.clients_comments = clients_comments;
-    }
-
-    public Invoice getInvoice() 
-    {
-        return invoice;
-    }
-
-    public void setInvoice(Invoice invoice) 
-    {
-        this.invoice = invoice;
-    }
-
-    public Resource[] getResourcesUsed() 
-    {
-        return resources_used;
-    }
-
-    public void setResourcesUsed(Resource[] resources_used) 
-    {
-        this.resources_used = resources_used;
-    }*/
 }
 

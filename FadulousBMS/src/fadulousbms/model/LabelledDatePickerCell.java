@@ -69,9 +69,13 @@ public class LabelledDatePickerCell extends TableCell<BusinessObject, Long>
         datePicker.valueProperty().addListener((observable, oldVal, newVal)->
         {
             //System.out.println("\noldVal: " + oldVal + ", newVal: " + newVal + ", isShowing? " + datePicker.isShowing() + ", isFocused?" + datePicker.isFocused() + "\n");
-            updateItem(datePicker.getValue().atStartOfDay(ZoneId.systemDefault()).toEpochSecond(), isEmpty());
-            if(datePicker.isFocused() || datePicker.isShowing())
-                commitEdit(datePicker.getValue().atStartOfDay(ZoneId.systemDefault()).toEpochSecond());
+            //updateItem(datePicker.getValue().atStartOfDay(ZoneId.systemDefault()).toEpochSecond(), isEmpty());
+            if(newVal!=null)
+            {
+                updateItem(newVal.atStartOfDay(ZoneId.systemDefault()).toEpochSecond(), isEmpty());
+                if (datePicker.isFocused() || datePicker.isShowing())
+                    commitEdit(newVal.atStartOfDay(ZoneId.systemDefault()).toEpochSecond());
+            }else IO.log(getClass().getName(), IO.TAG_ERROR, "new date picker value is null.");
         });
     }
 
@@ -117,6 +121,7 @@ public class LabelledDatePickerCell extends TableCell<BusinessObject, Long>
         if (!isEmpty())
         {
             setGraphic(datePicker);
+            datePicker.requestFocus();
             //datePicker.setValue(getItem().atYear(LocalDate.now().getYear()));
         }
     }

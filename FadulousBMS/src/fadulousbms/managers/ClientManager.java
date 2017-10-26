@@ -30,6 +30,7 @@ import java.net.MalformedURLException;
 import java.time.ZoneId;
 import java.util.AbstractMap;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -38,7 +39,7 @@ import java.util.logging.Logger;
  */
 public class ClientManager extends BusinessObjectManager
 {
-    private Client[] clients;
+    private HashMap<String, Client> clients;
     private Client selected;
     private TableView tblClients;
     private Gson gson;
@@ -57,7 +58,7 @@ public class ClientManager extends BusinessObjectManager
         return clientManager;
     }
 
-    public Client[] getClients(){return clients;}
+    public HashMap<String, Client> getClients(){return clients;}
 
     public void setSelected(Client client)
     {
@@ -104,13 +105,18 @@ public class ClientManager extends BusinessObjectManager
                     if(!isSerialized(ROOT_PATH+filename))
                     {
                         String clients_json = RemoteComms.sendGetRequest("/api/clients", headers);
-                        clients = gson.fromJson(clients_json, Client[].class);
+                        Client[] clients_arr = gson.fromJson(clients_json, Client[].class);
+
+                        clients = new HashMap<>();
+                        for(Client client: clients_arr)
+                            clients.put(client.get_id(), client);
 
                         IO.log(getClass().getName(), IO.TAG_INFO, "reloaded collection of clients.");
                         this.serialize(ROOT_PATH+filename, clients);
-                    }else{
+                    }else
+                    {
                         IO.log(this.getClass().getName(), IO.TAG_INFO, "binary object ["+ROOT_PATH+filename+"] on local disk is already up-to-date.");
-                        clients = (Client[]) this.deserialize(ROOT_PATH+filename);
+                        clients = (HashMap<String, Client>) this.deserialize(ROOT_PATH+filename);
                     }
                 }else JOptionPane.showMessageDialog(null, "Active session has expired.", "Session Expired", JOptionPane.ERROR_MESSAGE);
             }else JOptionPane.showMessageDialog(null, "No active sessions.", "Session Expired", JOptionPane.ERROR_MESSAGE);

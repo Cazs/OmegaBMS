@@ -25,13 +25,14 @@ import java.net.MalformedURLException;
 import java.time.ZoneId;
 import java.util.AbstractMap;
 import java.util.ArrayList;
+import java.util.HashMap;
 
 /**
  * Created by ghost on 2017/01/27.
  */
 public class InvoiceManager extends BusinessObjectManager
 {
-    private Invoice[] invoices= null;
+    private HashMap<String, Invoice> invoices;
     private static InvoiceManager invoice_manager = new InvoiceManager();
     private ScreenManager screenManager = null;
     private Invoice selected_invoice;
@@ -85,25 +86,24 @@ public class InvoiceManager extends BusinessObjectManager
                     if(!isSerialized(ROOT_PATH+filename))
                     {
                         String invoices_json = RemoteComms.sendGetRequest("/api/invoices", headers);
-                        invoices = gson.fromJson(invoices_json, Invoice[].class);
+                        Invoice[] invoices_arr = gson.fromJson(invoices_json, Invoice[].class);
 
-                        //set Invoice job object
-                        JobManager.getInstance().loadDataFromServer();
-                        for(Invoice invoice: invoices)
-                            for(Job job : JobManager.getInstance().getJobs())
-                                if(job.get_id().equals(invoice.getJob_id()))
-                                    invoice.setJob(job);
+                        invoices = new HashMap<>();
+                        if(invoices_arr!=null)
+                            for(Invoice invoice: invoices_arr)
+                                invoices.put(invoice.get_id(), invoice);
 
                         IO.log(getClass().getName(), IO.TAG_INFO, "reloaded collection of invoices.");
                         this.serialize(ROOT_PATH+filename, invoices);
                     }else{
                         IO.log(this.getClass().getName(), IO.TAG_INFO, "binary object ["+ROOT_PATH+filename+"] on local disk is already up-to-date.");
-                        invoices = (Invoice[]) this.deserialize(ROOT_PATH+filename);
+                        invoices = (HashMap<String, Invoice>) this.deserialize(ROOT_PATH+filename);
                     }
                 }else{
-                    JOptionPane.showMessageDialog(null, "Active session has expired.", "Session Expired", JOptionPane.ERROR_MESSAGE);
+                    IO.logAndAlert("Session Expired", "Active session has expired.", IO.TAG_ERROR);
                 }
             }else{
+                IO.logAndAlert(getClass().getName(), "no clients were found in the database.", IO.TAG_ERROR);
                 JOptionPane.showMessageDialog(null, "No active sessions.", "Session Expired", JOptionPane.ERROR_MESSAGE);
             }
         } catch (MalformedURLException ex)
@@ -118,7 +118,7 @@ public class InvoiceManager extends BusinessObjectManager
         }
     }
 
-    public Invoice[] getInvoices()
+    public HashMap<String, Invoice> getInvoices()
     {
         return invoices;
     }

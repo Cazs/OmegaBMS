@@ -55,7 +55,7 @@
          <center>
             <Label text="Detailed Job Information" BorderPane.alignment="CENTER">
                <font>
-                  <Font name="System Bold" size="31.0" />
+                  <Font size="25.0" />
                </font>
             </Label>
          </center>
@@ -117,7 +117,7 @@
                         </Button>
                      </children>
                   </HBox>
-                  <Label nodeOrientation="LEFT_TO_RIGHT" text="Total (including VAT)" GridPane.hgrow="ALWAYS" GridPane.rowIndex="9" GridPane.valignment="CENTER" GridPane.vgrow="ALWAYS" />
+                  <Label nodeOrientation="LEFT_TO_RIGHT" text="Total (excluding VAT)" GridPane.hgrow="ALWAYS" GridPane.rowIndex="9" GridPane.valignment="CENTER" GridPane.vgrow="ALWAYS" />
                   <TextField fx:id="txtTotal" editable="false" promptText="N/A" GridPane.columnIndex="1" GridPane.halignment="LEFT" GridPane.hgrow="ALWAYS" GridPane.rowIndex="9" GridPane.valignment="CENTER" GridPane.vgrow="ALWAYS" />
                   <Label text="Request/Description" GridPane.rowIndex="8" />
                   <TextArea fx:id="txtRequest" editable="false" promptText="N/A" GridPane.columnIndex="1" GridPane.hgrow="ALWAYS" GridPane.rowIndex="8" GridPane.vgrow="ALWAYS" />

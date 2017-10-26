@@ -64,9 +64,9 @@
                         <TextField fx:id="txtVat" GridPane.columnIndex="1" GridPane.rowIndex="3" />
                         <Label text="Account" GridPane.rowIndex="4" />
                         <TextField fx:id="txtAccount" GridPane.columnIndex="1" GridPane.rowIndex="4" />
-                        <Label text="Create Purchase Order" GridPane.columnSpan="2" GridPane.halignment="CENTER" GridPane.hgrow="ALWAYS" GridPane.valignment="CENTER" GridPane.vgrow="ALWAYS">
+                        <Label text="Create New Purchase Order" GridPane.columnSpan="2" GridPane.halignment="CENTER" GridPane.hgrow="ALWAYS" GridPane.valignment="CENTER" GridPane.vgrow="ALWAYS">
                             <font>
-                                <Font name="System Bold" size="17.0" />
+                                <Font size="25.0" />
                             </font>
                         </Label>
                   <HBox fx:id="cbxSupplier" prefHeight="100.0" prefWidth="200.0" GridPane.columnIndex="1" GridPane.rowIndex="1">

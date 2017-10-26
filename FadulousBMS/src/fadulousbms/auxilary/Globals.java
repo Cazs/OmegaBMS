@@ -6,7 +6,7 @@ package fadulousbms.auxilary;
 public enum Globals
 {
     COMPANY("Airotek Engineering"),
-    APP_NAME("Airotek BMS Engine"),
+    APP_NAME("Enterprise Resource Engine"),
     DEBUG_WARNINGS("on"),
     DEBUG_INFO("on"),
     CURRENCY_SYMBOL("R"),

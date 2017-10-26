@@ -24,10 +24,6 @@ const assetSchema = mongoose.Schema(
       type:Number,
       required:true
     },
-    account:{
-      type:String,
-      required:true
-    },
     date_acquired:{
       type:Number,
       required:false
@@ -102,6 +98,29 @@ module.exports.update = function (asset_id, asset, callback)
   });
 };
 
+module.exports.incrementQuantity = function(asset_id, asset, callback)
+{
+  console.log("attempting to increment asset [%s] quantity.", asset_id);
+  var _update = this.update;
+  this.get(asset_id, function(err, old_asset)
+  {
+    if(err)
+    {
+      console.log(error);
+      return;
+    }
+
+    var old_qty = new Number(old_asset.quantity);
+    var qty_inc_val = new Number(asset.quantity);
+    var qty = (old_qty + qty_inc_val);
+
+    console.log("incrementing asset [%s] quantity from [%s] to [%s].", asset.asset_name, old_qty, qty);
+
+    asset.quantity = qty;
+    _update(asset_id, asset, callback);
+  });
+};
+
 module.exports.isValid = function(asset)
 {
   console.log('validating asset object:\n%s', JSON.stringify(asset));
@@ -115,13 +134,11 @@ module.exports.isValid = function(asset)
     return false;
   if(isNullOrEmpty(asset.asset_value))
     return false;
-  if(isNullOrEmpty(asset.date_acquired))
-    return false;
   if(isNullOrEmpty(asset.asset_type))
     return false;
-  if(isNullOrEmpty(asset.account))
+  /*if(isNullOrEmpty(asset.date_acquired))
     return false;
-  /*if(isNullOrEmpty(resource.date_exhausted))
+  if(isNullOrEmpty(resource.date_exhausted))
     return false;*/
   console.log('valid asset.');
   return true;

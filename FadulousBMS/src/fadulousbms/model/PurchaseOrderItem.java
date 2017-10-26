@@ -194,7 +194,11 @@ public abstract class PurchaseOrderItem implements BusinessObject, Serializable
         this.extra = extra;
     }
 
-    public abstract BusinessObject getItem();
+    //public abstract BusinessObject getItem();
+    public BusinessObject getItem()
+    {
+        return this.item;
+    }
 
     public void setItem(BusinessObject item)
     {

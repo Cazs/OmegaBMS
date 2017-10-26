@@ -95,41 +95,45 @@ module.exports.add = function(employee, callback)
   //Check if user being created is not greater than a normal user
   if(employee.access_level)
   {
-    if(employee.access_level>access_levels.NORMAL)
+    if(employee.access_level==access_levels.SUPER)//creating super user account
     {
-      console.log('attempting to create an account with elevated privilleges.');
-      if(employee.access_level>access_levels.ADMIN)//creating super user account
+      console.log('attempting to create super user account [max privilleges].');
+      //check if super user account exists
+      Employees.findOne({access_level:3}, function(err, res_employee)
       {
-        //check if super user account exists
-        Employees.findOne({access_level:3}, function(err, res_employee)
+        if(err)
         {
-          if(err)
-          {
-            callback(err);
-            return;
-          }
-          if(res_employee)
-          {
-            callback(new Error('super user account already exists.'));
-            return;
-          }
-          //set date_joined & active status - vericodes
-          //creating super user account
-          console.log('info: creating a super user account.');
-          var sha = crypto.createHash('sha1');
-          var pwd = employee.pwd;
-          employee.pwd = sha.update(pwd).digest('hex');
-          Employees.create(employee, callback);
-        });
-      }else{
+          callback(err);
+          return;
+        }
+        if(res_employee)
+        {
+          callback(new Error('super user account already exists.'));
+          return;
+        }
         //set date_joined & active status - vericodes
-        //creating an admin account
-        console.log('info: creating an admin account.');
-      }
-    }else{
-      //set date_joined & active status - vericodes
-      //creating normal account
+        //creating super user account
+        console.log('info: creating a super user account.');
+        var sha = crypto.createHash('sha1');
+        var pwd = employee.pwd;
+        employee.pwd = sha.update(pwd).digest('hex');
+        Employees.create(employee, callback);
+      });
+    }else if(employee.access_level<access_levels.SUPER)//creating other user type
+    {
+      //set active status - vericodes
+      //************insecure**********************//
+      //TODO: check user access_level
+      console.log('info: creating user account [%], with access_level [%s].', employee.usr, employee.access_level);
+      var sha = crypto.createHash('sha1');
+      var pwd = employee.pwd;
+      employee.pwd = sha.update(pwd).digest('hex');
+      Employees.create(employee, callback);
     }
+  }else
+  {
+    console.log('access_level attribute is not set.');
+    callback(new Error('access_level attribute is not set.'));
   }
 };
 
@@ -151,6 +155,8 @@ module.exports.validate = function(usr, pwd, callback)
 
 module.exports.isValid = function(employee)
 {
+  console.log('validating employee:\n%s', JSON.stringify(employee));
+  
   if(isNullOrEmpty(employee))
     return false;
   //attribute validation
@@ -180,8 +186,8 @@ module.exports.isValid = function(employee)
     return false;
   if(isNullOrEmpty(employee.active))
     return false;*/
-
-    return true;
+  console.log('valid employee.');
+  return true;
 }
 
 isNullOrEmpty = function(obj)

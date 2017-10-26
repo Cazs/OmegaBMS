@@ -7,6 +7,7 @@ package fadulousbms.controllers;
 
 import fadulousbms.auxilary.IO;
 import fadulousbms.auxilary.Screen;
+import fadulousbms.managers.AssetManager;
 import fadulousbms.managers.ResourceManager;
 import fadulousbms.managers.ScreenManager;
 import fadulousbms.model.*;
@@ -46,19 +47,23 @@ public class ResourcesController extends Screen implements Initializable
         ResourceType[] res_types = new ResourceType[ResourceManager.getInstance().getResource_types().size()];
         ResourceManager.getInstance().getResource_types().values().toArray(res_types);
 
-        colId.setMinWidth(100);
+        colId.setMinWidth(80);
         colId.setCellValueFactory(new PropertyValueFactory<>("_id"));
-        CustomTableViewControls.makeEditableTableColumn(colName, TextFieldTableCell.forTableColumn(), 215, "resource_name", "/api/resource");
+        CustomTableViewControls.makeEditableTableColumn(colName, TextFieldTableCell.forTableColumn(), 80, "resource_name", "/api/resource");
         CustomTableViewControls.makeEditableTableColumn(colSerial, TextFieldTableCell.forTableColumn(), 80, "resource_serial", "/api/resource");
-        CustomTableViewControls.makeComboBoxTableColumn(colType, res_types, "resource_type", "type_name", "/api/resource", 120);
-        CustomTableViewControls.makeEditableTableColumn(colDescription, TextFieldTableCell.forTableColumn(), 215, "resource_description", "/api/resource");
+
+        colType.setMinWidth(120);
+        colType.setCellValueFactory(new PropertyValueFactory<>("resource_type"));
+        colType.setCellFactory(col -> new ComboBoxTableCell(ResourceManager.getInstance().getResource_types(), "resource_type", "/api/resource"));
+
+        CustomTableViewControls.makeEditableTableColumn(colDescription, TextFieldTableCell.forTableColumn(), 100, "resource_description", "/api/resource");
         CustomTableViewControls.makeEditableTableColumn(colValue, TextFieldTableCell.forTableColumn(), 80, "resource_value", "/api/resource");
         CustomTableViewControls.makeEditableTableColumn(colAccount, TextFieldTableCell.forTableColumn(), 80, "account", "/api/resource");
         CustomTableViewControls.makeEditableTableColumn(colUnit, TextFieldTableCell.forTableColumn(), 50, "unit", "/api/resource");
         CustomTableViewControls.makeEditableTableColumn(colQuantity, TextFieldTableCell.forTableColumn(), 50, "quantity", "/api/resource");
         CustomTableViewControls.makeLabelledDatePickerTableColumn(colDateAcquired, "date_acquired", "/api/resource");
         CustomTableViewControls.makeLabelledDatePickerTableColumn(colDateExhausted, "date_exhausted", "/api/resource");
-        CustomTableViewControls.makeEditableTableColumn(colOther, TextFieldTableCell.forTableColumn(), 215, "extra", "/api/resource");
+        CustomTableViewControls.makeEditableTableColumn(colOther, TextFieldTableCell.forTableColumn(), 80, "extra", "/api/resource");
 
         ObservableList<Resource> lst_resources = FXCollections.observableArrayList();
         lst_resources.addAll(ResourceManager.getInstance().getResources().values());
@@ -129,6 +134,7 @@ public class ResourcesController extends Screen implements Initializable
                     }
                 };
 
+        colAction.setMinWidth(250);
         colAction.setCellValueFactory(new PropertyValueFactory<>(""));
         colAction.setCellFactory(cellFactory);
 

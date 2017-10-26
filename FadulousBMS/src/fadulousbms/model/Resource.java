@@ -25,9 +25,6 @@ public class Resource implements BusinessObject, Serializable
     private String resource_serial;
     private String resource_type;
     private double resource_value;
-    private String account;
-    private double markup;//TODO:??
-    private double labour;//TODO:??
     private long quantity;
     private long date_acquired;
     private long date_exhausted;
@@ -114,18 +111,6 @@ public class Resource implements BusinessObject, Serializable
         this.resource_type = resource_type;
     }
 
-    public StringProperty markupProperty(){return new SimpleStringProperty(String.valueOf(markup));}
-
-    public double getMarkup()
-    {
-        return markup;
-    }
-
-    public void setMarkup(double markup)
-    {
-        this.markup = markup;
-    }
-
     public StringProperty resource_valueProperty(){return new SimpleStringProperty(String.valueOf(resource_value));}
 
     public double getResource_value()
@@ -138,18 +123,6 @@ public class Resource implements BusinessObject, Serializable
         this.resource_value = resource_value;
     }
 
-    public StringProperty accountProperty(){return new SimpleStringProperty(account);}
-
-    public String getAccount()
-    {
-        return account;
-    }
-
-    public void setAccount(String account)
-    {
-        this.account = account;
-    }
-
     public StringProperty unitProperty(){return new SimpleStringProperty(unit);}
 
     public String getUnit()
@@ -160,18 +133,6 @@ public class Resource implements BusinessObject, Serializable
     public void setUnit(String unit)
     {
         this.unit = unit;
-    }
-
-    public StringProperty labourProperty(){return new SimpleStringProperty(String.valueOf(labour));}
-
-    public double getLabour()
-    {
-        return labour;
-    }
-
-    public void setLabour(int labour)
-    {
-        this.labour = labour;
     }
 
     public StringProperty quantityProperty(){return new SimpleStringProperty(String.valueOf(quantity));}
@@ -244,15 +205,6 @@ public class Resource implements BusinessObject, Serializable
                 case "resource_value":
                     resource_value = Double.parseDouble(String.valueOf(val));
                     break;
-                case "account":
-                    account = (String)val;
-                    break;
-                case "markup":
-                    markup = Double.parseDouble(String.valueOf(val));
-                    break;
-                case "labour":
-                    labour = Double.parseDouble(String.valueOf(val));
-                    break;
                 case "date_acquired":
                     date_acquired = Long.parseLong(String.valueOf(val));
                     break;
@@ -296,12 +248,6 @@ public class Resource implements BusinessObject, Serializable
             case "value":
             case "resource_value":
                 return getResource_value();
-            case "account":
-                return account;
-            case "markup":
-                return markup;
-            case "labour":
-                return labour;
             case "date_acquired":
                 return date_acquired;
             case "date_exhausted":
@@ -341,10 +287,6 @@ public class Resource implements BusinessObject, Serializable
                     + URLEncoder.encode(resource_serial, "UTF-8"));
             result.append("&" + URLEncoder.encode("resource_value","UTF-8") + "="
                     + URLEncoder.encode(String.valueOf(resource_value), "UTF-8"));
-            result.append("&" + URLEncoder.encode("account","UTF-8") + "="
-                    + URLEncoder.encode(account, "UTF-8"));
-            result.append("&" + URLEncoder.encode("markup","UTF-8") + "="
-                    + URLEncoder.encode(String.valueOf(markup), "UTF-8"));
             if(date_acquired>0)
                 result.append("&" + URLEncoder.encode("date_acquired","UTF-8") + "="
                         + URLEncoder.encode(String.valueOf(date_acquired), "UTF-8"));
@@ -353,8 +295,6 @@ public class Resource implements BusinessObject, Serializable
                         + URLEncoder.encode(String.valueOf(date_exhausted), "UTF-8"));
             result.append("&" + URLEncoder.encode("unit","UTF-8") + "="
                     + URLEncoder.encode(unit, "UTF-8"));
-            result.append("&" + URLEncoder.encode("labour","UTF-8") + "="
-                    + URLEncoder.encode(String.valueOf(labour), "UTF-8"));
             result.append("&" + URLEncoder.encode("quantity","UTF-8") + "="
                     + URLEncoder.encode(String.valueOf(quantity), "UTF-8"));
             if(other!=null)

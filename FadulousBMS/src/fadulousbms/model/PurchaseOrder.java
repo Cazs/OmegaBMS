@@ -2,6 +2,7 @@ package fadulousbms.model;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import fadulousbms.auxilary.Globals;
 import fadulousbms.auxilary.IO;
 import fadulousbms.auxilary.RemoteComms;
 import fadulousbms.managers.EmployeeManager;
@@ -139,9 +140,21 @@ public class PurchaseOrder implements BusinessObject, Serializable
         if(suppliers!=null)
         {
             setSupplier(suppliers.get(supplier_id));
-            System.out.println("set supplier>>> " + suppliers.get(supplier_id));
             this.supplier_id = supplier_id;
         }else IO.log(getClass().getName(), IO.TAG_ERROR, "no suppliers were found in database.");
+    }
+
+    public StringProperty totalProperty()
+    {
+        return new SimpleStringProperty(Globals.CURRENCY_SYMBOL.getValue() + " " + String.valueOf(getTotal()));
+    }
+
+    public double getTotal()
+    {
+        double total=0;
+        for(PurchaseOrderItem item: getItems())
+            total+=item.getCostValue()*item.getQuantityValue();
+        return total;
     }
 
     public String getContact_person_id()

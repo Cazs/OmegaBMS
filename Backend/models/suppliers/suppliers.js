@@ -22,7 +22,7 @@ var supplierSchema = mongoose.Schema(
     },
     fax:{
       type:String,
-      required:true
+      required:false
     },
     speciality:{
       type:String,
@@ -108,6 +108,8 @@ var supplierSchema = mongoose.Schema(
 
   module.exports.isValid = function(supplier)
   {
+    console.log('validating supplier object:\n%s', JSON.stringify(supplier));
+
     if(isNullOrEmpty(supplier))
       return false;
     //attribute validation
@@ -131,7 +133,7 @@ var supplierSchema = mongoose.Schema(
       return false;
     /*if(isNullOrEmpty(supplier.other))
       return false;*/
-
+      console.log('valid supplier.');
       return true;
   }
 

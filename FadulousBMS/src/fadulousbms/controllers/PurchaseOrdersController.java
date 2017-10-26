@@ -60,12 +60,17 @@ public class PurchaseOrdersController extends Screen implements Initializable
         colId.setPrefWidth(100);
         colPONumber.setCellValueFactory(new PropertyValueFactory<>("number"));
         colPONumber.setPrefWidth(80);
-        CustomTableViewControls.makeComboBoxTableColumn(colSupplier, suppliers, "supplier_id", "supplier_name", "/api/purchaseorder", 120);
+
+        colSupplier.setMinWidth(120);
+        colSupplier.setCellValueFactory(new PropertyValueFactory<>("supplier_id"));
+        colSupplier.setCellFactory(col -> new ComboBoxTableCell(SupplierManager.getInstance().getSuppliers(), "supplier_id", "/api/purchaseorder"));
+
         CustomTableViewControls.makeEditableTableColumn(colAccount, TextFieldTableCell.forTableColumn(), 80, "account", "/api/purchaseorder");
         CustomTableViewControls.makeEditableTableColumn(colVat, TextFieldTableCell.forTableColumn(), 50, "vat", "/api/purchaseorder");
         CustomTableViewControls.makeLabelledDatePickerTableColumn(colDateLogged, "date_logged", "/api/purchaseorder");
-        colStatus.setCellValueFactory(new PropertyValueFactory<>("status"));
+        CustomTableViewControls.makeDynamicToggleButtonTableColumn(colStatus,100, "status", new String[]{"0","PENDING","1","APPROVED"}, false,"/api/purchaseorder");
         colCreator.setCellValueFactory(new PropertyValueFactory<>("creator"));
+        colTotal.setCellValueFactory(new PropertyValueFactory<>("total"));
         CustomTableViewControls.makeEditableTableColumn(colExtra, TextFieldTableCell.forTableColumn(), 215, "extra", "/api/purchaseorder");
 
         ObservableList<PurchaseOrder> lst_po = FXCollections.observableArrayList();

@@ -199,8 +199,13 @@ public class Invoice implements BusinessObject, Serializable
             IO.logAndAlert("Error " + getClass().getName(), "Job->Quote->Client object is not set", IO.TAG_ERROR);
             return new SimpleStringProperty("N/A");
         }
+        if(ClientManager.getInstance().getClients()==null)
+        {
+            IO.logAndAlert("Error " + getClass().getName(), "Job->Client object is not set", IO.TAG_ERROR);
+            return new SimpleStringProperty("N/A");
+        }
 
-        for(Client client : ClientManager.getInstance().getClients())
+        for(Client client : ClientManager.getInstance().getClients().values())
             if(client.get_id().equals(job.getQuote().getClient_id()))
                 return new SimpleStringProperty(job.getQuote().getClient().getClient_name());
 

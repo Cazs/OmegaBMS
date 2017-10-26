@@ -43,21 +43,26 @@ public class ClientsController extends Screen implements Initializable
     public void refreshView()
     {
         IO.log(getClass().getName(), IO.TAG_INFO, "reloading clients view..");
+        if( ClientManager.getInstance().getClients()==null)
+        {
+            IO.logAndAlert(getClass().getName(), "no clients were found in the database.", IO.TAG_ERROR);
+            return;
+        }
 
         colClientId.setMinWidth(100);
         colClientId.setCellValueFactory(new PropertyValueFactory<>("_id"));
-        CustomTableViewControls.makeEditableTableColumn(colClientName, TextFieldTableCell.forTableColumn(), 215, "client_name", "/api/client");
-        CustomTableViewControls.makeEditableTableColumn(colClientPhysicalAddress, TextFieldTableCell.forTableColumn(), 215, "physical_address", "/api/client");
-        CustomTableViewControls.makeEditableTableColumn(colClientPostalAddress, TextFieldTableCell.forTableColumn(), 215, "postal_address", "/api/client");
-        CustomTableViewControls.makeEditableTableColumn(colClientTel, TextFieldTableCell.forTableColumn(), 215, "tel", "/api/client");
-        CustomTableViewControls.makeEditableTableColumn(colClientFax, TextFieldTableCell.forTableColumn(), 215, "fax", "/api/client");
+        CustomTableViewControls.makeEditableTableColumn(colClientName, TextFieldTableCell.forTableColumn(), 80, "client_name", "/api/client");
+        CustomTableViewControls.makeEditableTableColumn(colClientPhysicalAddress, TextFieldTableCell.forTableColumn(), 120, "physical_address", "/api/client");
+        CustomTableViewControls.makeEditableTableColumn(colClientPostalAddress, TextFieldTableCell.forTableColumn(), 120, "postal_address", "/api/client");
+        CustomTableViewControls.makeEditableTableColumn(colClientTel, TextFieldTableCell.forTableColumn(), 80, "tel", "/api/client");
+        CustomTableViewControls.makeEditableTableColumn(colClientFax, TextFieldTableCell.forTableColumn(), 80, "fax", "/api/client");
         CustomTableViewControls.makeCheckboxedTableColumn(colClientActive, null, 80, "active", "/api/client");
         CustomTableViewControls.makeLabelledDatePickerTableColumn(colClientDatePartnered, "date_partnered", "/api/client");
-        CustomTableViewControls.makeEditableTableColumn(colClientWebsite, TextFieldTableCell.forTableColumn(), 215, "website", "/api/client");
-        CustomTableViewControls.makeEditableTableColumn(colClientOther, TextFieldTableCell.forTableColumn(), 215, "other", "/api/client");
+        CustomTableViewControls.makeEditableTableColumn(colClientWebsite, TextFieldTableCell.forTableColumn(), 100, "website", "/api/client");
+        CustomTableViewControls.makeEditableTableColumn(colClientOther, TextFieldTableCell.forTableColumn(), 50, "other", "/api/client");
 
         ObservableList<Client> lst_clients = FXCollections.observableArrayList();
-        lst_clients.addAll(ClientManager.getInstance().getClients());
+        lst_clients.addAll(ClientManager.getInstance().getClients().values());
         tblClients.setItems(lst_clients);
 
         final ScreenManager screenManager = ScreenManager.getInstance();

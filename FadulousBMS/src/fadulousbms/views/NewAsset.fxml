@@ -62,7 +62,7 @@
                     <children>
                         <Label text="Create New Asset" GridPane.columnSpan="2" GridPane.halignment="CENTER" GridPane.hgrow="ALWAYS" GridPane.valignment="CENTER" GridPane.vgrow="ALWAYS">
                             <font>
-                                <Font name="System Bold" size="17.0" />
+                                <Font size="25.0" />
                             </font>
                         </Label>
 

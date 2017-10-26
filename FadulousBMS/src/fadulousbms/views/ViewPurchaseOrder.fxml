@@ -74,7 +74,7 @@
                         <TextField fx:id="txtAccount" GridPane.columnIndex="1" GridPane.rowIndex="5" />
                         <Label text="Purchase Order Details" GridPane.columnSpan="2" GridPane.halignment="CENTER" GridPane.hgrow="ALWAYS" GridPane.valignment="CENTER" GridPane.vgrow="ALWAYS">
                             <font>
-                                <Font name="System Bold" size="17.0" />
+                                <Font size="25.0" />
                             </font>
                         </Label>
                   <HBox fx:id="cbxSupplier" prefHeight="100.0" prefWidth="200.0" GridPane.columnIndex="1" GridPane.rowIndex="2">

@@ -49,7 +49,11 @@ public class InvoicesController extends Screen implements Initializable
     public void refreshView()
     {
         IO.log(getClass().getName(), IO.TAG_INFO, "reloading invoices view..");
-
+        if(InvoiceManager.getInstance().getInvoices()==null)
+        {
+            IO.logAndAlert(getClass().getName(), "no invoices were found in the database.", IO.TAG_ERROR);
+            return;
+        }
         colInvoiceNum.setMinWidth(140);
         colInvoiceNum.setCellValueFactory(new PropertyValueFactory<>("invoice_number"));
         colJobNum.setMinWidth(120);
@@ -66,7 +70,7 @@ public class InvoicesController extends Screen implements Initializable
         CustomTableViewControls.makeEditableTableColumn(colExtra, TextFieldTableCell.forTableColumn(), 80, "extra", "/api/invoice");
 
         ObservableList<Invoice> lst_invoices = FXCollections.observableArrayList();
-        lst_invoices.addAll(InvoiceManager.getInstance().getInvoices());
+        lst_invoices.addAll(InvoiceManager.getInstance().getInvoices().values());
         tblInvoices.setItems(lst_invoices);
 
         final ScreenManager screenManager = ScreenManager.getInstance();

@@ -33,6 +33,50 @@
     -fx-prompt-text-fill: transparent;
 }
 
+#btnBack
+{
+    -fx-image:url("../images/ic_chevron_left_black_48px.png");
+    -fx-width:20px;
+}
+
+#btnBack:hover
+{
+    -fx-image:url("../images/ic_chevron_left_white_48dp_2x.png");
+}
+
+#btnNext
+{
+    -fx-image:url("../images/ic_chevron_right_black_48dp_2x.png");
+    -fx-width:20px;
+}
+
+#btnNext:hover
+{
+    -fx-image:url("../images/ic_chevron_right_white_48dp_2x.png");
+}
+
+#btnHome
+{
+    -fx-image:url("../images/ic_home_black_48dp_2x.png");
+    -fx-width:20px;
+}
+
+#btnHome:hover
+{
+    -fx-image:url("../images/ic_home_white_48dp_2x.png");
+}
+
+#btnLogin
+{
+    -fx-image:url("../images/ic_vpn_key_black_48dp_2x.png");
+    -fx-width:20px;
+}
+
+#btnLogin:hover
+{
+    -fx-image:url("../images/ic_vpn_key_white_48dp_2x.png");
+}
+
 .btnBack
 {
     -fx-background-color: rgba(200,0,0,.7);

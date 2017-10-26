@@ -5,6 +5,9 @@
       <artifact name="FXRibbon:jar" />
     </artifacts-to-build>
   </component>
+  <component name="BookmarkManager">
+    <bookmark url="file://$PROJECT_DIR$/src/fadulousbms/controllers/HomescreenController.java" line="78" mnemonic="8" />
+  </component>
   <component name="ChangeListManager">
     <list default="true" id="0eff3b17-3454-48a9-bc96-4c05a6782e9f" name="Default" comment="" />
     <ignored path="$PROJECT_DIR$/out/" />
@@ -20,64 +23,71 @@
   </component>
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
-      <file leaf-file-name="PurchaseOrderManager.java" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/fadulousbms/managers/PurchaseOrderManager.java">
+      <file leaf-file-name="QuotesController.java" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/fadulousbms/controllers/QuotesController.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="231">
-              <caret line="29" column="18" lean-forward="false" selection-start-line="29" selection-start-column="18" selection-end-line="29" selection-end-column="18" />
+            <state relative-caret-position="884">
+              <caret line="97" column="82" lean-forward="false" selection-start-line="97" selection-start-column="82" selection-end-line="97" selection-end-column="82" />
               <folding>
-                <element signature="e#1208#1209#0" expanded="true" />
-                <element signature="e#1245#1246#0" expanded="true" />
+                <element signature="docComment;class#QuotesController#0" expanded="false" />
+                <element signature="e#4203#4690#0" expanded="false" />
+                <element signature="class#5022:11308" expanded="false" />
+                <element signature="method#call#0;class#5022:11308" expanded="false" />
+                <element signature="class#5305:11230" expanded="false" />
+                <element signature="method#updateItem#0;class#5305:11230" expanded="false" />
+                <element signature="e#7365#9636#0" expanded="false" />
+                <element signature="e#7922#9596#0" expanded="false" />
+                <element signature="class#8032:9487" expanded="false" />
+                <element signature="method#run#0;class#8032:9487" expanded="false" />
+                <element signature="e#9698#10225#0" expanded="false" />
+                <element signature="e#10284#10840#0" expanded="false" />
+                <element signature="method#refreshModel#0;class#QuotesController#0" expanded="false" />
+                <element signature="docComment;method#initialize#0;class#QuotesController#0" expanded="false" />
+                <element signature="method#initialize#0;class#QuotesController#0" expanded="false" />
+                <element signature="e#12300#12405#0" expanded="false" />
               </folding>
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="PurchaseOrderItem.java" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/fadulousbms/model/PurchaseOrderItem.java">
+      <file leaf-file-name="CustomTableViewControls.java" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/fadulousbms/model/CustomTableViewControls.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="162">
-              <caret line="269" column="5" lean-forward="false" selection-start-line="269" selection-start-column="5" selection-end-line="269" selection-end-column="5" />
-              <folding>
-                <element signature="method#parse#0;class#PurchaseOrderItem#0" expanded="false" />
-                <element signature="method#asUTFEncodedString#0;class#PurchaseOrderItem#0" expanded="false" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="TextFieldTableCell.java" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/fadulousbms/model/TextFieldTableCell.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="94">
-              <caret line="101" column="0" lean-forward="false" selection-start-line="101" selection-start-column="0" selection-end-line="101" selection-end-column="0" />
+            <state relative-caret-position="510">
+              <caret line="58" column="43" lean-forward="false" selection-start-line="58" selection-start-column="43" selection-end-line="58" selection-end-column="43" />
               <folding />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="Asset.java" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/fadulousbms/model/Asset.java">
+      <file leaf-file-name="AssetsController.java" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/fadulousbms/controllers/AssetsController.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="-126">
-              <caret line="275" column="4" lean-forward="true" selection-start-line="275" selection-start-column="4" selection-end-line="275" selection-end-column="4" />
+            <state relative-caret-position="799">
+              <caret line="74" column="117" lean-forward="false" selection-start-line="74" selection-start-column="117" selection-end-line="74" selection-end-column="117" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="ResourcesController.java" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/fadulousbms/controllers/ResourcesController.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="544">
+              <caret line="56" column="146" lean-forward="false" selection-start-line="56" selection-start-column="146" selection-end-line="56" selection-end-column="146" />
               <folding>
-                <element signature="docComment;class#Asset#0" expanded="false" />
-                <element signature="method#idProperty#0;class#Asset#0" expanded="false" />
-                <element signature="method#short_idProperty#0;class#Asset#0" expanded="false" />
-                <element signature="method#setMarked#0;class#Asset#0" expanded="false" />
-                <element signature="method#asset_nameProperty#0;class#Asset#0" expanded="false" />
-                <element signature="method#asset_descriptionProperty#0;class#Asset#0" expanded="false" />
-                <element signature="method#asset_serialProperty#0;class#Asset#0" expanded="false" />
-                <element signature="method#asset_typeProperty#0;class#Asset#0" expanded="false" />
-                <element signature="method#asset_valueProperty#0;class#Asset#0" expanded="false" />
-                <element signature="method#accountProperty#0;class#Asset#0" expanded="false" />
-                <element signature="method#quantityProperty#0;class#Asset#0" expanded="false" />
-                <element signature="method#unitProperty#0;class#Asset#0" expanded="false" />
-                <element signature="method#otherProperty#0;class#Asset#0" expanded="false" />
-                <element signature="method#parse#0;class#Asset#0" expanded="false" />
-                <element signature="method#get#0;class#Asset#0" expanded="false" />
+                <element signature="class#3749:7215" expanded="false" />
               </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="ComboBoxTableCell.java" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/fadulousbms/model/ComboBoxTableCell.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="1343">
+              <caret line="101" column="62" lean-forward="false" selection-start-line="101" selection-start-column="62" selection-end-line="101" selection-end-column="62" />
+              <folding />
             </state>
           </provider>
         </entry>
@@ -85,140 +95,111 @@
       <file leaf-file-name="PurchaseOrdersController.java" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/fadulousbms/controllers/PurchaseOrdersController.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="142">
-              <caret line="72" column="43" lean-forward="false" selection-start-line="72" selection-start-column="43" selection-end-line="72" selection-end-column="43" />
+            <state relative-caret-position="748">
+              <caret line="72" column="74" lean-forward="false" selection-start-line="72" selection-start-column="74" selection-end-line="72" selection-end-column="74" />
               <folding />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="Resource.java" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/fadulousbms/model/Resource.java">
+      <file leaf-file-name="PDF.java" pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/src/fadulousbms/auxilary/PDF.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="-195">
-              <caret line="282" column="4" lean-forward="true" selection-start-line="282" selection-start-column="4" selection-end-line="282" selection-end-column="4" />
+            <state relative-caret-position="255">
+              <caret line="445" column="0" lean-forward="true" selection-start-line="445" selection-start-column="0" selection-end-line="445" selection-end-column="0" />
               <folding>
-                <element signature="docComment;class#Resource#0" expanded="false" />
-                <element signature="method#idProperty#0;class#Resource#0" expanded="false" />
-                <element signature="method#short_idProperty#0;class#Resource#0" expanded="false" />
-                <element signature="method#setMarked#0;class#Resource#0" expanded="false" />
-                <element signature="method#resource_nameProperty#0;class#Resource#0" expanded="false" />
-                <element signature="method#resource_descriptionProperty#0;class#Resource#0" expanded="false" />
-                <element signature="method#resource_serialProperty#0;class#Resource#0" expanded="false" />
-                <element signature="method#resource_typeProperty#0;class#Resource#0" expanded="false" />
-                <element signature="method#markupProperty#0;class#Resource#0" expanded="false" />
-                <element signature="method#resource_valueProperty#0;class#Resource#0" expanded="false" />
-                <element signature="method#accountProperty#0;class#Resource#0" expanded="false" />
-                <element signature="method#unitProperty#0;class#Resource#0" expanded="false" />
-                <element signature="method#labourProperty#0;class#Resource#0" expanded="false" />
-                <element signature="method#quantityProperty#0;class#Resource#0" expanded="false" />
-                <element signature="e#4661#4662#0" expanded="true" />
-                <element signature="e#4711#4712#0" expanded="true" />
-                <element signature="method#otherProperty#0;class#Resource#0" expanded="false" />
-                <element signature="method#parse#0;class#Resource#0" expanded="false" />
+                <element signature="docComment;class#PDF#0" expanded="false" />
+                <element signature="method#printPDF#0;class#PDF#0" expanded="false" />
+                <element signature="method#drawHorzLines#0;class#PDF#0" expanded="false" />
+                <element signature="method#drawVertLines#0;class#PDF#0" expanded="false" />
+                <element signature="method#createDocumentIndex#0;class#PDF#0" expanded="false" />
+                <element signature="e#3929#3982#0" expanded="false" />
+                <element signature="method#createBordersOnPage#0;class#PDF#0" expanded="false" />
+                <element signature="method#createLinesAndBordersOnPage#0;class#PDF#0" expanded="false" />
+                <element signature="e#26223#26254#0" expanded="false" />
+                <element signature="method#createQuotePdf#0;class#PDF#0" expanded="false" />
+                <element signature="e#29373#29406#0" expanded="false" />
+                <element signature="e#30354#30407#0" expanded="false" />
+                <element signature="e#33733#33795#0" expanded="false" />
+                <element signature="e#41417#41435#0" expanded="false" />
+                <element signature="e#47615#47646#0" expanded="false" />
+                <element signature="method#createInvoicePdf#0;class#PDF#0" expanded="false" />
+                <element signature="e#52797#52830#0" expanded="false" />
+                <element signature="e#53824#53877#0" expanded="false" />
+                <element signature="e#57207#57269#0" expanded="false" />
+                <element signature="e#66624#66634#0" expanded="false" />
+                <element signature="e#71056#71087#0" expanded="false" />
+                <element signature="method#partition#0;class#PDF#0" expanded="false" />
+                <element signature="method#quickSort#0;class#PDF#0" expanded="false" />
+                <element signature="method#createGeneralJournalPdf#0;class#PDF#0" expanded="false" />
+                <element signature="e#77835#77867#0" expanded="false" />
+                <element signature="e#78366#78419#0" expanded="false" />
+                <element signature="e#87756#87765#0" expanded="false" />
+                <element signature="e#89213#89222#0" expanded="false" />
+                <element signature="e#89648#89742#0" expanded="false" />
+                <element signature="method#initLedgerPage#0;class#PDF#0" expanded="false" />
+                <element signature="e#90873#90917#0" expanded="false" />
+                <element signature="e#91059#91112#0" expanded="false" />
+                <element signature="method#createGeneralLedgerPdf#0;class#PDF#0" expanded="false" />
+                <element signature="e#95748#95780#0" expanded="false" />
+                <element signature="e#100392#100445#0" expanded="false" />
+                <element signature="e#109651#109658#0" expanded="false" />
+                <element signature="e#111405#111413#0" expanded="false" />
+                <element signature="e#112824#112832#0" expanded="false" />
+                <element signature="e#113109#113203#0" expanded="false" />
+                <element signature="method#createJobCardPdf#0;class#PDF#0" expanded="false" />
+                <element signature="e#116781#116862#0" expanded="false" />
+                <element signature="e#117387#117430#0" expanded="false" />
+                <element signature="e#120712#120852#0" expanded="false" />
+                <element signature="method#addTextToPageStream#0;class#PDF#0" expanded="false" />
+                <element signature="method#addTextToPageStream#1;class#PDF#0" expanded="false" />
+                <element signature="docComment;class#BMSPDFRenderer#0;class#PDF#0" expanded="false" />
+                <element signature="class#BMSPDFRenderer#0;class#PDF#0" expanded="false" />
+                <element signature="method#createPageDrawer#0;class#BMSPDFRenderer#0;class#PDF#0" expanded="false" />
+                <element signature="docComment;class#BMSPageDrawer#0;class#PDF#0" expanded="false" />
+                <element signature="class#BMSPageDrawer#0;class#PDF#0" expanded="false" />
+                <element signature="method#BMSPageDrawer#0;class#BMSPageDrawer#0;class#PDF#0" expanded="false" />
+                <element signature="docComment;method#getPaint#0;class#BMSPageDrawer#0;class#PDF#0" expanded="false" />
+                <element signature="method#getPaint#0;class#BMSPageDrawer#0;class#PDF#0" expanded="false" />
+                <element signature="docComment;method#showGlyph#0;class#BMSPageDrawer#0;class#PDF#0" expanded="false" />
+                <element signature="method#showGlyph#0;class#BMSPageDrawer#0;class#PDF#0" expanded="false" />
+                <element signature="docComment;method#fillPath#0;class#BMSPageDrawer#0;class#PDF#0" expanded="false" />
+                <element signature="method#fillPath#0;class#BMSPageDrawer#0;class#PDF#0" expanded="false" />
+                <element signature="e#128938#128959#0" expanded="false" />
+                <element signature="docComment;method#showAnnotation#0;class#BMSPageDrawer#0;class#PDF#0" expanded="false" />
+                <element signature="method#showAnnotation#0;class#BMSPageDrawer#0;class#PDF#0" expanded="false" />
+                <marker date="1508998055482" expanded="false" signature="20047:20175" ph="//..." />
               </folding>
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="ViewPurchaseOrderController.java" pinned="false" current-in-tab="true">
-        <entry file="file://$PROJECT_DIR$/src/fadulousbms/controllers/ViewPurchaseOrderController.java">
+      <file leaf-file-name="PurchaseOrder.java" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/fadulousbms/model/PurchaseOrder.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="238">
-              <caret line="729" column="21" lean-forward="false" selection-start-line="729" selection-start-column="21" selection-end-line="729" selection-end-column="21" />
-              <folding>
-                <element signature="docComment;class#ViewPurchaseOrderController#0" expanded="false" />
-                <element signature="method#refreshView#0;class#ViewPurchaseOrderController#0" expanded="false" />
-                <element signature="class#5225:12055" expanded="false" />
-                <element signature="method#call#0;class#5225:12055" expanded="false" />
-                <element signature="class#5540:11977" expanded="false" />
-                <element signature="method#updateItem#0;class#5540:11977" expanded="false" />
-                <element signature="e#7763#10172#0" expanded="false" />
-                <element signature="e#10234#10900#0" expanded="false" />
-                <element signature="e#10959#11587#0" expanded="false" />
-                <element signature="method#refreshModel#0;class#ViewPurchaseOrderController#0" expanded="false" />
-                <element signature="docComment;method#initialize#0;class#ViewPurchaseOrderController#0" expanded="false" />
-                <element signature="method#newPurchaseOrderItem#0;class#ViewPurchaseOrderController#0" expanded="false" />
-                <element signature="e#15758#17243#0" expanded="false" />
-                <element signature="e#17002#17025#0" expanded="false" />
-                <element signature="e#17379#17747#0" expanded="false" />
-                <element signature="e#17461#17662#0" expanded="false" />
-                <element signature="method#newAssetPurchaseOrderItem#0;class#ViewPurchaseOrderController#0" expanded="false" />
-                <element signature="e#20830#22276#0" expanded="false" />
-                <element signature="e#22035#22058#0" expanded="false" />
-                <element signature="e#22404#22772#0" expanded="false" />
-                <element signature="e#22486#22687#0" expanded="false" />
-                <element signature="method#updatePurchaseOrder#0;class#ViewPurchaseOrderController#0" expanded="false" />
-                <element signature="e#28371#28412#0" expanded="false" />
-                <element signature="e#30665#30731#0" expanded="false" />
-              </folding>
+            <state relative-caret-position="138">
+              <caret line="227" column="18" lean-forward="false" selection-start-line="227" selection-start-column="18" selection-end-line="227" selection-end-column="18" />
+              <folding />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="ResourceManager.java" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/fadulousbms/managers/ResourceManager.java">
+      <file leaf-file-name="QuoteItem.java" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/fadulousbms/model/QuoteItem.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="51">
-              <caret line="278" column="14" lean-forward="false" selection-start-line="278" selection-start-column="14" selection-end-line="278" selection-end-column="14" />
-              <folding>
-                <element signature="method#loadDataFromServer#0;class#ResourceManager#0" expanded="false" />
-                <element signature="method#newResourceTypeWindow#0;class#ResourceManager#0" expanded="false" />
-              </folding>
+            <state relative-caret-position="-2533">
+              <caret line="17" column="13" lean-forward="false" selection-start-line="17" selection-start-column="13" selection-end-line="17" selection-end-column="13" />
+              <folding />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="NewPurchaseOrderController.java" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/fadulousbms/controllers/NewPurchaseOrderController.java">
+      <file leaf-file-name="ExpensesController.java" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/fadulousbms/controllers/ExpensesController.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="163">
-              <caret line="551" column="37" lean-forward="false" selection-start-line="551" selection-start-column="37" selection-end-line="551" selection-end-column="37" />
-              <folding>
-                <element signature="docComment;class#NewPurchaseOrderController#0" expanded="false" />
-                <element signature="class#3701:10222" expanded="false" />
-                <element signature="method#call#0;class#3701:10222" expanded="false" />
-                <element signature="class#4016:10144" expanded="false" />
-                <element signature="method#updateItem#0;class#4016:10144" expanded="false" />
-                <element signature="e#6084#8437#0" expanded="false" />
-                <element signature="e#8499#9067#0" expanded="false" />
-                <element signature="e#9126#9754#0" expanded="false" />
-                <element signature="e#10351#10466#0" expanded="false" />
-                <element signature="docComment;method#initialize#0;class#NewPurchaseOrderController#0" expanded="false" />
-                <element signature="method#initialize#0;class#NewPurchaseOrderController#0" expanded="false" />
-                <element signature="e#11341#11446#0" expanded="false" />
-                <element signature="e#15152#15175#0" expanded="false" />
-                <element signature="e#15529#15897#0" expanded="false" />
-                <element signature="e#15611#15812#0" expanded="false" />
-                <element signature="e#19775#19798#0" expanded="false" />
-                <element signature="e#28712#29941#0" expanded="false" />
-                <element signature="class#28790:29864" expanded="false" />
-                <element signature="method#run#0;class#28790:29864" expanded="false" />
-                <element signature="method#previousScreen#0;class#NewPurchaseOrderController#0" expanded="false" />
-                <element signature="e#30919#31791#0" expanded="false" />
-                <element signature="class#30965:31746" expanded="false" />
-                <element signature="method#run#0;class#30965:31746" expanded="false" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="AssetManager.java" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/fadulousbms/managers/AssetManager.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="-1860">
-              <caret line="32" column="13" lean-forward="false" selection-start-line="32" selection-start-column="13" selection-end-line="32" selection-end-column="13" />
-              <folding>
-                <element signature="docComment;class#AssetManager#0" expanded="false" />
-                <element signature="method#AssetManager#0;class#AssetManager#0" expanded="false" />
-                <element signature="method#loadDataFromServer#0;class#AssetManager#0" expanded="false" />
-                <element signature="method#handleNewAsset#0;class#AssetManager#0" expanded="false" />
-                <element signature="class#10799:11549" expanded="false" />
-                <element signature="method#call#0;class#10799:11549" expanded="false" />
-                <element signature="e#13415#17232#0" expanded="false" />
-                <element signature="method#createNewAssetType#0;class#AssetManager#0" expanded="false" />
-                <element signature="e#19346#21788#0" expanded="false" />
-              </folding>
+            <state relative-caret-position="663">
+              <caret line="63" column="123" lean-forward="false" selection-start-line="63" selection-start-column="123" selection-end-line="63" selection-end-column="123" />
+              <folding />
             </state>
           </provider>
         </entry>
@@ -234,25 +215,6 @@
   </component>
   <component name="FindInProjectRecents">
     <findStrings>
-      <find>updateQuoteItems</find>
-      <find>updateQuote</find>
-      <find>Total Incl</find>
-      <find>com.pixelduke.javafx.ribbon</find>
-      <find>resource_types</find>
-      <find>equipment</find>
-      <find>tblPurchaseOrders</find>
-      <find>colDateGenerated</find>
-      <find>purchase</find>
-      <find>reloaded collection of purchase orders.</find>
-      <find>supplier&gt;&gt;&gt;</find>
-      <find>set supplier</find>
-      <find>PurchaseOrderMan</find>
-      <find>reloaded c</find>
-      <find>getContact_person</find>
-      <find>resource</find>
-      <find>assets</find>
-      <find>api/resource</find>
-      <find>setting</find>
       <find>sett</find>
       <find>json</find>
       <find>js</find>
@@ -264,6 +226,25 @@
       <find>unknown PurchaseOrderItem item type</find>
       <find>new date</find>
       <find>date_acquired</find>
+      <find>reloading purchase order data model..</find>
+      <find>increment_quantity</find>
+      <find>PDFViewer</find>
+      <find>doOpen</find>
+      <find>1508027451475</find>
+      <find>QuoteRe</find>
+      <find>logAndAlert</find>
+      <find>quote/u</find>
+      <find>vat</find>
+      <find>POST /api/job/</find>
+      <find>compu</find>
+      <find>get_</find>
+      <find>get_id</find>
+      <find>updating combo box</find>
+      <find>not committing to server</find>
+      <find>attempting to update object</find>
+      <find>update_property</find>
+      <find>updated</find>
+      <find>Rat</find>
     </findStrings>
     <replaceStrings>
       <replace>ScreenManager.getInstance()</replace>
@@ -281,57 +262,57 @@
   <component name="IdeDocumentHistory">
     <option name="CHANGED_PATHS">
       <list>
-        <option value="$PROJECT_DIR$/../../FXRibbon/src/skin/RibbonGroupSkin.java" />
-        <option value="$PROJECT_DIR$/../../FXRibbon/src/skin/RibbonItemSkin.java" />
-        <option value="$PROJECT_DIR$/../../FXRibbon/src/skin/RibbonSkin.java" />
-        <option value="$PROJECT_DIR$/../../FXRibbon/src/fxribbon/Ribbon.java" />
-        <option value="$PROJECT_DIR$/src/fadulousbms/styles/tabs.css" />
+        <option value="$PROJECT_DIR$/src/fadulousbms/controllers/HomescreenController.java" />
+        <option value="$PROJECT_DIR$/src/fadulousbms/views/Accounting.fxml" />
+        <option value="$PROJECT_DIR$/src/fadulousbms/views/Login.fxml" />
         <option value="$PROJECT_DIR$/src/fadulousbms/views/Homescreen.fxml" />
-        <option value="$PROJECT_DIR$/src/fadulousbms/controllers/AccountingController.java" />
-        <option value="$PROJECT_DIR$/src/fadulousbms/controllers/JobsController.java" />
-        <option value="$PROJECT_DIR$/src/fadulousbms/managers/ClientManager.java" />
-        <option value="$PROJECT_DIR$/src/fadulousbms/views/Quotes.fxml" />
-        <option value="$PROJECT_DIR$/src/fadulousbms/views/Operations.fxml" />
-        <option value="$PROJECT_DIR$/src/fadulousbms/views/PurchaseOrdersTab.fxml" />
-        <option value="$PROJECT_DIR$/src/fadulousbms/views/NewPurchaseOrder.fxml" />
-        <option value="$PROJECT_DIR$/src/fadulousbms/views/ViewPurchaseOrder.fxml" />
+        <option value="$PROJECT_DIR$/src/fadulousbms/controllers/CreateAccountController.java" />
         <option value="$PROJECT_DIR$/src/fadulousbms/managers/SupplierManager.java" />
-        <option value="$PROJECT_DIR$/src/fadulousbms/controllers/NewExpenseController.java" />
-        <option value="$PROJECT_DIR$/src/fadulousbms/managers/RevenueManager.java" />
-        <option value="$PROJECT_DIR$/src/fadulousbms/controllers/ViewJobController.java" />
-        <option value="$PROJECT_DIR$/src/fadulousbms/controllers/ViewGenericQuoteController.java" />
-        <option value="$PROJECT_DIR$/src/fadulousbms/auxilary/Screen.java" />
-        <option value="$PROJECT_DIR$/src/fadulousbms/model/Screens.java" />
-        <option value="$PROJECT_DIR$/src/fadulousbms/controllers/OperationsController.java" />
-        <option value="$PROJECT_DIR$/src/fadulousbms/managers/QuoteManager.java" />
-        <option value="$PROJECT_DIR$/src/fadulousbms/controllers/SuppliersController.java" />
-        <option value="$PROJECT_DIR$/src/fadulousbms/controllers/QuotesController.java" />
-        <option value="$PROJECT_DIR$/src/fadulousbms/controllers/NewResourceController.java" />
-        <option value="$PROJECT_DIR$/src/fadulousbms/controllers/NewQuoteController.java" />
-        <option value="$PROJECT_DIR$/src/fadulousbms/controllers/ViewQuoteController.java" />
-        <option value="$PROJECT_DIR$/src/fadulousbms/controllers/ResourcesController.java" />
-        <option value="$PROJECT_DIR$/src/fadulousbms/model/CustomTableViewControls.java" />
-        <option value="$PROJECT_DIR$/src/fadulousbms/model/TextFieldTableCell.java" />
         <option value="$PROJECT_DIR$/src/fadulousbms/managers/EmployeeManager.java" />
-        <option value="$PROJECT_DIR$/src/fadulousbms/auxilary/PDF.java" />
-        <option value="$PROJECT_DIR$/src/fadulousbms/model/PurchaseOrderResource.java" />
-        <option value="$PROJECT_DIR$/src/fadulousbms/model/PurchaseOrderAsset.java" />
-        <option value="$PROJECT_DIR$/src/fadulousbms/model/Invoice.java" />
-        <option value="$PROJECT_DIR$/src/fadulousbms/managers/ExpenseManager.java" />
-        <option value="$PROJECT_DIR$/src/fadulousbms/controllers/ExpensesController.java" />
-        <option value="$PROJECT_DIR$/src/fadulousbms/auxilary/Validators.java" />
-        <option value="$PROJECT_DIR$/src/fadulousbms/managers/AssetManager.java" />
-        <option value="$PROJECT_DIR$/src/fadulousbms/controllers/NewAssetController.java" />
-        <option value="$PROJECT_DIR$/src/fadulousbms/controllers/AssetsController.java" />
-        <option value="$PROJECT_DIR$/src/fadulousbms/model/Asset.java" />
-        <option value="$PROJECT_DIR$/src/fadulousbms/model/PurchaseOrder.java" />
-        <option value="$PROJECT_DIR$/src/fadulousbms/controllers/PurchaseOrdersController.java" />
-        <option value="$PROJECT_DIR$/src/fadulousbms/controllers/NewPurchaseOrderController.java" />
-        <option value="$PROJECT_DIR$/src/fadulousbms/managers/PurchaseOrderManager.java" />
         <option value="$PROJECT_DIR$/src/fadulousbms/model/PurchaseOrderItem.java" />
+        <option value="$PROJECT_DIR$/src/fadulousbms/model/PurchaseOrderAsset.java" />
+        <option value="$PROJECT_DIR$/src/fadulousbms/model/PurchaseOrderResource.java" />
         <option value="$PROJECT_DIR$/src/fadulousbms/managers/ResourceManager.java" />
+        <option value="$PROJECT_DIR$/src/fadulousbms/managers/AssetManager.java" />
+        <option value="$PROJECT_DIR$/src/fadulousbms/views/loading.fxml" />
         <option value="$PROJECT_DIR$/src/fadulousbms/model/Resource.java" />
+        <option value="$PROJECT_DIR$/src/fadulousbms/controllers/NewResourceController.java" />
+        <option value="$PROJECT_DIR$/src/fadulousbms/model/Asset.java" />
+        <option value="$PROJECT_DIR$/src/fadulousbms/controllers/NewAssetController.java" />
+        <option value="$PROJECT_DIR$/src/fadulousbms/views/MaterialsTab.fxml" />
+        <option value="$PROJECT_DIR$/src/fadulousbms/controllers/NewPurchaseOrderController.java" />
         <option value="$PROJECT_DIR$/src/fadulousbms/controllers/ViewPurchaseOrderController.java" />
+        <option value="$PROJECT_DIR$/src/fadulousbms/auxilary/PDFViewer.java" />
+        <option value="$PROJECT_DIR$/src/fadulousbms/views/JobsTab.fxml" />
+        <option value="$PROJECT_DIR$/src/fadulousbms/model/Invoice.java" />
+        <option value="$PROJECT_DIR$/src/fadulousbms/managers/InvoiceManager.java" />
+        <option value="$PROJECT_DIR$/src/fadulousbms/managers/SafetyManager.java" />
+        <option value="$PROJECT_DIR$/src/fadulousbms/model/Sale.java" />
+        <option value="$PROJECT_DIR$/src/fadulousbms/controllers/InvoicesController.java" />
+        <option value="$PROJECT_DIR$/src/fadulousbms/managers/ClientManager.java" />
+        <option value="$PROJECT_DIR$/src/fadulousbms/managers/QuoteManager.java" />
+        <option value="$PROJECT_DIR$/src/fadulousbms/model/QuoteRep.java" />
+        <option value="$PROJECT_DIR$/src/fadulousbms/controllers/NewQuoteController.java" />
+        <option value="$PROJECT_DIR$/src/fadulousbms/auxilary/IO.java" />
+        <option value="$PROJECT_DIR$/src/fadulousbms/model/QuoteItem.java" />
+        <option value="$PROJECT_DIR$/src/fadulousbms/model/Quote.java" />
+        <option value="$PROJECT_DIR$/src/fadulousbms/managers/JobManager.java" />
+        <option value="$PROJECT_DIR$/src/fadulousbms/controllers/ViewQuoteController.java" />
+        <option value="$PROJECT_DIR$/src/fadulousbms/controllers/ViewJobController.java" />
+        <option value="$PROJECT_DIR$/src/fadulousbms/model/Job.java" />
+        <option value="$PROJECT_DIR$/src/fadulousbms/controllers/JobsController.java" />
+        <option value="$PROJECT_DIR$/src/fadulousbms/model/LabelledDatePickerCell.java" />
+        <option value="$PROJECT_DIR$/src/fadulousbms/controllers/ClientsController.java" />
+        <option value="$PROJECT_DIR$/src/fadulousbms/controllers/SuppliersController.java" />
+        <option value="$PROJECT_DIR$/src/fadulousbms/model/PurchaseOrder.java" />
+        <option value="$PROJECT_DIR$/src/fadulousbms/controllers/ExpensesController.java" />
+        <option value="$PROJECT_DIR$/src/fadulousbms/model/CustomTableViewControls.java" />
+        <option value="$PROJECT_DIR$/src/fadulousbms/controllers/AssetsController.java" />
+        <option value="$PROJECT_DIR$/src/fadulousbms/controllers/ResourcesController.java" />
+        <option value="$PROJECT_DIR$/src/fadulousbms/model/ComboBoxTableCell.java" />
+        <option value="$PROJECT_DIR$/src/fadulousbms/controllers/QuotesController.java" />
+        <option value="$PROJECT_DIR$/src/fadulousbms/controllers/PurchaseOrdersController.java" />
+        <option value="$PROJECT_DIR$/src/fadulousbms/auxilary/PDF.java" />
       </list>
     </option>
   </component>
@@ -357,9 +338,6 @@
     </navigator>
     <panes>
       <pane id="Scratches" />
-      <pane id="AndroidView" />
-      <pane id="Scope" />
-      <pane id="PackagesPane" />
       <pane id="ProjectPane">
         <subPane>
           <expand>
@@ -367,42 +345,13 @@
               <item name="FadulousBMS" type="b2602c69:ProjectViewProjectNode" />
               <item name="FadulousBMS" type="462c0819:PsiDirectoryNode" />
             </path>
-            <path>
-              <item name="FadulousBMS" type="b2602c69:ProjectViewProjectNode" />
-              <item name="FadulousBMS" type="462c0819:PsiDirectoryNode" />
-              <item name="src" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="FadulousBMS" type="b2602c69:ProjectViewProjectNode" />
-              <item name="FadulousBMS" type="462c0819:PsiDirectoryNode" />
-              <item name="src" type="462c0819:PsiDirectoryNode" />
-              <item name="fadulousbms" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="FadulousBMS" type="b2602c69:ProjectViewProjectNode" />
-              <item name="FadulousBMS" type="462c0819:PsiDirectoryNode" />
-              <item name="src" type="462c0819:PsiDirectoryNode" />
-              <item name="fadulousbms" type="462c0819:PsiDirectoryNode" />
-              <item name="controllers" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="FadulousBMS" type="b2602c69:ProjectViewProjectNode" />
-              <item name="FadulousBMS" type="462c0819:PsiDirectoryNode" />
-              <item name="src" type="462c0819:PsiDirectoryNode" />
-              <item name="fadulousbms" type="462c0819:PsiDirectoryNode" />
-              <item name="model" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="FadulousBMS" type="b2602c69:ProjectViewProjectNode" />
-              <item name="FadulousBMS" type="462c0819:PsiDirectoryNode" />
-              <item name="src" type="462c0819:PsiDirectoryNode" />
-              <item name="fadulousbms" type="462c0819:PsiDirectoryNode" />
-              <item name="styles" type="462c0819:PsiDirectoryNode" />
-            </path>
           </expand>
           <select />
         </subPane>
       </pane>
+      <pane id="Scope" />
+      <pane id="AndroidView" />
+      <pane id="PackagesPane" />
     </panes>
   </component>
   <component name="PropertiesComponent">
@@ -574,25 +523,25 @@
       <window_info id="Capture Analysis" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
       <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.3296355" sideWeight="0.50292826" order="7" side_tool="true" content_ui="tabs" />
       <window_info id="Maven Projects" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
-      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.3645008" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="false" weight="0.33" sideWeight="0.5" order="8" side_tool="false" content_ui="tabs" />
+      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.30110934" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.3296355" sideWeight="0.5" order="9" side_tool="false" content_ui="tabs" />
       <window_info id="Capture Tool" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Designer" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.24963397" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
-      <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.3296355" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Ant Build" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="UI Designer" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
       <window_info id="Theme Preview" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
-      <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.4" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="5" side_tool="true" content_ui="tabs" />
+      <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.4" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Cvs" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
       <window_info id="Message" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
       <window_info id="Commander" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.4" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
       <window_info id="Hierarchy" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="2" side_tool="false" content_ui="combo" />
       <window_info id="Inspection" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.4" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
       <window_info id="Coverage" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.329429" sideWeight="0.5" order="7" side_tool="true" content_ui="tabs" />
+      <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.3296355" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
     </layout>
   </component>
   <component name="UnloadedModulesList">
@@ -604,700 +553,476 @@
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
-      <option name="time" value="3" />
+      <option name="time" value="4" />
     </breakpoint-manager>
     <watches-manager />
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/src/fadulousbms/managers/ScreenManager.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="128">
-          <caret line="155" column="0" lean-forward="false" selection-start-line="155" selection-start-column="0" selection-end-line="155" selection-end-column="0" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/fadulousbms/views/Operations.fxml">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="132">
-          <caret line="102" column="16" lean-forward="false" selection-start-line="102" selection-start-column="16" selection-end-line="102" selection-end-column="16" />
-        </state>
-      </provider>
       <provider editor-type-id="JavaFX-Scene-Builder">
         <state />
       </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/fadulousbms/views/PurchaseOrdersTab.fxml">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="85">
-          <caret line="5" column="0" lean-forward="false" selection-start-line="5" selection-start-column="0" selection-end-line="5" selection-end-column="0" />
-          <folding />
+        <state relative-caret-position="68">
+          <caret line="42" column="75" lean-forward="false" selection-start-line="42" selection-start-column="75" selection-end-line="42" selection-end-column="75" />
         </state>
       </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/fadulousbms/views/loading.fxml">
       <provider editor-type-id="JavaFX-Scene-Builder">
         <state />
       </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/fadulousbms/views/NewPurchaseOrder.fxml">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="187">
-          <caret line="63" column="43" lean-forward="false" selection-start-line="63" selection-start-column="43" selection-end-line="63" selection-end-column="43" />
-        </state>
-      </provider>
-      <provider editor-type-id="JavaFX-Scene-Builder">
-        <state />
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/fadulousbms/managers/RevenueManager.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="183">
-          <caret line="79" column="133" lean-forward="false" selection-start-line="79" selection-start-column="133" selection-end-line="79" selection-end-column="133" />
+        <state relative-caret-position="86">
+          <caret line="92" column="53" lean-forward="false" selection-start-line="92" selection-start-column="53" selection-end-line="92" selection-end-column="53" />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/fadulousbms/controllers/NewExpenseController.java">
+    <entry file="file://$PROJECT_DIR$/src/fadulousbms/model/Resource.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="222">
-          <caret line="46" column="102" lean-forward="true" selection-start-line="46" selection-start-column="102" selection-end-line="46" selection-end-column="102" />
+        <state relative-caret-position="576">
+          <caret line="296" column="56" lean-forward="false" selection-start-line="296" selection-start-column="56" selection-end-line="296" selection-end-column="56" />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/fadulousbms/managers/GenericQuoteManager.java" />
-    <entry file="file://$PROJECT_DIR$/src/fadulousbms/controllers/ViewJobController.java">
+    <entry file="file://$PROJECT_DIR$/src/fadulousbms/model/Asset.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="125">
-          <caret line="179" column="59" lean-forward="false" selection-start-line="179" selection-start-column="59" selection-end-line="179" selection-end-column="59" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/fadulousbms/controllers/ViewGenericQuoteController.java" />
-    <entry file="file://$PROJECT_DIR$/src/fadulousbms/controllers/RejectedQuotesController.java" />
-    <entry file="file://$PROJECT_DIR$/src/fadulousbms/controllers/NewGenericQuoteController.java" />
-    <entry file="file://$PROJECT_DIR$/src/fadulousbms/auxilary/Screen.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="57">
-          <caret line="133" column="5" lean-forward="false" selection-start-line="133" selection-start-column="5" selection-end-line="133" selection-end-column="5" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/fadulousbms/model/Screens.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="255">
-          <caret line="52" column="50" lean-forward="true" selection-start-line="52" selection-start-column="50" selection-end-line="52" selection-end-column="50" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/fadulousbms/views/ViewPurchaseOrder.fxml">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="170">
-          <caret line="63" column="59" lean-forward="false" selection-start-line="63" selection-start-column="59" selection-end-line="63" selection-end-column="59" />
-          <folding />
-        </state>
-      </provider>
-      <provider editor-type-id="JavaFX-Scene-Builder">
-        <state />
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/fadulousbms/controllers/OperationsController.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="229">
-          <caret line="322" column="0" lean-forward="false" selection-start-line="322" selection-start-column="0" selection-end-line="322" selection-end-column="0" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/fadulousbms/controllers/JobsController.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="3451">
-          <caret line="225" column="0" lean-forward="false" selection-start-line="225" selection-start-column="0" selection-end-line="225" selection-end-column="0" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/fadulousbms/managers/JobManager.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="850">
-          <caret line="86" column="0" lean-forward="false" selection-start-line="86" selection-start-column="0" selection-end-line="86" selection-end-column="0" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/fadulousbms/controllers/QuotesController.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="510">
-          <caret line="70" column="81" lean-forward="false" selection-start-line="70" selection-start-column="81" selection-end-line="70" selection-end-column="81" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/fadulousbms/controllers/SuppliersController.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="255">
-          <caret line="52" column="81" lean-forward="false" selection-start-line="52" selection-start-column="81" selection-end-line="52" selection-end-column="81" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/fadulousbms/managers/QuoteManager.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="34">
-          <caret line="163" column="97" lean-forward="false" selection-start-line="163" selection-start-column="97" selection-end-line="163" selection-end-column="97" />
-          <folding>
-            <element signature="docComment;class#QuoteManager#0" expanded="false" />
-            <element signature="method#QuoteManager#0;class#QuoteManager#0" expanded="false" />
-            <element signature="method#initialize#0;class#QuoteManager#0" expanded="false" />
-            <element signature="method#setSelectedQuote#0;class#QuoteManager#0" expanded="false" />
-            <element signature="method#setSelectedQuote#1;class#QuoteManager#0" expanded="false" />
-            <element signature="method#getSelectedQuote#0;class#QuoteManager#0" expanded="false" />
-            <element signature="method#computeQuoteTotal#0;class#QuoteManager#0" expanded="false" />
-            <element signature="method#generatePDF#0;class#QuoteManager#0" expanded="false" />
-            <element signature="method#updateQuote#0;class#QuoteManager#0" expanded="false" />
-            <element signature="method#updateQuote#1;class#QuoteManager#0" expanded="false" />
-            <element signature="method#updateQuoteItems#0;class#QuoteManager#0" expanded="false" />
-            <element signature="e#23197#23213#0" expanded="false" />
-            <element signature="method#createQuoteItem#0;class#QuoteManager#0" expanded="false" />
-            <element signature="e#25097#25138#0" expanded="false" />
-            <element signature="method#createQuoteItem#1;class#QuoteManager#0" expanded="false" />
-            <element signature="e#26436#26477#0" expanded="false" />
-            <element signature="method#updateQuoteItem#0;class#QuoteManager#0" expanded="false" />
-            <element signature="method#updateQuoteReps#0;class#QuoteManager#0" expanded="false" />
-            <element signature="e#29780#29795#0" expanded="false" />
-            <element signature="method#createQuoteRep#0;class#QuoteManager#0" expanded="false" />
-            <element signature="e#31110#31151#0" expanded="false" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/fadulousbms/model/Quote.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-1899">
-          <caret line="15" column="13" lean-forward="false" selection-start-line="15" selection-start-column="13" selection-end-line="15" selection-end-column="13" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/fadulousbms/managers/SupplierManager.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="612">
-          <caret line="364" column="53" lean-forward="false" selection-start-line="364" selection-start-column="53" selection-end-line="364" selection-end-column="53" />
-          <folding>
-            <element signature="method#handleNewSupplier#0;class#SupplierManager#0" expanded="false" />
-            <marker date="1508172578691" expanded="false" signature="2048:7296" ph="{...}" />
-          </folding>
+        <state relative-caret-position="136">
+          <caret line="198" column="22" lean-forward="false" selection-start-line="198" selection-start-column="22" selection-end-line="198" selection-end-column="22" />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/fadulousbms/controllers/NewResourceController.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="132">
-          <caret line="48" column="129" lean-forward="false" selection-start-line="48" selection-start-column="129" selection-end-line="48" selection-end-column="129" />
-          <folding>
-            <element signature="method#createResource#0;class#NewResourceController#0" expanded="false" />
-            <element signature="method#previousScreen#0;class#NewResourceController#0" expanded="false" />
-          </folding>
+        <state relative-caret-position="125">
+          <caret line="144" column="16" lean-forward="false" selection-start-line="144" selection-start-column="16" selection-end-line="144" selection-end-column="16" />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/fadulousbms/controllers/ViewQuoteController.java">
+    <entry file="file://$PROJECT_DIR$/src/fadulousbms/views/MaterialsTab.fxml">
+      <provider editor-type-id="JavaFX-Scene-Builder">
+        <state />
+      </provider>
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-2362">
-          <caret line="881" column="79" lean-forward="false" selection-start-line="881" selection-start-column="79" selection-end-line="881" selection-end-column="79" />
-          <folding>
-            <element signature="docComment;class#ViewQuoteController#0" expanded="false" />
-            <element signature="class#3588:5375" expanded="false" />
-            <element signature="method#updateItem#0;class#3588:5375" expanded="false" />
-            <element signature="e#4109#5084#0" expanded="false" />
-            <element signature="class#5667:7448" expanded="false" />
-            <element signature="method#updateItem#0;class#5667:7448" expanded="false" />
-            <element signature="e#6188#7155#0" expanded="false" />
-            <element signature="class#7690:9464" expanded="false" />
-            <element signature="method#updateItem#0;class#7690:9464" expanded="false" />
-            <element signature="e#8211#9174#0" expanded="false" />
-            <element signature="e#11025#11331#0" expanded="false" />
-            <element signature="e#12276#12713#0" expanded="false" />
-            <element signature="e#14681#14734#0" expanded="false" />
-            <element signature="e#16519#16577#0" expanded="false" />
-            <element signature="class#17859:27536" expanded="false" />
-            <element signature="method#updateItem#0;class#17859:27536" expanded="false" />
-            <element signature="e#18743#24256#0" expanded="false" />
-            <element signature="e#19830#19855#0" expanded="false" />
-            <element signature="e#20270#20322#0" expanded="false" />
-            <element signature="e#21781#21843#0" expanded="false" />
-            <element signature="docComment;method#initialize#0;class#ViewQuoteController#0" expanded="false" />
-            <element signature="method#initialize#0;class#ViewQuoteController#0" expanded="false" />
-            <element signature="class#30069:33058" expanded="false" />
-            <element signature="method#updateItem#0;class#30069:33058" expanded="false" />
-            <element signature="e#31674#32080#0" expanded="false" />
-            <element signature="e#32142#32668#0" expanded="false" />
-            <element signature="class#33614:35406" expanded="false" />
-            <element signature="method#updateItem#0;class#33614:35406" expanded="false" />
-            <element signature="e#34672#35204#0" expanded="false" />
-            <element signature="method#computeQuoteTotal#0;class#ViewQuoteController#0" expanded="false" />
-            <element signature="method#addQuoteItemAdditionalMaterial#0;class#ViewQuoteController#0" expanded="false" />
-            <element signature="e#37040#43513#0" expanded="false" />
-            <element signature="class#39961:43053" expanded="false" />
-            <element signature="method#updateItem#0;class#39961:43053" expanded="false" />
-            <element signature="e#40394#41669#0" expanded="false" />
-            <element signature="e#46634#48008#0" expanded="false" />
-            <element signature="e#48144#48512#0" expanded="false" />
-            <element signature="e#48226#48427#0" expanded="false" />
-            <element signature="e#51181#51597#0" expanded="false" />
-            <element signature="method#apply#0;class#ViewQuoteController#0" expanded="false" />
-            <element signature="method#updateQuote#0;class#ViewQuoteController#0" expanded="false" />
-            <element signature="e#55363#55389#0" expanded="false" />
-            <element signature="method#newClient#0;class#ViewQuoteController#0" expanded="false" />
-            <element signature="e#56799#57007#0" expanded="false" />
-            <element signature="e#56841#56962#0" expanded="false" />
-            <element signature="method#previousScreen#0;class#ViewQuoteController#0" expanded="false" />
-            <element signature="e#57471#58343#0" expanded="false" />
-            <element signature="class#ComboBoxTableCell#0;class#ViewQuoteController#0" expanded="false" />
-            <element signature="method#ComboBoxTableCell#0;class#ComboBoxTableCell#0;class#ViewQuoteController#0" expanded="false" />
-            <element signature="e#60447#61058#0" expanded="false" />
-            <element signature="docComment;method#getBusinessObjectProperty#0;class#ComboBoxTableCell#0;class#ViewQuoteController#0" expanded="false" />
-            <element signature="method#getBusinessObjectProperty#0;class#ComboBoxTableCell#0;class#ViewQuoteController#0" expanded="false" />
-            <element signature="method#commitEdit#0;class#ComboBoxTableCell#0;class#ViewQuoteController#0" expanded="false" />
-            <element signature="method#updateItem#0;class#ComboBoxTableCell#0;class#ViewQuoteController#0" expanded="false" />
-            <element signature="e#65690#65776#0" expanded="false" />
-          </folding>
+        <state relative-caret-position="187">
+          <caret line="19" column="38" lean-forward="false" selection-start-line="19" selection-start-column="38" selection-end-line="19" selection-end-column="38" />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/fadulousbms/controllers/ResourcesController.java">
+    <entry file="file://$PROJECT_DIR$/src/fadulousbms/managers/ResourceManager.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-1568">
+          <caret line="41" column="13" lean-forward="false" selection-start-line="41" selection-start-column="13" selection-end-line="41" selection-end-column="13" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/fadulousbms/controllers/PurchasesController.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="119">
+          <caret line="24" column="13" lean-forward="false" selection-start-line="24" selection-start-column="13" selection-end-line="24" selection-end-column="13" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/fadulousbms/controllers/ViewPurchaseOrderController.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="200">
+          <caret line="739" column="23" lean-forward="false" selection-start-line="739" selection-start-column="23" selection-end-line="739" selection-end-column="23" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="jar://C:/Program Files/Java/jdk1.8.0_91/src.zip!/java/awt/Window.java">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="125">
-          <caret line="50" column="141" lean-forward="false" selection-start-line="50" selection-start-column="8" selection-end-line="50" selection-end-column="141" />
+          <caret line="1149" column="16" lean-forward="false" selection-start-line="1149" selection-start-column="16" selection-end-line="1149" selection-end-column="16" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/fadulousbms/views/JobsTab.fxml">
+      <provider editor-type-id="JavaFX-Scene-Builder">
+        <state />
+      </provider>
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="324">
+          <caret line="69" column="93" lean-forward="false" selection-start-line="69" selection-start-column="93" selection-end-line="69" selection-end-column="93" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/fadulousbms/auxilary/PDFViewer.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="108">
+          <caret line="826" column="0" lean-forward="false" selection-start-line="826" selection-start-column="0" selection-end-line="826" selection-end-column="0" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/fadulousbms/managers/SupplierManager.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="119">
+          <caret line="37" column="13" lean-forward="false" selection-start-line="37" selection-start-column="13" selection-end-line="37" selection-end-column="13" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/fadulousbms/model/Invoice.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="239">
+          <caret line="203" column="72" lean-forward="false" selection-start-line="203" selection-start-column="72" selection-end-line="203" selection-end-column="72" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/fadulousbms/managers/SafetyManager.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="132">
+          <caret line="296" column="8" lean-forward="false" selection-start-line="296" selection-start-column="8" selection-end-line="298" selection-end-column="31" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/fadulousbms/managers/InvoiceManager.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="1207">
+          <caret line="102" column="99" lean-forward="false" selection-start-line="102" selection-start-column="99" selection-end-line="102" selection-end-column="99" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/fadulousbms/controllers/NewPurchaseOrderController.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="3638">
+          <caret line="542" column="37" lean-forward="false" selection-start-line="542" selection-start-column="37" selection-end-line="542" selection-end-column="37" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/fadulousbms/model/Sale.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="1700">
+          <caret line="147" column="53" lean-forward="false" selection-start-line="147" selection-start-column="53" selection-end-line="147" selection-end-column="53" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/fadulousbms/controllers/InvoicesController.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="374">
+          <caret line="51" column="53" lean-forward="false" selection-start-line="51" selection-start-column="53" selection-end-line="51" selection-end-column="53" />
           <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/fadulousbms/managers/ClientManager.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="134">
+          <caret line="109" column="50" lean-forward="false" selection-start-line="109" selection-start-column="50" selection-end-line="109" selection-end-column="50" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/fadulousbms/model/QuoteRep.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="204">
+          <caret line="18" column="30" lean-forward="false" selection-start-line="18" selection-start-column="30" selection-end-line="18" selection-end-column="30" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/fadulousbms/controllers/NewQuoteController.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="408">
+          <caret line="94" column="0" lean-forward="false" selection-start-line="94" selection-start-column="0" selection-end-line="94" selection-end-column="0" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/fadulousbms/auxilary/IO.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="272">
+          <caret line="96" column="19" lean-forward="false" selection-start-line="96" selection-start-column="19" selection-end-line="96" selection-end-column="19" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/fadulousbms/views/View_quote.fxml">
+      <provider editor-type-id="JavaFX-Scene-Builder">
+        <state />
+      </provider>
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="170">
+          <caret line="260" column="59" lean-forward="false" selection-start-line="260" selection-start-column="59" selection-end-line="260" selection-end-column="59" />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/fadulousbms/auxilary/RemoteComms.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-118">
-          <caret line="279" column="78" lean-forward="true" selection-start-line="279" selection-start-column="78" selection-end-line="279" selection-end-column="78" />
+        <state relative-caret-position="-215">
+          <caret line="177" column="36" lean-forward="false" selection-start-line="177" selection-start-column="36" selection-end-line="177" selection-end-column="36" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/fadulousbms/managers/QuoteManager.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="32">
+          <caret line="430" column="4" lean-forward="false" selection-start-line="430" selection-start-column="4" selection-end-line="430" selection-end-column="4" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/fadulousbms/managers/JobManager.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="136">
+          <caret line="251" column="89" lean-forward="false" selection-start-line="251" selection-start-column="89" selection-end-line="251" selection-end-column="89" />
+          <folding>
+            <element signature="method#createJob#0;class#JobManager#0" expanded="false" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/fadulousbms/controllers/ViewJobController.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="129">
+          <caret line="276" column="153" lean-forward="false" selection-start-line="276" selection-start-column="153" selection-end-line="276" selection-end-column="153" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/fadulousbms/model/Job.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="289">
+          <caret line="346" column="15" lean-forward="false" selection-start-line="346" selection-start-column="15" selection-end-line="346" selection-end-column="15" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/fadulousbms/controllers/ViewQuoteController.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="166">
+          <caret line="1136" column="31" lean-forward="false" selection-start-line="1136" selection-start-column="31" selection-end-line="1136" selection-end-column="31" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/fadulousbms/model/LabelledDatePickerCell.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="223">
+          <caret line="123" column="38" lean-forward="false" selection-start-line="123" selection-start-column="38" selection-end-line="123" selection-end-column="38" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/fadulousbms/model/Employee.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-3058">
+          <caret line="19" column="13" lean-forward="false" selection-start-line="19" selection-start-column="13" selection-end-line="19" selection-end-column="13" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/fadulousbms/controllers/JobsController.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="3009">
+          <caret line="199" column="15" lean-forward="false" selection-start-line="199" selection-start-column="15" selection-end-line="199" selection-end-column="15" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/fadulousbms/model/Quote.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-2329">
+          <caret line="19" column="13" lean-forward="false" selection-start-line="19" selection-start-column="13" selection-end-line="19" selection-end-column="13" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/fadulousbms/model/PurchaseOrderItem.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-1411">
+          <caret line="16" column="22" lean-forward="false" selection-start-line="16" selection-start-column="22" selection-end-line="16" selection-end-column="22" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/fadulousbms/controllers/ClientsController.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="240">
+          <caret line="60" column="113" lean-forward="false" selection-start-line="60" selection-start-column="113" selection-end-line="60" selection-end-column="113" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/fadulousbms/controllers/SuppliersController.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="257">
+          <caret line="64" column="115" lean-forward="false" selection-start-line="64" selection-start-column="115" selection-end-line="64" selection-end-column="115" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="jar://C:/Program Files/Java/jdk1.8.0_91/javafx-src.zip!/javafx/scene/control/ComboBox.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="138">
+          <caret line="232" column="11" lean-forward="false" selection-start-line="232" selection-start-column="11" selection-end-line="232" selection-end-column="11" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/fadulousbms/controllers/NewAssetController.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="153">
+          <caret line="30" column="13" lean-forward="false" selection-start-line="30" selection-start-column="13" selection-end-line="30" selection-end-column="13" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/fadulousbms/model/AssetType.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="119">
+          <caret line="12" column="32" lean-forward="true" selection-start-line="12" selection-start-column="32" selection-end-line="12" selection-end-column="32" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/fadulousbms/model/Type.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="341">
+          <caret line="159" column="0" lean-forward="true" selection-start-line="159" selection-start-column="0" selection-end-line="159" selection-end-column="0" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/fadulousbms/controllers/ExpensesController.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="663">
+          <caret line="63" column="123" lean-forward="false" selection-start-line="63" selection-start-column="123" selection-end-line="63" selection-end-column="123" />
           <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/fadulousbms/model/CustomTableViewControls.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="174">
-          <caret line="149" column="39" lean-forward="true" selection-start-line="149" selection-start-column="39" selection-end-line="149" selection-end-column="39" />
-          <folding>
-            <element signature="docComment;class#CustomTableViewControls#0" expanded="false" />
-            <element signature="method#makeComboBoxTableColumn#0;class#CustomTableViewControls#0" expanded="false" />
-            <element signature="e#1686#1841#0" expanded="false" />
-            <element signature="method#makeComboBoxTableColumn#1;class#CustomTableViewControls#0" expanded="false" />
-            <element signature="e#2470#2625#0" expanded="false" />
-            <element signature="method#makeDatePickerTableColumn#0;class#CustomTableViewControls#0" expanded="false" />
-            <element signature="method#makeLabelledDatePickerTableColumn#0;class#CustomTableViewControls#0" expanded="false" />
-            <element signature="method#makeDatePickerTableColumn#1;class#CustomTableViewControls#0" expanded="false" />
-            <element signature="method#makeEditableTableColumn#0;class#CustomTableViewControls#0" expanded="false" />
-            <element signature="e#5994#6299#0" expanded="false" />
-            <element signature="method#createEditableTableColumn#0;class#CustomTableViewControls#0" expanded="false" />
-            <element signature="e#7771#7954#0" expanded="false" />
-            <element signature="method#makeCheckboxedTableColumn#0;class#CustomTableViewControls#0" expanded="false" />
-            <element signature="e#8480#9184#0" expanded="false" />
-            <element signature="method#makeToggleButtonTypeTableColumn#0;class#CustomTableViewControls#0" expanded="false" />
-            <element signature="e#9726#12871#0" expanded="false" />
-            <element signature="e#11319#12798#0" expanded="false" />
-            <element signature="method#makeToggleButtonTableColumn#0;class#CustomTableViewControls#0" expanded="false" />
-            <element signature="e#13409#15780#0" expanded="false" />
-            <element signature="e#14956#15707#0" expanded="false" />
-            <element signature="method#makeToggleButtonTableColumn#1;class#CustomTableViewControls#0" expanded="false" />
-            <element signature="e#16584#18214#0" expanded="false" />
-            <element signature="e#17595#18121#0" expanded="false" />
-            <element signature="method#makeDynamicToggleButtonTableColumn#0;class#CustomTableViewControls#0" expanded="false" />
-            <element signature="e#18622#20687#0" expanded="false" />
-            <element signature="e#20132#20614#0" expanded="false" />
-            <element signature="method#makeActionTableColumn#0;class#CustomTableViewControls#0" expanded="false" />
-            <element signature="e#21092#24690#0" expanded="false" />
-            <element signature="e#21321#24246#0" expanded="false" />
-            <element signature="method#makeJobManagerAction#0;class#CustomTableViewControls#0" expanded="false" />
-            <element signature="e#25097#29223#0" expanded="false" />
-            <element signature="e#25323#25492#0" expanded="false" />
-            <element signature="e#25600#25763#0" expanded="false" />
-            <element signature="e#25880#28621#0" expanded="false" />
-            <element signature="method#printDocument#0;class#CustomTableViewControls#0" expanded="false" />
-            <element signature="method#getLabelledNode#0;class#CustomTableViewControls#0" expanded="false" />
-            <element signature="method#getSpacedButton#0;class#CustomTableViewControls#0" expanded="false" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/fadulousbms/controllers/NewQuoteController.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-198">
-          <caret line="67" column="17" lean-forward="false" selection-start-line="67" selection-start-column="17" selection-end-line="67" selection-end-column="17" />
-          <folding>
-            <element signature="docComment;class#NewQuoteController#0" expanded="false" />
-            <element signature="e#5679#5985#0" expanded="false" />
-            <element signature="method#refreshModel#0;class#NewQuoteController#0" expanded="false" />
-            <element signature="docComment;method#initialize#0;class#NewQuoteController#0" expanded="false" />
-            <element signature="method#initialize#0;class#NewQuoteController#0" expanded="false" />
-            <element signature="class#9001:12036" expanded="false" />
-            <element signature="method#updateItem#0;class#9001:12036" expanded="false" />
-            <element signature="e#10606#11035#0" expanded="false" />
-            <element signature="e#11097#11646#0" expanded="false" />
-            <element signature="method#computeQuoteTotal#0;class#NewQuoteController#0" expanded="false" />
-            <element signature="method#addQuoteItemAdditionalMaterial#0;class#NewQuoteController#0" expanded="false" />
-            <element signature="e#13605#16871#0" expanded="false" />
-            <element signature="class#15243:16773" expanded="false" />
-            <element signature="method#updateItem#0;class#15243:16773" expanded="false" />
-            <element signature="e#15519#15539#0" expanded="false" />
-            <element signature="e#16476#16671#0" expanded="false" />
-            <element signature="e#19991#21457#0" expanded="false" />
-            <element signature="e#21593#21961#0" expanded="false" />
-            <element signature="e#21675#21876#0" expanded="false" />
-            <element signature="method#newClient#0;class#NewQuoteController#0" expanded="false" />
-            <element signature="e#22384#22592#0" expanded="false" />
-            <element signature="e#22426#22547#0" expanded="false" />
-            <element signature="e#24944#25360#0" expanded="false" />
-            <element signature="method#apply#0;class#NewQuoteController#0" expanded="false" />
-            <element signature="method#updateQuote#0;class#NewQuoteController#0" expanded="false" />
-            <element signature="e#29240#29266#0" expanded="false" />
-            <element signature="method#createQuote#0;class#NewQuoteController#0" expanded="false" />
-            <element signature="e#38677#38697#0" expanded="false" />
-            <element signature="method#previousScreen#0;class#NewQuoteController#0" expanded="false" />
-            <element signature="e#40204#41076#0" expanded="false" />
-            <element signature="class#ComboBoxTableCell#0;class#NewQuoteController#0" expanded="false" />
-            <element signature="method#ComboBoxTableCell#0;class#ComboBoxTableCell#0;class#NewQuoteController#0" expanded="false" />
-            <element signature="e#43180#43793#0" expanded="false" />
-            <element signature="docComment;method#getBusinessObjectProperty#0;class#ComboBoxTableCell#0;class#NewQuoteController#0" expanded="false" />
-            <element signature="method#getBusinessObjectProperty#0;class#ComboBoxTableCell#0;class#NewQuoteController#0" expanded="false" />
-            <element signature="method#commitEdit#0;class#ComboBoxTableCell#0;class#NewQuoteController#0" expanded="false" />
-            <element signature="method#updateItem#0;class#ComboBoxTableCell#0;class#NewQuoteController#0" expanded="false" />
-            <element signature="e#48425#48511#0" expanded="false" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/fadulousbms/managers/EmployeeManager.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="124">
-          <caret line="76" column="48" lean-forward="false" selection-start-line="76" selection-start-column="48" selection-end-line="76" selection-end-column="48" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/fadulousbms/model/Employee.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="162">
-          <caret line="74" column="19" lean-forward="false" selection-start-line="74" selection-start-column="19" selection-end-line="74" selection-end-column="19" />
-          <folding>
-            <element signature="e#1769#1770#0" expanded="false" />
-            <element signature="e#1795#1796#0" expanded="false" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/fadulousbms/auxilary/PDF.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="26996">
-          <caret line="1622" column="104" lean-forward="false" selection-start-line="1622" selection-start-column="104" selection-end-line="1622" selection-end-column="104" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/fadulousbms/model/PurchaseOrderAsset.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-330">
-          <caret line="13" column="57" lean-forward="false" selection-start-line="13" selection-start-column="57" selection-end-line="13" selection-end-column="57" />
-          <folding>
-            <element signature="e#474#475#0" expanded="true" />
-            <element signature="e#522#523#0" expanded="true" />
-            <element signature="e#569#570#0" expanded="true" />
-            <element signature="e#624#625#0" expanded="true" />
-            <element signature="e#659#660#0" expanded="true" />
-            <element signature="e#701#702#0" expanded="true" />
-            <element signature="e#741#742#0" expanded="true" />
-            <element signature="e#790#791#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/fadulousbms/model/Invoice.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="101">
-          <caret line="217" column="64" lean-forward="false" selection-start-line="217" selection-start-column="64" selection-end-line="217" selection-end-column="64" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/fadulousbms/managers/ExpenseManager.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="94">
-          <caret line="89" column="61" lean-forward="false" selection-start-line="89" selection-start-column="61" selection-end-line="89" selection-end-column="61" />
-          <folding>
-            <element signature="e#950#951#0" expanded="true" />
-            <element signature="e#986#987#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/fadulousbms/controllers/ExpensesController.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="179">
-          <caret line="147" column="30" lean-forward="false" selection-start-line="147" selection-start-column="30" selection-end-line="147" selection-end-column="30" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/fadulousbms/auxilary/Validators.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="230">
-          <caret line="49" column="21" lean-forward="true" selection-start-line="49" selection-start-column="21" selection-end-line="49" selection-end-column="21" />
+        <state relative-caret-position="510">
+          <caret line="58" column="43" lean-forward="false" selection-start-line="58" selection-start-column="43" selection-end-line="58" selection-end-column="43" />
           <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/fadulousbms/controllers/AssetsController.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="102">
-          <caret line="80" column="131" lean-forward="false" selection-start-line="80" selection-start-column="131" selection-end-line="80" selection-end-column="131" />
+        <state relative-caret-position="799">
+          <caret line="74" column="117" lean-forward="false" selection-start-line="74" selection-start-column="117" selection-end-line="74" selection-end-column="117" />
           <folding />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/fadulousbms/controllers/NewAssetController.java">
+    <entry file="file://$PROJECT_DIR$/src/fadulousbms/controllers/ResourcesController.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="129">
-          <caret line="204" column="13" lean-forward="false" selection-start-line="204" selection-start-column="13" selection-end-line="204" selection-end-column="13" />
+        <state relative-caret-position="544">
+          <caret line="56" column="146" lean-forward="false" selection-start-line="56" selection-start-column="146" selection-end-line="56" selection-end-column="146" />
           <folding>
-            <element signature="docComment;class#NewAssetController#0" expanded="false" />
-            <element signature="docComment;method#initialize#0;class#NewAssetController#0" expanded="false" />
-            <element signature="method#createAsset#0;class#NewAssetController#0" expanded="false" />
-            <element signature="e#5797#5818#0" expanded="false" />
+            <element signature="class#3749:7215" expanded="false" />
           </folding>
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/fadulousbms/model/PurchaseOrder.java">
+    <entry file="file://$PROJECT_DIR$/src/fadulousbms/model/ComboBoxTableCell.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-250">
-          <caret line="170" column="5" lean-forward="false" selection-start-line="170" selection-start-column="5" selection-end-line="170" selection-end-column="5" />
-          <folding>
-            <element signature="docComment;class#PurchaseOrder#0" expanded="false" />
-            <element signature="method#idProperty#0;class#PurchaseOrder#0" expanded="false" />
-            <element signature="docComment;method#get_id#0;class#PurchaseOrder#0" expanded="false" />
-            <element signature="docComment;method#set_id#0;class#PurchaseOrder#0" expanded="false" />
-            <element signature="docComment;method#short_idProperty#0;class#PurchaseOrder#0" expanded="false" />
-            <element signature="method#short_idProperty#0;class#PurchaseOrder#0" expanded="false" />
-            <element signature="method#setMarked#0;class#PurchaseOrder#0" expanded="false" />
-            <element signature="method#numberProperty#0;class#PurchaseOrder#0" expanded="false" />
-            <element signature="method#vatProperty#0;class#PurchaseOrder#0" expanded="false" />
-            <element signature="method#setSupplier_id#0;class#PurchaseOrder#0" expanded="false" />
-            <element signature="method#setContact_person_id#0;class#PurchaseOrder#0" expanded="false" />
-            <element signature="e#4674#4675#0" expanded="true" />
-            <element signature="e#4708#4709#0" expanded="true" />
-            <element signature="method#getSupplier#0;class#PurchaseOrder#0" expanded="false" />
-            <element signature="method#getContact_person#0;class#PurchaseOrder#0" expanded="false" />
-            <element signature="method#getCreator#0;class#PurchaseOrder#0" expanded="false" />
-            <element signature="method#getCreatorID#0;class#PurchaseOrder#0" expanded="false" />
-            <element signature="method#setCreator#1;class#PurchaseOrder#0" expanded="false" />
-            <element signature="method#accountProperty#0;class#PurchaseOrder#0" expanded="false" />
-            <element signature="method#statusProperty#0;class#PurchaseOrder#0" expanded="false" />
-            <element signature="method#extraProperty#0;class#PurchaseOrder#0" expanded="false" />
-            <element signature="method#parse#0;class#PurchaseOrder#0" expanded="false" />
-            <element signature="method#get#0;class#PurchaseOrder#0" expanded="false" />
-            <element signature="method#asUTFEncodedString#0;class#PurchaseOrder#0" expanded="false" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/fadulousbms/model/PurchaseOrderResource.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="94">
-          <caret line="21" column="0" lean-forward="false" selection-start-line="21" selection-start-column="0" selection-end-line="21" selection-end-column="0" />
-          <folding>
-            <element signature="e#604#605#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/fadulousbms/model/TextFieldTableCell.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="94">
-          <caret line="101" column="0" lean-forward="false" selection-start-line="101" selection-start-column="0" selection-end-line="101" selection-end-column="0" />
+        <state relative-caret-position="1343">
+          <caret line="101" column="62" lean-forward="false" selection-start-line="101" selection-start-column="62" selection-end-line="101" selection-end-column="62" />
           <folding />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/fadulousbms/controllers/NewPurchaseOrderController.java">
+    <entry file="file://$PROJECT_DIR$/src/fadulousbms/controllers/QuotesController.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="163">
-          <caret line="551" column="37" lean-forward="false" selection-start-line="551" selection-start-column="37" selection-end-line="551" selection-end-column="37" />
+        <state relative-caret-position="884">
+          <caret line="97" column="82" lean-forward="false" selection-start-line="97" selection-start-column="82" selection-end-line="97" selection-end-column="82" />
           <folding>
-            <element signature="docComment;class#NewPurchaseOrderController#0" expanded="false" />
-            <element signature="class#3701:10222" expanded="false" />
-            <element signature="method#call#0;class#3701:10222" expanded="false" />
-            <element signature="class#4016:10144" expanded="false" />
-            <element signature="method#updateItem#0;class#4016:10144" expanded="false" />
-            <element signature="e#6084#8437#0" expanded="false" />
-            <element signature="e#8499#9067#0" expanded="false" />
-            <element signature="e#9126#9754#0" expanded="false" />
-            <element signature="e#10351#10466#0" expanded="false" />
-            <element signature="docComment;method#initialize#0;class#NewPurchaseOrderController#0" expanded="false" />
-            <element signature="method#initialize#0;class#NewPurchaseOrderController#0" expanded="false" />
-            <element signature="e#11341#11446#0" expanded="false" />
-            <element signature="e#15152#15175#0" expanded="false" />
-            <element signature="e#15529#15897#0" expanded="false" />
-            <element signature="e#15611#15812#0" expanded="false" />
-            <element signature="e#19775#19798#0" expanded="false" />
-            <element signature="e#28712#29941#0" expanded="false" />
-            <element signature="class#28790:29864" expanded="false" />
-            <element signature="method#run#0;class#28790:29864" expanded="false" />
-            <element signature="method#previousScreen#0;class#NewPurchaseOrderController#0" expanded="false" />
-            <element signature="e#30919#31791#0" expanded="false" />
-            <element signature="class#30965:31746" expanded="false" />
-            <element signature="method#run#0;class#30965:31746" expanded="false" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/fadulousbms/managers/PurchaseOrderManager.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="231">
-          <caret line="29" column="18" lean-forward="false" selection-start-line="29" selection-start-column="18" selection-end-line="29" selection-end-column="18" />
-          <folding>
-            <element signature="e#1208#1209#0" expanded="true" />
-            <element signature="e#1245#1246#0" expanded="true" />
+            <element signature="docComment;class#QuotesController#0" expanded="false" />
+            <element signature="e#4203#4690#0" expanded="false" />
+            <element signature="class#5022:11308" expanded="false" />
+            <element signature="method#call#0;class#5022:11308" expanded="false" />
+            <element signature="class#5305:11230" expanded="false" />
+            <element signature="method#updateItem#0;class#5305:11230" expanded="false" />
+            <element signature="e#7365#9636#0" expanded="false" />
+            <element signature="e#7922#9596#0" expanded="false" />
+            <element signature="class#8032:9487" expanded="false" />
+            <element signature="method#run#0;class#8032:9487" expanded="false" />
+            <element signature="e#9698#10225#0" expanded="false" />
+            <element signature="e#10284#10840#0" expanded="false" />
+            <element signature="method#refreshModel#0;class#QuotesController#0" expanded="false" />
+            <element signature="docComment;method#initialize#0;class#QuotesController#0" expanded="false" />
+            <element signature="method#initialize#0;class#QuotesController#0" expanded="false" />
+            <element signature="e#12300#12405#0" expanded="false" />
           </folding>
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/fadulousbms/controllers/PurchaseOrdersController.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="142">
-          <caret line="72" column="43" lean-forward="false" selection-start-line="72" selection-start-column="43" selection-end-line="72" selection-end-column="43" />
+        <state relative-caret-position="748">
+          <caret line="72" column="74" lean-forward="false" selection-start-line="72" selection-start-column="74" selection-end-line="72" selection-end-column="74" />
           <folding />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/fadulousbms/model/PurchaseOrderItem.java">
+    <entry file="file://$PROJECT_DIR$/src/fadulousbms/model/QuoteItem.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="162">
-          <caret line="269" column="5" lean-forward="false" selection-start-line="269" selection-start-column="5" selection-end-line="269" selection-end-column="5" />
-          <folding>
-            <element signature="method#parse#0;class#PurchaseOrderItem#0" expanded="false" />
-            <element signature="method#asUTFEncodedString#0;class#PurchaseOrderItem#0" expanded="false" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/fadulousbms/model/BusinessObject.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="152">
-          <caret line="16" column="11" lean-forward="false" selection-start-line="16" selection-start-column="11" selection-end-line="16" selection-end-column="11" />
+        <state relative-caret-position="-2533">
+          <caret line="17" column="13" lean-forward="false" selection-start-line="17" selection-start-column="13" selection-end-line="17" selection-end-column="13" />
           <folding />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/fadulousbms/managers/ResourceManager.java">
+    <entry file="file://$PROJECT_DIR$/src/fadulousbms/model/PurchaseOrder.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="51">
-          <caret line="278" column="14" lean-forward="false" selection-start-line="278" selection-start-column="14" selection-end-line="278" selection-end-column="14" />
-          <folding>
-            <element signature="method#loadDataFromServer#0;class#ResourceManager#0" expanded="false" />
-            <element signature="method#newResourceTypeWindow#0;class#ResourceManager#0" expanded="false" />
-          </folding>
+        <state relative-caret-position="138">
+          <caret line="227" column="18" lean-forward="false" selection-start-line="227" selection-start-column="18" selection-end-line="227" selection-end-column="18" />
+          <folding />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/fadulousbms/managers/AssetManager.java">
+    <entry file="file://$PROJECT_DIR$/src/fadulousbms/auxilary/PDF.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-1860">
-          <caret line="32" column="13" lean-forward="false" selection-start-line="32" selection-start-column="13" selection-end-line="32" selection-end-column="13" />
+        <state relative-caret-position="255">
+          <caret line="445" column="0" lean-forward="true" selection-start-line="445" selection-start-column="0" selection-end-line="445" selection-end-column="0" />
           <folding>
-            <element signature="docComment;class#AssetManager#0" expanded="false" />
-            <element signature="method#AssetManager#0;class#AssetManager#0" expanded="false" />
-            <element signature="method#loadDataFromServer#0;class#AssetManager#0" expanded="false" />
-            <element signature="method#handleNewAsset#0;class#AssetManager#0" expanded="false" />
-            <element signature="class#10799:11549" expanded="false" />
-            <element signature="method#call#0;class#10799:11549" expanded="false" />
-            <element signature="e#13415#17232#0" expanded="false" />
-            <element signature="method#createNewAssetType#0;class#AssetManager#0" expanded="false" />
-            <element signature="e#19346#21788#0" expanded="false" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/fadulousbms/model/Asset.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-126">
-          <caret line="275" column="4" lean-forward="true" selection-start-line="275" selection-start-column="4" selection-end-line="275" selection-end-column="4" />
-          <folding>
-            <element signature="docComment;class#Asset#0" expanded="false" />
-            <element signature="method#idProperty#0;class#Asset#0" expanded="false" />
-            <element signature="method#short_idProperty#0;class#Asset#0" expanded="false" />
-            <element signature="method#setMarked#0;class#Asset#0" expanded="false" />
-            <element signature="method#asset_nameProperty#0;class#Asset#0" expanded="false" />
-            <element signature="method#asset_descriptionProperty#0;class#Asset#0" expanded="false" />
-            <element signature="method#asset_serialProperty#0;class#Asset#0" expanded="false" />
-            <element signature="method#asset_typeProperty#0;class#Asset#0" expanded="false" />
-            <element signature="method#asset_valueProperty#0;class#Asset#0" expanded="false" />
-            <element signature="method#accountProperty#0;class#Asset#0" expanded="false" />
-            <element signature="method#quantityProperty#0;class#Asset#0" expanded="false" />
-            <element signature="method#unitProperty#0;class#Asset#0" expanded="false" />
-            <element signature="method#otherProperty#0;class#Asset#0" expanded="false" />
-            <element signature="method#parse#0;class#Asset#0" expanded="false" />
-            <element signature="method#get#0;class#Asset#0" expanded="false" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/fadulousbms/model/Resource.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-195">
-          <caret line="282" column="4" lean-forward="true" selection-start-line="282" selection-start-column="4" selection-end-line="282" selection-end-column="4" />
-          <folding>
-            <element signature="docComment;class#Resource#0" expanded="false" />
-            <element signature="method#idProperty#0;class#Resource#0" expanded="false" />
-            <element signature="method#short_idProperty#0;class#Resource#0" expanded="false" />
-            <element signature="method#setMarked#0;class#Resource#0" expanded="false" />
-            <element signature="method#resource_nameProperty#0;class#Resource#0" expanded="false" />
-            <element signature="method#resource_descriptionProperty#0;class#Resource#0" expanded="false" />
-            <element signature="method#resource_serialProperty#0;class#Resource#0" expanded="false" />
-            <element signature="method#resource_typeProperty#0;class#Resource#0" expanded="false" />
-            <element signature="method#markupProperty#0;class#Resource#0" expanded="false" />
-            <element signature="method#resource_valueProperty#0;class#Resource#0" expanded="false" />
-            <element signature="method#accountProperty#0;class#Resource#0" expanded="false" />
-            <element signature="method#unitProperty#0;class#Resource#0" expanded="false" />
-            <element signature="method#labourProperty#0;class#Resource#0" expanded="false" />
-            <element signature="method#quantityProperty#0;class#Resource#0" expanded="false" />
-            <element signature="e#4661#4662#0" expanded="true" />
-            <element signature="e#4711#4712#0" expanded="true" />
-            <element signature="method#otherProperty#0;class#Resource#0" expanded="false" />
-            <element signature="method#parse#0;class#Resource#0" expanded="false" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/fadulousbms/controllers/ViewPurchaseOrderController.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="238">
-          <caret line="729" column="21" lean-forward="false" selection-start-line="729" selection-start-column="21" selection-end-line="729" selection-end-column="21" />
-          <folding>
-            <element signature="docComment;class#ViewPurchaseOrderController#0" expanded="false" />
-            <element signature="method#refreshView#0;class#ViewPurchaseOrderController#0" expanded="false" />
-            <element signature="class#5225:12055" expanded="false" />
-            <element signature="method#call#0;class#5225:12055" expanded="false" />
-            <element signature="class#5540:11977" expanded="false" />
-            <element signature="method#updateItem#0;class#5540:11977" expanded="false" />
-            <element signature="e#7763#10172#0" expanded="false" />
-            <element signature="e#10234#10900#0" expanded="false" />
-            <element signature="e#10959#11587#0" expanded="false" />
-            <element signature="method#refreshModel#0;class#ViewPurchaseOrderController#0" expanded="false" />
-            <element signature="docComment;method#initialize#0;class#ViewPurchaseOrderController#0" expanded="false" />
-            <element signature="method#newPurchaseOrderItem#0;class#ViewPurchaseOrderController#0" expanded="false" />
-            <element signature="e#15758#17243#0" expanded="false" />
-            <element signature="e#17002#17025#0" expanded="false" />
-            <element signature="e#17379#17747#0" expanded="false" />
-            <element signature="e#17461#17662#0" expanded="false" />
-            <element signature="method#newAssetPurchaseOrderItem#0;class#ViewPurchaseOrderController#0" expanded="false" />
-            <element signature="e#20830#22276#0" expanded="false" />
-            <element signature="e#22035#22058#0" expanded="false" />
-            <element signature="e#22404#22772#0" expanded="false" />
-            <element signature="e#22486#22687#0" expanded="false" />
-            <element signature="method#updatePurchaseOrder#0;class#ViewPurchaseOrderController#0" expanded="false" />
-            <element signature="e#28371#28412#0" expanded="false" />
-            <element signature="e#30665#30731#0" expanded="false" />
+            <element signature="docComment;class#PDF#0" expanded="false" />
+            <element signature="method#printPDF#0;class#PDF#0" expanded="false" />
+            <element signature="method#drawHorzLines#0;class#PDF#0" expanded="false" />
+            <element signature="method#drawVertLines#0;class#PDF#0" expanded="false" />
+            <element signature="method#createDocumentIndex#0;class#PDF#0" expanded="false" />
+            <element signature="e#3929#3982#0" expanded="false" />
+            <element signature="method#createBordersOnPage#0;class#PDF#0" expanded="false" />
+            <element signature="method#createLinesAndBordersOnPage#0;class#PDF#0" expanded="false" />
+            <element signature="e#26223#26254#0" expanded="false" />
+            <element signature="method#createQuotePdf#0;class#PDF#0" expanded="false" />
+            <element signature="e#29373#29406#0" expanded="false" />
+            <element signature="e#30354#30407#0" expanded="false" />
+            <element signature="e#33733#33795#0" expanded="false" />
+            <element signature="e#41417#41435#0" expanded="false" />
+            <element signature="e#47615#47646#0" expanded="false" />
+            <element signature="method#createInvoicePdf#0;class#PDF#0" expanded="false" />
+            <element signature="e#52797#52830#0" expanded="false" />
+            <element signature="e#53824#53877#0" expanded="false" />
+            <element signature="e#57207#57269#0" expanded="false" />
+            <element signature="e#66624#66634#0" expanded="false" />
+            <element signature="e#71056#71087#0" expanded="false" />
+            <element signature="method#partition#0;class#PDF#0" expanded="false" />
+            <element signature="method#quickSort#0;class#PDF#0" expanded="false" />
+            <element signature="method#createGeneralJournalPdf#0;class#PDF#0" expanded="false" />
+            <element signature="e#77835#77867#0" expanded="false" />
+            <element signature="e#78366#78419#0" expanded="false" />
+            <element signature="e#87756#87765#0" expanded="false" />
+            <element signature="e#89213#89222#0" expanded="false" />
+            <element signature="e#89648#89742#0" expanded="false" />
+            <element signature="method#initLedgerPage#0;class#PDF#0" expanded="false" />
+            <element signature="e#90873#90917#0" expanded="false" />
+            <element signature="e#91059#91112#0" expanded="false" />
+            <element signature="method#createGeneralLedgerPdf#0;class#PDF#0" expanded="false" />
+            <element signature="e#95748#95780#0" expanded="false" />
+            <element signature="e#100392#100445#0" expanded="false" />
+            <element signature="e#109651#109658#0" expanded="false" />
+            <element signature="e#111405#111413#0" expanded="false" />
+            <element signature="e#112824#112832#0" expanded="false" />
+            <element signature="e#113109#113203#0" expanded="false" />
+            <element signature="method#createJobCardPdf#0;class#PDF#0" expanded="false" />
+            <element signature="e#116781#116862#0" expanded="false" />
+            <element signature="e#117387#117430#0" expanded="false" />
+            <element signature="e#120712#120852#0" expanded="false" />
+            <element signature="method#addTextToPageStream#0;class#PDF#0" expanded="false" />
+            <element signature="method#addTextToPageStream#1;class#PDF#0" expanded="false" />
+            <element signature="docComment;class#BMSPDFRenderer#0;class#PDF#0" expanded="false" />
+            <element signature="class#BMSPDFRenderer#0;class#PDF#0" expanded="false" />
+            <element signature="method#createPageDrawer#0;class#BMSPDFRenderer#0;class#PDF#0" expanded="false" />
+            <element signature="docComment;class#BMSPageDrawer#0;class#PDF#0" expanded="false" />
+            <element signature="class#BMSPageDrawer#0;class#PDF#0" expanded="false" />
+            <element signature="method#BMSPageDrawer#0;class#BMSPageDrawer#0;class#PDF#0" expanded="false" />
+            <element signature="docComment;method#getPaint#0;class#BMSPageDrawer#0;class#PDF#0" expanded="false" />
+            <element signature="method#getPaint#0;class#BMSPageDrawer#0;class#PDF#0" expanded="false" />
+            <element signature="docComment;method#showGlyph#0;class#BMSPageDrawer#0;class#PDF#0" expanded="false" />
+            <element signature="method#showGlyph#0;class#BMSPageDrawer#0;class#PDF#0" expanded="false" />
+            <element signature="docComment;method#fillPath#0;class#BMSPageDrawer#0;class#PDF#0" expanded="false" />
+            <element signature="method#fillPath#0;class#BMSPageDrawer#0;class#PDF#0" expanded="false" />
+            <element signature="e#128938#128959#0" expanded="false" />
+            <element signature="docComment;method#showAnnotation#0;class#BMSPageDrawer#0;class#PDF#0" expanded="false" />
+            <element signature="method#showAnnotation#0;class#BMSPageDrawer#0;class#PDF#0" expanded="false" />
+            <marker date="1508998055482" expanded="false" signature="20047:20175" ph="//..." />
           </folding>
         </state>
       </provider>

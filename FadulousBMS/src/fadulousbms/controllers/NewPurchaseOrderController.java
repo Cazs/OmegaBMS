@@ -93,26 +93,12 @@ public class NewPurchaseOrderController extends OperationsController implements 
                     {
                         final TableCell<PurchaseOrder, String> cell = new TableCell<PurchaseOrder, String>()
                         {
-                            final Button btnView = new Button("View");
-                            final Button btnPDF = new Button("PDF");
                             final Button btnRemove = new Button("Delete");
 
                             @Override
                             public void updateItem(String item, boolean empty)
                             {
                                 super.updateItem(item, empty);
-                                btnView.getStylesheets().add(this.getClass().getResource("../styles/home.css").toExternalForm());
-                                btnView.getStyleClass().add("btnApply");
-                                btnView.setMinWidth(100);
-                                btnView.setMinHeight(35);
-                                HBox.setHgrow(btnView, Priority.ALWAYS);
-
-                                btnPDF.getStylesheets().add(this.getClass().getResource("../styles/home.css").toExternalForm());
-                                btnPDF.getStyleClass().add("btnApply");
-                                btnPDF.setMinWidth(100);
-                                btnPDF.setMinHeight(35);
-                                HBox.setHgrow(btnPDF, Priority.ALWAYS);
-
                                 btnRemove.getStylesheets().add(this.getClass().getResource("../styles/home.css").toExternalForm());
                                 btnRemove.getStyleClass().add("btnBack");
                                 btnRemove.setMinWidth(100);
@@ -125,41 +111,7 @@ public class NewPurchaseOrderController extends OperationsController implements 
                                     setText(null);
                                 } else
                                 {
-                                    HBox hBox = new HBox(btnView, btnPDF, btnRemove);
-
-                                    btnView.setOnAction(event ->
-                                    {
-                                        PurchaseOrder purchaseOrder = getTableView().getItems().get(getIndex());
-                                        if(purchaseOrder==null)
-                                        {
-                                            IO.logAndAlert("Error " + getClass().getName(), "PurchaseOrder object is not set", IO.TAG_ERROR);
-                                            return;
-                                        }
-
-                                        /*ScreenManager.getInstance().showLoadingScreen(param ->
-                                        {
-                                            new Thread(new Runnable()
-                                            {
-                                                @Override
-                                                public void run()
-                                                {
-                                                    PurchaseOrderManager.getInstance().setSelected(purchaseOrder);
-                                                    try
-                                                    {
-                                                        if(ScreenManager.getInstance().loadScreen(Screens.VIEW_PURCHASE_ORDER.getScreen(),getClass().getResource("../views/"+Screens.VIEW_PURCHASE_ORDER.getScreen())))
-                                                        {
-                                                            Platform.runLater(() -> ScreenManager.getInstance().setScreen(Screens.VIEW_PURCHASE_ORDER.getScreen()));
-                                                        }
-                                                        else IO.log(getClass().getName(), IO.TAG_ERROR, "could not load purchase order viewer screen.");
-                                                    } catch (IOException e)
-                                                    {
-                                                        IO.log(getClass().getName(), IO.TAG_ERROR, e.getMessage());
-                                                    }
-                                                }
-                                            }).start();
-                                            return null;
-                                        });*/
-                                    });
+                                    HBox hBox = new HBox(btnRemove);
 
                                     btnRemove.setOnAction(event ->
                                     {
@@ -168,18 +120,6 @@ public class NewPurchaseOrderController extends OperationsController implements 
                                         getTableView().refresh();
                                         //TODO: remove from server
                                         IO.log(getClass().getName(), IO.TAG_INFO, "successfully removed purchase order: " + purchaseOrder.get_id());
-                                    });
-
-                                    btnPDF.setOnAction(event ->
-                                    {
-                                        /*PurchaseOrder purchaseOrder = getTableView().getItems().get(getIndex());
-                                        try
-                                        {
-                                            PDF.createPurchaseOrderPdf(purchaseOrder);
-                                        } catch (IOException ex)
-                                        {
-                                            IO.log(getClass().getName(), IO.TAG_ERROR, ex.getMessage());
-                                        }*/
                                     });
 
                                     hBox.setFillHeight(true);
@@ -195,11 +135,6 @@ public class NewPurchaseOrderController extends OperationsController implements 
                 };
         colAction.setCellValueFactory(new PropertyValueFactory<>(""));
         colAction.setCellFactory(cellFactory);
-
-        //tblPurchaseOrderItems.getSelectionModel().selectedIndexProperty().addListener((observable, oldValue, newValue) ->
-        //        PurchaseOrderManager.getInstance().setSelected(tblPurchaseOrderItems.getSelectionModel().getSelectedItem()));
-
-        //tblPurchaseOrderItems.setItems(FXCollections.observableArrayList(PurchaseOrderManager.getInstance().getPurchaseOrders()));
     }
 
     @Override
@@ -232,13 +167,13 @@ public class NewPurchaseOrderController extends OperationsController implements 
     {
         if (ResourceManager.getInstance() != null)
         {
-            if (ResourceManager.getInstance().getResources() != null)
+            if (ResourceManager.getInstance().getAll_resources() != null)
             {
-                if (ResourceManager.getInstance().getResources().size() > 0)
+                if (ResourceManager.getInstance().getAll_resources().size() > 0)
                 {
                     ComboBox<Resource> resourceComboBox = new ComboBox<>();
                     resourceComboBox.setMinWidth(120);
-                    resourceComboBox.setItems(FXCollections.observableArrayList(ResourceManager.getInstance().getResources().values()));
+                    resourceComboBox.setItems(FXCollections.observableArrayList(ResourceManager.getInstance().getAll_resources().values()));
                     HBox.setHgrow(resourceComboBox, Priority.ALWAYS);
 
                     Button btnAdd = new Button("Add");
@@ -307,15 +242,18 @@ public class NewPurchaseOrderController extends OperationsController implements 
                     });
 
                     btnNewMaterial.setOnAction(event ->
-                            ResourceManager.getInstance().newResourceWindow(param ->
+                    {
+                        stage.close();
+                        ResourceManager.getInstance().newResourceWindow(param ->
+                        {
+                            new Thread(() ->
                             {
-                                new Thread(() ->
-                                {
-                                    refreshModel();
-                                    Platform.runLater(() -> refreshView());
-                                }).start();
-                                return null;
-                            }));
+                                refreshModel();
+                                Platform.runLater(() -> refreshView());
+                            }).start();
+                            return null;
+                        });
+                    });
 
                     btnCancel.setOnAction(event ->
                             stage.close());
@@ -331,13 +269,13 @@ public class NewPurchaseOrderController extends OperationsController implements 
     {
         if (AssetManager.getInstance() != null)
         {
-            if (AssetManager.getInstance().getAssets() != null)
+            if (AssetManager.getInstance().getAll_assets() != null)
             {
-                if (AssetManager.getInstance().getAssets().size() > 0)
+                if (AssetManager.getInstance().getAll_assets().size() > 0)
                 {
                     ComboBox<Asset> assetComboBox = new ComboBox<>();
                     assetComboBox.setMinWidth(120);
-                    assetComboBox.setItems(FXCollections.observableArrayList(AssetManager.getInstance().getAssets().values()));
+                    assetComboBox.setItems(FXCollections.observableArrayList(AssetManager.getInstance().getAll_assets().values()));
                     HBox.setHgrow(assetComboBox, Priority.ALWAYS);
 
                     Button btnAdd = new Button("Add");
@@ -406,15 +344,18 @@ public class NewPurchaseOrderController extends OperationsController implements 
                     });
 
                     btnNew.setOnAction(event ->
-                            ResourceManager.getInstance().newResourceWindow(param ->
+                    {
+                        stage.close();
+                        AssetManager.getInstance().newAssetWindow(param ->
+                        {
+                            new Thread(() ->
                             {
-                                new Thread(() ->
-                                {
-                                    refreshModel();
-                                    Platform.runLater(() -> refreshView());
-                                }).start();
-                                return null;
-                            }));
+                                refreshModel();
+                                Platform.runLater(() -> refreshView());
+                            }).start();
+                            return null;
+                        });
+                    });
 
                     btnCancel.setOnAction(event ->
                             stage.close());
@@ -619,6 +560,62 @@ public class NewPurchaseOrderController extends OperationsController implements 
         {
             IO.logAndAlert(getClass().getName(), e.getMessage(), IO.TAG_ERROR);
         }
+    }
+
+    @FXML
+    public void newSupplier()
+    {
+        SupplierManager.getInstance().newSupplierWindow(param ->
+        {
+            new Thread(() ->
+            {
+                refreshModel();
+                Platform.runLater(() -> refreshView());
+            }).start();
+            return null;
+        });
+    }
+
+    @FXML
+    public void newEmployee()
+    {
+        EmployeeManager.getInstance().newEmployeeWindow(param ->
+        {
+            new Thread(() ->
+            {
+                refreshModel();
+                Platform.runLater(() -> refreshView());
+            }).start();
+            return null;
+        });
+    }
+
+    @FXML
+    public void newResource()
+    {
+        ResourceManager.getInstance().newResourceWindow(param ->
+        {
+            new Thread(() ->
+            {
+                refreshModel();
+                Platform.runLater(() -> refreshView());
+            }).start();
+            return null;
+        });
+    }
+
+    @FXML
+    public void newAsset()
+    {
+        AssetManager.getInstance().newAssetWindow(param ->
+        {
+            new Thread(() ->
+            {
+                refreshModel();
+                Platform.runLater(() -> refreshView());
+            }).start();
+            return null;
+        });
     }
 
     @FXML

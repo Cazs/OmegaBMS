@@ -19,6 +19,8 @@
                             <items>
                                 <MenuItem mnemonicParsing="false" onAction="#newPurchaseOrderItem" text="Add Material" />
                         <MenuItem mnemonicParsing="false" onAction="#newAssetPurchaseOrderItem" text="Add Asset" />
+                        <MenuItem mnemonicParsing="false" onAction="#newResource" text="Create New Resource" />
+                        <MenuItem mnemonicParsing="false" onAction="#newAsset" text="Create New Asset" />
                         <MenuItem mnemonicParsing="false" text="Close" />
                             </items>
                         </Menu>
@@ -66,19 +68,19 @@
                     </rowConstraints>
                     <children>
                         <Label text="Supplier" GridPane.rowIndex="2" />
-                        <Label text="VAT" GridPane.rowIndex="4" />
+                        <Label text="VAT [%]" GridPane.rowIndex="4" />
                         <TextField fx:id="txtVat" GridPane.columnIndex="1" GridPane.rowIndex="4" />
                         <Label text="Account" GridPane.rowIndex="5" />
                         <TextField fx:id="txtAccount" GridPane.columnIndex="1" GridPane.rowIndex="5" />
                         <Label text="Purchase Order Details" GridPane.columnSpan="2" GridPane.halignment="CENTER" GridPane.hgrow="ALWAYS" GridPane.valignment="CENTER" GridPane.vgrow="ALWAYS">
                             <font>
-                                <Font name="System Bold" size="17.0" />
+                                <Font size="25.0" />
                             </font>
                         </Label>
                   <HBox fx:id="cbxSupplier" prefHeight="100.0" prefWidth="200.0" GridPane.columnIndex="1" GridPane.rowIndex="2">
                      <children>
                         <ComboBox fx:id="cbxSuppliers" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minWidth="150.0" promptText="select supplier" HBox.hgrow="ALWAYS" />
-                        <Button minWidth="60.0" mnemonicParsing="false" styleClass="btnAdd" stylesheets="@../styles/home.css" text="New" HBox.hgrow="ALWAYS">
+                        <Button minWidth="60.0" mnemonicParsing="false" onMouseClicked="#newSupplier" styleClass="btnAdd" stylesheets="@../styles/home.css" text="New" HBox.hgrow="ALWAYS">
                            <HBox.margin>
                               <Insets left="10.0" />
                            </HBox.margin>
@@ -88,7 +90,7 @@
                   <HBox fx:id="cbxSupplier1" layoutX="379.0" layoutY="60.0" prefHeight="100.0" prefWidth="200.0" GridPane.columnIndex="1" GridPane.rowIndex="3">
                      <children>
                         <ComboBox fx:id="cbxContactPerson" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minWidth="150.0" promptText="select supplier contact person" HBox.hgrow="ALWAYS" />
-                        <Button minWidth="60.0" mnemonicParsing="false" styleClass="btnAdd" stylesheets="@../styles/home.css" text="New" HBox.hgrow="ALWAYS">
+                        <Button minWidth="60.0" mnemonicParsing="false" onMouseClicked="#newEmployee" styleClass="btnAdd" stylesheets="@../styles/home.css" text="New" HBox.hgrow="ALWAYS">
                            <HBox.margin>
                               <Insets left="10.0" />
                            </HBox.margin>

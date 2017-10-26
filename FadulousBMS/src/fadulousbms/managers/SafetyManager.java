@@ -26,6 +26,7 @@ import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.util.AbstractMap;
 import java.util.ArrayList;
+import java.util.Collection;
 
 /**
  * Created by ghost on 2017/02/24.
@@ -293,7 +294,10 @@ public class SafetyManager extends BusinessObjectManager
 
         JobManager jobManager = JobManager.getInstance();
         jobManager.loadDataFromServer();
-        Job[] jobs = jobManager.getJobs();
+        Collection<Job> jobs_arr = jobManager.getJobs().values();
+        Job[] jobs = new Job[jobs_arr.size()];
+        jobs_arr.toArray(jobs);
+
 
         VBox vbox = new VBox(10);
 

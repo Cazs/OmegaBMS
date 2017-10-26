@@ -89,7 +89,7 @@
                         <TextField fx:id="txtUnit" GridPane.columnIndex="1" GridPane.rowIndex="9" />
                         <Label text="Create New Resource" GridPane.columnSpan="2" GridPane.halignment="CENTER" GridPane.hgrow="ALWAYS" GridPane.valignment="CENTER" GridPane.vgrow="ALWAYS">
                             <font>
-                                <Font name="System Bold" size="17.0" />
+                                <Font size="25.0" />
                             </font>
                         </Label>
                     </children>

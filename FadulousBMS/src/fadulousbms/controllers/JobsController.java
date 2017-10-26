@@ -43,7 +43,16 @@ public class JobsController extends Screen implements Initializable
     public void refreshView()
     {
         IO.log(getClass().getName(), IO.TAG_INFO, "reloading jobs view..");
-
+        if(JobManager.getInstance().getJobs()==null)
+        {
+            IO.logAndAlert(getClass().getName(), "no jobs in database", IO.TAG_ERROR);
+            return;
+        }
+        if(JobManager.getInstance().getJobs().values()==null)
+        {
+            IO.logAndAlert(getClass().getName(), "no jobs in database", IO.TAG_ERROR);
+            return;
+        }
         colJobNum.setMinWidth(100);
         colJobNum.setCellValueFactory(new PropertyValueFactory<>("job_number"));
         CustomTableViewControls.makeEditableTableColumn(colRequest, TextFieldTableCell.forTableColumn(), 215, "job_description", "/api/job");
@@ -70,7 +79,7 @@ public class JobsController extends Screen implements Initializable
         //invoice_id.setCellValueFactory(new PropertyValueFactory<>("invoice_id"));
 
         ObservableList<Job> lst_jobs = FXCollections.observableArrayList();
-        lst_jobs.addAll(JobManager.getInstance().getJobs());
+        lst_jobs.addAll(JobManager.getInstance().getJobs().values());
         tblJobs.setItems(lst_jobs);
 
         Callback<TableColumn<Job, String>, TableCell<Job, String>> cellFactory
@@ -170,7 +179,45 @@ public class JobsController extends Screen implements Initializable
                                     {
                                         try
                                         {
-                                            InvoiceManager.getInstance().generateInvoice(job);
+                                            if(job!=null)
+                                            {
+                                                if(job.getAssigned_employees()!=null)
+                                                {
+                                                    if(job.getDate_started()>0 && job.getDate_completed()>0)
+                                                    {
+                                                        if(job.getDate_completed()>=job.getDate_started())
+                                                        {
+                                                            InvoiceManager.getInstance().generateInvoice(job);
+                                                            ScreenManager.getInstance().showLoadingScreen(param ->
+                                                            {
+                                                                new Thread(new Runnable()
+                                                                {
+                                                                    @Override
+                                                                    public void run()
+                                                                    {
+                                                                        try
+                                                                        {
+                                                                            if (ScreenManager.getInstance()
+                                                                                    .loadScreen(Screens.ACCOUNTING.getScreen(), getClass()
+                                                                                            .getResource("../views/" + Screens.ACCOUNTING.getScreen())))
+                                                                            {
+                                                                                Platform.runLater(() -> ScreenManager.getInstance()
+                                                                                        .setScreen(Screens.ACCOUNTING.getScreen()));
+                                                                            }
+                                                                            else IO.log(getClass()
+                                                                                    .getName(), IO.TAG_ERROR, "could not load invoice viewer screen.");
+                                                                        } catch (IOException e)
+                                                                        {
+                                                                            IO.log(getClass().getName(), IO.TAG_ERROR, e.getMessage());
+                                                                        }
+                                                                    }
+                                                                }).start();
+                                                                return null;
+                                                            });
+                                                        } else  IO.logAndAlert("Error", "Date started cannot be less than date completed.", IO.TAG_ERROR);
+                                                    }else IO.logAndAlert("Error", "Please ensure that you've entered valid dates then try again.", IO.TAG_ERROR);
+                                                } else IO.logAndAlert("Error", "Selected job has no assigned employees, please assign employees first then try again.", IO.TAG_ERROR);
+                                            } else IO.logAndAlert("Error", "Selected job is invalid.", IO.TAG_ERROR);
                                         } catch (IOException ex)
                                         {
                                             IO.log(getClass().getName(), IO.TAG_ERROR, ex.getMessage());
@@ -223,6 +270,9 @@ public class JobsController extends Screen implements Initializable
     {
         IO.log(getClass().getName(), IO.TAG_INFO, "reloading jobs data model..");
         ResourceManager.getInstance().initialize();
+        SupplierManager.getInstance().initialize();
+        ClientManager.getInstance().initialize();
+        QuoteManager.getInstance().initialize();
         JobManager.getInstance().initialize();
     }
 

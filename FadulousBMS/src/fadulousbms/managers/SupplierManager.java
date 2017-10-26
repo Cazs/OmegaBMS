@@ -6,6 +6,7 @@ import fadulousbms.auxilary.*;
 import fadulousbms.controllers.HomescreenController;
 import fadulousbms.controllers.OperationsController;
 import fadulousbms.model.*;
+import fadulousbms.model.Error;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.scene.Scene;
@@ -17,6 +18,7 @@ import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
+import javafx.util.Callback;
 
 import javax.swing.*;
 import java.io.File;
@@ -73,106 +75,14 @@ public class SupplierManager extends BusinessObjectManager
         loadDataFromServer();
     }
 
-    /*public void newWindow()
+    public void newSupplierWindow(Callback callback)
     {
-        SessionManager smgr = SessionManager.getInstance();
-        if(smgr.getActive()!=null)
-        {
-            if(!smgr.getActive().isExpired())
-            {
-                Stage stage = new Stage();
-                stage.setTitle(Globals.APP_NAME.getValue() + " - Suppliers");
-                stage.setMinWidth(320);
-                stage.setMinHeight(340);
-                //stage.setAlwaysOnTop(true);
-
-                tblSuppliers = new TableView();
-                tblSuppliers.setEditable(true);
-
-                TableColumn<Supplier, String> supplier_id = new TableColumn<>("Supplier Id");
-                supplier_id.setMinWidth(100);
-                supplier_id.setCellValueFactory(new PropertyValueFactory<>("short_id"));
-
-                TableColumn<BusinessObject, String> supplier_name = new TableColumn<>("Supplier name");
-                CustomTableViewControls.makeEditableTableColumn(supplier_name, TextFieldTableCell.forTableColumn(), 100, "supplier_name", "/api/supplier");
-
-                TableColumn<BusinessObject, String> supplier_physical_address = new TableColumn("Physical Address");
-                CustomTableViewControls.makeEditableTableColumn(supplier_physical_address, TextFieldTableCell.forTableColumn(), 130, "physical_address", "/api/supplier");
-
-                TableColumn<BusinessObject, String> supplier_postal_address = new TableColumn("Postal Address");
-                CustomTableViewControls.makeEditableTableColumn(supplier_postal_address, TextFieldTableCell.forTableColumn(), 100, "postal_address", "/api/supplier");
-
-                TableColumn<BusinessObject, String> supplier_tel = new TableColumn("Tel Number");
-                CustomTableViewControls.makeEditableTableColumn(supplier_tel, TextFieldTableCell.forTableColumn(), 100, "tel", "/api/supplier");
-
-                TableColumn<BusinessObject, String> supplier_speciality = new TableColumn("Speciality");
-                CustomTableViewControls.makeEditableTableColumn(supplier_speciality, TextFieldTableCell.forTableColumn(), 100, "speciality", "/api/supplier");
-
-                TableColumn supplier_active = new TableColumn("Active");
-                //supplier_active.setCellFactory(CheckBoxTableCell.forTableColumn(supplier_active));
-                CustomTableViewControls.makeCheckboxedTableColumn(supplier_active, CheckBoxTableCell.forTableColumn(supplier_active), 60, "active", "/api/supplier");
-
-                TableColumn<BusinessObject, Long> supplier_date_partnered = new TableColumn("Date partnered");
-                CustomTableViewControls.makeDatePickerTableColumn(supplier_date_partnered, "date_partnered", "/api/supplier");
-
-                TableColumn<BusinessObject, String> supplier_website = new TableColumn("Website");
-                CustomTableViewControls.makeEditableTableColumn(supplier_website, TextFieldTableCell.forTableColumn(), 100, "website", "/api/supplier");
-
-                TableColumn<BusinessObject, String> supplier_contact_email = new TableColumn("Contact email");
-                CustomTableViewControls.makeEditableTableColumn(supplier_contact_email, TextFieldTableCell.forTableColumn(), 100, "contact_email", "/api/supplier");
-
-                TableColumn<BusinessObject, String> supplier_other = new TableColumn("Other");
-                CustomTableViewControls.makeEditableTableColumn(supplier_other, TextFieldTableCell.forTableColumn(), 100, "other", "/api/supplier");
-
-                ObservableList<Supplier> lst_suppliers = FXCollections.observableArrayList(suppliers);
-
-                tblSuppliers.setItems(lst_suppliers);
-                tblSuppliers.getColumns().addAll(supplier_id, supplier_name, supplier_physical_address,
-                        supplier_postal_address, supplier_tel, supplier_speciality, supplier_active,
-                        supplier_date_partnered, supplier_website, supplier_contact_email, supplier_other);
-
-                MenuBar menu_bar = new MenuBar();
-                Menu file = new Menu("File");
-                Menu edit = new Menu("Edit");
-
-                MenuItem new_supplier = new MenuItem("New Supplier");
-                new_supplier.setOnAction(event -> handleNewSupplier(stage));
-                MenuItem save = new MenuItem("Save");
-                MenuItem print = new MenuItem("Print");
-
-                file.getItems().addAll(new_supplier, save, print);
-
-                menu_bar.getMenus().addAll(file, edit);
-
-                BorderPane border_pane = new BorderPane();
-                border_pane.setTop(menu_bar);
-                border_pane.setCenter(tblSuppliers);
-
-                stage.onHidingProperty().addListener((observable, oldValue, newValue) ->
-                        loadDataFromServer());
-
-                Scene scene = new Scene(border_pane);
-                stage.setScene(scene);
-                stage.show();
-                stage.centerOnScreen();
-                stage.setResizable(true);
-            }else{
-                JOptionPane.showMessageDialog(null, "Active session has expired.", "Session Expired", JOptionPane.ERROR_MESSAGE);
-            }
-        }else{
-            JOptionPane.showMessageDialog(null, "No active sessions.", "Session Expired", JOptionPane.ERROR_MESSAGE);
-        }
-    }*/
-
-    public void handleNewSupplier(Stage parentStage)
-    {
-        parentStage.setAlwaysOnTop(false);
         Stage stage = new Stage();
         stage.setTitle(Globals.APP_NAME.getValue() + " - Create New Supplier");
         stage.setMinWidth(320);
         stage.setMinHeight(350);
         stage.setHeight(700);
-        //stage.setAlwaysOnTop(true);
+        stage.setAlwaysOnTop(true);
 
         VBox vbox = new VBox(1);
 
@@ -219,7 +129,7 @@ public class SupplierManager extends BusinessObjectManager
         final TextField txt_contact_email = new TextField();
         txt_contact_email.setMinWidth(200);
         txt_contact_email.setMaxWidth(Double.MAX_VALUE);
-        HBox contact_email = CustomTableViewControls.getLabelledNode("Contact email", 200, txt_contact_email);
+        HBox contact_email = CustomTableViewControls.getLabelledNode("eMail Address", 200, txt_contact_email);
 
         final TextArea txt_other = new TextArea();
         txt_other.setMinWidth(200);
@@ -227,7 +137,7 @@ public class SupplierManager extends BusinessObjectManager
         HBox other = CustomTableViewControls.getLabelledNode("Other", 200, txt_other);
 
         HBox submit;
-        submit = CustomTableViewControls.getSpacedButton("Submit", event ->
+        submit = CustomTableViewControls.getSpacedButton("Create Supplier", event ->
         {
             String date_regex="\\d+(\\-|\\/|\\\\)\\d+(\\-|\\/|\\\\)\\d+";
 
@@ -280,7 +190,7 @@ public class SupplierManager extends BusinessObjectManager
                     headers.add(new AbstractMap.SimpleEntry<>("Cookie", SessionManager.getInstance().getActive().getSessionId()));
                 else
                 {
-                    JOptionPane.showMessageDialog(null, "No active sessions.", "Session expired", JOptionPane.ERROR_MESSAGE);
+                    IO.logAndAlert("No active sessions.", "Session expired", IO.TAG_ERROR);
                     return;
                 }
 
@@ -289,9 +199,16 @@ public class SupplierManager extends BusinessObjectManager
                 {
                     if(connection.getResponseCode()==HttpURLConnection.HTTP_OK)
                     {
-                        JOptionPane.showMessageDialog(null, "Successfully added new supplier!", "Success", JOptionPane.INFORMATION_MESSAGE);
-                    }else{
-                        JOptionPane.showMessageDialog(null, connection.getResponseCode(), "Error", JOptionPane.INFORMATION_MESSAGE);
+                        IO.logAndAlert("Success", "Successfully created a new supplier!", IO.TAG_INFO);
+                        if(callback!=null)
+                            callback.call(null);
+                    }else
+                    {
+                        //Get error message
+                        String msg = IO.readStream(connection.getErrorStream());
+                        Gson gson = new GsonBuilder().create();
+                        Error error = gson.fromJson(msg, Error.class);
+                        IO.logAndAlert("Error " +String.valueOf(connection.getResponseCode()), error.getError(), IO.TAG_ERROR);
                     }
                 }
             } catch (IOException e)

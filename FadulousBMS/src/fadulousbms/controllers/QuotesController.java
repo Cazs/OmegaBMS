@@ -15,6 +15,7 @@ import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.embed.swing.SwingFXUtils;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.Group;
@@ -56,6 +57,8 @@ public class QuotesController extends OperationsController implements Initializa
     private TableColumn     colId, colClient, colSitename, colRequest, colContactPerson, colTotal,
                             colDateGenerated, colStatus, colCreator, colRevision,
                             colExtra,colAction;
+    @FXML
+    private TableColumn<BusinessObject, String> colVat;
 
     @Override
     public void refreshView()
@@ -64,21 +67,53 @@ public class QuotesController extends OperationsController implements Initializa
 
         if(EmployeeManager.getInstance().getEmployees()==null)
         {
-            IO.logAndAlert(getClass().getName(), "no employees found in the database.", IO.TAG_ERROR);
+            IO.logAndAlert(getClass().getName(), "no employees were found in the database.", IO.TAG_ERROR);
             return;
         }
-        Employee[] employees = new Employee[EmployeeManager.getInstance().getEmployees().values().toArray().length];
-        EmployeeManager.getInstance().getEmployees().values().toArray(employees);
+        if(QuoteManager.getInstance().getQuotes()==null)
+        {
+            IO.logAndAlert(getClass().getName(), "no quotes were found in the database.", IO.TAG_ERROR);
+            return;
+        }
+        if(ClientManager.getInstance().getClients()==null)
+        {
+            IO.logAndAlert(getClass().getName(), "no clients were found in the database.", IO.TAG_ERROR);
+            return;
+        }
 
         colId.setCellValueFactory(new PropertyValueFactory<>("_id"));
-        CustomTableViewControls.makeComboBoxTableColumn(colClient, ClientManager.getInstance().getClients(), "client_id", "client_name", "/api/quote", 180);
-        CustomTableViewControls.makeComboBoxTableColumn(colContactPerson, employees, "contact_person_id", "firstname|lastname", "/api/quote", 160, true);
+
+
+        colClient.setMinWidth(120);
+        colClient.setCellValueFactory(new PropertyValueFactory<>("client_id"));
+        colClient.setCellFactory(col -> new ComboBoxTableCell(ClientManager.getInstance().getClients(), "client_id", "/api/quote"));
+
+        colContactPerson.setMinWidth(120);
+        colContactPerson.setCellValueFactory(new PropertyValueFactory<>("contact_person_id"));
+        colContactPerson.setCellFactory(col -> new ComboBoxTableCell(EmployeeManager.getInstance().getEmployees(), "contact_person_id", "usr", "/api/quote"));
+
         CustomTableViewControls.makeLabelledDatePickerTableColumn(colDateGenerated, "date_generated", "/api/quote");
         CustomTableViewControls.makeEditableTableColumn(colRequest, TextFieldTableCell.forTableColumn(), 100, "request", "/api/quote");
         CustomTableViewControls.makeEditableTableColumn(colSitename, TextFieldTableCell.forTableColumn(), 100, "sitename", "/api/quote");
         CustomTableViewControls.makeDynamicToggleButtonTableColumn(colStatus,100, "status", new String[]{"0","PENDING","1","SALE"}, false,"/api/quote");
         colCreator.setCellValueFactory(new PropertyValueFactory<>("creator"));
         colRevision.setCellValueFactory(new PropertyValueFactory<>("revision"));
+        CustomTableViewControls.makeEditableTableColumn(colVat, TextFieldTableCell.forTableColumn(), 100, "vat", "/api/quote");
+        colVat.setOnEditCommit(event ->
+        {
+            BusinessObject bo = event.getRowValue();
+            if(bo!=null)
+            {
+                bo.parse("vat", event.getNewValue());
+                RemoteComms.updateBusinessObjectOnServer(bo, "/api/quote", "vat");
+                tblQuotes.refresh();
+                /*new Thread(() ->
+                {
+                    refreshModel();
+                    Platform.runLater(() -> refreshView());
+                }).start();*/
+            }
+        });
         colTotal.setCellValueFactory(new PropertyValueFactory<>("total"));
         CustomTableViewControls.makeEditableTableColumn(colExtra, TextFieldTableCell.forTableColumn(), 100, "extra", "/api/quote");
 
@@ -196,7 +231,7 @@ public class QuotesController extends OperationsController implements Initializa
         tblQuotes.getSelectionModel().selectedIndexProperty().addListener((observable, oldValue, newValue) ->
                 QuoteManager.getInstance().setSelectedQuote(tblQuotes.getSelectionModel().getSelectedItem()));
 
-        tblQuotes.setItems(FXCollections.observableArrayList(QuoteManager.getInstance().getQuotes()));
+        tblQuotes.setItems(FXCollections.observableArrayList(QuoteManager.getInstance().getQuotes().values()));
     }
 
     @Override

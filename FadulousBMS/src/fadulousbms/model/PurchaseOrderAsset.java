@@ -17,30 +17,41 @@ public class PurchaseOrderAsset extends PurchaseOrderItem
 
     public String getItem_name()
     {
-        return getItem().getAsset_name();
+        if(getItem()!=null)
+            return getItem().getAsset_name();
+        return "N/A";
     }
 
     public String getItem_description()
     {
-        return getItem().getAsset_description();
+        if(getItem()!=null)
+            return getItem().getAsset_description();
+        return "N/A";
     }
 
     public String getUnit()
     {
-        return getItem().getUnit();
+        if(getItem()!=null)
+            return getItem().getUnit();
+        return "N/A";
     }
 
     public double getCostValue()
     {
-        return getItem().getAsset_value();
+        if(getItem()!=null)
+            return getItem().getAsset_value();
+        return 0;
     }
 
     public Asset getItem()
     {
+        if(super.getItem()!=null)
+            return (Asset) super.getItem();
+
         AssetManager.getInstance().loadDataFromServer();
-        if (AssetManager.getInstance().getAssets() != null)
+        if (AssetManager.getInstance().getAll_assets() != null)
         {
-            Asset asset = AssetManager.getInstance().getAssets().get(getItem_id());
+            Asset asset = AssetManager.getInstance().getAll_assets().get(getItem_id());
             if (asset != null)
                 return asset;
             else IO.log(TAG, IO.TAG_ERROR, "key returns null po asset object.");

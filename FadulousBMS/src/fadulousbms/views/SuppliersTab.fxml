@@ -1,8 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.lang.*?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.control.cell.*?>
 <?import javafx.scene.layout.*?>
 
-<Tab text="Suppliers" fx:id="suppliersTab" fx:controller="fadulousbms.controllers.SuppliersController" xmlns:fx="http://javafx.com/fxml">
+<Tab fx:id="suppliersTab" text="Suppliers" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/8" fx:controller="fadulousbms.controllers.SuppliersController">
     <content>
         <TableView fx:id="tblSuppliers" editable="true" tableMenuButtonVisible="true" VBox.vgrow="ALWAYS">
             <columns>
@@ -11,57 +14,57 @@
                         <PropertyValueFactory property="_id" />
                     </cellValueFactory>
                 </TableColumn>
-                <TableColumn fx:id="colSupplierName" maxWidth="1.7976931348623157E308" minWidth="180.0" prefWidth="-1.0" text="Supplier Name">
+                <TableColumn fx:id="colSupplierName" maxWidth="1.7976931348623157E308" minWidth="80.0" prefWidth="-1.0" text="Supplier Name">
                     <cellValueFactory>
                         <PropertyValueFactory property="supplier_name" />
                     </cellValueFactory>
                 </TableColumn>
-                <TableColumn fx:id="colSupplierPhysicalAddress" maxWidth="1.7976931348623157E308" minWidth="250.0" prefWidth="-1.0" text="Physical Address">
+                <TableColumn fx:id="colSupplierPhysicalAddress" maxWidth="1.7976931348623157E308" minWidth="100.0" prefWidth="-1.0" text="Physical Address">
                     <cellValueFactory>
                         <PropertyValueFactory property="physical_address" />
                     </cellValueFactory>
                 </TableColumn>
-                <TableColumn fx:id="colSupplierPostalAddress" maxWidth="1.7976931348623157E308" minWidth="150.0" prefWidth="-1.0" text="Postal Address" visible="true">
+                <TableColumn fx:id="colSupplierPostalAddress" maxWidth="1.7976931348623157E308" minWidth="100.0" prefWidth="-1.0" text="Postal Address" visible="true">
                     <cellValueFactory>
                         <PropertyValueFactory property="postal_address" />
                     </cellValueFactory>
                 </TableColumn>
-                <TableColumn fx:id="colSupplierTel" maxWidth="1.7976931348623157E308" minWidth="150.0" prefWidth="-1.0" text="Tel">
+                <TableColumn fx:id="colSupplierTel" maxWidth="1.7976931348623157E308" minWidth="80.0" prefWidth="-1.0" text="Tel">
                     <cellValueFactory>
                         <PropertyValueFactory property="tel" />
                     </cellValueFactory>
                 </TableColumn>
-                <TableColumn fx:id="colSupplierFax" maxWidth="1.7976931348623157E308" minWidth="150.0" prefWidth="-1.0" text="Fax">
+                <TableColumn fx:id="colSupplierFax" maxWidth="1.7976931348623157E308" minWidth="80.0" prefWidth="-1.0" text="Fax">
                     <cellValueFactory>
                         <PropertyValueFactory property="fax" />
                     </cellValueFactory>
                 </TableColumn>
-                <TableColumn fx:id="colSupplierSpeciality" maxWidth="1.7976931348623157E308" minWidth="150.0" prefWidth="-1.0" text="Speciality">
+                <TableColumn fx:id="colSupplierSpeciality" maxWidth="1.7976931348623157E308" minWidth="80.0" prefWidth="-1.0" text="Speciality">
                     <cellValueFactory>
                         <PropertyValueFactory property="speciality" />
                     </cellValueFactory>
                 </TableColumn>
-                <TableColumn fx:id="colSupplierActive" maxWidth="1.7976931348623157E308" minWidth="150.0" prefWidth="-1.0" text="Active">
+                <TableColumn fx:id="colSupplierActive" maxWidth="1.7976931348623157E308" minWidth="70.0" prefWidth="-1.0" text="Active">
                     <cellValueFactory>
                         <PropertyValueFactory property="active" />
                     </cellValueFactory>
                 </TableColumn>
-                <TableColumn fx:id="colSupplierDatePartnered" maxWidth="1.7976931348623157E308" minWidth="150.0" prefWidth="-1.0" text="Date Partnered">
+                <TableColumn fx:id="colSupplierDatePartnered" maxWidth="1.7976931348623157E308" minWidth="80.0" prefWidth="-1.0" text="Date Partnered">
                     <cellValueFactory>
                         <PropertyValueFactory property="date_partnered" />
                     </cellValueFactory>
                 </TableColumn>
-                <TableColumn fx:id="colSupplierWebsite" maxWidth="1.7976931348623157E308" minWidth="150.0" prefWidth="-1.0" text="Website">
+                <TableColumn fx:id="colSupplierWebsite" maxWidth="1.7976931348623157E308" minWidth="80.0" prefWidth="-1.0" text="Website">
                     <cellValueFactory>
                         <PropertyValueFactory property="website" />
                     </cellValueFactory>
                 </TableColumn>
-                <TableColumn fx:id="colSupplierOther" maxWidth="1.7976931348623157E308" minWidth="150.0" prefWidth="-1.0" text="Other">
+                <TableColumn fx:id="colSupplierOther" maxWidth="1.7976931348623157E308" minWidth="50.0" prefWidth="-1.0" text="Other" visible="false">
                     <cellValueFactory>
                         <PropertyValueFactory property="other" />
                     </cellValueFactory>
                 </TableColumn>
-                <TableColumn fx:id="colAction" maxWidth="1.7976931348623157E308" minWidth="150.0" prefWidth="-1.0" text="Action">
+                <TableColumn fx:id="colAction" maxWidth="1.7976931348623157E308" minWidth="200.0" prefWidth="-1.0" text="Action">
                 </TableColumn>
             </columns>
         </TableView>
