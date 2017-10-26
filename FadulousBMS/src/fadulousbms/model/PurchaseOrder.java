@@ -33,9 +33,6 @@ public class PurchaseOrder implements BusinessObject, Serializable
     private String creator;
     private String account;
     private int status;
-    private Employee creator_employee;
-    private Supplier supplier;
-    private Employee contact_person;
     private boolean marked;
     private String extra;
     public static final String TAG = "PurchaseOrder";
@@ -101,7 +98,7 @@ public class PurchaseOrder implements BusinessObject, Serializable
         this.number = number;
     }
 
-    private StringProperty vatProperty(){return new SimpleStringProperty(String.valueOf(vat));}
+    private StringProperty vatProperty(){return new SimpleStringProperty(String.valueOf(getVatVal()));}
 
     public String getVat()
     {
@@ -135,13 +132,7 @@ public class PurchaseOrder implements BusinessObject, Serializable
 
     public void setSupplier_id(String supplier_id)
     {
-        SupplierManager.getInstance().loadDataFromServer();
-        HashMap<String, Supplier> suppliers = SupplierManager.getInstance().getSuppliers();
-        if(suppliers!=null)
-        {
-            setSupplier(suppliers.get(supplier_id));
-            this.supplier_id = supplier_id;
-        }else IO.log(getClass().getName(), IO.TAG_ERROR, "no suppliers were found in database.");
+        this.supplier_id = supplier_id;
     }
 
     public StringProperty totalProperty()
@@ -157,6 +148,26 @@ public class PurchaseOrder implements BusinessObject, Serializable
         return total;
     }
 
+    public StringProperty discountProperty()
+    {
+        return new SimpleStringProperty(String.valueOf(getDiscount() + "%"));
+    }
+
+    public double getDiscount()
+    {
+        if(getItems()==null)
+        {
+            IO.log(getClass().getName(), IO.TAG_ERROR, "purchase order has no items.");
+            return 0;
+        }
+        double total_discount=0;
+        for(PurchaseOrderItem item: getItems())
+            total_discount+=item.getDiscountValue();
+        if(total_discount>0)
+            return total_discount/((getItems().length));
+        return 0;
+    }
+
     public String getContact_person_id()
     {
         return contact_person_id;
@@ -164,13 +175,7 @@ public class PurchaseOrder implements BusinessObject, Serializable
 
     public void setContact_person_id(String contact_person_id)
     {
-        EmployeeManager.getInstance().loadDataFromServer();
-        HashMap<String, Employee> employees = EmployeeManager.getInstance().getEmployees();
-        if(employees!=null)
-        {
-            setContact_person(employees.get(contact_person_id));
-            this.contact_person_id=contact_person_id;
-        }
+        this.contact_person_id=contact_person_id;
     }
 
     public PurchaseOrderItem[] getItems()
@@ -193,15 +198,9 @@ public class PurchaseOrder implements BusinessObject, Serializable
         SupplierManager.getInstance().loadDataFromServer();
         HashMap<String, Supplier> suppliers = SupplierManager.getInstance().getSuppliers();
         if(suppliers!=null)
-        {
             return suppliers.get(supplier_id);
-        }else IO.log(getClass().getName(), IO.TAG_ERROR, "no suppliers were found in database.");
+        else IO.log(getClass().getName(), IO.TAG_ERROR, "no suppliers were found in database.");
         return null;
-    }
-
-    public void setSupplier(Supplier supplier)
-    {
-        this.supplier = supplier;
     }
 
     public Employee getContact_person()
@@ -209,50 +208,29 @@ public class PurchaseOrder implements BusinessObject, Serializable
         EmployeeManager.getInstance().loadDataFromServer();
         HashMap<String, Employee> employees = EmployeeManager.getInstance().getEmployees();
         if(employees!=null)
-        {
             return employees.get(contact_person_id);
-        }
         return null;
-    }
-
-    public void setContact_person(Employee contact_person)
-    {
-        this.contact_person = contact_person;
     }
 
     public StringProperty creatorProperty()
     {
-        return new SimpleStringProperty(getCreator());
+        return new SimpleStringProperty(getCreator().toString());
     }
 
-    public String getCreator()
+    public Employee getCreator()
     {
         if(creator==null)
-            return "N/A";
+            return null;
         else
         {
             EmployeeManager.getInstance().loadDataFromServer();
-            return EmployeeManager.getInstance().getEmployees().get(creator).toString();
+            return EmployeeManager.getInstance().getEmployees().get(creator);
         }
     }
-
-    public String getCreatorID(){return this.creator;}
 
     public void setCreator(String creator)
     {
         this.creator = creator;
-    }
-
-    public Employee getCreatorEmployee()
-    {
-        return this.creator_employee;
-    }
-
-    public void setCreator(Employee creator_employee)
-    {
-        this.creator_employee = creator_employee;
-        if(creator_employee!=null)
-            setCreator(creator_employee.getUsr());
     }
 
     private StringProperty accountProperty(){return new SimpleStringProperty(account);}
@@ -349,7 +327,7 @@ public class PurchaseOrder implements BusinessObject, Serializable
             case "contact_person_id":
                 return getContact_person_id();
             case "vat":
-                return getVat();
+                return getVatVal();
             case "account":
                 return getAccount();
             case "date_logged":

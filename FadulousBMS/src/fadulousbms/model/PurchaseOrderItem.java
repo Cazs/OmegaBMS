@@ -169,18 +169,30 @@ public abstract class PurchaseOrderItem implements BusinessObject, Serializable
 
     public String getCost()
     {
-        return String.valueOf(getCostValue());
+        return Globals.CURRENCY_SYMBOL.getValue() + " " + String.valueOf(getCostValue());
     }
 
     public abstract double getCostValue();
 
     private StringProperty discountProperty(){return new SimpleStringProperty(String.valueOf(discount));}
 
-    public String getDiscount(){return String.valueOf(this.discount);}
+    public String getDiscount(){return String.valueOf(this.discount) + "%";}
 
     public double getDiscountValue(){return this.discount;}
 
-    public void setDiscount(double discount){this.discount=discount;}
+    public void setDiscount(double discount)
+    {
+        this.discount = discount;
+    }
+
+    private StringProperty totalProperty(){return new SimpleStringProperty(String.valueOf(getTotal()));}
+
+    public double getTotal()
+    {
+        return (getCostValue()-(getCostValue()*(getDiscountValue()/100)))*getQuantityValue(); //discounted value * qty
+    }
+
+    public abstract BusinessObject getItem();
 
     private StringProperty extraProperty(){return new SimpleStringProperty(extra);}
 
@@ -195,7 +207,7 @@ public abstract class PurchaseOrderItem implements BusinessObject, Serializable
     }
 
     //public abstract BusinessObject getItem();
-    public BusinessObject getItem()
+   /* public BusinessObject getItem()
     {
         return this.item;
     }
@@ -203,7 +215,7 @@ public abstract class PurchaseOrderItem implements BusinessObject, Serializable
     public void setItem(BusinessObject item)
     {
         this.item=item;
-    }
+    }*/
 
     @Override
     public void parse(String var, Object val)

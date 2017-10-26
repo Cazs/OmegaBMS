@@ -6,6 +6,7 @@
 package fadulousbms.controllers;
 
 import fadulousbms.auxilary.IO;
+import fadulousbms.auxilary.PDF;
 import fadulousbms.auxilary.Screen;
 import fadulousbms.managers.PurchaseOrderManager;
 import fadulousbms.managers.QuoteManager;
@@ -87,6 +88,7 @@ public class PurchaseOrdersController extends Screen implements Initializable
                         final TableCell<PurchaseOrder, String> cell = new TableCell<PurchaseOrder, String>()
                         {
                             final Button btnView = new Button("View");
+                            final Button btnPDF = new Button("PDF");
                             final Button btnRemove = new Button("Delete");
 
                             @Override
@@ -98,6 +100,12 @@ public class PurchaseOrdersController extends Screen implements Initializable
                                 btnView.setMinWidth(100);
                                 btnView.setMinHeight(35);
                                 HBox.setHgrow(btnView, Priority.ALWAYS);
+
+                                btnPDF.getStylesheets().add(this.getClass().getResource("../styles/home.css").toExternalForm());
+                                btnPDF.getStyleClass().add("btnAdd");
+                                btnPDF.setMinWidth(100);
+                                btnPDF.setMinHeight(35);
+                                HBox.setHgrow(btnPDF, Priority.ALWAYS);
 
                                 btnRemove.getStylesheets().add(this.getClass().getResource("../styles/home.css").toExternalForm());
                                 btnRemove.getStyleClass().add("btnBack");
@@ -111,7 +119,7 @@ public class PurchaseOrdersController extends Screen implements Initializable
                                     setText(null);
                                 } else
                                 {
-                                    HBox hBox = new HBox(btnView, btnRemove);
+                                    HBox hBox = new HBox(btnView, btnPDF, btnRemove);
                                     PurchaseOrder po = getTableView().getItems().get(getIndex());
 
                                     btnView.setOnAction(event ->
@@ -144,6 +152,24 @@ public class PurchaseOrdersController extends Screen implements Initializable
                                             }).start();
                                             return null;
                                         });
+                                    });
+
+                                    btnPDF.setOnAction(event ->
+                                    {
+                                        if (po == null)
+                                        {
+                                            IO.logAndAlert("Error " + getClass().getName(), "Purchase Order object is not set", IO.TAG_ERROR);
+                                            return;
+                                        }
+                                        PurchaseOrderManager.getInstance().setSelected(po);
+                                        try
+                                        {
+                                            PDF.createPurchaseOrderPdf(po);
+                                        } catch (IOException e)
+                                        {
+                                            IO.logAndAlert("IO Error " + getClass().getName(), e.getMessage(), IO.TAG_ERROR);
+                                            e.printStackTrace();
+                                        }
                                     });
 
                                     btnRemove.setOnAction(event ->

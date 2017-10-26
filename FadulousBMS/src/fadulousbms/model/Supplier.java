@@ -295,12 +295,14 @@ public class Supplier implements BusinessObject, Serializable
                     + URLEncoder.encode(tel, "UTF-8") + "&");
             result.append(URLEncoder.encode("fax","UTF-8") + "="
                     + URLEncoder.encode(fax, "UTF-8") + "&");
-            result.append(URLEncoder.encode("speciality","UTF-8") + "="
-                    + URLEncoder.encode(speciality, "UTF-8") + "&");
+            if(fax!=null)
+                result.append(URLEncoder.encode("speciality","UTF-8") + "="
+                        + URLEncoder.encode(speciality, "UTF-8") + "&");
             result.append(URLEncoder.encode("active","UTF-8") + "="
                     + URLEncoder.encode(String.valueOf(active), "UTF-8") + "&");
-            result.append(URLEncoder.encode("date_partnered","UTF-8") + "="
-                    + URLEncoder.encode(String.valueOf(date_partnered), "UTF-8") + "&");
+            if(date_partnered>0)
+                result.append(URLEncoder.encode("date_partnered","UTF-8") + "="
+                        + URLEncoder.encode(String.valueOf(date_partnered), "UTF-8") + "&");
             result.append(URLEncoder.encode("website","UTF-8") + "="
                     + URLEncoder.encode(website, "UTF-8") + "&");
             result.append(URLEncoder.encode("contact_email","UTF-8") + "="

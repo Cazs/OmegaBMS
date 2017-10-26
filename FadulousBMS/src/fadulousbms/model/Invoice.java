@@ -5,9 +5,11 @@
  */
 package fadulousbms.model;
 
+import fadulousbms.auxilary.Globals;
 import fadulousbms.auxilary.IO;
 import fadulousbms.managers.ClientManager;
 import fadulousbms.managers.EmployeeManager;
+import fadulousbms.managers.JobManager;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 
@@ -23,12 +25,8 @@ import java.util.ArrayList;
 public class Invoice implements BusinessObject, Serializable
 {
     private String _id;
-    //private String quote_id;
     private String job_id;
     private String creator;
-    private Employee creator_employee;
-    //private Quote quote;
-    private Job job;
     private long date_generated;
     private String account;
     private String extra;
@@ -96,18 +94,6 @@ public class Invoice implements BusinessObject, Serializable
         this.receivable = receivable;
     }
 
-    /*private StringProperty quote_idProperty(){return new SimpleStringProperty(quote_id);}
-
-    public String getQuote_id()
-    {
-        return quote_id;
-    }
-
-    public void setQuote_id(String quote_id)
-    {
-        this.quote_id = quote_id;
-    }*/
-
     private StringProperty job_idProperty(){return new SimpleStringProperty(job_id);}
 
     public String getJob_id()
@@ -125,128 +111,69 @@ public class Invoice implements BusinessObject, Serializable
         return new SimpleStringProperty(_id);//TODO: fix this!
     }
 
-    public double getTotal()
-    {
-        if(job==null)
-        {
-            IO.logAndAlert("Error " + getClass().getName(), "Job object is not set", IO.TAG_ERROR);
-            return 0;
-        }
-        if(job.getQuote()==null)
-        {
-            IO.logAndAlert("Error " + getClass().getName(), "Job Quote object is not set", IO.TAG_ERROR);
-            return 0;
-        }
-
-        return job.getQuote().getTotal();
-    }
-
     private StringProperty totalProperty()
     {
-        if(job==null)
-        {
-            IO.logAndAlert("Error " + getClass().getName(), "Job object is not set", IO.TAG_ERROR);
-            return new SimpleStringProperty("N/A");
-        }
-        if(job.getQuote()==null)
-        {
-            IO.logAndAlert("Error " + getClass().getName(), "Job Quote object is not set", IO.TAG_ERROR);
-            return new SimpleStringProperty("N/A");
-        }
-
-        return job.getQuote().totalProperty();
+        return new SimpleStringProperty(Globals.CURRENCY_SYMBOL.getValue() + " " + String.valueOf(getTotal()));
     }
 
-    public long getJob_number()
+    public double getTotal()
     {
-        if(job==null)
-        {
-            IO.logAndAlert("Error " + getClass().getName(), "Job object is not set", IO.TAG_ERROR);
-            return 0;
-        }
-        return job.getJob_number();
+        if(getJob()!=null)
+            return getJob().getTotal();
+        else IO.log(getClass().getName(), IO.TAG_ERROR, "Job object is not set");
+        return 0;
     }
 
     public StringProperty job_numberProperty()
     {
-        if(job==null)
-        {
-            IO.logAndAlert("Error " + getClass().getName(), "Job object is not set", IO.TAG_ERROR);
-            return new SimpleStringProperty("N/A");
-        }
-        return new SimpleStringProperty(String.valueOf(job.getJob_number()));
+        return new SimpleStringProperty(String.valueOf(getJob_number()));
     }
 
-    public String getClient()
+    public long getJob_number()
     {
-        return  clientProperty().get();
+        if(getJob()!=null)
+            return getJob().getJob_number();
+        else IO.log(getClass().getName(), IO.TAG_ERROR, "Job object is not set");
+        return 0;
+    }
+
+    public Client getClient()
+    {
+        if(getJob()!=null)
+            if(getJob().getQuote()!=null)
+                return getJob().getQuote().getClient();
+            else IO.log(getClass().getName(), IO.TAG_ERROR, "Job->Quote object is not set");
+        else IO.log(getClass().getName(), IO.TAG_ERROR, "Job object is not set");
+        return null;
     }
 
     private StringProperty clientProperty()
     {
-        if(job==null)
-        {
-            IO.logAndAlert("Error " + getClass().getName(), "Job object is not set", IO.TAG_ERROR);
-            return new SimpleStringProperty("N/A");
-        }
-        if(job.getQuote()==null)
-        {
-            IO.logAndAlert("Error " + getClass().getName(), "Job->Quote object is not set", IO.TAG_ERROR);
-            return new SimpleStringProperty("N/A");
-        }
-        if(job.getQuote().getClient().getClient_name()==null)
-        {
-            IO.logAndAlert("Error " + getClass().getName(), "Job->Quote->Client object is not set", IO.TAG_ERROR);
-            return new SimpleStringProperty("N/A");
-        }
-        if(ClientManager.getInstance().getClients()==null)
-        {
-            IO.logAndAlert("Error " + getClass().getName(), "Job->Client object is not set", IO.TAG_ERROR);
-            return new SimpleStringProperty("N/A");
-        }
-
-        for(Client client : ClientManager.getInstance().getClients().values())
-            if(client.get_id().equals(job.getQuote().getClient_id()))
-                return new SimpleStringProperty(job.getQuote().getClient().getClient_name());
-
-        return new SimpleStringProperty("N/A");
+        if(getClient()!=null)
+            return new SimpleStringProperty(getClient().toString());
+        else IO.log(getClass().getName(), IO.TAG_ERROR, "Job->Quote->Client object is not set");
+        return null;
     }
 
     private StringProperty creatorProperty()
     {
-        if(EmployeeManager.getInstance().getEmployees()==null)
-        {
-            IO.logAndAlert("Error " + getClass().getName(), "No employees were found in the database.", IO.TAG_ERROR);
-            return new SimpleStringProperty(creator);
-        }
-
-        Employee[] employees = new Employee[EmployeeManager.getInstance().getEmployees().size()];
-        EmployeeManager.getInstance().getEmployees().values().toArray(employees);
-
-        for(Employee employee : employees)
-            if(employee.getUsr().equals(creator))
-                return new SimpleStringProperty(employee.toString());
-        return new SimpleStringProperty(creator);
+        return new SimpleStringProperty(getCreator().toString());
     }
 
-    public String getCreator()
+    public Employee getCreator()
     {
-        return creatorProperty().get();
+        if(creator==null)
+            return null;
+        else
+        {
+            EmployeeManager.getInstance().loadDataFromServer();
+            return EmployeeManager.getInstance().getEmployees().get(creator);
+        }
     }
 
     public void setCreator(String creator)
     {
         this.creator = creator;
-    }
-
-    public Employee getCreator_employee()
-    {
-        return creator_employee;
-    }
-
-    public void setCreator_employee(Employee creator_employee)
-    {
-        this.creator_employee = creator_employee;
     }
 
     private StringProperty extraProperty(){return new SimpleStringProperty(extra);}
@@ -261,24 +188,19 @@ public class Invoice implements BusinessObject, Serializable
         this.extra = extra;
     }
 
-    /*public Quote getQuote()
-    {
-        return quote;
-    }
-
-    public void setQuote(Quote quote)
-    {
-        this.quote = quote;
-    }*/
-
     public Job getJob()
     {
-        return job;
-    }
-
-    public void setJob(Job job)
-    {
-        this.job = job;
+        if(job_id==null)
+        {
+            IO.log(getClass().getName(), IO.TAG_ERROR, "job_id is not set.");
+            return null;
+        }
+        JobManager.getInstance().loadDataFromServer();
+        if(JobManager.getInstance().getJobs()!=null)
+        {
+            return JobManager.getInstance().getJobs().get(job_id);
+        }else IO.log(getClass().getName(), IO.TAG_ERROR, "No Jobs were found in the database.");
+        return null;
     }
 
     @Override
@@ -289,22 +211,22 @@ public class Invoice implements BusinessObject, Serializable
             switch (var.toLowerCase())
             {
                 case "date_generated":
-                    date_generated = Long.parseLong(String.valueOf(val));
+                    setDate_generated(Long.parseLong(String.valueOf(val)));
                     break;
                 case "job_id":
-                    job_id = String.valueOf(val);
+                    setJob_id(String.valueOf(val));
                     break;
                 case "creator":
-                    creator = String.valueOf(val);
+                    setCreator(String.valueOf(val));
                     break;
                 case "account":
-                    account = String.valueOf(val);
+                    setAccount(String.valueOf(val));
                     break;
                 case "receivable":
-                    receivable = Double.valueOf(String.valueOf(val));
+                    setReceivable(Double.valueOf(String.valueOf(val)));
                     break;
                 case "extra":
-                    extra = String.valueOf(val);
+                    setExtra(String.valueOf(val));
                     break;
                 default:
                     IO.log(getClass().getName(), IO.TAG_ERROR, "unknown Invoice attribute '" + var + "'.");
@@ -322,21 +244,21 @@ public class Invoice implements BusinessObject, Serializable
         switch (var.toLowerCase())
         {
             case "_id":
-                return _id;
+                return get_id();
             case "short_id":
                 return getShort_id();
             case "job_id":
-                return job_id;
+                return getJob_id();
             case "date_generated":
-                return date_generated;
+                return getDate_generated();
             case "creator":
-                return creator;
+                return getCreator();
             case "account":
-                return account;
+                return getAccount();
             case "receivable":
-                return receivable;
+                return getReceivable();
             case "extra":
-                return extra;
+                return getExtra();
             default:
                 IO.log(getClass().getName(), IO.TAG_ERROR, "unknown Invoice attribute '" + var + "'.");
                 return null;

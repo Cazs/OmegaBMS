@@ -226,7 +226,7 @@ public class NewPurchaseOrderController extends OperationsController implements 
                         {
                             PurchaseOrderResource purchaseOrderResource = new PurchaseOrderResource();
                             purchaseOrderResource.setItem_number(tblPurchaseOrderItems.getItems().size());
-                            purchaseOrderResource.setItem(resourceComboBox.getValue());
+                            //purchaseOrderResource.setItem(resourceComboBox.getValue());
                             purchaseOrderResource.setItem_id(resourceComboBox.getValue().get_id());
                             purchaseOrderResource.setQuantity(1);
                             purchaseOrderResource.setDiscount(0);
@@ -328,7 +328,7 @@ public class NewPurchaseOrderController extends OperationsController implements 
                         {
                             PurchaseOrderAsset purchaseOrderAsset = new PurchaseOrderAsset();
                             purchaseOrderAsset.setItem_number(tblPurchaseOrderItems.getItems().size());
-                            purchaseOrderAsset.setItem(assetComboBox.getValue());
+                            //purchaseOrderAsset.setItem(assetComboBox.getValue());
                             purchaseOrderAsset.setItem_id(assetComboBox.getValue().get_id());
                             purchaseOrderAsset.setQuantity(1);
                             purchaseOrderAsset.setDiscount(0);

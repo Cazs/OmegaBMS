@@ -90,10 +90,10 @@ public class ViewPurchaseOrderController extends OperationsController implements
         else IO.log(getClass().getName(), IO.TAG_ERROR, "selected po has no valid contact person.");
 
         //set up text fields
-        txtVat.setText(PurchaseOrderManager.getInstance().getSelected().getVat());
+        txtVat.setText(String.valueOf(PurchaseOrderManager.getInstance().getSelected().getVatVal()));
         txtAccount.setText(PurchaseOrderManager.getInstance().getSelected().getAccount());
         txtNumber.setText(PurchaseOrderManager.getInstance().getSelected().getNumber());
-        txtCreator.setText(PurchaseOrderManager.getInstance().getSelected().getCreator());
+        txtCreator.setText(PurchaseOrderManager.getInstance().getSelected().getCreator().toString());
         txtStatus.setText(String.valueOf(PurchaseOrderManager.getInstance().getSelected().getStatus()));
 
         //set up PurchaseOrderItems table
@@ -261,7 +261,7 @@ public class ViewPurchaseOrderController extends OperationsController implements
                             PurchaseOrderResource purchaseOrderResource = new PurchaseOrderResource();
                             purchaseOrderResource.setPurchase_order_id(PurchaseOrderManager.getInstance().getSelected().get_id());
                             purchaseOrderResource.setItem_number(tblPurchaseOrderItems.getItems().size());
-                            purchaseOrderResource.setItem(resourceComboBox.getValue());
+                            //purchaseOrderResource.setItem(resourceComboBox.getValue());
                             purchaseOrderResource.setItem_id(resourceComboBox.getValue().get_id());
                             purchaseOrderResource.setQuantity(1);
                             purchaseOrderResource.setDiscount(0);
@@ -369,7 +369,7 @@ public class ViewPurchaseOrderController extends OperationsController implements
                             PurchaseOrderAsset purchaseOrderAsset = new PurchaseOrderAsset();
                             purchaseOrderAsset.setPurchase_order_id(PurchaseOrderManager.getInstance().getSelected().get_id());
                             purchaseOrderAsset.setItem_number(tblPurchaseOrderItems.getItems().size());
-                            purchaseOrderAsset.setItem(assetComboBox.getValue());
+                            //purchaseOrderAsset.setItem(assetComboBox.getValue());
                             purchaseOrderAsset.setItem_id(assetComboBox.getValue().get_id());
                             purchaseOrderAsset.setQuantity(1);
                             purchaseOrderAsset.setDiscount(0);

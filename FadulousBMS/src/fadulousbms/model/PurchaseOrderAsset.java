@@ -45,8 +45,8 @@ public class PurchaseOrderAsset extends PurchaseOrderItem
 
     public Asset getItem()
     {
-        if(super.getItem()!=null)
-            return (Asset) super.getItem();
+        //if(super.getItem()!=null)
+        //    return (Asset) super.getItem();
 
         AssetManager.getInstance().loadDataFromServer();
         if (AssetManager.getInstance().getAll_assets() != null)

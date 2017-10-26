@@ -131,7 +131,7 @@
             <tabs>
                 <fx:include source="InvoicesTab.fxml" />
                 <fx:include source="ExpensesTab.fxml" />
-                <fx:include source="IncomeTab.fxml" />
+                <!--<fx:include source="IncomeTab.fxml" />-->
                 <fx:include source="AssetsTab.fxml" />
                 <fx:include source="MaterialsTab.fxml" />
             </tabs>
