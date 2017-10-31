@@ -274,7 +274,6 @@ public class Quote implements BusinessObject, Serializable
 
     public Client getClient()
     {
-        ClientManager.getInstance().loadDataFromServer();
         HashMap<String, Client> clients = ClientManager.getInstance().getClients();
         if(clients!=null)
         {
@@ -324,8 +323,9 @@ public class Quote implements BusinessObject, Serializable
                     + URLEncoder.encode(client_id, "UTF-8") + "&");
             result.append(URLEncoder.encode("contact_person_id","UTF-8") + "="
                     + URLEncoder.encode(contact_person_id, "UTF-8") + "&");
-            result.append(URLEncoder.encode("date_generated","UTF-8") + "="
-                    + URLEncoder.encode(String.valueOf(date_generated), "UTF-8"));
+            if(date_generated>0)
+                result.append(URLEncoder.encode("date_generated","UTF-8") + "="
+                        + URLEncoder.encode(String.valueOf(date_generated), "UTF-8"));
             result.append("&" + URLEncoder.encode("sitename","UTF-8") + "="
                     + URLEncoder.encode(sitename, "UTF-8"));
             result.append("&" + URLEncoder.encode("request","UTF-8") + "="

@@ -195,7 +195,6 @@ public class PurchaseOrder implements BusinessObject, Serializable
 
     public Supplier getSupplier()
     {
-        SupplierManager.getInstance().loadDataFromServer();
         HashMap<String, Supplier> suppliers = SupplierManager.getInstance().getSuppliers();
         if(suppliers!=null)
             return suppliers.get(supplier_id);

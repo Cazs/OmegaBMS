@@ -256,38 +256,47 @@ public class SupplierManager extends BusinessObjectManager
             {
                 if(!smgr.getActive().isExpired())
                 {
-                    gson  = new GsonBuilder().create();
-                    ArrayList<AbstractMap.SimpleEntry<String,String>> headers = new ArrayList<>();
-                    headers.add(new AbstractMap.SimpleEntry<>("Cookie", smgr.getActive().getSessionId()));
-
-                    //Get Timestamp
-                    String timestamp_json = RemoteComms.sendGetRequest("/api/timestamp/suppliers_timestamp", headers);
-                    Counters cntr_timestamp = gson.fromJson(timestamp_json, Counters.class);
-                    if(cntr_timestamp!=null)
+                    if(suppliers==null)
                     {
-                        timestamp = cntr_timestamp.getCount();
-                        filename = "suppliers_"+timestamp+".dat";
-                        IO.log(this.getClass().getName(), IO.TAG_INFO, "Server Timestamp: "+timestamp);
-                    }else {
-                        IO.logAndAlert(this.getClass().getName(), "could not get valid timestamp", IO.TAG_ERROR);
-                        return;
-                    }
+                        gson = new GsonBuilder().create();
+                        ArrayList<AbstractMap.SimpleEntry<String, String>> headers = new ArrayList<>();
+                        headers.add(new AbstractMap.SimpleEntry<>("Cookie", smgr.getActive().getSessionId()));
 
-                    if(!isSerialized(ROOT_PATH+filename))
-                    {
-                        String suppliers_json = RemoteComms.sendGetRequest("/api/suppliers", headers);
+                        //Get Timestamp
+                        String timestamp_json = RemoteComms
+                                .sendGetRequest("/api/timestamp/suppliers_timestamp", headers);
+                        Counters cntr_timestamp = gson.fromJson(timestamp_json, Counters.class);
+                        if (cntr_timestamp != null)
+                        {
+                            timestamp = cntr_timestamp.getCount();
+                            filename = "suppliers_" + timestamp + ".dat";
+                            IO.log(this.getClass().getName(), IO.TAG_INFO, "Server Timestamp: " + timestamp);
+                        }
+                        else
+                        {
+                            IO.logAndAlert(this.getClass().getName(), "could not get valid timestamp", IO.TAG_ERROR);
+                            return;
+                        }
 
-                        Supplier[] supps = gson.fromJson(suppliers_json, Supplier[].class);
-                        suppliers = new HashMap();
-                        for(Supplier supplier: supps)
-                            suppliers.put(supplier.get_id(), supplier);
+                        if (!isSerialized(ROOT_PATH + filename))
+                        {
+                            String suppliers_json = RemoteComms.sendGetRequest("/api/suppliers", headers);
 
-                        IO.log(getClass().getName(), IO.TAG_INFO, "reloaded collection of suppliers.");
-                        this.serialize(ROOT_PATH+filename, suppliers);
-                    }else{
-                        IO.log(this.getClass().getName(), IO.TAG_INFO, "binary object ["+ROOT_PATH+filename+"] on local disk is already up-to-date.");
-                        suppliers = (HashMap) this.deserialize(ROOT_PATH+filename);
-                    }
+                            Supplier[] supps = gson.fromJson(suppliers_json, Supplier[].class);
+                            suppliers = new HashMap();
+                            for (Supplier supplier : supps)
+                                suppliers.put(supplier.get_id(), supplier);
+
+                            IO.log(getClass().getName(), IO.TAG_INFO, "reloaded collection of suppliers.");
+                            this.serialize(ROOT_PATH + filename, suppliers);
+                        }
+                        else
+                        {
+                            IO.log(this.getClass()
+                                    .getName(), IO.TAG_INFO, "binary object [" + ROOT_PATH + filename + "] on local disk is already up-to-date.");
+                            suppliers = (HashMap) this.deserialize(ROOT_PATH + filename);
+                        }
+                    }else IO.log(getClass().getName(), IO.TAG_INFO, "suppliers object has already been set.");
                 }else JOptionPane.showMessageDialog(null, "Active session has expired.", "Session Expired", JOptionPane.ERROR_MESSAGE);
             }else JOptionPane.showMessageDialog(null, "No active sessions.", "Session Expired", JOptionPane.ERROR_MESSAGE);
         }catch (MalformedURLException ex)

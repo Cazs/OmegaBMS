@@ -136,85 +136,88 @@ public class QuoteManager extends BusinessObjectManager
             {
                 if(!smgr.getActive().isExpired())
                 {
-                    gson  = new GsonBuilder().create();
-                    ArrayList<AbstractMap.SimpleEntry<String,String>> headers = new ArrayList<>();
-                    headers.add(new AbstractMap.SimpleEntry<>("Cookie", smgr.getActive().getSessionId()));
-                    //Get Timestamp
-                    String quotes_timestamp_json = RemoteComms.sendGetRequest("/api/timestamp/quotes_timestamp", headers);
-                    Counters quotes_timestamp = gson.fromJson(quotes_timestamp_json, Counters.class);
-                    if(quotes_timestamp!=null)
+                    if(quotes==null)
                     {
-                        timestamp = quotes_timestamp.getCount();
-                        filename = "quotes_"+timestamp+".dat";
-                        IO.log(QuoteManager.getInstance().getClass().getName(), IO.TAG_INFO, "Server Timestamp: "+quotes_timestamp.getCount());
-                    } else {
-                        IO.logAndAlert(this.getClass().getName(), "could not get valid timestamp", IO.TAG_ERROR);
-                        return;
-                    }
-
-                    if(!isSerialized(ROOT_PATH+filename))
-                    {
-                        //Load Quotes
-                        String quotes_json = RemoteComms.sendGetRequest("/api/quotes", headers);
-                        Quote[] quotes_arr = gson.fromJson(quotes_json, Quote[].class);
-                        quotes = new HashMap<>();
-
-                        Employee[] employees = new Employee[EmployeeManager.getInstance().getEmployees().values().toArray().length];
-                        EmployeeManager.getInstance().getEmployees().values().toArray(employees);
-
-                        if(quotes!=null)
+                        gson  = new GsonBuilder().create();
+                        ArrayList<AbstractMap.SimpleEntry<String,String>> headers = new ArrayList<>();
+                        headers.add(new AbstractMap.SimpleEntry<>("Cookie", smgr.getActive().getSessionId()));
+                        //Get Timestamp
+                        String quotes_timestamp_json = RemoteComms.sendGetRequest("/api/timestamp/quotes_timestamp", headers);
+                        Counters quotes_timestamp = gson.fromJson(quotes_timestamp_json, Counters.class);
+                        if(quotes_timestamp!=null)
                         {
-                            if(quotes_arr.length>0)
+                            timestamp = quotes_timestamp.getCount();
+                            filename = "quotes_"+timestamp+".dat";
+                            IO.log(QuoteManager.getInstance().getClass().getName(), IO.TAG_INFO, "Server Timestamp: "+quotes_timestamp.getCount());
+                        } else {
+                            IO.logAndAlert(this.getClass().getName(), "could not get valid timestamp", IO.TAG_ERROR);
+                            return;
+                        }
+
+                        if(!isSerialized(ROOT_PATH+filename))
+                        {
+                            //Load Quotes
+                            String quotes_json = RemoteComms.sendGetRequest("/api/quotes", headers);
+                            Quote[] quotes_arr = gson.fromJson(quotes_json, Quote[].class);
+                            quotes = new HashMap<>();
+
+                            Employee[] employees = new Employee[EmployeeManager.getInstance().getEmployees().values().toArray().length];
+                            EmployeeManager.getInstance().getEmployees().values().toArray(employees);
+
+                            if(quotes!=null)
                             {
-                                for (Quote quote : quotes_arr)
+                                if(quotes_arr.length>0)
                                 {
-                                    //Load Quote Resources
-                                    String quote_item_ids_json = RemoteComms.sendGetRequest("/api/quote/resources/" + quote.get_id(), headers);
-                                    if (quote_item_ids_json != null)
+                                    for (Quote quote : quotes_arr)
                                     {
-                                        if (!quote_item_ids_json.equals("[]"))
+                                        //Load Quote Resources
+                                        String quote_item_ids_json = RemoteComms.sendGetRequest("/api/quote/resources/" + quote.get_id(), headers);
+                                        if (quote_item_ids_json != null)
                                         {
-                                            QuoteItem[] quote_items = gson.fromJson(quote_item_ids_json, QuoteItem[].class);
-                                            quote.setResources(quote_items);
+                                            if (!quote_item_ids_json.equals("[]"))
+                                            {
+                                                QuoteItem[] quote_items = gson.fromJson(quote_item_ids_json, QuoteItem[].class);
+                                                quote.setResources(quote_items);
+                                            } else
+                                                IO.log(getClass().getName(), IO.TAG_WARN, String.format("quote '%s does not have any resources.", quote.get_id()));
                                         } else
                                             IO.log(getClass().getName(), IO.TAG_WARN, String.format("quote '%s does not have any resources.", quote.get_id()));
-                                    } else
-                                        IO.log(getClass().getName(), IO.TAG_WARN, String.format("quote '%s does not have any resources.", quote.get_id()));
 
-                                    //Load Quote Representatives
-                                    String quote_rep_ids_json = RemoteComms.sendGetRequest("/api/quote/reps/" + quote.get_id(), headers);
-                                    if (quote_rep_ids_json != null)
-                                    {
-                                        if (!quote_rep_ids_json.equals("[]"))
+                                        //Load Quote Representatives
+                                        String quote_rep_ids_json = RemoteComms.sendGetRequest("/api/quote/reps/" + quote.get_id(), headers);
+                                        if (quote_rep_ids_json != null)
                                         {
-                                            QuoteRep[] quote_reps = gson.fromJson(quote_rep_ids_json, QuoteRep[].class);
-                                            quote.setRepresentatives(quote_reps);
-                                            IO.log(getClass().getName(), IO.TAG_INFO, String.format("set reps for quote '%s'.", quote.get_id()));
+                                            if (!quote_rep_ids_json.equals("[]"))
+                                            {
+                                                QuoteRep[] quote_reps = gson.fromJson(quote_rep_ids_json, QuoteRep[].class);
+                                                quote.setRepresentatives(quote_reps);
+                                                IO.log(getClass().getName(), IO.TAG_INFO, String.format("set reps for quote '%s'.", quote.get_id()));
+                                            } else IO.log(getClass().getName(), IO.TAG_WARN, String.format("quote '%s does not have any representatives.", quote.get_id()));
                                         } else IO.log(getClass().getName(), IO.TAG_WARN, String.format("quote '%s does not have any representatives.", quote.get_id()));
-                                    } else IO.log(getClass().getName(), IO.TAG_WARN, String.format("quote '%s does not have any representatives.", quote.get_id()));
 
-                                    //Update selected quote data
-                                    if(selected_quote!=null)
-                                    {
-                                        if (quote.get_id().equals(selected_quote.get_id()))
-                                            selected_quote = quote;
+                                        //Update selected quote data
+                                        if(selected_quote!=null)
+                                        {
+                                            if (quote.get_id().equals(selected_quote.get_id()))
+                                                selected_quote = quote;
+                                        }
+                                        quotes.put(quote.get_id(), quote);
                                     }
-                                    quotes.put(quote.get_id(), quote);
+                                    IO.log(getClass().getName(), IO.TAG_INFO, "reloaded collection of quotes.");
+                                    this.serialize(ROOT_PATH+filename, quotes);
+                                }else{
+                                    IO.log(getClass().getName(), IO.TAG_ERROR, "no quotes found in database.");
+                                    //IO.showMessage("No quotes", "no quotes found in database.", IO.TAG_ERROR);
                                 }
-                                IO.log(getClass().getName(), IO.TAG_INFO, "reloaded collection of quotes.");
-                                this.serialize(ROOT_PATH+filename, quotes);
                             }else{
-                                IO.log(getClass().getName(), IO.TAG_ERROR, "no quotes found in database.");
+                                IO.log(getClass().getName(), IO.TAG_ERROR, "quotes object is null.");
                                 //IO.showMessage("No quotes", "no quotes found in database.", IO.TAG_ERROR);
                             }
-                        }else{
-                            IO.log(getClass().getName(), IO.TAG_ERROR, "quotes object is null.");
-                            //IO.showMessage("No quotes", "no quotes found in database.", IO.TAG_ERROR);
+                        } else{
+                            IO.log(this.getClass().getName(), IO.TAG_INFO, "binary object ["+ROOT_PATH+filename+"] on local disk is already up-to-date.");
+                            quotes = (HashMap<String, Quote>) this.deserialize(ROOT_PATH+filename);
                         }
-                    } else{
-                        IO.log(this.getClass().getName(), IO.TAG_INFO, "binary object ["+ROOT_PATH+filename+"] on local disk is already up-to-date.");
-                        quotes = (HashMap<String, Quote>) this.deserialize(ROOT_PATH+filename);
-                    }
+                    }else IO.log(getClass().getName(), IO.TAG_INFO, "quotes object has already been set.");
                 }else IO.showMessage("Session Expired", "Active session has expired.", IO.TAG_ERROR);
             }else IO.showMessage("Session Expired", "No active sessions.", IO.TAG_ERROR);
         }catch (MalformedURLException ex)

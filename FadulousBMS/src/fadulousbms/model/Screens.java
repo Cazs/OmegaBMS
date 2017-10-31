@@ -23,7 +23,7 @@ public enum Screens
     SETTINGS("Settings.fxml"),
     CREATE_ACCOUNT("Create_account.fxml"),
     RESET_PWD("ResetPassword.fxml"),
-    NEW_QUOTE("New_quote.fxml"),
+    NEW_QUOTE("NewQuote.fxml"),
     REJECTED_QUOTES("RejectedQuotes.fxml"),
     QUOTES("Quotes.fxml"),
     VIEW_QUOTE("View_quote.fxml"),

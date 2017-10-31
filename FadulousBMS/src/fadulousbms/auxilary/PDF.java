@@ -1218,7 +1218,6 @@ public class PDF
         int digit_font_size=9;
 
         /**Draw lines**/
-        int center_vert_line_start = line_pos;
         int bottom_line = (int)h-logo_h-(ROW_COUNT+1)*LINE_HEIGHT;
         createLinesAndBordersOnPage(contents, (int)w, line_pos, bottom_line);
 
@@ -1228,58 +1227,72 @@ public class PDF
         //left text
         contents.beginText();
         int temp_pos = line_pos;
-        addTextToPageStream(contents,"Invoice Number #" + job.getJob_number(), PDType1Font.COURIER_BOLD_OBLIQUE, 15,(int)((w/2)/4), line_pos);
+        addTextToPageStream(contents,"Invoice ID: " + invoice.get_id(), PDType1Font.COURIER_BOLD_OBLIQUE, 15,20, line_pos);
         line_pos-=LINE_HEIGHT;
-        addTextToPageStream(contents,"Date Generated:  " + (new SimpleDateFormat("yyyy-MM-dd").format(new Date(job.getDate_logged()*1000))), 12,(int)(w/2)+5, line_pos);
+        int center_vert_line_start = line_pos;
+        addTextToPageStream(contents,"Date Generated:  " + (new SimpleDateFormat("yyyy-MM-dd").format(new Date(job.getDate_logged()*1000))), 12,20, line_pos);
         line_pos-=LINE_HEIGHT;
-        addTextToPageStream(contents,"Creator:  " + invoice.getCreator(), 12,(int)(w/2)+5, line_pos);
+        addTextToPageStream(contents,"Creator:  " + invoice.getCreator(), 12,20, line_pos);
+        line_pos-=LINE_HEIGHT;
+        addTextToPageStream(contents,"Quote ID: " + quote.get_id(), 14,20, line_pos);
+        //line_pos-=LINE_HEIGHT;
+        //addTextToPageStream(contents,"Quote Date Generated: " + (new SimpleDateFormat("yyyy-MM-dd").format(new Date(quote.getDate_generated()*1000))), 12,(int)(w/2)+ 5, line_pos);
 
         line_pos=temp_pos;
 
         //right content
         contents.endText();
         PDImageXObject logo = PDImageXObject.createFromFile("images/logo.png", document);
-        contents.drawImage(logo, (int)(w/2)+ 20, line_pos-logo_h, 150, logo_h);
+        contents.drawImage(logo, (int)(w/2)+ 20, line_pos-logo_h-10, 150, logo_h);
 
-        line_pos-=LINE_HEIGHT;
+        line_pos-=LINE_HEIGHT*4;
         temp_pos = line_pos;
 
-        //left text
+        //horizontal solid line after company logo
+        contents.setStrokingColor(Color.BLACK);
+        contents.moveTo(10, line_pos+LINE_HEIGHT/2);
+        contents.lineTo(w-10, line_pos+LINE_HEIGHT/2);
+        contents.stroke();
+
+        //horizontal solid line after consultants heading
+        contents.setStrokingColor(Color.BLACK);
+        contents.moveTo(10, line_pos-LINE_HEIGHT/2);
+        contents.lineTo(w-10, line_pos-LINE_HEIGHT/2);
+        contents.stroke();
         contents.beginText();
-        addTextToPageStream(contents,"Job Number #" + job.getJob_number(), PDType1Font.COURIER_BOLD_OBLIQUE, 15,(int)((w/2)/4), line_pos);
+
+        //left text
+        addTextToPageStream(contents,"Client Information", PDType1Font.COURIER_BOLD_OBLIQUE, 15,20, line_pos);
         line_pos-=LINE_HEIGHT;
-        addTextToPageStream(contents,"Date Generated:  " + (new SimpleDateFormat("yyyy-MM-dd").format(new Date(job.getDate_logged()*1000))), 12,(int)(w/2)+5, line_pos);
+        addTextToPageStream(contents,"Company: " + client.getClient_name(), 12, 20, line_pos);
         line_pos-=LINE_HEIGHT;
-        addTextToPageStream(contents,"Date Started:  " + (new SimpleDateFormat("yyyy-MM-dd").format(new Date(job.getDate_started()*1000))), 12,(int)(w/2)+5, line_pos);
-        line_pos-=LINE_HEIGHT;
-        addTextToPageStream(contents,"Date Completed:  " + (new SimpleDateFormat("yyyy-MM-dd").format(new Date(job.getDate_completed()*1000))), 12,(int)(w/2)+5, line_pos);
-        line_pos-=LINE_HEIGHT;
-        addTextToPageStream(contents,"Creator:  " + invoice.getCreator(), 12,(int)(w/2)+5, line_pos);
+        addTextToPageStream(contents,"Company Tel: " + client.getTel(), 12,20, line_pos);
 
         line_pos=temp_pos;
 
         //right content
+        addTextToPageStream(contents,"Job Number #" + job.getJob_number(), PDType1Font.COURIER_BOLD_OBLIQUE, 15, (int)(w/2)+ 5, line_pos);
+        line_pos-=LINE_HEIGHT;
+        addTextToPageStream(contents,"Date Generated:  " + (new SimpleDateFormat("yyyy-MM-dd").format(new Date(job.getDate_logged()*1000))), 12, (int)(w/2)+ 5, line_pos);
+        line_pos-=LINE_HEIGHT;
+        addTextToPageStream(contents,"Date Started:  " + (new SimpleDateFormat("yyyy-MM-dd").format(new Date(job.getDate_started()*1000))), 12,(int)(w/2)+ 5, line_pos);
+        line_pos-=LINE_HEIGHT;
+        addTextToPageStream(contents,"Date Completed:  " + (new SimpleDateFormat("yyyy-MM-dd").format(new Date(job.getDate_completed()*1000))), 12,(int)(w/2)+ 5, line_pos);
+        line_pos-=LINE_HEIGHT;
+        addTextToPageStream(contents,"Creator:  " + invoice.getCreator(), 12,(int)(w/2)+ 5, line_pos);
         //contents.endText();
         //PDImageXObject logo = PDImageXObject.createFromFile("images/logo.png", document);
         //contents.drawImage(logo, (int)(w/2)+ 20, line_pos-logo_h, 150, logo_h);
 
         line_pos-=LINE_HEIGHT;
 
-        //left text
-        addTextToPageStream(contents,"Client Information", PDType1Font.COURIER_BOLD_OBLIQUE, 15,(int)((w/2)/4), line_pos);
-        //right text
-        addTextToPageStream(contents,"Invoice No.: " + invoice.invoice_numberProperty().get(), PDType1Font.COURIER_BOLD_OBLIQUE, 11, (int)(w/2)+5, line_pos);
-        line_pos-=LINE_HEIGHT;//next line
-
-        //left text
-        addTextToPageStream(contents,"Company: " + client.getClient_name(), 12, 20, line_pos);
-        //right text
-        addTextToPageStream(contents,"Date Generated:  " + (new SimpleDateFormat("yyyy-MM-dd").format(new Date(quote.getDate_generated()*1000))), 12,(int)(w/2)+5, line_pos);
-        line_pos-=LINE_HEIGHT;//next line
-        //left text
-        addTextToPageStream(contents,"Company Tel: " + client.getTel(), 12,20, line_pos);
-        //right text
-        addTextToPageStream(contents,"Sale Consultant(s):", PDType1Font.COURIER_BOLD_OBLIQUE, 16,(int)((w/2)+((w/2)/4)), line_pos);
+        //horizontal solid line after job details
+        contents.endText();
+        contents.setStrokingColor(Color.BLACK);
+        contents.moveTo(10, line_pos-LINE_HEIGHT/2);
+        contents.lineTo(w-10, line_pos-LINE_HEIGHT/2);
+        contents.stroke();
+        contents.beginText();
 
         //horizontal solid line after company details
         contents.endText();
@@ -1402,7 +1415,7 @@ public class PDF
 
         //vertical line going through center of page
         contents.setStrokingColor(Color.BLACK);
-        contents.moveTo((w/2), center_vert_line_start);
+        contents.moveTo((w/2), center_vert_line_start+LINE_HEIGHT/2);
         contents.lineTo((w/2),(col_divider_start+LINE_HEIGHT*2+(int)Math.ceil(LINE_HEIGHT/2)));
         contents.stroke();
         //
@@ -1439,22 +1452,22 @@ public class PDF
         {
             for(QuoteItem item: quote.getResources())
             {
-                //quote content column dividers
                 contents.endText();
+                //quote content column dividers
                 //#1
-                contents.moveTo(80, (col_divider_start-LINE_HEIGHT+(int)Math.ceil(LINE_HEIGHT/2)));
-                contents.lineTo(80, line_pos+LINE_HEIGHT/2);
+                contents.moveTo(80, (col_divider_start+(int)Math.ceil(LINE_HEIGHT/2)));
+                contents.lineTo(80, line_pos-LINE_HEIGHT/2);
                 contents.stroke();
                 //vertical line going through center of page
                 contents.setStrokingColor(Color.BLACK);
                 contents.moveTo((w/2), (col_divider_start-LINE_HEIGHT+(int)Math.ceil(LINE_HEIGHT/2)));
-                contents.lineTo((w/2),line_pos+LINE_HEIGHT/2);
+                contents.lineTo((w/2),line_pos-LINE_HEIGHT/2);
                 contents.stroke();
                 //#3+
                 for(int i=1;i<5;i++)//7 cols in total
                 {
-                    contents.moveTo((w/2)+55*i, (col_divider_start-LINE_HEIGHT+(int)Math.ceil(LINE_HEIGHT/2)));
-                    contents.lineTo((w/2)+55*i,line_pos+LINE_HEIGHT/2);
+                    contents.moveTo((w/2)+55*i, (col_divider_start+(int)Math.ceil(LINE_HEIGHT/2)));
+                    contents.lineTo((w/2)+55*i,line_pos-LINE_HEIGHT/2);
                     contents.stroke();
                 }
                 contents.beginText();
@@ -1490,7 +1503,7 @@ public class PDF
                 addTextToPageStream(contents,item.getQuantity(), digit_font_size,col_pos+5, line_pos);
                 col_pos+=55;//next column
                 //Rate col
-                //addTextToPageStream(contents, String.valueOf(DecimalFormat.getCurrencyInstance().format(item.getRateValue())), digit_font_size,col_pos+5, line_pos);
+                addTextToPageStream(contents, String.valueOf(DecimalFormat.getCurrencyInstance().format(item.getRate())), digit_font_size,col_pos+5, line_pos);
                 col_pos+=55;//next column
                 //Labour col
                 addTextToPageStream(contents, String.valueOf(DecimalFormat.getCurrencyInstance().format(item.getLabourCost())), digit_font_size,col_pos+5, line_pos);
@@ -1541,7 +1554,7 @@ public class PDF
 
         double vat = sub_total*(quote.getVat()/100);
         contents.beginText();
-        addTextToPageStream(contents, "VAT: ", PDType1Font.COURIER_BOLD_OBLIQUE, 14,col_pos+30, line_pos);
+        addTextToPageStream(contents, "VAT["+quote.getVat()+"%]: ", PDType1Font.COURIER_BOLD_OBLIQUE, 14,col_pos+30, line_pos);
         addTextToPageStream(contents, String.valueOf(DecimalFormat.getCurrencyInstance().format(vat)), PDType1Font.COURIER_BOLD_OBLIQUE, 14,(int)(5+(w/2)), line_pos);
         line_pos -= LINE_HEIGHT;//next line
 

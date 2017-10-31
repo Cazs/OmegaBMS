@@ -85,39 +85,46 @@ public class ClientManager extends BusinessObjectManager
             {
                 if(!smgr.getActive().isExpired())
                 {
-                    gson  = new GsonBuilder().create();
-                    ArrayList<AbstractMap.SimpleEntry<String,String>> headers = new ArrayList<>();
-                    headers.add(new AbstractMap.SimpleEntry<>("Cookie", smgr.getActive().getSessionId()));
-
-                    //Get Timestamp
-                    String timestamp_json = RemoteComms.sendGetRequest("/api/timestamp/clients_timestamp", headers);
-                    Counters cntr_timestamp = gson.fromJson(timestamp_json, Counters.class);
-                    if(cntr_timestamp!=null)
+                    if(clients==null)
                     {
-                        timestamp = cntr_timestamp.getCount();
-                        filename = "clients_"+timestamp+".dat";
-                        IO.log(this.getClass().getName(), IO.TAG_INFO, "Server Timestamp: "+timestamp);
-                    }else {
-                        IO.logAndAlert(this.getClass().getName(), "could not get valid timestamp", IO.TAG_ERROR);
-                        return;
-                    }
+                        gson = new GsonBuilder().create();
+                        ArrayList<AbstractMap.SimpleEntry<String, String>> headers = new ArrayList<>();
+                        headers.add(new AbstractMap.SimpleEntry<>("Cookie", smgr.getActive().getSessionId()));
 
-                    if(!isSerialized(ROOT_PATH+filename))
-                    {
-                        String clients_json = RemoteComms.sendGetRequest("/api/clients", headers);
-                        Client[] clients_arr = gson.fromJson(clients_json, Client[].class);
+                        //Get Timestamp
+                        String timestamp_json = RemoteComms.sendGetRequest("/api/timestamp/clients_timestamp", headers);
+                        Counters cntr_timestamp = gson.fromJson(timestamp_json, Counters.class);
+                        if (cntr_timestamp != null)
+                        {
+                            timestamp = cntr_timestamp.getCount();
+                            filename = "clients_" + timestamp + ".dat";
+                            IO.log(this.getClass().getName(), IO.TAG_INFO, "Server Timestamp: " + timestamp);
+                        }
+                        else
+                        {
+                            IO.logAndAlert(this.getClass().getName(), "could not get valid timestamp", IO.TAG_ERROR);
+                            return;
+                        }
 
-                        clients = new HashMap<>();
-                        for(Client client: clients_arr)
-                            clients.put(client.get_id(), client);
+                        if (!isSerialized(ROOT_PATH + filename))
+                        {
+                            String clients_json = RemoteComms.sendGetRequest("/api/clients", headers);
+                            Client[] clients_arr = gson.fromJson(clients_json, Client[].class);
 
-                        IO.log(getClass().getName(), IO.TAG_INFO, "reloaded collection of clients.");
-                        this.serialize(ROOT_PATH+filename, clients);
-                    }else
-                    {
-                        IO.log(this.getClass().getName(), IO.TAG_INFO, "binary object ["+ROOT_PATH+filename+"] on local disk is already up-to-date.");
-                        clients = (HashMap<String, Client>) this.deserialize(ROOT_PATH+filename);
-                    }
+                            clients = new HashMap<>();
+                            for (Client client : clients_arr)
+                                clients.put(client.get_id(), client);
+
+                            IO.log(getClass().getName(), IO.TAG_INFO, "reloaded collection of clients.");
+                            this.serialize(ROOT_PATH + filename, clients);
+                        }
+                        else
+                        {
+                            IO.log(this.getClass()
+                                    .getName(), IO.TAG_INFO, "binary object [" + ROOT_PATH + filename + "] on local disk is already up-to-date.");
+                            clients = (HashMap<String, Client>) this.deserialize(ROOT_PATH + filename);
+                        }
+                    }else IO.log(getClass().getName(), IO.TAG_INFO, "clients object has already been set.");
                 }else JOptionPane.showMessageDialog(null, "Active session has expired.", "Session Expired", JOptionPane.ERROR_MESSAGE);
             }else JOptionPane.showMessageDialog(null, "No active sessions.", "Session Expired", JOptionPane.ERROR_MESSAGE);
         }catch (MalformedURLException ex)

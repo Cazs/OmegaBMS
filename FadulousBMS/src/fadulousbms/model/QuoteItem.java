@@ -226,7 +226,6 @@ public class QuoteItem implements BusinessObject, Serializable
 
     public Resource getResource()
     {
-        ResourceManager.getInstance().loadDataFromServer();
         HashMap<String, Resource> resources = ResourceManager.getInstance().getResources();
         if(resources!=null)
             return resources.get(getResource_id());

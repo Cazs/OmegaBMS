@@ -28,7 +28,8 @@ const quoteSchema = mongoose.Schema(
   },
   date_generated:{
     type: Number,
-    required:true
+    required:false,
+    default: Math.floor(new Date().getTime()/1000)// epoch seconds
   },
   creator:{
     type:String,
@@ -151,8 +152,6 @@ module.exports.isValid = function(quote)
   if(isNullOrEmpty(quote.revision))
     return false;
   if(isNullOrEmpty(quote.status))
-    return false;
-  if(isNullOrEmpty(quote.date_generated))
     return false;
 
     console.log('valid quote.');

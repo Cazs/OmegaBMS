@@ -18,6 +18,7 @@ import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
+import javafx.scene.paint.Color;
 import javafx.util.Callback;
 
 import javax.print.PrintException;
@@ -698,16 +699,34 @@ public class CustomTableViewControls
         return hbox;
     }
 
+    public static HBox getLabelledNode(String label, int lbl_min_w, Node node, Color label_colour)
+    {
+        HBox hbox = new HBox();
+        Label lbl = new Label(label);
+        lbl.setTextFill(label_colour);
+        HBox.setMargin(lbl, new Insets(8));
+        hbox.getChildren().add(lbl);
+        lbl.setMinWidth(lbl_min_w);
+
+        //node.minWidth(node_min_w);
+        HBox.setHgrow(node, Priority.ALWAYS);
+        hbox.getChildren().add(node);
+        VBox.setMargin(hbox, new Insets(0,10,0,10));
+
+        HBox.setHgrow(hbox, Priority.ALWAYS);
+        return hbox;
+    }
+
     public static HBox getSpacedButton(String btn_name, EventHandler<ActionEvent> btnClickHandler)
     {
         HBox name = new HBox();
         Label lbl = new Label("");
         HBox.setMargin(lbl, new Insets(5));
         name.getChildren().add(lbl);
-        lbl.setMinWidth(200);
+        lbl.setMinWidth(150);
 
         Button btn = new Button(btn_name);
-        btn.setMinWidth(200);
+        btn.setMinWidth(150);
         btn.setMinHeight(50);
         HBox.setHgrow(btn, Priority.ALWAYS);
         btn.setMaxWidth(400);

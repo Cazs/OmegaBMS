@@ -96,66 +96,80 @@ public class JobManager extends BusinessObjectManager
             {
                 if(!smgr.getActive().isExpired())
                 {
-                    gson  = new GsonBuilder().create();
-                    ArrayList<AbstractMap.SimpleEntry<String,String>> headers = new ArrayList<>();
-                    headers.add(new AbstractMap.SimpleEntry<>("Cookie", smgr.getActive().getSessionId()));
-
-                    //Get Timestamp
-                    String timestamp_json = RemoteComms.sendGetRequest("/api/timestamp/jobs_timestamp", headers);
-                    Counters cntr_timestamp = gson.fromJson(timestamp_json, Counters.class);
-                    if(cntr_timestamp!=null)
+                    if(jobs==null)
                     {
-                        timestamp = cntr_timestamp.getCount();
-                        filename = "jobs_"+timestamp+".dat";
-                        IO.log(this.getClass().getName(), IO.TAG_INFO, "Server Timestamp: "+timestamp);
-                    }else {
-                        IO.logAndAlert(this.getClass().getName(), "could not get valid timestamp", IO.TAG_ERROR);
-                        return;
-                    }
+                        gson = new GsonBuilder().create();
+                        ArrayList<AbstractMap.SimpleEntry<String, String>> headers = new ArrayList<>();
+                        headers.add(new AbstractMap.SimpleEntry<>("Cookie", smgr.getActive().getSessionId()));
 
-                    if(!isSerialized(ROOT_PATH+filename))
-                    {
-                        String jobs_json = RemoteComms.sendGetRequest("/api/jobs", headers);
-                        Job[] jobs_arr = gson.fromJson(jobs_json, Job[].class);
-
-                        jobs = new HashMap<>();
-                        for (Job job : jobs_arr)
+                        //Get Timestamp
+                        String timestamp_json = RemoteComms.sendGetRequest("/api/timestamp/jobs_timestamp", headers);
+                        Counters cntr_timestamp = gson.fromJson(timestamp_json, Counters.class);
+                        if (cntr_timestamp != null)
                         {
-                            //Load JobEmployee objects using Job_id
-                            String jobemployees_json = RemoteComms.sendGetRequest("/api/job/employees/" + job.get_id(), headers);
-                            JobEmployee[] jobemployees = gson.fromJson(jobemployees_json, JobEmployee[].class);
-
-                            // Get Employee objects from Employee_id derived from JobEmployee objects
-                            // And load them into an array.
-                            Employee[] employees_arr = new Employee[jobemployees.length];
-                            for (int i = 0; i < jobemployees.length; i++)
-                            {
-                                String employees_json = RemoteComms.sendGetRequest("/api/employee/" + jobemployees[i].getUsr(), headers);
-                                Employee employee = gson.fromJson(employees_json, Employee.class);
-                                employees_arr[i] = employee;
-                            }
-                            // Set Employee objects on to Job object.
-                            job.setAssigned_employees(employees_arr);
-
-                            //Load Job Safety Catalogue
-                            String job_cat_json = RemoteComms.sendGetRequest("/api/job/safetycatalogue/" + job.get_id(), headers);
-                            JobSafetyCatalogue[] safetyCatalog = gson.fromJson(job_cat_json, JobSafetyCatalogue[].class);
-                            FileMetadata[] safety_docs = new FileMetadata[safetyCatalog.length];
-                            for (int i = 0; i < safetyCatalog.length; i++)
-                            {
-                                String safety_doc_json = RemoteComms.sendGetRequest("/api/safety/index/" + safetyCatalog[i].getSafety_id(), headers);
-                                FileMetadata safety_doc = gson.fromJson(safety_doc_json, FileMetadata.class);
-                                safety_docs[i] = safety_doc;
-                            }
-                            job.setSafety_catalogue(safety_docs);
-                            jobs.put(job.get_id(), job);
+                            timestamp = cntr_timestamp.getCount();
+                            filename = "jobs_" + timestamp + ".dat";
+                            IO.log(this.getClass().getName(), IO.TAG_INFO, "Server Timestamp: " + timestamp);
                         }
-                        IO.log(getClass().getName(), IO.TAG_INFO, "reloaded collection of jobs.");
-                        this.serialize(ROOT_PATH+filename, jobs);
-                    }else{
-                        IO.log(this.getClass().getName(), IO.TAG_INFO, "binary object ["+ROOT_PATH+filename+"] on local disk is already up-to-date.");
-                        jobs = (HashMap<String, Job>) this.deserialize(ROOT_PATH+filename);
-                    }
+                        else
+                        {
+                            IO.logAndAlert(this.getClass().getName(), "could not get valid timestamp", IO.TAG_ERROR);
+                            return;
+                        }
+
+                        if (!isSerialized(ROOT_PATH + filename))
+                        {
+                            String jobs_json = RemoteComms.sendGetRequest("/api/jobs", headers);
+                            Job[] jobs_arr = gson.fromJson(jobs_json, Job[].class);
+
+                            jobs = new HashMap<>();
+                            for (Job job : jobs_arr)
+                            {
+                                //Load JobEmployee objects using Job_id
+                                String jobemployees_json = RemoteComms
+                                        .sendGetRequest("/api/job/employees/" + job.get_id(), headers);
+                                JobEmployee[] jobemployees = gson.fromJson(jobemployees_json, JobEmployee[].class);
+
+                                // Get Employee objects from Employee_id derived from JobEmployee objects
+                                // And load them into an array.
+                                Employee[] employees_arr = new Employee[jobemployees.length];
+                                for (int i = 0; i < jobemployees.length; i++)
+                                {
+                                    String employees_json = RemoteComms
+                                            .sendGetRequest("/api/employee/" + jobemployees[i].getUsr(), headers);
+                                    Employee employee = gson.fromJson(employees_json, Employee.class);
+                                    employees_arr[i] = employee;
+                                }
+                                // Set Employee objects on to Job object.
+                                job.setAssigned_employees(employees_arr);
+
+                                //Load Job Safety Catalogue
+                                String job_cat_json = RemoteComms
+                                        .sendGetRequest("/api/job/safetycatalogue/" + job.get_id(), headers);
+                                JobSafetyCatalogue[] safetyCatalog = gson
+                                        .fromJson(job_cat_json, JobSafetyCatalogue[].class);
+                                FileMetadata[] safety_docs = new FileMetadata[safetyCatalog.length];
+                                for (int i = 0; i < safetyCatalog.length; i++)
+                                {
+                                    String safety_doc_json = RemoteComms
+                                            .sendGetRequest("/api/safety/index/" + safetyCatalog[i]
+                                                    .getSafety_id(), headers);
+                                    FileMetadata safety_doc = gson.fromJson(safety_doc_json, FileMetadata.class);
+                                    safety_docs[i] = safety_doc;
+                                }
+                                job.setSafety_catalogue(safety_docs);
+                                jobs.put(job.get_id(), job);
+                            }
+                            IO.log(getClass().getName(), IO.TAG_INFO, "reloaded collection of jobs.");
+                            this.serialize(ROOT_PATH + filename, jobs);
+                        }
+                        else
+                        {
+                            IO.log(this.getClass()
+                                    .getName(), IO.TAG_INFO, "binary object [" + ROOT_PATH + filename + "] on local disk is already up-to-date.");
+                            jobs = (HashMap<String, Job>) this.deserialize(ROOT_PATH + filename);
+                        }
+                    }else IO.log(getClass().getName(), IO.TAG_INFO, "jobs object has already been set.");
                 }else JOptionPane.showMessageDialog(null, "Active session has expired.", "Session Expired", JOptionPane.ERROR_MESSAGE);
             }else JOptionPane.showMessageDialog(null, "No active sessions.", "Session Expired", JOptionPane.ERROR_MESSAGE);
         } catch (MalformedURLException ex)

@@ -114,61 +114,73 @@ public class ResourceManager extends BusinessObjectManager
             {
                 if (!smgr.getActive().isExpired())
                 {
-                    gson = new GsonBuilder().create();
-                    ArrayList<AbstractMap.SimpleEntry<String, String>> headers = new ArrayList<>();
-                    headers.add(new AbstractMap.SimpleEntry<>("Cookie", smgr.getActive().getSessionId()));
-
-                    //Get Timestamp
-                    String timestamp_json = RemoteComms.sendGetRequest("/api/timestamp/resources_timestamp", headers);
-                    Counters cntr_timestamp = gson.fromJson(timestamp_json, Counters.class);
-                    if(cntr_timestamp!=null)
+                    if(resources==null)
                     {
-                        timestamp = cntr_timestamp.getCount();
-                        filename = "resources_"+timestamp+".dat";
-                        IO.log(this.getClass().getName(), IO.TAG_INFO, "Server Timestamp: "+timestamp);
-                    }else {
-                        IO.logAndAlert(this.getClass().getName(), "could not get valid timestamp", IO.TAG_ERROR);
-                        return;
-                    }
+                        gson = new GsonBuilder().create();
+                        ArrayList<AbstractMap.SimpleEntry<String, String>> headers = new ArrayList<>();
+                        headers.add(new AbstractMap.SimpleEntry<>("Cookie", smgr.getActive().getSessionId()));
 
-                    if(!isSerialized(ROOT_PATH+filename))
-                    {
-                        String resources_json = RemoteComms.sendGetRequest("/api/resources", headers);
-                        Resource[] arr_resources = gson.fromJson(resources_json, Resource[].class);
-                        resources = new HashMap<>();
-                        all_resources = new HashMap<>();
-                        for(Resource res: arr_resources)
+                        //Get Timestamp
+                        String timestamp_json = RemoteComms
+                                .sendGetRequest("/api/timestamp/resources_timestamp", headers);
+                        Counters cntr_timestamp = gson.fromJson(timestamp_json, Counters.class);
+                        if (cntr_timestamp != null)
                         {
-                            all_resources.put(res.get_id(), res);
-                            if(res.getDate_acquired()>0)
-                                resources.put(res.get_id(), res);
-                            else IO.log(getClass().getName(), IO.TAG_WARN, "resource ["+res+"] has not been approved yet. [date_acquired not set]");
+                            timestamp = cntr_timestamp.getCount();
+                            filename = "resources_" + timestamp + ".dat";
+                            IO.log(this.getClass().getName(), IO.TAG_INFO, "Server Timestamp: " + timestamp);
+                        }
+                        else
+                        {
+                            IO.logAndAlert(this.getClass().getName(), "could not get valid timestamp", IO.TAG_ERROR);
+                            return;
                         }
 
-
-                        String resource_types_json = RemoteComms.sendGetRequest("/api/resource/types", headers);
-                        ResourceType[] resourcetypes = gson.fromJson(resource_types_json, ResourceType[].class);
-                        resource_types = new HashMap<>();
-                        for(ResourceType resourceType: resourcetypes)
-                            resource_types.put(resourceType.get_id(), resourceType);
-
-                        IO.log(getClass().getName(), IO.TAG_INFO, "reloaded collection of resources.");
-
-                        this.serialize(ROOT_PATH+filename, all_resources);
-                        this.serialize(ROOT_PATH+"resource_types.dat", resource_types);
-                    }else{
-                        IO.log(this.getClass().getName(), IO.TAG_INFO, "binary object ["+ROOT_PATH+filename+"] on local disk is already up-to-date.");
-                        all_resources = (HashMap<String, Resource>) this.deserialize(ROOT_PATH+filename);
-                        resource_types = (HashMap<String, ResourceType>) this.deserialize(ROOT_PATH + "resource_types.dat");
-
-                        resources = new HashMap<>();
-                        if(all_resources!=null)
+                        if (!isSerialized(ROOT_PATH + filename))
                         {
-                            for (Resource resource : all_resources.values())
-                                if (resource.getDate_acquired() > 0)
-                                    resources.put(resource.get_id(), resource);
-                        } else IO.log(getClass().getName(), IO.TAG_ERROR, "serialized resources are null.");
-                    }
+                            String resources_json = RemoteComms.sendGetRequest("/api/resources", headers);
+                            Resource[] arr_resources = gson.fromJson(resources_json, Resource[].class);
+                            resources = new HashMap<>();
+                            all_resources = new HashMap<>();
+                            for (Resource res : arr_resources)
+                            {
+                                all_resources.put(res.get_id(), res);
+                                if (res.getDate_acquired() > 0)
+                                    resources.put(res.get_id(), res);
+                                else IO.log(getClass()
+                                        .getName(), IO.TAG_WARN, "resource [" + res + "] has not been approved yet. [date_acquired not set]");
+                            }
+
+
+                            String resource_types_json = RemoteComms.sendGetRequest("/api/resource/types", headers);
+                            ResourceType[] resourcetypes = gson.fromJson(resource_types_json, ResourceType[].class);
+                            resource_types = new HashMap<>();
+                            for (ResourceType resourceType : resourcetypes)
+                                resource_types.put(resourceType.get_id(), resourceType);
+
+                            IO.log(getClass().getName(), IO.TAG_INFO, "reloaded collection of resources.");
+
+                            this.serialize(ROOT_PATH + filename, all_resources);
+                            this.serialize(ROOT_PATH + "resource_types.dat", resource_types);
+                        }
+                        else
+                        {
+                            IO.log(this.getClass()
+                                    .getName(), IO.TAG_INFO, "binary object [" + ROOT_PATH + filename + "] on local disk is already up-to-date.");
+                            all_resources = (HashMap<String, Resource>) this.deserialize(ROOT_PATH + filename);
+                            resource_types = (HashMap<String, ResourceType>) this
+                                    .deserialize(ROOT_PATH + "resource_types.dat");
+
+                            resources = new HashMap<>();
+                            if (all_resources != null)
+                            {
+                                for (Resource resource : all_resources.values())
+                                    if (resource.getDate_acquired() > 0)
+                                        resources.put(resource.get_id(), resource);
+                            }
+                            else IO.log(getClass().getName(), IO.TAG_ERROR, "serialized resources are null.");
+                        }
+                    }else IO.log(getClass().getName(), IO.TAG_INFO, "resources object has already been set.");
                 } else IO.logAndAlert("Session Expired", "Active session has expired.", IO.TAG_ERROR);
             } else IO.logAndAlert("Session Expired", "No active sessions.", IO.TAG_ERROR);
         }catch (JsonSyntaxException ex)
