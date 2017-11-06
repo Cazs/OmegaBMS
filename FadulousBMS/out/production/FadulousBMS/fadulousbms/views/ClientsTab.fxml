@@ -54,6 +54,16 @@
                         <PropertyValueFactory property="website" />
                     </cellValueFactory>
                 </TableColumn>
+            <TableColumn fx:id="colClientRegistration" maxWidth="1.7976931348623157E308" minWidth="120.0" prefWidth="-1.0" text="Registration #">
+               <cellValueFactory>
+                  <PropertyValueFactory property="website" />
+               </cellValueFactory>
+            </TableColumn>
+            <TableColumn fx:id="colClientVat" maxWidth="1.7976931348623157E308" minWidth="120.0" prefWidth="-1.0" text="VAT #">
+               <cellValueFactory>
+                  <PropertyValueFactory property="website" />
+               </cellValueFactory>
+            </TableColumn>
                 <TableColumn fx:id="colClientOther" maxWidth="1.7976931348623157E308" minWidth="50.0" prefWidth="-1.0" text="Other" visible="false">
                     <cellValueFactory>
                         <PropertyValueFactory property="other" />

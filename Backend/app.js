@@ -347,12 +347,12 @@ app.get('/api/quote/resources/:object_id',function(req, res)
 
 app.post('/api/quote/resource/add',function(req, res)
 {
-  console.log('attempting to create quote_resource: %s', req.params.body);
   add(req, res, quote_resources, function(err, quote_resource)
   {
     if(err)
     {
-      console.log(err);
+      errorAndCloseConnection(res, 500, errors.INTERNAL_ERR);
+      logServerError(err);
       return;
     }
     console.log('created new quote_resource:\n%s\n', JSON.stringify(quote_resource));
@@ -471,7 +471,8 @@ app.post('/api/quote/generic/resource/add',function(req, res)
   {
     if(err)
     {
-      console.log(err);
+      errorAndCloseConnection(res, 500, errors.INTERNAL_ERR);
+      logServerError(err);
       return;
     }
     console.log('created new generic_quote_resource:\n%s\n', JSON.stringify(quote_resource));
@@ -531,7 +532,8 @@ app.post('/api/expense/add',function(req, res)
   {
     if(err)
     {
-      console.log(err);
+      errorAndCloseConnection(res, 500, errors.INTERNAL_ERR);
+      logServerError(err);
       return;
     }
     console.log('created new expense:\n%s\n', JSON.stringify(expense));
@@ -591,7 +593,8 @@ app.post('/api/revenue/add',function(req, res)
   {
     if(err)
     {
-      console.log(err);
+      errorAndCloseConnection(res, 500, errors.INTERNAL_ERR);
+      logServerError(err);
       return;
     }
     console.log('created additional revenue:\n%s\n', JSON.stringify(revenue));
@@ -651,7 +654,8 @@ app.post('/api/invoice/add',function(req, res)
   {
     if(err)
     {
-      console.log(err);
+      errorAndCloseConnection(res, 500, errors.INTERNAL_ERR);
+      logServerError(err);
       return;
     }
     console.log('created new invoice:\n%s\n', JSON.stringify(invoice));
@@ -729,7 +733,8 @@ app.post('/api/resource/type/add',function(req, res)
   {
     if(err)
     {
-      console.log(err);
+      errorAndCloseConnection(res, 500, errors.INTERNAL_ERR);
+      logServerError(err);
       return;
     }
     console.log('created new resource_type:\n%s\n', JSON.stringify(resource_type));
@@ -789,7 +794,8 @@ app.post('/api/resource/add',function(req, res)
   {
     if(err)
     {
-      console.log(err);
+      errorAndCloseConnection(res, 500, errors.INTERNAL_ERR);
+      logServerError(err);
       return;
     }
     console.log('created new resource:\n%s\n', JSON.stringify(resource));
@@ -854,7 +860,7 @@ app.post('/api/resource/increment_quantity/:object_id',function(req, res)
         {
           if(error)
           {
-            console.log(error);
+            logServerError(err);
             errorAndCloseConnection(res, 500, errors.INTERNAL_ERR);
             return;
           }
@@ -894,7 +900,8 @@ app.post('/api/asset/type/add',function(req, res)
   {
     if(err)
     {
-      console.log(err);
+      errorAndCloseConnection(res, 500, errors.INTERNAL_ERR);
+      logServerError(err);
       return;
     }
     console.log('created new asset_type:\n%s\n', JSON.stringify(asset_type));
@@ -954,7 +961,8 @@ app.post('/api/asset/add',function(req, res)
   {
     if(err)
     {
-      console.log(err);
+      errorAndCloseConnection(res, 500, errors.INTERNAL_ERR);
+      logServerError(err);
       return;
     }
     console.log('created new asset:\n%s\n', JSON.stringify(asset));
@@ -1019,7 +1027,7 @@ app.post('/api/asset/increment_quantity/:object_id',function(req, res)
         {
           if(error)
           {
-            console.log(error);
+            logServerError(err);
             errorAndCloseConnection(res, 500, errors.INTERNAL_ERR);
             return;
           }
@@ -1388,7 +1396,7 @@ app.post('/api/employee/add',function(req,res)
   {
     if(err)
     {
-      console.log(err);
+      logServerError(err);
       errorAndCloseConnection(res, 500, errors.INTERNAL_ERR);
       return;
     }

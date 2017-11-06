@@ -36,12 +36,12 @@ public class PurchaseOrderAsset extends PurchaseOrderItem
         return "N/A";
     }
 
-    public double getCostValue()
+    /*public double getCostValue()
     {
         if(getItem()!=null)
             return getItem().getAsset_value();
         return 0;
-    }
+    }*/
 
     public Asset getItem()
     {

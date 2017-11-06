@@ -728,6 +728,7 @@ public class CustomTableViewControls
         Button btn = new Button(btn_name);
         btn.setMinWidth(150);
         btn.setMinHeight(50);
+        btn.getStyleClass().add("btnDefault");
         HBox.setHgrow(btn, Priority.ALWAYS);
         btn.setMaxWidth(400);
         btn.setMaxHeight(100);

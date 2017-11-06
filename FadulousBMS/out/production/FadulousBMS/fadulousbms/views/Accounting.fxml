@@ -17,6 +17,8 @@
                     <menus>
                         <Menu mnemonicParsing="false" text="File">
                             <items>
+                        <MenuItem mnemonicParsing="false" onAction="#newClientClick" text="New Client" />
+                        <MenuItem mnemonicParsing="false" onAction="#newSupplierClick" text="New Supplier" />
                                 <MenuItem mnemonicParsing="false" onAction="#createAssetClick" text="New Asset" />
                         <MenuItem mnemonicParsing="false" onAction="#newExpenseClick" text="New Expense" />
                         <MenuItem mnemonicParsing="false" onAction="#newRevenueClick" text="New Additional Revenue" />

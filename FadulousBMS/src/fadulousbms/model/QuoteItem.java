@@ -20,7 +20,7 @@ public class QuoteItem implements BusinessObject, Serializable
     private String _id;
     private int item_number;
     private int quantity;
-    private double labour;
+    private double unit_cost;
     private double markup;
     private String additional_costs;
     private boolean marked;
@@ -172,31 +172,31 @@ public class QuoteItem implements BusinessObject, Serializable
         this.quantity = quantity;
     }
 
-    private StringProperty labourProperty() {return new SimpleStringProperty(String.valueOf(labour));}
+    private StringProperty unit_costProperty() {return new SimpleStringProperty(String.valueOf(unit_cost));}
 
-    public String getLabour()
+    public String getUnit_cost()
     {
-        return String.valueOf(labour);
+        return String.valueOf(getUnitCost());
     }
 
-    public double getLabourCost()
+    public double getUnitCost()
     {
-        return labour;
+        return unit_cost;
     }
 
-    public void setLabour(double labour)
+    public void setUnit_cost(double unit_cost)
     {
-        this.labour = labour;
+        this.unit_cost = unit_cost;
     }
 
-    private StringProperty valueProperty(){return new SimpleStringProperty(String.valueOf(getValue()));}
+    private StringProperty valueProperty(){return new SimpleStringProperty(String.valueOf(getCurrentValue()));}
 
-    public String getValue()
+    public String getCurrentValue()
     {
-        return String.valueOf(getCost());
+        return String.valueOf(getCurrentUnitCost());
     }
 
-    public double getCost()
+    public double getCurrentUnitCost()
     {
         Resource resource = getResource();
         if(resource!=null)
@@ -226,7 +226,7 @@ public class QuoteItem implements BusinessObject, Serializable
 
     public Resource getResource()
     {
-        HashMap<String, Resource> resources = ResourceManager.getInstance().getResources();
+        HashMap<String, Resource> resources = ResourceManager.getInstance().getAll_resources();
         if(resources!=null)
             return resources.get(getResource_id());
         return null;
@@ -239,32 +239,47 @@ public class QuoteItem implements BusinessObject, Serializable
 
     public double getRate()
     {
-        double marked_up = getCost() + getCost()*(markup/100);
-        double total = marked_up;
-        total += labour;
+        //double marked_up = getUnitCost() + getUnitCost()*(markup/100);
+        double total = getUnitCost();
 
         //check additional costs
-        if (additional_costs != null)
+        if (getAdditional_costs() != null)
         {
-            if (!additional_costs.isEmpty())
+            if (!getAdditional_costs().isEmpty())
             {
                 //compute additional costs for each Quote Item
-                if(additional_costs.contains(";"))//check cost delimiter
+                if(getAdditional_costs().contains(";"))//check cost delimiter
                 {
-                    String[] costs = additional_costs.split(";");
+                    String[] costs = getAdditional_costs().split(";");
                     for (String str_cost : costs)
                     {
                         if (str_cost.contains("="))
                         {
-                            double cost = Double.parseDouble(str_cost.split("=")[1]);
-                            total += cost;
-                        }
-                        else IO.log(getClass().getName(), IO.TAG_ERROR, "invalid Quote Item additional cost.");
+                            //retrieve cost and markup
+                            String add_cost = str_cost.split("=")[1];
+
+                            double cost=0,add_cost_markup=0;
+                            if(add_cost.contains("*"))
+                            {
+                                cost = Double.parseDouble(getAdditional_costs().split("=")[1].split("\\*")[0]);
+                                add_cost_markup = Double.parseDouble(getAdditional_costs().split("=")[1].split("\\*")[1]);
+                            }else cost = Double.parseDouble(add_cost);
+
+                            //add marked up additional cost to total
+                            total += cost + cost*(add_cost_markup/100);
+                        } else IO.log(getClass().getName(), IO.TAG_ERROR, "invalid Quote Item additional cost.");
                     }
-                }else if (additional_costs.contains("="))//if only one additional cost
+                } else if (getAdditional_costs().contains("="))//if only one additional cost
                 {
-                    double cost = Double.parseDouble(additional_costs.split("=")[1]);
-                    total += cost;
+                    double cost=0,add_cost_markup=0;
+                    //get cost and markup
+                    if(getAdditional_costs().split("=")[1].contains("*"))
+                    {
+                        cost = Double.parseDouble(getAdditional_costs().split("=")[1].split("\\*")[0]);
+                        add_cost_markup = Double.parseDouble(getAdditional_costs().split("=")[1].split("\\*")[1]);
+                    }else cost = Double.parseDouble(getAdditional_costs().split("=")[1]);
+                    //add marked up additional cost to total
+                    total += cost + cost*(add_cost_markup/100);
                 }else IO.log(getClass().getName(), IO.TAG_ERROR, "invalid Quote Item additional cost.");
             }
         }
@@ -305,8 +320,8 @@ public class QuoteItem implements BusinessObject, Serializable
                         + URLEncoder.encode(additional_costs, "UTF-8") + "&");
             result.append(URLEncoder.encode("quantity","UTF-8") + "="
                     + URLEncoder.encode(String.valueOf(quantity), "UTF-8") + "&");
-            result.append(URLEncoder.encode("labour","UTF-8") + "="
-                    + URLEncoder.encode(String.valueOf(labour), "UTF-8") + "&");
+            result.append(URLEncoder.encode("unit_cost","UTF-8") + "="
+                    + URLEncoder.encode(String.valueOf(unit_cost), "UTF-8") + "&");
             result.append(URLEncoder.encode("markup","UTF-8") + "="
                     + URLEncoder.encode(String.valueOf(markup), "UTF-8"));
             if(extra!=null)
@@ -329,28 +344,28 @@ public class QuoteItem implements BusinessObject, Serializable
             switch (var.toLowerCase())
             {
                 case "quote_id":
-                    quote_id = String.valueOf(val);
+                    setQuote_id(String.valueOf(val));
                     break;
                 case "resource_id":
-                    resource_id = String.valueOf(val);
+                    setResource_id(String.valueOf(val));
                     break;
                 case "item_number":
-                    item_number = Integer.valueOf((String)val);
+                    setItem_number(Integer.valueOf((String)val));
                     break;
                 case "additional_costs":
-                    additional_costs = (String)val;
+                    setAdditional_costs((String)val);
                     break;
                 case "quantity":
-                    quantity = Integer.valueOf((String)val);
+                    setQuantity(Integer.valueOf((String)val));
                     break;
-                case "labour":
-                    labour = Double.valueOf((String)val);
+                case "unit_cost":
+                    setUnit_cost(Double.valueOf((String)val));
                     break;
                 case "markup":
-                    markup = Double.parseDouble((String) val);
+                    setMarkup(Double.parseDouble((String) val));
                     break;
                 case "extra":
-                    extra = String.valueOf(val);
+                    setExtra((String)val);
                     break;
                 default:
                     IO.log(getClass().getName(), IO.TAG_ERROR, "Unknown QuoteItem attribute '" + var + "'.");
@@ -385,10 +400,10 @@ public class QuoteItem implements BusinessObject, Serializable
                 return getUnit();
             case "quantity":
                 return getQuantityValue();
-            case "labour":
-                return getLabourCost();
+            case "unit_cost":
+                return getUnitCost();
             case "value":
-                return getCost();
+                return getCurrentValue();
             case "markup":
                 return getMarkupValue();
             case "extra":

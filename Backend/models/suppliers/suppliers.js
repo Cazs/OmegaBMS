@@ -40,6 +40,14 @@ var supplierSchema = mongoose.Schema(
       type:String,
       required:true
     },
+    registration:{
+      type:String,
+      required:true
+    },
+    vat:{
+      type:String,
+      required:true
+    },
     contact_email:{
       type:String,
       required:true
@@ -128,6 +136,10 @@ var supplierSchema = mongoose.Schema(
     if(isNullOrEmpty(supplier.date_partnered))
       return false;
     if(isNullOrEmpty(supplier.website))
+      return false;
+    if(isNullOrEmpty(supplier.registration))
+      return false;
+    if(isNullOrEmpty(supplier.vat))
       return false;
     if(isNullOrEmpty(supplier.contact_email))
       return false;

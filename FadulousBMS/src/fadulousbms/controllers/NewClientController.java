@@ -20,6 +20,7 @@ import javafx.scene.control.TextField;
 
 import java.io.IOException;
 import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
 import java.net.URL;
 import java.time.ZoneId;
 import java.util.AbstractMap;
@@ -35,7 +36,7 @@ public class NewClientController extends Screen implements Initializable
 {
     private boolean itemsModified;
     @FXML
-    private TextField txtName,txtTel,txtFax,txtWebsite;
+    private TextField txtName,txtTel,txtFax,txtWebsite, txtRegistration,txtVat;
     @FXML
     private CheckBox cbxActive;
     @FXML
@@ -95,6 +96,16 @@ public class NewClientController extends Screen implements Initializable
             txtWebsite.getStylesheets().add(this.getClass().getResource("../styles/home.css").toExternalForm());
             return;
         }
+        if(!Validators.isValidNode(txtRegistration, txtRegistration.getText(), 1, ".+"))
+        {
+            txtRegistration.getStylesheets().add(this.getClass().getResource("../styles/home.css").toExternalForm());
+            return;
+        }
+        if(!Validators.isValidNode(txtVat, txtVat.getText(), 1, ".+"))
+        {
+            txtVat.getStylesheets().add(this.getClass().getResource("../styles/home.css").toExternalForm());
+            return;
+        }
         if(!Validators.isValidNode(txtTel, txtTel.getText(), 1, ".+"))
         {
             txtTel.getStylesheets().add(this.getClass().getResource("../styles/home.css").toExternalForm());
@@ -115,6 +126,8 @@ public class NewClientController extends Screen implements Initializable
         client.setFax(txtFax.getText());
         client.setDate_partnered(datePartnered.getValue().atStartOfDay(ZoneId.systemDefault()).toEpochSecond());
         client.setWebsite(txtWebsite.getText());
+        client.setRegistration(txtRegistration.getText());
+        client.setVat(txtVat.getText());
         client.setActive(cbxActive.isSelected());
 
         //if(str_extra!=null)
@@ -144,9 +157,25 @@ public class NewClientController extends Screen implements Initializable
                         IO.logAndAlert("New Client Creation Failure", "Invalid response.", IO.TAG_ERROR);
                         return;
                     }
-                    ClientManager.getInstance().setSelected(client);
-                    IO.logAndAlert("New Client Creation Success", "Successfully created a new client.", IO.TAG_INFO);
-                    itemsModified = false;
+                    try
+                    {
+                        ClientManager.getInstance().reloadDataFromServer();
+                        ClientManager.getInstance().setSelected(client);
+                        IO.logAndAlert("New Client Creation Success", "Successfully created a new client.", IO.TAG_INFO);
+                        itemsModified = false;
+                    }catch (MalformedURLException ex)
+                    {
+                        IO.log(getClass().getName(), IO.TAG_ERROR, ex.getMessage());
+                        IO.showMessage("URL Error", ex.getMessage(), IO.TAG_ERROR);
+                    }catch (ClassNotFoundException e)
+                    {
+                        IO.log(getClass().getName(), IO.TAG_ERROR, e.getMessage());
+                        IO.showMessage("ClassNotFoundException", e.getMessage(), IO.TAG_ERROR);
+                    }catch (IOException ex)
+                    {
+                        IO.log(getClass().getName(), IO.TAG_ERROR, ex.getMessage());
+                        IO.showMessage("I/O Error", ex.getMessage(), IO.TAG_ERROR);
+                    }
                 }else
                 {
                     //Get error message

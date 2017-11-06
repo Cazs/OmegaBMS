@@ -5,7 +5,7 @@
 <?import javafx.scene.control.cell.*?>
 <?import javafx.scene.layout.*?>
 
-<Tab fx:id="suppliersTab" text="Suppliers" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/8" fx:controller="fadulousbms.controllers.SuppliersController">
+<Tab fx:id="suppliersTab" text="Suppliers" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="fadulousbms.controllers.SuppliersController">
     <content>
         <TableView fx:id="tblSuppliers" editable="true" tableMenuButtonVisible="true" VBox.vgrow="ALWAYS">
             <columns>
@@ -59,6 +59,16 @@
                         <PropertyValueFactory property="website" />
                     </cellValueFactory>
                 </TableColumn>
+            <TableColumn fx:id="colSupplierRegistration" maxWidth="1.7976931348623157E308" minWidth="80.0" prefWidth="-1.0" text="Registration #">
+               <cellValueFactory>
+                  <PropertyValueFactory property="website" />
+               </cellValueFactory>
+            </TableColumn>
+            <TableColumn fx:id="colSupplierVat" maxWidth="1.7976931348623157E308" minWidth="80.0" prefWidth="-1.0" text="VAT Number">
+               <cellValueFactory>
+                  <PropertyValueFactory property="website" />
+               </cellValueFactory>
+            </TableColumn>
                 <TableColumn fx:id="colSupplierOther" maxWidth="1.7976931348623157E308" minWidth="50.0" prefWidth="-1.0" text="Other" visible="false">
                     <cellValueFactory>
                         <PropertyValueFactory property="other" />

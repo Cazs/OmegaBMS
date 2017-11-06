@@ -983,7 +983,7 @@ public class PDF
                 addTextToPageStream(contents, String.valueOf(DecimalFormat.getCurrencyInstance().format(item.getRate())), digit_font_size,col_pos+5, line_pos);
                 col_pos+=55;//next column
                 //Labour col
-                addTextToPageStream(contents, String.valueOf(DecimalFormat.getCurrencyInstance().format(item.getLabourCost())), digit_font_size,col_pos+5, line_pos);
+                //addTextToPageStream(contents, String.valueOf(DecimalFormat.getCurrencyInstance().format(item.getLabourCost())), digit_font_size,col_pos+5, line_pos);
                 col_pos+=55;//next column
                 //Total col
                 sub_total+=item.getTotal();
@@ -1506,7 +1506,7 @@ public class PDF
                 addTextToPageStream(contents, String.valueOf(DecimalFormat.getCurrencyInstance().format(item.getRate())), digit_font_size,col_pos+5, line_pos);
                 col_pos+=55;//next column
                 //Labour col
-                addTextToPageStream(contents, String.valueOf(DecimalFormat.getCurrencyInstance().format(item.getLabourCost())), digit_font_size,col_pos+5, line_pos);
+                //addTextToPageStream(contents, String.valueOf(DecimalFormat.getCurrencyInstance().format(item.getLabourCost())), digit_font_size,col_pos+5, line_pos);
                 col_pos+=55;//next column
                 //Total col
                 sub_total+=item.getTotal();

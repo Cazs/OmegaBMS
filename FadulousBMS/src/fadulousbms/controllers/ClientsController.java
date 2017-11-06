@@ -37,7 +37,7 @@ public class ClientsController extends Screen implements Initializable
     @FXML
     private TableColumn     colClientId,colClientName,colClientPhysicalAddress,
                             colClientPostalAddress,colClientTel,colClientFax,colClientActive,
-                            colClientDatePartnered,colClientWebsite,colClientOther,colAction;
+                            colClientDatePartnered,colClientWebsite,colClientRegistration,colClientVat,colClientOther,colAction;
 
     @Override
     public void refreshView()
@@ -59,6 +59,8 @@ public class ClientsController extends Screen implements Initializable
         CustomTableViewControls.makeCheckboxedTableColumn(colClientActive, null, 80, "active", "/api/client");
         CustomTableViewControls.makeLabelledDatePickerTableColumn(colClientDatePartnered, "date_partnered", "/api/client");
         CustomTableViewControls.makeEditableTableColumn(colClientWebsite, TextFieldTableCell.forTableColumn(), 100, "website", "/api/client");
+        CustomTableViewControls.makeEditableTableColumn(colClientRegistration, TextFieldTableCell.forTableColumn(), 100, "registration", "/api/client");
+        CustomTableViewControls.makeEditableTableColumn(colClientVat, TextFieldTableCell.forTableColumn(), 100, "vat", "/api/client");
         CustomTableViewControls.makeEditableTableColumn(colClientOther, TextFieldTableCell.forTableColumn(), 50, "other", "/api/client");
 
         ObservableList<Client> lst_clients = FXCollections.observableArrayList();

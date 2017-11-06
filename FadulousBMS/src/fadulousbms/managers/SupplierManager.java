@@ -72,7 +72,22 @@ public class SupplierManager extends BusinessObjectManager
     @Override
     public void initialize()
     {
-        loadDataFromServer();
+        try
+        {
+            reloadDataFromServer();
+        }catch (MalformedURLException ex)
+        {
+            IO.log(getClass().getName(), IO.TAG_ERROR, ex.getMessage());
+            IO.showMessage("URL Error", ex.getMessage(), IO.TAG_ERROR);
+        }catch (ClassNotFoundException e)
+        {
+            IO.log(getClass().getName(), IO.TAG_ERROR, e.getMessage());
+            IO.showMessage("ClassNotFoundException", e.getMessage(), IO.TAG_ERROR);
+        }catch (IOException ex)
+        {
+            IO.log(getClass().getName(), IO.TAG_ERROR, ex.getMessage());
+            IO.showMessage("I/O Error", ex.getMessage(), IO.TAG_ERROR);
+        }
     }
 
     public void newSupplierWindow(Callback callback)
@@ -126,6 +141,16 @@ public class SupplierManager extends BusinessObjectManager
         txt_website.setMaxWidth(Double.MAX_VALUE);
         HBox website = CustomTableViewControls.getLabelledNode("Supplier website", 200, txt_website);
 
+        final TextField txt_supplier_reg = new TextField();
+        txt_supplier_reg.setMinWidth(200);
+        txt_supplier_reg.setMaxWidth(Double.MAX_VALUE);
+        HBox supplier_reg = CustomTableViewControls.getLabelledNode("Registration Number", 200, txt_supplier_reg);
+
+        final TextField txt_supplier_vat = new TextField();
+        txt_supplier_vat.setMinWidth(200);
+        txt_supplier_vat.setMaxWidth(Double.MAX_VALUE);
+        HBox supplier_vat = CustomTableViewControls.getLabelledNode("VAT Number", 200, txt_supplier_vat);
+
         final TextField txt_contact_email = new TextField();
         txt_contact_email.setMinWidth(200);
         txt_contact_email.setMaxWidth(Double.MAX_VALUE);
@@ -149,15 +174,17 @@ public class SupplierManager extends BusinessObjectManager
                 return;
             if(!Validators.isValidNode(txt_tel, txt_tel.getText(), 1, ".+"))
                 return;
-            if(!Validators.isValidNode(txt_speciality, txt_speciality.getText(), 1, ".+"))
+            if(!Validators.isValidNode(txt_contact_email, txt_contact_email.getText(), 1, ".+"))
                 return;
-            if(!Validators.isValidNode(txt_website, txt_website.getText(), 1, ".+"))
+            if(!Validators.isValidNode(txt_speciality, txt_speciality.getText(), 1, ".+"))
                 return;
             if(!Validators.isValidNode(dpk_date_partnered, dpk_date_partnered.getValue()==null?"":dpk_date_partnered.getValue().toString(), 4, date_regex))
                 return;
             if(!Validators.isValidNode(txt_website, txt_website.getText(), 1, ".+"))
                 return;
-            if(!Validators.isValidNode(txt_contact_email, txt_contact_email.getText(), 1, ".+"))
+            if(!Validators.isValidNode(txt_supplier_reg, txt_supplier_reg.getText(), 1, ".+"))
+                return;
+            if(!Validators.isValidNode(txt_supplier_vat, txt_supplier_vat.getText(), 1, ".+"))
                 return;
 
             String str_supplier_name = txt_supplier_name.getText();
@@ -166,6 +193,8 @@ public class SupplierManager extends BusinessObjectManager
             String str_tel = txt_tel.getText();
             String str_speciality = txt_speciality.getText();
             String str_website = txt_website.getText();
+            String str_reg = txt_supplier_reg.getText();
+            String str_vat = txt_supplier_vat.getText();
             long date_partnered_in_sec = dpk_date_partnered.getValue().atStartOfDay(ZoneId.systemDefault()).toEpochSecond();
             String str_contact_email = txt_contact_email.getText();
             String str_other = txt_other.getText();
@@ -178,6 +207,8 @@ public class SupplierManager extends BusinessObjectManager
             params.add(new AbstractMap.SimpleEntry<>("tel", str_tel));
             params.add(new AbstractMap.SimpleEntry<>("speciality", str_speciality));
             params.add(new AbstractMap.SimpleEntry<>("website", str_website));
+            params.add(new AbstractMap.SimpleEntry<>("registration", str_reg));
+            params.add(new AbstractMap.SimpleEntry<>("vat", str_vat));
             params.add(new AbstractMap.SimpleEntry<>("date_partnered", String.valueOf(date_partnered_in_sec)));
             params.add(new AbstractMap.SimpleEntry<>("contact_email", str_contact_email));
             params.add(new AbstractMap.SimpleEntry<>("other", str_other));
@@ -200,6 +231,8 @@ public class SupplierManager extends BusinessObjectManager
                     if(connection.getResponseCode()==HttpURLConnection.HTTP_OK)
                     {
                         IO.logAndAlert("Success", "Successfully created a new supplier!", IO.TAG_INFO);
+                        SupplierManager.getInstance().initialize();
+                        //TODO: SupplierManager.getInstance().setSelected(supplier); why??
                         if(callback!=null)
                             callback.call(null);
                     }else
@@ -226,6 +259,8 @@ public class SupplierManager extends BusinessObjectManager
         vbox.getChildren().add(tel);
         vbox.getChildren().add(speciality);
         vbox.getChildren().add(website);
+        vbox.getChildren().add(supplier_reg);
+        vbox.getChildren().add(supplier_vat);
         vbox.getChildren().add(date_partnered);
         vbox.getChildren().add(contact_email);
         vbox.getChildren().add(other);
@@ -239,7 +274,24 @@ public class SupplierManager extends BusinessObjectManager
         scene.getStylesheets().add("file:///"+ fCss.getAbsolutePath().replace("\\", "/"));
 
         stage.onHidingProperty().addListener((observable, oldValue, newValue) ->
-                loadDataFromServer());
+        {
+            try
+            {
+                reloadDataFromServer();
+            }catch (MalformedURLException ex)
+            {
+                IO.log(getClass().getName(), IO.TAG_ERROR, ex.getMessage());
+                IO.showMessage("URL Error", ex.getMessage(), IO.TAG_ERROR);
+            }catch (ClassNotFoundException e)
+            {
+                IO.log(getClass().getName(), IO.TAG_ERROR, e.getMessage());
+                IO.showMessage("ClassNotFoundException", e.getMessage(), IO.TAG_ERROR);
+            }catch (IOException ex)
+            {
+                IO.log(getClass().getName(), IO.TAG_ERROR, ex.getMessage());
+                IO.showMessage("I/O Error", ex.getMessage(), IO.TAG_ERROR);
+            }
+        });
 
         stage.setScene(scene);
         stage.show();
@@ -251,63 +303,70 @@ public class SupplierManager extends BusinessObjectManager
     {
         try
         {
-            SessionManager smgr = SessionManager.getInstance();
-            if(smgr.getActive()!=null)
-            {
-                if(!smgr.getActive().isExpired())
-                {
-                    if(suppliers==null)
-                    {
-                        gson = new GsonBuilder().create();
-                        ArrayList<AbstractMap.SimpleEntry<String, String>> headers = new ArrayList<>();
-                        headers.add(new AbstractMap.SimpleEntry<>("Cookie", smgr.getActive().getSessionId()));
-
-                        //Get Timestamp
-                        String timestamp_json = RemoteComms
-                                .sendGetRequest("/api/timestamp/suppliers_timestamp", headers);
-                        Counters cntr_timestamp = gson.fromJson(timestamp_json, Counters.class);
-                        if (cntr_timestamp != null)
-                        {
-                            timestamp = cntr_timestamp.getCount();
-                            filename = "suppliers_" + timestamp + ".dat";
-                            IO.log(this.getClass().getName(), IO.TAG_INFO, "Server Timestamp: " + timestamp);
-                        }
-                        else
-                        {
-                            IO.logAndAlert(this.getClass().getName(), "could not get valid timestamp", IO.TAG_ERROR);
-                            return;
-                        }
-
-                        if (!isSerialized(ROOT_PATH + filename))
-                        {
-                            String suppliers_json = RemoteComms.sendGetRequest("/api/suppliers", headers);
-
-                            Supplier[] supps = gson.fromJson(suppliers_json, Supplier[].class);
-                            suppliers = new HashMap();
-                            for (Supplier supplier : supps)
-                                suppliers.put(supplier.get_id(), supplier);
-
-                            IO.log(getClass().getName(), IO.TAG_INFO, "reloaded collection of suppliers.");
-                            this.serialize(ROOT_PATH + filename, suppliers);
-                        }
-                        else
-                        {
-                            IO.log(this.getClass()
-                                    .getName(), IO.TAG_INFO, "binary object [" + ROOT_PATH + filename + "] on local disk is already up-to-date.");
-                            suppliers = (HashMap) this.deserialize(ROOT_PATH + filename);
-                        }
-                    }else IO.log(getClass().getName(), IO.TAG_INFO, "suppliers object has already been set.");
-                }else JOptionPane.showMessageDialog(null, "Active session has expired.", "Session Expired", JOptionPane.ERROR_MESSAGE);
-            }else JOptionPane.showMessageDialog(null, "No active sessions.", "Session Expired", JOptionPane.ERROR_MESSAGE);
+            if(suppliers==null)
+                reloadDataFromServer();
+            else IO.log(getClass().getName(), IO.TAG_INFO, "suppliers object has already been set.");
         }catch (MalformedURLException ex)
         {
-            IO.log(TAG, IO.TAG_ERROR, ex.getMessage());
-        } catch (ClassNotFoundException ex)
+            IO.log(getClass().getName(), IO.TAG_ERROR, ex.getMessage());
+            IO.showMessage("URL Error", ex.getMessage(), IO.TAG_ERROR);
+        }catch (ClassNotFoundException e)
         {
-            IO.log(TAG, IO.TAG_ERROR, ex.getMessage());
+            IO.log(getClass().getName(), IO.TAG_ERROR, e.getMessage());
+            IO.showMessage("ClassNotFoundException", e.getMessage(), IO.TAG_ERROR);
         }catch (IOException ex)
         {
-            IO.log(TAG, IO.TAG_ERROR, ex.getMessage());
+            IO.log(getClass().getName(), IO.TAG_ERROR, ex.getMessage());
+            IO.showMessage("I/O Error", ex.getMessage(), IO.TAG_ERROR);
         }
+    }
+
+    public void reloadDataFromServer() throws ClassNotFoundException, IOException
+    {
+        SessionManager smgr = SessionManager.getInstance();
+        if(smgr.getActive()!=null)
+        {
+            if(!smgr.getActive().isExpired())
+            {
+                gson = new GsonBuilder().create();
+                ArrayList<AbstractMap.SimpleEntry<String, String>> headers = new ArrayList<>();
+                headers.add(new AbstractMap.SimpleEntry<>("Cookie", smgr.getActive().getSessionId()));
+
+                //Get Timestamp
+                String timestamp_json = RemoteComms
+                        .sendGetRequest("/api/timestamp/suppliers_timestamp", headers);
+                Counters cntr_timestamp = gson.fromJson(timestamp_json, Counters.class);
+                if (cntr_timestamp != null)
+                {
+                    timestamp = cntr_timestamp.getCount();
+                    filename = "suppliers_" + timestamp + ".dat";
+                    IO.log(this.getClass().getName(), IO.TAG_INFO, "Server Timestamp: " + timestamp);
+                }
+                else
+                {
+                    IO.logAndAlert(this.getClass().getName(), "could not get valid timestamp", IO.TAG_ERROR);
+                    return;
+                }
+
+                if (!isSerialized(ROOT_PATH + filename))
+                {
+                    String suppliers_json = RemoteComms.sendGetRequest("/api/suppliers", headers);
+
+                    Supplier[] supps = gson.fromJson(suppliers_json, Supplier[].class);
+                    suppliers = new HashMap();
+                    for (Supplier supplier : supps)
+                        suppliers.put(supplier.get_id(), supplier);
+
+                    IO.log(getClass().getName(), IO.TAG_INFO, "reloaded collection of suppliers.");
+                    this.serialize(ROOT_PATH + filename, suppliers);
+                }
+                else
+                {
+                    IO.log(this.getClass()
+                            .getName(), IO.TAG_INFO, "binary object [" + ROOT_PATH + filename + "] on local disk is already up-to-date.");
+                    suppliers = (HashMap) this.deserialize(ROOT_PATH + filename);
+                }
+            }else JOptionPane.showMessageDialog(null, "Active session has expired.", "Session Expired", JOptionPane.ERROR_MESSAGE);
+        }else JOptionPane.showMessageDialog(null, "No active sessions.", "Session Expired", JOptionPane.ERROR_MESSAGE);
     }
 }

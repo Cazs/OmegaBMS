@@ -24,7 +24,7 @@ public class NewSupplierController extends Screen implements Initializable
 {
     private boolean itemsModified;
     @FXML
-    private TextField txtName,txtSpeciality,txtTel,txtFax,txtWebsite,txtEmail;
+    private TextField txtName,txtSpeciality,txtTel,txtFax,txtWebsite,txtRegistration,txtVat,txtEmail;
     @FXML
     private CheckBox cbxActive;
     @FXML
@@ -54,6 +54,8 @@ public class NewSupplierController extends Screen implements Initializable
     @FXML
     public void createSupplier()
     {
+        String date_regex="\\d+(\\-|\\/|\\\\)\\d+(\\-|\\/|\\\\)\\d+";
+
         if(SessionManager.getInstance().getActive()==null)
         {
             IO.logAndAlert("Session Expired", "No active sessions.", IO.TAG_ERROR);
@@ -79,21 +81,6 @@ public class NewSupplierController extends Screen implements Initializable
             txtPostal.getStylesheets().add(this.getClass().getResource("../styles/home.css").toExternalForm());
             return;
         }
-        if(!Validators.isValidNode(txtSpeciality, txtTel.getText(), 1, ".+"))
-        {
-            txtTel.getStylesheets().add(this.getClass().getResource("../styles/home.css").toExternalForm());
-            return;
-        }
-        if(!Validators.isValidNode(txtWebsite, txtWebsite.getText(), 1, ".+"))
-        {
-            txtWebsite.getStylesheets().add(this.getClass().getResource("../styles/home.css").toExternalForm());
-            return;
-        }
-        if(!Validators.isValidNode(txtEmail, txtEmail.getText(), 1, ".+"))
-        {
-            txtEmail.getStylesheets().add(this.getClass().getResource("../styles/home.css").toExternalForm());
-            return;
-        }
         if(!Validators.isValidNode(txtTel, txtTel.getText(), 1, ".+"))
         {
             txtTel.getStylesheets().add(this.getClass().getResource("../styles/home.css").toExternalForm());
@@ -102,6 +89,36 @@ public class NewSupplierController extends Screen implements Initializable
         if(!Validators.isValidNode(txtFax, txtFax.getText(), 1, ".+"))
         {
             txtFax.getStylesheets().add(this.getClass().getResource("../styles/home.css").toExternalForm());
+            return;
+        }
+        if(!Validators.isValidNode(txtEmail, txtEmail.getText(), 1, ".+"))
+        {
+            txtEmail.getStylesheets().add(this.getClass().getResource("../styles/home.css").toExternalForm());
+            return;
+        }
+        if(!Validators.isValidNode(txtSpeciality, txtSpeciality.getText(), 1, ".+"))
+        {
+            txtSpeciality.getStylesheets().add(this.getClass().getResource("../styles/home.css").toExternalForm());
+            return;
+        }
+        if(!Validators.isValidNode(datePartnered, datePartnered.getValue()==null?"":datePartnered.getValue().toString(), 4, date_regex))
+        {
+            datePartnered.getStylesheets().add(this.getClass().getResource("../styles/home.css").toExternalForm());
+            return;
+        }
+        if(!Validators.isValidNode(txtWebsite, txtWebsite.getText(), 1, ".+"))
+        {
+            txtWebsite.getStylesheets().add(this.getClass().getResource("../styles/home.css").toExternalForm());
+            return;
+        }
+        if(!Validators.isValidNode(txtRegistration, txtRegistration.getText(), 1, ".+"))
+        {
+            txtRegistration.getStylesheets().add(this.getClass().getResource("../styles/home.css").toExternalForm());
+            return;
+        }
+        if(!Validators.isValidNode(txtVat, txtVat.getText(), 1, ".+"))
+        {
+            txtVat.getStylesheets().add(this.getClass().getResource("../styles/home.css").toExternalForm());
             return;
         }
 
@@ -116,6 +133,8 @@ public class NewSupplierController extends Screen implements Initializable
         supplier.setDate_partnered(datePartnered.getValue().atStartOfDay(ZoneId.systemDefault()).toEpochSecond());
         supplier.setSpeciality(txtSpeciality.getText());
         supplier.setWebsite(txtWebsite.getText());
+        supplier.setRegistration(txtRegistration.getText());
+        supplier.setVat(txtVat.getText());
         supplier.setContact_email(txtEmail.getText());
         supplier.setActive(cbxActive.isSelected());
 
@@ -146,8 +165,9 @@ public class NewSupplierController extends Screen implements Initializable
                         IO.logAndAlert("New Supplier Creation Failure", "Invalid response.", IO.TAG_ERROR);
                         return;
                     }
-                    SupplierManager.getInstance().setSelected(supplier);
                     IO.logAndAlert("New Supplier Creation Success", "Successfully created a new supplier.", IO.TAG_INFO);
+                    SupplierManager.getInstance().initialize();
+                    SupplierManager.getInstance().setSelected(supplier);
                     itemsModified = false;
                 }else
                 {

@@ -36,6 +36,14 @@ const clientSchema = mongoose.Schema(
       type:String,
       required:true
     },
+    registration:{
+      type:String,
+      required:true
+    },
+    vat:{
+      type:String,
+      required:true
+    },
     other:{
       type:String,
       required:false
@@ -119,6 +127,10 @@ module.exports.isValid = function(client)
   if(isNullOrEmpty(client.date_partnered))
     return false;
   if(isNullOrEmpty(client.website))
+    return false;
+  if(isNullOrEmpty(client.registration))
+    return false;
+  if(isNullOrEmpty(client.vat))
     return false;
   /*if(isNullOrEmpty(client.other))
     return false;*/

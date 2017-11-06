@@ -14,6 +14,7 @@ import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.geometry.Insets;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
@@ -25,6 +26,7 @@ import javafx.util.Callback;
 
 import java.io.IOException;
 import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.AbstractMap;
 import java.util.ArrayList;
@@ -135,6 +137,8 @@ public class NewPurchaseOrderController extends OperationsController implements 
                 };
         colAction.setCellValueFactory(new PropertyValueFactory<>(""));
         colAction.setCellFactory(cellFactory);
+
+        txtVat.setText(String.valueOf(QuoteManager.VAT));
     }
 
     @Override
@@ -180,16 +184,15 @@ public class NewPurchaseOrderController extends OperationsController implements 
                     btnAdd.setMinWidth(80);
                     btnAdd.setMinHeight(40);
                     btnAdd.setDefaultButton(true);
-                    btnAdd.getStyleClass().add("btnAdd");
+                    btnAdd.getStyleClass().add("btnDefault");
                     btnAdd.getStylesheets().add(this.getClass().getResource("../styles/home.css").toExternalForm());
 
                     Button btnNewMaterial = new Button("New Material");
-                    btnNewMaterial.setMinWidth(80);
+                    btnNewMaterial.setMinWidth(130);
                     btnNewMaterial.setMinHeight(40);
                     btnNewMaterial.setDefaultButton(true);
                     btnNewMaterial.getStyleClass().add("btnAdd");
-                    btnNewMaterial.getStylesheets()
-                            .add(this.getClass().getResource("../styles/home.css").toExternalForm());
+                    btnNewMaterial.getStylesheets().add(this.getClass().getResource("../styles/home.css").toExternalForm());
 
                     Button btnCancel = new Button("Close");
                     btnCancel.setMinWidth(80);
@@ -197,14 +200,17 @@ public class NewPurchaseOrderController extends OperationsController implements 
                     btnCancel.getStyleClass().add("btnBack");
                     btnCancel.getStylesheets().add(this.getClass().getResource("../styles/home.css").toExternalForm());
 
-                    HBox hBox = new HBox(new Label("Resource: "), resourceComboBox);
+                    HBox hBox = new HBox(new Label("Material: "), resourceComboBox);
                     HBox.setHgrow(hBox, Priority.ALWAYS);
+                    HBox.setHgrow(resourceComboBox, Priority.ALWAYS);
                     hBox.setSpacing(20);
+                    HBox.setMargin(hBox, new Insets(0, 0, 0, 20));
 
                     HBox hBoxButtons = new HBox(btnAdd, btnNewMaterial, btnCancel);
                     hBoxButtons.setHgrow(btnAdd, Priority.ALWAYS);
                     hBoxButtons.setHgrow(btnCancel, Priority.ALWAYS);
                     hBoxButtons.setSpacing(20);
+                    HBox.setMargin(hBoxButtons, new Insets(0, 0, 0, 20));
 
                     VBox vBox = new VBox(hBox, hBoxButtons);
                     VBox.setVgrow(vBox, Priority.ALWAYS);
@@ -213,10 +219,11 @@ public class NewPurchaseOrderController extends OperationsController implements 
                     vBox.setFillWidth(true);
 
                     Stage stage = new Stage();
-                    stage.setMaxWidth(300);
-                    stage.setTitle("Resource Purchase Order");
+                    stage.setMaxWidth(350);
+                    stage.setTitle("Add Material to Purchase Order");
                     stage.setScene(new Scene(vBox));
                     stage.setAlwaysOnTop(true);
+                    stage.setResizable(false);
                     stage.show();
 
 
@@ -230,6 +237,7 @@ public class NewPurchaseOrderController extends OperationsController implements 
                             purchaseOrderResource.setItem_id(resourceComboBox.getValue().get_id());
                             purchaseOrderResource.setQuantity(1);
                             purchaseOrderResource.setDiscount(0);
+                            purchaseOrderResource.setCost(resourceComboBox.getValue().getResource_value());
                             tblPurchaseOrderItems.getItems().add(purchaseOrderResource);
                             tblPurchaseOrderItems.refresh();
 
@@ -332,6 +340,7 @@ public class NewPurchaseOrderController extends OperationsController implements 
                             purchaseOrderAsset.setItem_id(assetComboBox.getValue().get_id());
                             purchaseOrderAsset.setQuantity(1);
                             purchaseOrderAsset.setDiscount(0);
+                            purchaseOrderAsset.setCost(assetComboBox.getValue().getAsset_value());
                             tblPurchaseOrderItems.getItems().add(purchaseOrderAsset);
                             tblPurchaseOrderItems.refresh();
 
@@ -521,31 +530,45 @@ public class NewPurchaseOrderController extends OperationsController implements 
 
                         IO.logAndAlert("New Purchase Order Creation Success", "Successfully created a new Purchase Order.", IO.TAG_INFO);
 
-                        PurchaseOrderManager.getInstance().loadDataFromServer();
-                        PurchaseOrderManager.getInstance().setSelected(PurchaseOrderManager.getInstance().getPurchaseOrders().get(response));
-
-                        ScreenManager.getInstance().showLoadingScreen(param ->
+                        try
                         {
-                            new Thread(new Runnable()
+                            PurchaseOrderManager.getInstance().reloadDataFromServer();
+                            PurchaseOrderManager.getInstance().setSelected(PurchaseOrderManager.getInstance().getPurchaseOrders().get(response));
+
+                            ScreenManager.getInstance().showLoadingScreen(param ->
                             {
-                                @Override
-                                public void run()
+                                new Thread(new Runnable()
                                 {
-                                    try
+                                    @Override
+                                    public void run()
                                     {
-                                        if(ScreenManager.getInstance().loadScreen(Screens.VIEW_PURCHASE_ORDER.getScreen(),getClass().getResource("../views/"+Screens.VIEW_PURCHASE_ORDER.getScreen())))
+                                        try
                                         {
-                                            Platform.runLater(() -> ScreenManager.getInstance().setScreen(Screens.VIEW_PURCHASE_ORDER.getScreen()));
-                                        } else IO.log(getClass().getName(), IO.TAG_ERROR, "could not load purchase order viewer screen.");
-                                    } catch (IOException e)
-                                    {
-                                        IO.log(getClass().getName(), IO.TAG_ERROR, e.getMessage());
+                                            if(ScreenManager.getInstance().loadScreen(Screens.VIEW_PURCHASE_ORDER.getScreen(),getClass().getResource("../views/"+Screens.VIEW_PURCHASE_ORDER.getScreen())))
+                                            {
+                                                Platform.runLater(() -> ScreenManager.getInstance().setScreen(Screens.VIEW_PURCHASE_ORDER.getScreen()));
+                                            } else IO.log(getClass().getName(), IO.TAG_ERROR, "could not load purchase order viewer screen.");
+                                        } catch (IOException e)
+                                        {
+                                            IO.log(getClass().getName(), IO.TAG_ERROR, e.getMessage());
+                                        }
                                     }
-                                }
-                            }).start();
-                            return null;
-                        });
-                        //itemsModified = false;
+                                }).start();
+                                return null;
+                            });
+                        }catch (MalformedURLException ex)
+                        {
+                            IO.log(getClass().getName(), IO.TAG_ERROR, ex.getMessage());
+                            IO.showMessage("URL Error", ex.getMessage(), IO.TAG_ERROR);
+                        }catch (ClassNotFoundException e)
+                        {
+                            IO.log(getClass().getName(), IO.TAG_ERROR, e.getMessage());
+                            IO.showMessage("ClassNotFoundException", e.getMessage(), IO.TAG_ERROR);
+                        }catch (IOException ex)
+                        {
+                            IO.log(getClass().getName(), IO.TAG_ERROR, ex.getMessage());
+                            IO.showMessage("I/O Error", ex.getMessage(), IO.TAG_ERROR);
+                        }
                     } else IO.logAndAlert("New Purchase Order Creation Failure", "Could not add items to Purchase Order.", IO.TAG_ERROR);
                 }else
                 {
@@ -579,7 +602,7 @@ public class NewPurchaseOrderController extends OperationsController implements 
     @FXML
     public void newEmployee()
     {
-        EmployeeManager.getInstance().newEmployeeWindow(param ->
+        EmployeeManager.getInstance().newExternalEmployeeWindow("Create a Contact Person for this Purchase Order", param ->
         {
             new Thread(() ->
             {

@@ -25,6 +25,7 @@ import javafx.util.Callback;
 
 import java.io.IOException;
 import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.AbstractMap;
 import java.util.ArrayList;
@@ -90,7 +91,7 @@ public class ViewPurchaseOrderController extends OperationsController implements
         else IO.log(getClass().getName(), IO.TAG_ERROR, "selected po has no valid contact person.");
 
         //set up text fields
-        txtVat.setText(String.valueOf(PurchaseOrderManager.getInstance().getSelected().getVatVal()));
+        txtVat.setText(String.valueOf(QuoteManager.VAT));
         txtAccount.setText(PurchaseOrderManager.getInstance().getSelected().getAccount());
         txtNumber.setText(PurchaseOrderManager.getInstance().getSelected().getNumber());
         txtCreator.setText(PurchaseOrderManager.getInstance().getSelected().getCreator().toString());
@@ -605,13 +606,30 @@ public class ViewPurchaseOrderController extends OperationsController implements
                         tblPurchaseOrderItems.getItems().toArray(po_items);
                         purchaseOrder.setItems(po_items);
 
-                        PurchaseOrderManager.getInstance().loadDataFromServer();
-                        PurchaseOrderManager.getInstance().setSelected(purchaseOrder);
-                        tblPurchaseOrderItems.setItems(FXCollections
+                        try
+                        {
+                            //refresh data model after PO update
+                            PurchaseOrderManager.getInstance().reloadDataFromServer();
+                            PurchaseOrderManager.getInstance().setSelected(purchaseOrder);
+                            tblPurchaseOrderItems.setItems(FXCollections
                                 .observableArrayList(PurchaseOrderManager.getInstance().getSelected().getItems()));
+                            tblPurchaseOrderItems.refresh();
 
-                        IO.logAndAlert("Purchase Order Update Success", "Successfully updated Purchase Order.", IO.TAG_INFO);
-                        //itemsModified = false;
+                            IO.logAndAlert("Purchase Order Update Success", "Successfully updated Purchase Order.", IO.TAG_INFO);
+                            //itemsModified = false;
+                        }catch (MalformedURLException ex)
+                        {
+                            IO.log(getClass().getName(), IO.TAG_ERROR, ex.getMessage());
+                            IO.showMessage("URL Error", ex.getMessage(), IO.TAG_ERROR);
+                        }catch (ClassNotFoundException e)
+                        {
+                            IO.log(getClass().getName(), IO.TAG_ERROR, e.getMessage());
+                            IO.showMessage("ClassNotFoundException", e.getMessage(), IO.TAG_ERROR);
+                        }catch (IOException ex)
+                        {
+                            IO.log(getClass().getName(), IO.TAG_ERROR, ex.getMessage());
+                            IO.showMessage("I/O Error", ex.getMessage(), IO.TAG_ERROR);
+                        }
                     }
                     else IO.logAndAlert("Purchase Order Update Failure", "Could not add items to Purchase Order.", IO.TAG_ERROR);
                 }
@@ -648,7 +666,7 @@ public class ViewPurchaseOrderController extends OperationsController implements
     @FXML
     public void newEmployee()
     {
-        EmployeeManager.getInstance().newEmployeeWindow(param ->
+        EmployeeManager.getInstance().newExternalEmployeeWindow("Create a new Contact Person for this Purchase Order", param ->
         {
             new Thread(() ->
             {

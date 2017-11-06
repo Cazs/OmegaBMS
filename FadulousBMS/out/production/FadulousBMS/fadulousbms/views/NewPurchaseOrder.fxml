@@ -61,7 +61,7 @@
                     <children>
                         <Label text="Supplier" GridPane.rowIndex="1" />
                         <Label text="VAT [%]" GridPane.rowIndex="3" />
-                        <TextField fx:id="txtVat" GridPane.columnIndex="1" GridPane.rowIndex="3" />
+                        <TextField fx:id="txtVat" editable="false" GridPane.columnIndex="1" GridPane.rowIndex="3" />
                         <Label text="Account" GridPane.rowIndex="4" />
                         <TextField fx:id="txtAccount" GridPane.columnIndex="1" GridPane.rowIndex="4" />
                         <Label text="Create New Purchase Order" GridPane.columnSpan="2" GridPane.halignment="CENTER" GridPane.hgrow="ALWAYS" GridPane.valignment="CENTER" GridPane.vgrow="ALWAYS">
@@ -99,7 +99,7 @@
         </SplitPane>
       <TableView fx:id="tblPurchaseOrderItems" editable="true" tableMenuButtonVisible="true" VBox.vgrow="ALWAYS">
          <columns>
-            <TableColumn fx:id="colId" maxWidth="1.7976931348623157E308" minWidth="50.0" prefWidth="-1.0" text="ID">
+            <TableColumn fx:id="colId" maxWidth="1.7976931348623157E308" minWidth="50.0" prefWidth="-1.0" text="ID" visible="false">
                <cellValueFactory>
                   <PropertyValueFactory property="item_number" />
                </cellValueFactory>
@@ -137,7 +137,7 @@
                   <PropertyValueFactory property="value" />
                </cellValueFactory>
             </TableColumn>
-            <TableColumn fx:id="colDiscount" maxWidth="1.7976931348623157E308" minWidth="80.0" prefWidth="-1.0" text="Discount">
+            <TableColumn fx:id="colDiscount" maxWidth="1.7976931348623157E308" minWidth="80.0" prefWidth="-1.0" text="Discount" visible="false">
                <cellFactory>
                   <TextFieldTableCell fx:factory="forTableColumn" />
                </cellFactory>

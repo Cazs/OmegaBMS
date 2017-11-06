@@ -18,9 +18,9 @@ const quoteResourceSchema = mongoose.Schema(
     },
     markup:{
       type:Number,
-      required:true
+      required:false
     },
-    labour:{
+    unit_cost:{
       type:Number,
       required:true
     },
@@ -108,9 +108,9 @@ const quoteResourceSchema = mongoose.Schema(
       return false;
     if(isNullOrEmpty(quoteresource.quote_id))
       return false;
-    if(isNullOrEmpty(quoteresource.markup))
-      return false;
-    if(isNullOrEmpty(quoteresource.labour))
+    /*if(isNullOrEmpty(quoteresource.markup))
+      return false;*/
+    if(isNullOrEmpty(quoteresource.unit_cost))
       return false;
     if(isNullOrEmpty(quoteresource.quantity))
       return false;

@@ -77,74 +77,81 @@ public class ClientManager extends BusinessObjectManager
     }
 
     public void loadDataFromServer()
+{
+    try
     {
-        try
+        if(clients==null)
+            reloadDataFromServer();
+        else IO.log(getClass().getName(), IO.TAG_INFO, "clients object has already been set.");
+    }catch (MalformedURLException ex)
+    {
+        IO.log(getClass().getName(), IO.TAG_ERROR, ex.getMessage());
+        IO.showMessage("URL Error", ex.getMessage(), IO.TAG_ERROR);
+    }catch (ClassNotFoundException e)
+    {
+        IO.log(getClass().getName(), IO.TAG_ERROR, e.getMessage());
+        IO.showMessage("ClassNotFoundException", e.getMessage(), IO.TAG_ERROR);
+    }catch (IOException ex)
+    {
+        IO.log(getClass().getName(), IO.TAG_ERROR, ex.getMessage());
+        IO.showMessage("I/O Error", ex.getMessage(), IO.TAG_ERROR);
+    }
+}
+
+    public void reloadDataFromServer() throws ClassNotFoundException, IOException
+    {
+        SessionManager smgr = SessionManager.getInstance();
+        if(smgr.getActive()!=null)
         {
-            SessionManager smgr = SessionManager.getInstance();
-            if(smgr.getActive()!=null)
+            if(!smgr.getActive().isExpired())
             {
-                if(!smgr.getActive().isExpired())
+                gson = new GsonBuilder().create();
+                ArrayList<AbstractMap.SimpleEntry<String, String>> headers = new ArrayList<>();
+                headers.add(new AbstractMap.SimpleEntry<>("Cookie", smgr.getActive().getSessionId()));
+
+                //Get Timestamp
+                String timestamp_json = RemoteComms.sendGetRequest("/api/timestamp/clients_timestamp", headers);
+                Counters cntr_timestamp = gson.fromJson(timestamp_json, Counters.class);
+                if (cntr_timestamp != null)
                 {
-                    if(clients==null)
-                    {
-                        gson = new GsonBuilder().create();
-                        ArrayList<AbstractMap.SimpleEntry<String, String>> headers = new ArrayList<>();
-                        headers.add(new AbstractMap.SimpleEntry<>("Cookie", smgr.getActive().getSessionId()));
+                    timestamp = cntr_timestamp.getCount();
+                    filename = "clients_" + timestamp + ".dat";
+                    IO.log(this.getClass().getName(), IO.TAG_INFO, "Server Timestamp: " + timestamp);
+                }
+                else
+                {
+                    IO.logAndAlert(this.getClass().getName(), "could not get valid timestamp", IO.TAG_ERROR);
+                    return;
+                }
 
-                        //Get Timestamp
-                        String timestamp_json = RemoteComms.sendGetRequest("/api/timestamp/clients_timestamp", headers);
-                        Counters cntr_timestamp = gson.fromJson(timestamp_json, Counters.class);
-                        if (cntr_timestamp != null)
-                        {
-                            timestamp = cntr_timestamp.getCount();
-                            filename = "clients_" + timestamp + ".dat";
-                            IO.log(this.getClass().getName(), IO.TAG_INFO, "Server Timestamp: " + timestamp);
-                        }
-                        else
-                        {
-                            IO.logAndAlert(this.getClass().getName(), "could not get valid timestamp", IO.TAG_ERROR);
-                            return;
-                        }
+                if (!isSerialized(ROOT_PATH + filename))
+                {
+                    String clients_json = RemoteComms.sendGetRequest("/api/clients", headers);
+                    Client[] clients_arr = gson.fromJson(clients_json, Client[].class);
 
-                        if (!isSerialized(ROOT_PATH + filename))
-                        {
-                            String clients_json = RemoteComms.sendGetRequest("/api/clients", headers);
-                            Client[] clients_arr = gson.fromJson(clients_json, Client[].class);
+                    clients = new HashMap<>();
+                    for (Client client : clients_arr)
+                        clients.put(client.get_id(), client);
 
-                            clients = new HashMap<>();
-                            for (Client client : clients_arr)
-                                clients.put(client.get_id(), client);
-
-                            IO.log(getClass().getName(), IO.TAG_INFO, "reloaded collection of clients.");
-                            this.serialize(ROOT_PATH + filename, clients);
-                        }
-                        else
-                        {
-                            IO.log(this.getClass()
-                                    .getName(), IO.TAG_INFO, "binary object [" + ROOT_PATH + filename + "] on local disk is already up-to-date.");
-                            clients = (HashMap<String, Client>) this.deserialize(ROOT_PATH + filename);
-                        }
-                    }else IO.log(getClass().getName(), IO.TAG_INFO, "clients object has already been set.");
-                }else JOptionPane.showMessageDialog(null, "Active session has expired.", "Session Expired", JOptionPane.ERROR_MESSAGE);
-            }else JOptionPane.showMessageDialog(null, "No active sessions.", "Session Expired", JOptionPane.ERROR_MESSAGE);
-        }catch (MalformedURLException ex)
-        {
-            IO.log(TAG, IO.TAG_ERROR, ex.getMessage());
-        } catch (ClassNotFoundException ex)
-        {
-            IO.log(TAG, IO.TAG_ERROR, ex.getMessage());
-        }catch (IOException ex)
-        {
-            IO.log(TAG, IO.TAG_ERROR, ex.getMessage());
-        }
+                    IO.log(getClass().getName(), IO.TAG_INFO, "reloaded collection of clients.");
+                    this.serialize(ROOT_PATH + filename, clients);
+                }
+                else
+                {
+                    IO.log(this.getClass()
+                            .getName(), IO.TAG_INFO, "binary object [" + ROOT_PATH + filename + "] on local disk is already up-to-date.");
+                    clients = (HashMap<String, Client>) this.deserialize(ROOT_PATH + filename);
+                }
+            }else JOptionPane.showMessageDialog(null, "Active session has expired.", "Session Expired", JOptionPane.ERROR_MESSAGE);
+        }else JOptionPane.showMessageDialog(null, "No active sessions.", "Session Expired", JOptionPane.ERROR_MESSAGE);
     }
 
-    public void newClientWindow(Callback callback)
+    public void newClientWindow(String title, Callback callback)
     {
         Stage stage = new Stage();
-        stage.setTitle(Globals.APP_NAME.getValue() + " - Create New Client");
+        stage.setTitle(Globals.APP_NAME.getValue() + " - " + title);
         stage.setMinWidth(320);
-        stage.setHeight(400);
+        stage.setHeight(500);
         stage.setAlwaysOnTop(true);
 
         VBox vbox = new VBox(1);
@@ -168,6 +175,21 @@ public class ClientManager extends BusinessObjectManager
         txt_tel.setMinWidth(200);
         txt_tel.setMaxWidth(Double.MAX_VALUE);
         HBox tel = CustomTableViewControls.getLabelledNode("Tel Number", 200, txt_tel);
+
+        final TextField txt_fax = new TextField();
+        txt_fax.setMinWidth(200);
+        txt_fax.setMaxWidth(Double.MAX_VALUE);
+        HBox fax = CustomTableViewControls.getLabelledNode("Fax Number", 200, txt_fax);
+
+        final TextField txt_client_reg = new TextField();
+        txt_client_reg.setMinWidth(200);
+        txt_client_reg.setMaxWidth(Double.MAX_VALUE);
+        HBox client_reg = CustomTableViewControls.getLabelledNode("Registration Number", 200, txt_client_reg);
+
+        final TextField txt_client_vat = new TextField();
+        txt_client_vat.setMinWidth(200);
+        txt_client_vat.setMaxWidth(Double.MAX_VALUE);
+        HBox client_vat = CustomTableViewControls.getLabelledNode("VAT Number", 200, txt_client_vat);
 
         final CheckBox chbx_active = new CheckBox();
         chbx_active.setMinWidth(200);
@@ -202,11 +224,17 @@ public class ClientManager extends BusinessObjectManager
                 return;
             if(!Validators.isValidNode(txt_tel, txt_tel.getText(), 1, ".+"))
                 return;
+            if(!Validators.isValidNode(txt_fax, txt_fax.getText(), 1, ".+"))
+                return;
             if(!Validators.isValidNode(txt_website, txt_website.getText(), 1, ".+"))
                 return;
             if(!Validators.isValidNode(dpk_date_partnered, dpk_date_partnered.getValue()==null?"":dpk_date_partnered.getValue().toString(), 4, date_regex))
                 return;
             if(!Validators.isValidNode(txt_website, txt_website.getText(), 1, ".+"))
+                return;
+            if(!Validators.isValidNode(txt_client_reg, txt_client_reg.getText(), 1, ".+"))
+                return;
+            if(!Validators.isValidNode(txt_client_vat, txt_client_vat.getText(), 1, ".+"))
                 return;
 
             String str_client_name = txt_client_name.getText();
@@ -215,6 +243,8 @@ public class ClientManager extends BusinessObjectManager
             String str_tel = txt_tel.getText();
             String str_website = txt_website.getText();
             long date_partnered_in_sec = dpk_date_partnered.getValue().atStartOfDay(ZoneId.systemDefault()).toEpochSecond();
+            String str_reg = txt_client_reg.getText();
+            String str_vat = txt_client_vat.getText();
             String str_other = txt_other.getText();
             boolean is_active = chbx_active.selectedProperty().get();
 
@@ -223,9 +253,14 @@ public class ClientManager extends BusinessObjectManager
             params.add(new AbstractMap.SimpleEntry<>("physical_address", str_physical_address));
             params.add(new AbstractMap.SimpleEntry<>("postal_address", str_postal_address));
             params.add(new AbstractMap.SimpleEntry<>("tel", str_tel));
+            if(txt_fax.getText()!=null)
+                if(!txt_fax.getText().isEmpty())
+                    params.add(new AbstractMap.SimpleEntry<>("fax", txt_fax.getText()));
             params.add(new AbstractMap.SimpleEntry<>("website", str_website));
             params.add(new AbstractMap.SimpleEntry<>("date_partnered", String.valueOf(date_partnered_in_sec)));
             params.add(new AbstractMap.SimpleEntry<>("other", str_other));
+            params.add(new AbstractMap.SimpleEntry<>("registration", str_reg));
+            params.add(new AbstractMap.SimpleEntry<>("vat", str_vat));
             params.add(new AbstractMap.SimpleEntry<>("active", String.valueOf(is_active)));
 
             try
@@ -264,7 +299,10 @@ public class ClientManager extends BusinessObjectManager
         vbox.getChildren().add(physical_address);
         vbox.getChildren().add(postal_address);
         vbox.getChildren().add(tel);
+        vbox.getChildren().add(fax);
         vbox.getChildren().add(website);
+        vbox.getChildren().add(client_reg);
+        vbox.getChildren().add(client_vat);
         vbox.getChildren().add(date_partnered);
         vbox.getChildren().add(other);
         vbox.getChildren().add(active);

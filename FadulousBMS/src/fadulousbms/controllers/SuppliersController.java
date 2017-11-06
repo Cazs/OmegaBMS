@@ -38,7 +38,7 @@ public class SuppliersController extends Screen implements Initializable
     @FXML
     private TableColumn     colSupplierId,colSupplierName,colSupplierPhysicalAddress,colSupplierSpeciality,
                             colSupplierPostalAddress,colSupplierTel,colSupplierFax,colSupplierActive,
-                            colSupplierDatePartnered,colSupplierWebsite,colSupplierOther,colAction;
+                            colSupplierDatePartnered,colSupplierWebsite,colSupplierRegistration,colSupplierVat,colSupplierOther,colAction;
 
     @Override
     public void refreshView()
@@ -63,6 +63,8 @@ public class SuppliersController extends Screen implements Initializable
         CustomTableViewControls.makeCheckboxedTableColumn(colSupplierActive, null, 80, "active", "/api/supplier");
         CustomTableViewControls.makeLabelledDatePickerTableColumn(colSupplierDatePartnered, "date_partnered", "/api/supplier");
         CustomTableViewControls.makeEditableTableColumn(colSupplierWebsite, TextFieldTableCell.forTableColumn(), 100, "website", "/api/supplier");
+        CustomTableViewControls.makeEditableTableColumn(colSupplierRegistration, TextFieldTableCell.forTableColumn(), 100, "registration", "/api/supplier");
+        CustomTableViewControls.makeEditableTableColumn(colSupplierVat, TextFieldTableCell.forTableColumn(), 100, "vat", "/api/supplier");
         CustomTableViewControls.makeEditableTableColumn(colSupplierOther, TextFieldTableCell.forTableColumn(), 80, "other", "/api/supplier");
 
         ObservableList<Supplier> lst_suppliers = FXCollections.observableArrayList();

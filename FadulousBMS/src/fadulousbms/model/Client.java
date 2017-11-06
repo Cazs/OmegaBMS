@@ -28,6 +28,8 @@ public class Client implements BusinessObject, Serializable
     private String fax;
     private boolean active;
     private long date_partnered;
+    private String registration;
+    private String vat;
     private String website;
     private String other;
     private boolean marked;
@@ -166,6 +168,30 @@ public class Client implements BusinessObject, Serializable
         this.website = website;
     }
 
+    public StringProperty registrationProperty(){return new SimpleStringProperty(getRegistration());}
+
+    public String getRegistration()
+    {
+        return registration;
+    }
+
+    public void setRegistration(String registration)
+    {
+        this.registration = registration;
+    }
+
+    public StringProperty vatProperty(){return new SimpleStringProperty(getVat());}
+
+    public String getVat()
+    {
+        return vat;
+    }
+
+    public void setVat(String vat)
+    {
+        this.vat = vat;
+    }
+
     public String getOther()
     {
         return other;
@@ -186,34 +212,40 @@ public class Client implements BusinessObject, Serializable
             switch (var.toLowerCase())
             {
                 case "client_name":
-                    client_name = (String) val;
+                    setClient_name((String) val);
                     break;
                 case "physical_address":
-                    physical_address = (String) val;
+                    setPhysical_address((String) val);
                     break;
                 case "postal_address":
-                    postal_address = (String) val;
+                    setPostal_address((String) val);
                     break;
                 case "tel":
-                    tel = (String) val;
+                    setTel((String) val);
                     break;
                 case "fax":
-                    fax = (String) val;
+                    setFax((String) val);
                     break;
                 case "active":
-                    active = Boolean.parseBoolean(String.valueOf(val));
+                    setActive(Boolean.parseBoolean(String.valueOf(val)));
                     break;
                 case "date_partnered":
-                    date_partnered = Long.parseLong(String.valueOf(val));
+                    setDate_partnered(Long.parseLong(String.valueOf(val)));
                     break;
                 case "website":
-                    website = (String) val;
+                    setWebsite((String) val);
+                    break;
+                case "registration":
+                    setRegistration((String) val);
+                    break;
+                case "vat":
+                    setVat((String) val);
                     break;
                 case "other":
-                    other = (String) val;
+                    setOther((String) val);
                     break;
                 default:
-                    System.err.println("Unknown Client attribute '" + var + "'.");
+                    IO.log(getClass().getName(), IO.TAG_ERROR, "unknown Client attribute '" + var + "'.");
                     break;
             }
         }catch (NumberFormatException e)
@@ -228,25 +260,29 @@ public class Client implements BusinessObject, Serializable
         switch (var.toLowerCase())
         {
             case "client_name":
-                return client_name;
+                return getClient_name();
             case "physical_address":
-                return physical_address;
+                return getPhysical_address();
             case "postal_address":
-                return postal_address;
+                return getPostal_address();
             case "tel":
-                return tel;
+                return getTel();
             case "fax":
-                return fax;
+                return getFax();
             case "active":
-                return active;
+                return isActive();
             case "date_partnered":
-                return date_partnered;
+                return getDate_partnered();
             case "website":
-                return website;
+                return getWebsite();
+            case "registration":
+                return getRegistration();
+            case "vat":
+                return getVat();
             case "other":
-                return other;
+                return getOther();
             default:
-                System.err.println("Unknown Client attribute '" + var + "'.");
+                IO.log(getClass().getName(), IO.TAG_ERROR, "unknown Client attribute '" + var + "'.");
                 return null;
         }
     }
@@ -265,17 +301,21 @@ public class Client implements BusinessObject, Serializable
         try
         {
             result.append(URLEncoder.encode("client_name","UTF-8") + "="
-                    + URLEncoder.encode(client_name, "UTF-8") + "&");
-            result.append(URLEncoder.encode("physical_address","UTF-8") + "="
-                    + URLEncoder.encode(physical_address, "UTF-8") + "&");
-            result.append(URLEncoder.encode("postal_address","UTF-8") + "="
-                    + URLEncoder.encode(postal_address, "UTF-8") + "&");
-            result.append(URLEncoder.encode("tel","UTF-8") + "="
-                    + URLEncoder.encode(tel, "UTF-8") + "&");
-            result.append(URLEncoder.encode("active","UTF-8") + "="
-                    + URLEncoder.encode(String.valueOf(active), "UTF-8") + "&");
-            result.append(URLEncoder.encode("date_partnered","UTF-8") + "="
+                    + URLEncoder.encode(client_name, "UTF-8"));
+            result.append("&" + URLEncoder.encode("physical_address","UTF-8") + "="
+                    + URLEncoder.encode(physical_address, "UTF-8"));
+            result.append("&" + URLEncoder.encode("postal_address","UTF-8") + "="
+                    + URLEncoder.encode(postal_address, "UTF-8"));
+            result.append("&" + URLEncoder.encode("tel","UTF-8") + "="
+                    + URLEncoder.encode(tel, "UTF-8"));
+            result.append("&" + URLEncoder.encode("active","UTF-8") + "="
+                    + URLEncoder.encode(String.valueOf(active), "UTF-8"));
+            result.append("&" + URLEncoder.encode("date_partnered","UTF-8") + "="
                     + URLEncoder.encode(String.valueOf(date_partnered), "UTF-8"));
+            result.append("&" + URLEncoder.encode("registration","UTF-8") + "="
+                    + URLEncoder.encode(registration, "UTF-8"));
+            result.append("&" + URLEncoder.encode("vat","UTF-8") + "="
+                    + URLEncoder.encode(vat, "UTF-8"));
             if(fax!=null)
                 result.append("&" + URLEncoder.encode("fax","UTF-8") + "="
                         + URLEncoder.encode(fax, "UTF-8"));
@@ -289,7 +329,7 @@ public class Client implements BusinessObject, Serializable
             return result.toString();
         } catch (UnsupportedEncodingException e)
         {
-            System.err.print(e.getMessage());
+            IO.log(getClass().getName(), IO.TAG_ERROR, e.getMessage());
         }
         return null;
     }

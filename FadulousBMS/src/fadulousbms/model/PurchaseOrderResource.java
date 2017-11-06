@@ -38,12 +38,12 @@ public class PurchaseOrderResource extends PurchaseOrderItem
         return "N/A";
     }
 
-    public double getCostValue()
+    /*public double getCostValue()
     {
         if(getItem()!=null)
             return getItem().getResource_value();
         return 0;
-    }
+    }*/
 
     public Resource getItem()
     {

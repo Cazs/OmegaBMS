@@ -23,6 +23,8 @@ import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import javafx.util.Callback;
 
+import java.io.IOException;
+import java.net.MalformedURLException;
 import java.net.URL;
 import java.time.DateTimeException;
 import java.util.Date;
@@ -85,7 +87,7 @@ public class ViewJobController extends Screen implements Initializable
             txtSite.setText(selected.getQuote().getSitename());
             txtRequest.setText(selected.getQuote().getRequest());
             txtTotal.setText(Globals.CURRENCY_SYMBOL.getValue() + " " +
-                        String.valueOf(QuoteManager.computeQuoteTotal(selected.getQuote())));
+                        String.valueOf(selected.getQuote().getTotal()));
 
             try
             {
@@ -273,13 +275,59 @@ public class ViewJobController extends Screen implements Initializable
                         IO.logAndAlert("Success", "Successfully updated job[#" + String
                                 .valueOf(JobManager.getInstance().getSelectedJob()
                                         .getJob_number()) + "] representatives.", IO.TAG_INFO);
-                        JobManager.getInstance().loadDataFromServer();
-                        JobManager.getInstance().setSelectedJob(JobManager.getInstance().getJobs().get(JobManager.getInstance().getSelectedJob().get_id()));
-                        new Thread(() ->
+                        try
                         {
-                            refreshModel();
-                            Platform.runLater(() -> refreshView());
-                        }).start();
+                            JobManager.getInstance().reloadDataFromServer();
+                            //JobManager.getInstance().setSelectedJob(JobManager.getInstance().getJobs().get(new_job_id));
+
+                            JobManager.getInstance().setSelectedJob(JobManager.getInstance().getJobs().get(JobManager.getInstance().getSelectedJob().get_id()));
+
+                            if(JobManager.getInstance().getJobs()!=null)
+                            {
+                                ScreenManager.getInstance().showLoadingScreen(param ->
+                                {
+                                    new Thread(() ->
+                                    {
+                                        refreshModel();
+                                        Platform.runLater(() -> refreshView());
+                                    }).start();
+
+                                    /*new Thread(new Runnable()
+                                    {
+                                        @Override
+                                        public void run()
+                                        {
+                                            try
+                                            {
+                                                if (ScreenManager.getInstance().loadScreen(Screens.VIEW_JOB.getScreen(), getClass()
+                                                                .getResource("../views/" + Screens.VIEW_JOB.getScreen())))
+                                                {
+                                                    Platform.runLater(() -> ScreenManager.getInstance()
+                                                            .setScreen(Screens.VIEW_JOB.getScreen()));
+                                                } else IO.log(getClass().getName(), IO.TAG_ERROR, "could not load job viewer screen.");
+                                            } catch (IOException e)
+                                            {
+                                                IO.log(getClass().getName(), IO.TAG_ERROR, e.getMessage());
+                                            }
+                                        }
+                                    }).start();*/
+
+                                    return null;
+                                });
+                            } else IO.logAndAlert("Error", "Could not find any jobs in the database.", IO.TAG_INFO);
+                        }catch (MalformedURLException ex)
+                        {
+                            IO.log(getClass().getName(), IO.TAG_ERROR, ex.getMessage());
+                            IO.showMessage("URL Error", ex.getMessage(), IO.TAG_ERROR);
+                        }catch (ClassNotFoundException e)
+                        {
+                            IO.log(getClass().getName(), IO.TAG_ERROR, e.getMessage());
+                            IO.showMessage("ClassNotFoundException", e.getMessage(), IO.TAG_ERROR);
+                        }catch (IOException ex)
+                        {
+                            IO.log(getClass().getName(), IO.TAG_ERROR, ex.getMessage());
+                            IO.showMessage("I/O Error", ex.getMessage(), IO.TAG_ERROR);
+                        }
                     }
                     else IO.logAndAlert("Error", "Could NOT update job[#"+String.valueOf(JobManager.getInstance().getSelectedJob().getJob_number())+"] representatives.", IO.TAG_ERROR);
                 }

@@ -109,99 +109,102 @@ public class ResourceManager extends BusinessObjectManager
     {
         try
         {
-            SessionManager smgr = SessionManager.getInstance();
-            if (smgr.getActive() != null)
-            {
-                if (!smgr.getActive().isExpired())
-                {
-                    if(resources==null)
-                    {
-                        gson = new GsonBuilder().create();
-                        ArrayList<AbstractMap.SimpleEntry<String, String>> headers = new ArrayList<>();
-                        headers.add(new AbstractMap.SimpleEntry<>("Cookie", smgr.getActive().getSessionId()));
-
-                        //Get Timestamp
-                        String timestamp_json = RemoteComms
-                                .sendGetRequest("/api/timestamp/resources_timestamp", headers);
-                        Counters cntr_timestamp = gson.fromJson(timestamp_json, Counters.class);
-                        if (cntr_timestamp != null)
-                        {
-                            timestamp = cntr_timestamp.getCount();
-                            filename = "resources_" + timestamp + ".dat";
-                            IO.log(this.getClass().getName(), IO.TAG_INFO, "Server Timestamp: " + timestamp);
-                        }
-                        else
-                        {
-                            IO.logAndAlert(this.getClass().getName(), "could not get valid timestamp", IO.TAG_ERROR);
-                            return;
-                        }
-
-                        if (!isSerialized(ROOT_PATH + filename))
-                        {
-                            String resources_json = RemoteComms.sendGetRequest("/api/resources", headers);
-                            Resource[] arr_resources = gson.fromJson(resources_json, Resource[].class);
-                            resources = new HashMap<>();
-                            all_resources = new HashMap<>();
-                            for (Resource res : arr_resources)
-                            {
-                                all_resources.put(res.get_id(), res);
-                                if (res.getDate_acquired() > 0)
-                                    resources.put(res.get_id(), res);
-                                else IO.log(getClass()
-                                        .getName(), IO.TAG_WARN, "resource [" + res + "] has not been approved yet. [date_acquired not set]");
-                            }
-
-
-                            String resource_types_json = RemoteComms.sendGetRequest("/api/resource/types", headers);
-                            ResourceType[] resourcetypes = gson.fromJson(resource_types_json, ResourceType[].class);
-                            resource_types = new HashMap<>();
-                            for (ResourceType resourceType : resourcetypes)
-                                resource_types.put(resourceType.get_id(), resourceType);
-
-                            IO.log(getClass().getName(), IO.TAG_INFO, "reloaded collection of resources.");
-
-                            this.serialize(ROOT_PATH + filename, all_resources);
-                            this.serialize(ROOT_PATH + "resource_types.dat", resource_types);
-                        }
-                        else
-                        {
-                            IO.log(this.getClass()
-                                    .getName(), IO.TAG_INFO, "binary object [" + ROOT_PATH + filename + "] on local disk is already up-to-date.");
-                            all_resources = (HashMap<String, Resource>) this.deserialize(ROOT_PATH + filename);
-                            resource_types = (HashMap<String, ResourceType>) this
-                                    .deserialize(ROOT_PATH + "resource_types.dat");
-
-                            resources = new HashMap<>();
-                            if (all_resources != null)
-                            {
-                                for (Resource resource : all_resources.values())
-                                    if (resource.getDate_acquired() > 0)
-                                        resources.put(resource.get_id(), resource);
-                            }
-                            else IO.log(getClass().getName(), IO.TAG_ERROR, "serialized resources are null.");
-                        }
-                    }else IO.log(getClass().getName(), IO.TAG_INFO, "resources object has already been set.");
-                } else IO.logAndAlert("Session Expired", "Active session has expired.", IO.TAG_ERROR);
-            } else IO.logAndAlert("Session Expired", "No active sessions.", IO.TAG_ERROR);
-        }catch (JsonSyntaxException ex)
-        {
-            IO.log(TAG, IO.TAG_ERROR, ex.getMessage());
+            if(resources==null)
+                reloadDataFromServer();
+            else IO.log(getClass().getName(), IO.TAG_INFO, "clients object has already been set.");
         }catch (MalformedURLException ex)
         {
-            IO.log(TAG, IO.TAG_ERROR, ex.getMessage());
-        } catch (ClassNotFoundException ex)
+            IO.log(getClass().getName(), IO.TAG_ERROR, ex.getMessage());
+            IO.showMessage("URL Error", ex.getMessage(), IO.TAG_ERROR);
+        }catch (ClassNotFoundException e)
         {
-            IO.log(TAG, IO.TAG_ERROR, ex.getMessage());
+            IO.log(getClass().getName(), IO.TAG_ERROR, e.getMessage());
+            IO.showMessage("ClassNotFoundException", e.getMessage(), IO.TAG_ERROR);
         }catch (IOException ex)
         {
-            IO.log(TAG, IO.TAG_ERROR, ex.getMessage());
+            IO.log(getClass().getName(), IO.TAG_ERROR, ex.getMessage());
+            IO.showMessage("I/O Error", ex.getMessage(), IO.TAG_ERROR);
         }
+    }
+
+    public void reloadDataFromServer() throws ClassNotFoundException, IOException
+    {
+        SessionManager smgr = SessionManager.getInstance();
+        if (smgr.getActive() != null)
+        {
+            if (!smgr.getActive().isExpired())
+            {
+                gson = new GsonBuilder().create();
+                ArrayList<AbstractMap.SimpleEntry<String, String>> headers = new ArrayList<>();
+                headers.add(new AbstractMap.SimpleEntry<>("Cookie", smgr.getActive().getSessionId()));
+
+                //Get Timestamp
+                String timestamp_json = RemoteComms
+                        .sendGetRequest("/api/timestamp/resources_timestamp", headers);
+                Counters cntr_timestamp = gson.fromJson(timestamp_json, Counters.class);
+                if (cntr_timestamp != null)
+                {
+                    timestamp = cntr_timestamp.getCount();
+                    filename = "resources_" + timestamp + ".dat";
+                    IO.log(this.getClass().getName(), IO.TAG_INFO, "Server Timestamp: " + timestamp);
+                }
+                else
+                {
+                    IO.logAndAlert(this.getClass().getName(), "could not get valid timestamp", IO.TAG_ERROR);
+                    return;
+                }
+
+                if (!isSerialized(ROOT_PATH + filename))
+                {
+                    String resources_json = RemoteComms.sendGetRequest("/api/resources", headers);
+                    Resource[] arr_resources = gson.fromJson(resources_json, Resource[].class);
+                    resources = new HashMap<>();
+                    all_resources = new HashMap<>();
+                    for (Resource res : arr_resources)
+                    {
+                        all_resources.put(res.get_id(), res);
+                        if (res.getDate_acquired() > 0)
+                            resources.put(res.get_id(), res);
+                        else IO.log(getClass()
+                                .getName(), IO.TAG_WARN, "material [" + res + "] has not been approved yet. [date_acquired not set]");
+                    }
+
+
+                    String resource_types_json = RemoteComms.sendGetRequest("/api/resource/types", headers);
+                    ResourceType[] resourcetypes = gson.fromJson(resource_types_json, ResourceType[].class);
+                    resource_types = new HashMap<>();
+                    for (ResourceType resourceType : resourcetypes)
+                        resource_types.put(resourceType.get_id(), resourceType);
+
+                    IO.log(getClass().getName(), IO.TAG_INFO, "reloaded collection of materials.");
+
+                    this.serialize(ROOT_PATH + filename, all_resources);
+                    this.serialize(ROOT_PATH + "resource_types.dat", resource_types);
+                }
+                else
+                {
+                    IO.log(this.getClass()
+                            .getName(), IO.TAG_INFO, "binary object [" + ROOT_PATH + filename + "] on local disk is already up-to-date.");
+                    all_resources = (HashMap<String, Resource>) this.deserialize(ROOT_PATH + filename);
+                    resource_types = (HashMap<String, ResourceType>) this
+                            .deserialize(ROOT_PATH + "resource_types.dat");
+
+                    resources = new HashMap<>();
+                    if (all_resources != null)
+                    {
+                        for (Resource resource : all_resources.values())
+                            if (resource.getDate_acquired() > 0)
+                                resources.put(resource.get_id(), resource);
+                    } else IO.log(getClass().getName(), IO.TAG_ERROR, "serialized materials are null.");
+                }
+            } else IO.logAndAlert("Session Expired", "Active session has expired.", IO.TAG_ERROR);
+        } else IO.logAndAlert("Session Expired", "No active sessions.", IO.TAG_ERROR);
     }
 
     public void newResourceWindow(Callback callback)
     {
         Stage stage = new Stage();
-        stage.setTitle(Globals.APP_NAME.getValue() + " - Create New Resource");
+        stage.setTitle(Globals.APP_NAME.getValue() + " - Create New Material");
         stage.setWidth(520);
         stage.setMaxWidth(520);
         stage.setHeight(450);
@@ -215,17 +218,17 @@ public class ResourceManager extends BusinessObjectManager
         final TextField txt_resource_name = new TextField();
         txt_resource_name.setMinWidth(200);
         txt_resource_name.setMaxWidth(Double.MAX_VALUE);
-        HBox resource_name = CustomTableViewControls.getLabelledNode("Resource name", 200, txt_resource_name);
+        HBox resource_name = CustomTableViewControls.getLabelledNode("Material name", 200, txt_resource_name);
 
         final TextField txt_resource_description = new TextField();
         txt_resource_description.setMinWidth(200);
         txt_resource_description.setMaxWidth(Double.MAX_VALUE);
-        HBox resource_description = CustomTableViewControls.getLabelledNode("Resource description", 200, txt_resource_description);
+        HBox resource_description = CustomTableViewControls.getLabelledNode("Material description", 200, txt_resource_description);
 
         final TextField txt_resource_serial = new TextField();
         txt_resource_serial.setMinWidth(200);
         txt_resource_serial.setMaxWidth(Double.MAX_VALUE);
-        HBox resource_serial = CustomTableViewControls.getLabelledNode("Resource serial", 200, txt_resource_serial);
+        HBox resource_serial = CustomTableViewControls.getLabelledNode("Material serial", 200, txt_resource_serial);
 
         final ComboBox<ResourceType> cbx_resource_type = new ComboBox<>();
         cbx_resource_type.setCellFactory(new Callback<ListView<ResourceType>, ListCell<ResourceType>>()
@@ -265,7 +268,7 @@ public class ResourceManager extends BusinessObjectManager
         });
         if(resource_types!=null)
             cbx_resource_type.setItems(FXCollections.observableArrayList(resource_types.values()));
-        else IO.log(getClass().getName(), IO.TAG_ERROR, "resource_types map is not set.");
+        else IO.log(getClass().getName(), IO.TAG_ERROR, "material_types map is not set.");
         cbx_resource_type.setMinWidth(200);
         cbx_resource_type.setMinHeight(35);
         cbx_resource_type.setMaxWidth(Double.MAX_VALUE);
@@ -279,10 +282,12 @@ public class ResourceManager extends BusinessObjectManager
         HBox resource_type = CustomTableViewControls.getLabelledNode("Resource type", 200, new HBox(cbx_resource_type, btnNewType));
         btnNewType.setOnAction(event ->
         {
+            //close material creation window
             stage.close();
             ResourceManager.getInstance().newResourceTypeWindow(param ->
             {
-                loadDataFromServer();
+                //show material creation window again after material type has been created.
+                newResourceWindow(callback);
                 return null;
             });
         });
@@ -388,7 +393,27 @@ public class ResourceManager extends BusinessObjectManager
                 {
                     if(connection.getResponseCode()==HttpURLConnection.HTTP_OK)
                     {
+                        //close stage
+                        stage.close();
+
                         IO.logAndAlert("Success", "Successfully created a new resource!", IO.TAG_INFO);
+                        try
+                        {
+                            //refresh model & view when material has been created.
+                            reloadDataFromServer();
+                        }catch (MalformedURLException ex)
+                        {
+                            IO.log(getClass().getName(), IO.TAG_ERROR, ex.getMessage());
+                            IO.showMessage("URL Error", ex.getMessage(), IO.TAG_ERROR);
+                        }catch (ClassNotFoundException e)
+                        {
+                            IO.log(getClass().getName(), IO.TAG_ERROR, e.getMessage());
+                            IO.showMessage("ClassNotFoundException", e.getMessage(), IO.TAG_ERROR);
+                        }catch (IOException ex)
+                        {
+                            IO.log(getClass().getName(), IO.TAG_ERROR, ex.getMessage());
+                            IO.showMessage("I/O Error", ex.getMessage(), IO.TAG_ERROR);
+                        }
                         if(callback!=null)
                             callback.call(null);
                     }else
@@ -436,7 +461,7 @@ public class ResourceManager extends BusinessObjectManager
     public void newResourceTypeWindow(Callback callback)
     {
         Stage stage = new Stage();
-        stage.setTitle(Globals.APP_NAME.getValue() + " - Create New Resource Type");
+        stage.setTitle(Globals.APP_NAME.getValue() + " - Create New Material Type");
         stage.setWidth(520);
         stage.setMaxWidth(520);
         stage.setHeight(230);
@@ -455,7 +480,7 @@ public class ResourceManager extends BusinessObjectManager
         final TextField txt_type_description = new TextField();
         txt_type_description.setMinWidth(200);
         txt_type_description.setMaxWidth(Double.MAX_VALUE);
-        HBox type_description = CustomTableViewControls.getLabelledNode("Resource type description", 200, txt_type_description);
+        HBox type_description = CustomTableViewControls.getLabelledNode("Material type description", 200, txt_type_description);
 
         final TextField txt_other = new TextField();
         txt_other.setMinWidth(200);
@@ -463,11 +488,11 @@ public class ResourceManager extends BusinessObjectManager
         HBox other = CustomTableViewControls.getLabelledNode("Other", 200, txt_other);
 
         HBox submit;
-        submit = CustomTableViewControls.getSpacedButton("Create Resource Type", event ->
+        submit = CustomTableViewControls.getSpacedButton("Create Material Type", event ->
         {
             if(!Validators.isValidNode(txt_type_name, txt_type_name.getText(), 1, "\\w+"))
             {
-                IO.logAndAlert("Error", "Please make sure that the resource type name doesn't have any spaces.", IO.TAG_ERROR);
+                IO.logAndAlert("Error", "Please make sure that the material type name doesn't have any spaces.", IO.TAG_ERROR);
                 return;
             }
 
@@ -496,9 +521,28 @@ public class ResourceManager extends BusinessObjectManager
                 {
                     if(connection.getResponseCode()==HttpURLConnection.HTTP_OK)
                     {
-                        IO.logAndAlert("Success", "Successfully added new resource type!", IO.TAG_INFO);
+                        IO.logAndAlert("Success", "Successfully added new material type!", IO.TAG_INFO);
+                        try
+                        {
+                            //refresh model & view when material type has been created.
+                            reloadDataFromServer();
+                        }catch (MalformedURLException ex)
+                        {
+                            IO.log(getClass().getName(), IO.TAG_ERROR, ex.getMessage());
+                            IO.showMessage("URL Error", ex.getMessage(), IO.TAG_ERROR);
+                        }catch (ClassNotFoundException e)
+                        {
+                            IO.log(getClass().getName(), IO.TAG_ERROR, e.getMessage());
+                            IO.showMessage("ClassNotFoundException", e.getMessage(), IO.TAG_ERROR);
+                        }catch (IOException ex)
+                        {
+                            IO.log(getClass().getName(), IO.TAG_ERROR, ex.getMessage());
+                            IO.showMessage("I/O Error", ex.getMessage(), IO.TAG_ERROR);
+                        }
+
                         if(callback!=null)
                             callback.call(null);
+                        stage.close();
                     }else{
                         IO.logAndAlert( "ERROR_" + connection.getResponseCode(),  IO.readStream(connection.getErrorStream()), IO.TAG_ERROR);
                     }

@@ -22,6 +22,7 @@ public abstract class PurchaseOrderItem implements BusinessObject, Serializable
     private String item_id;
     private int quantity;
     private double discount;
+    private double cost;
     private long date_logged;
     private BusinessObject item;
     private boolean marked;
@@ -172,7 +173,16 @@ public abstract class PurchaseOrderItem implements BusinessObject, Serializable
         return Globals.CURRENCY_SYMBOL.getValue() + " " + String.valueOf(getCostValue());
     }
 
-    public abstract double getCostValue();
+    //public abstract double getCostValue();
+    public double getCostValue()
+    {
+        return cost;
+    }
+
+    public void setCost(double cost)
+    {
+        this.cost=cost;
+    }
 
     private StringProperty discountProperty(){return new SimpleStringProperty(String.valueOf(discount));}
 
@@ -189,7 +199,8 @@ public abstract class PurchaseOrderItem implements BusinessObject, Serializable
 
     public double getTotal()
     {
-        return (getCostValue()-(getCostValue()*(getDiscountValue()/100)))*getQuantityValue(); //discounted value * qty
+        //return (getCostValue()-(getCostValue()*(getDiscountValue()/100)))*getQuantityValue(); //discounted value * qty
+        return getCostValue()*getQuantityValue();
     }
 
     public abstract BusinessObject getItem();
@@ -239,6 +250,9 @@ public abstract class PurchaseOrderItem implements BusinessObject, Serializable
                 case "discount":
                     setDiscount(Double.parseDouble((String) val));
                     break;
+                case "cost":
+                    setCost(Double.parseDouble((String) val));
+                    break;
                 case "extra":
                     setExtra(String.valueOf(val));
                     break;
@@ -268,7 +282,7 @@ public abstract class PurchaseOrderItem implements BusinessObject, Serializable
             case "item_name":
                 return getItem_name();
             case "cost":
-                return getCost();
+                return getCostValue();
             case "item_description":
                 return getItem_description();
             case "unit":
@@ -302,6 +316,8 @@ public abstract class PurchaseOrderItem implements BusinessObject, Serializable
                     + URLEncoder.encode(String.valueOf(quantity), "UTF-8"));
             result.append("&" + URLEncoder.encode("discount","UTF-8") + "="
                     + URLEncoder.encode(String.valueOf(discount), "UTF-8"));
+            result.append("&" + URLEncoder.encode("cost","UTF-8") + "="
+                    + URLEncoder.encode(String.valueOf(cost), "UTF-8"));
             if(date_logged>0)
                 result.append("&" + URLEncoder.encode("date_logged","UTF-8") + "="
                         + URLEncoder.encode(String.valueOf(date_logged), "UTF-8"));

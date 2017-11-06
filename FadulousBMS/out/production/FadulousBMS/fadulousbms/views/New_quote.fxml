@@ -272,7 +272,7 @@
                              <PropertyValueFactory property="total" />
                          </cellValueFactory>
                      </TableColumn>
-                     <TableColumn fx:id="colAction" maxWidth="1.7976931348623157E308" minWidth="250.0" prefWidth="-1.0" text="Action" />
+                     <TableColumn fx:id="colAction" maxWidth="1.7976931348623157E308" minWidth="210.0" prefWidth="-1.0" text="Action" />
                  </columns>
              </TableView>
             <HBox>

@@ -24,6 +24,10 @@ const purchaseOrderItemSchema = mongoose.Schema(
       type:Number,
       required:true
     },
+    cost:{
+      type:Number,
+      required:true
+    },
     date_logged:{
       type:Number,
       required:false,
@@ -105,7 +109,7 @@ const purchaseOrderItemSchema = mongoose.Schema(
       return false;
     if(isNullOrEmpty(purchase_order_item.purchase_order_id))
       return false;
-    if(isNullOrEmpty(purchase_order_item.discount))
+    if(isNullOrEmpty(purchase_order_item.cost))
       return false;
     if(isNullOrEmpty(purchase_order_item.quantity))
       return false;
