@@ -1,7 +1,6 @@
 package fadulousbms.controllers;
 
 import fadulousbms.auxilary.IO;
-import fadulousbms.auxilary.Screen;
 import fadulousbms.managers.AssetManager;
 import fadulousbms.managers.ScreenManager;
 import fadulousbms.managers.SessionManager;
@@ -22,7 +21,7 @@ import java.util.ResourceBundle;
 /**
  * Created by ghost on 2017/02/02.
  */
-public class PurchasesController extends Screen implements Initializable
+public class PurchasesController extends ScreenController implements Initializable
 {
     @Override
     public void refreshView()

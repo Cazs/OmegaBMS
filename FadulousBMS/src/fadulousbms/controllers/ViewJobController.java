@@ -7,7 +7,6 @@ package fadulousbms.controllers;
 
 import fadulousbms.auxilary.Globals;
 import fadulousbms.auxilary.IO;
-import fadulousbms.auxilary.Screen;
 import fadulousbms.managers.*;
 import fadulousbms.model.*;
 import javafx.application.Platform;
@@ -36,7 +35,7 @@ import java.util.ResourceBundle;
  *
  * @author ghost
  */
-public class ViewJobController extends Screen implements Initializable
+public class ViewJobController extends ScreenController implements Initializable
 {
     private boolean itemsModified;
     @FXML

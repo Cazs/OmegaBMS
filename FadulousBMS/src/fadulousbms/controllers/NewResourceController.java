@@ -2,22 +2,18 @@ package fadulousbms.controllers;
 
 import fadulousbms.auxilary.IO;
 import fadulousbms.auxilary.RemoteComms;
-import fadulousbms.auxilary.Screen;
 import fadulousbms.auxilary.Validators;
 import fadulousbms.managers.ResourceManager;
 import fadulousbms.managers.ScreenManager;
 import fadulousbms.managers.SessionManager;
-import fadulousbms.managers.SupplierManager;
 import fadulousbms.model.Resource;
 import fadulousbms.model.ResourceType;
 import fadulousbms.model.Screens;
-import fadulousbms.model.Supplier;
 import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.*;
-import javafx.util.Callback;
 
 import java.io.IOException;
 import java.net.HttpURLConnection;
@@ -32,7 +28,7 @@ import java.util.ResourceBundle;
  *
  * @author ghost
  */
-public class NewResourceController extends Screen implements Initializable
+public class NewResourceController extends ScreenController implements Initializable
 {
     private boolean itemsModified;
     @FXML

@@ -7,17 +7,11 @@ package fadulousbms.controllers;
 
 import fadulousbms.auxilary.IO;
 import fadulousbms.auxilary.RemoteComms;
-import fadulousbms.auxilary.Screen;
 import fadulousbms.auxilary.Validators;
 import fadulousbms.managers.SessionManager;
-import fadulousbms.managers.SupplierManager;
-import fadulousbms.model.Expense;
 import fadulousbms.model.Revenue;
-import fadulousbms.model.Supplier;
-import javafx.collections.FXCollections;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
-import javafx.scene.control.ComboBox;
 import javafx.scene.control.DatePicker;
 import javafx.scene.control.TextField;
 
@@ -35,7 +29,7 @@ import java.util.ResourceBundle;
  *
  * @author ghost
  */
-public class NewRevenueController extends Screen implements Initializable
+public class NewRevenueController extends ScreenController implements Initializable
 {
     private boolean itemsModified;
     private Date date_generated;

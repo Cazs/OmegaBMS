@@ -1,7 +1,6 @@
 package fadulousbms.controllers;
 
 import fadulousbms.auxilary.IO;
-import fadulousbms.auxilary.Screen;
 import fadulousbms.managers.AssetManager;
 import fadulousbms.managers.SessionManager;
 import fadulousbms.model.Employee;
@@ -24,7 +23,7 @@ import java.util.ResourceBundle;
 /**
  * Created by ghost on 2017/02/02.
  */
-public class JournalController extends Screen implements Initializable
+public class JournalController extends ScreenController implements Initializable
 {
     @FXML
     BorderPane bpDatePickerContainer;

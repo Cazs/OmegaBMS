@@ -7,45 +7,32 @@ package fadulousbms.controllers;
 
 import fadulousbms.auxilary.IO;
 import fadulousbms.auxilary.RemoteComms;
-import fadulousbms.auxilary.Screen;
-import fadulousbms.managers.ScreenManager;
-import fadulousbms.auxilary.Session;
 import fadulousbms.managers.SessionManager;
-import fadulousbms.exceptions.LoginException;
 import fadulousbms.model.Employee;
-import fadulousbms.model.Screens;
 
 import java.awt.image.BufferedImage;
 import java.io.*;
-import java.net.ConnectException;
 import java.net.URL;
 import java.util.AbstractMap;
 import java.util.ArrayList;
 import java.util.ResourceBundle;
-import java.util.Set;
-import java.util.concurrent.TimeoutException;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 import javafx.embed.swing.SwingFXUtils;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
-import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.stage.FileChooser;
-import javafx.stage.Stage;
 
 import javax.imageio.ImageIO;
-import javax.swing.JOptionPane;
 
 /**
  * views Controller class
  *
  * @author ghost
  */
-public class SettingsController extends Screen implements Initializable
+public class SettingsController extends ScreenController implements Initializable
 {
     @FXML
     private TextField txtIP = new TextField();
@@ -60,47 +47,11 @@ public class SettingsController extends Screen implements Initializable
         txtIP.setText("127.0.0.1");
         txtPort.setText("9000");
         RemoteComms.host = "http://127.0.0.1:9000";
-
-        try
-        {
-            BufferedImage bufferedImage;
-            bufferedImage = ImageIO.read(new File("images/profile.png"));
-            Image image = SwingFXUtils.toFXImage(bufferedImage, null);
-            this.getProfileImageView().setImage(image);
-
-            if(SessionManager.getInstance().getActive()!=null)
-            {
-                if(!SessionManager.getInstance().getActive().isExpired())
-                {
-                    ArrayList<AbstractMap.SimpleEntry<String, String>> headers = new ArrayList<>();
-                    headers.add(new AbstractMap.SimpleEntry<>("Cookie",
-                            SessionManager.getInstance().getActive().getSessionId()));
-
-                    byte[] file = RemoteComms.sendFileRequest("logo", headers);
-                    ByteArrayInputStream bis = new ByteArrayInputStream(file);
-                    BufferedImage buff_img = ImageIO.read(bis);
-                    Image img = SwingFXUtils.toFXImage(buff_img, null);
-
-                    img_logo.setImage(img);
-                }else IO.showMessage("Session Expired", "Active session has expired.", IO.TAG_ERROR);
-            }else IO.showMessage("Session Expired", "No active sessions.", IO.TAG_ERROR);
-            /*for(int i=0;i<30;i++)
-                news_feed_tiles.getChildren().add(createTile());*/
-        }catch (IOException ex)
-        {
-            IO.log(getClass().getName(), IO.TAG_ERROR, ex.getMessage());
-        }
-
-        Employee e = SessionManager.getInstance().getActiveEmployee();
-        if(e!=null)
-            this.getUserNameLabel().setText(e.getFirstname() + " " + e.getLastname());
-        else IO.log(getClass().getName(), IO.TAG_ERROR, "No active sessions.");
     }
 
     @Override
     public void refreshModel()
     {
-
     }
 
     /**
@@ -109,7 +60,7 @@ public class SettingsController extends Screen implements Initializable
     @Override
     public void initialize(URL url, ResourceBundle rb) 
     {
-    }    
+    }
 
     @FXML
     public void changeLogo()
@@ -135,9 +86,9 @@ public class SettingsController extends Screen implements Initializable
                             ArrayList<AbstractMap.SimpleEntry<String, String>> headers = new ArrayList<>();
                             headers.add(new AbstractMap.SimpleEntry<>("Cookie", smgr.getActive().getSessionId()));
                             headers.add(new AbstractMap.SimpleEntry<>("Content-Type", "image/" + f.getName().split("\\.")[1]));
-                            headers.add(new AbstractMap.SimpleEntry<>("Filetype", f.getName().split("\\.")[1]));
+                            headers.add(new AbstractMap.SimpleEntry<>("File-Type", f.getName().split("\\.")[1]));
                             RemoteComms.uploadFile("/api/upload/logo", headers, buffer);
-                            System.out.println("\n File size: " + buffer.length + " bytes.");
+                            IO.log(getClass().getName(), IO.TAG_ERROR, "\n File size: " + buffer.length + " bytes.");
                         } else
                         {
                             IO.logAndAlert(getClass().getName(), "File not found.", IO.TAG_ERROR);

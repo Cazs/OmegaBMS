@@ -187,8 +187,8 @@ public class JobManager extends BusinessObjectManager
                             .getName(), IO.TAG_INFO, "binary object [" + ROOT_PATH + filename + "] on local disk is already up-to-date.");
                     jobs = (HashMap<String, Job>) this.deserialize(ROOT_PATH + filename);
                 }
-            }else JOptionPane.showMessageDialog(null, "Active session has expired.", "Session Expired", JOptionPane.ERROR_MESSAGE);
-        }else JOptionPane.showMessageDialog(null, "No active sessions.", "Session Expired", JOptionPane.ERROR_MESSAGE);
+            }else IO.logAndAlert("Session Expired", "Active session has expired.", IO.TAG_ERROR);
+        }else IO.logAndAlert("Session Expired", "No active sessions.", IO.TAG_ERROR);
     }
 
     public HashMap<String, Job> getJobs()

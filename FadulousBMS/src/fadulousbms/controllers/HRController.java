@@ -1,8 +1,6 @@
 package fadulousbms.controllers;
 
 import fadulousbms.auxilary.IO;
-import fadulousbms.auxilary.Screen;
-import fadulousbms.managers.AssetManager;
 import fadulousbms.managers.SessionManager;
 import fadulousbms.model.Employee;
 import javafx.embed.swing.SwingFXUtils;
@@ -10,7 +8,6 @@ import javafx.fxml.Initializable;
 import javafx.scene.image.Image;
 
 import javax.imageio.ImageIO;
-import javax.swing.*;
 import java.io.File;
 import java.io.IOException;
 import java.net.URL;
@@ -19,15 +16,11 @@ import java.util.ResourceBundle;
 /**
  * Created by ghost on 2017/02/02.
  */
-public class HRController extends Screen implements Initializable
+public class HRController extends ScreenController implements Initializable
 {
     @Override
     public void refreshView()
     {
-        Employee e = SessionManager.getInstance().getActiveEmployee();
-        if(e!=null)
-            this.getUserNameLabel().setText(e.getFirstname() + " " + e.getLastname());
-        else IO.log(getClass().getName(), IO.TAG_ERROR, "No active sessions.");
     }
 
     @Override
@@ -42,14 +35,5 @@ public class HRController extends Screen implements Initializable
     @Override
     public void initialize(URL url, ResourceBundle rb)
     {
-        try
-        {
-            defaultProfileImage = ImageIO.read(new File("images/profile.png"));
-            Image image = SwingFXUtils.toFXImage(defaultProfileImage, null);
-            this.getProfileImageView().setImage(image);
-        }catch (IOException e)
-        {
-            IO.log(getClass().getName(), IO.TAG_ERROR, e.getMessage());
-        }
     }
 }

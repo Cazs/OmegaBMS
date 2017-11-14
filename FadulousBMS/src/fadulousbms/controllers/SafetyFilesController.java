@@ -7,7 +7,6 @@ package fadulousbms.controllers;
 
 import fadulousbms.auxilary.IO;
 import fadulousbms.auxilary.RemoteComms;
-import fadulousbms.auxilary.Screen;
 import fadulousbms.managers.EmployeeManager;
 import fadulousbms.managers.SafetyManager;
 import fadulousbms.managers.SessionManager;
@@ -30,6 +29,7 @@ import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
+import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.AbstractMap;
 import java.util.ArrayList;
@@ -40,7 +40,7 @@ import java.util.ResourceBundle;
  *
  * @author ghost
  */
-public class SafetyFilesController extends Screen implements Initializable
+public class SafetyFilesController extends ScreenController implements Initializable
 {
     @FXML
     private TableView tblSafety;
@@ -167,5 +167,46 @@ public class SafetyFilesController extends Screen implements Initializable
                 }
             }else IO.showMessage("Session Expired", "Active session has expired.", IO.TAG_ERROR);
         }else IO.showMessage("Session Expired", "No active sessions.", IO.TAG_ERROR);
+    }
+
+    @FXML
+    public void newSafetyDocReference()
+    {
+        SafetyManager.newSafetyDocumentReference(null);
+    }
+
+    @FXML
+    public void repopulateSafetyDocs()
+    {
+        SessionManager smgr = SessionManager.getInstance();
+        if(smgr.getActive()!=null)
+        {
+            if(!smgr.getActive().isExpired())
+            {
+                ArrayList<AbstractMap.SimpleEntry<String, String>> headers = new ArrayList<>();
+                headers.add(new AbstractMap.SimpleEntry<>("Cookie", smgr.getActive().getSessionId()));
+
+                try
+                {
+                    HttpURLConnection connection = RemoteComms.postData("/api/safety/init", "", headers);
+                    if(connection!=null)
+                    {
+                        if (connection.getResponseCode() == HttpURLConnection.HTTP_OK)
+                        {
+                            IO.logAndAlert("Success", "Successfully repopulated safety documents.", IO.TAG_INFO);
+                        }
+                        else
+                        {
+                            IO.logAndAlert("Error: " + connection.getResponseCode(), IO
+                                    .readStream(connection.getErrorStream()), IO.TAG_ERROR);
+                        }
+                        connection.disconnect();
+                    } else IO.logAndAlert("Error", "Could not connect to server.", IO.TAG_ERROR);
+                } catch (IOException e)
+                {
+                    IO.log(getClass().getName() , IO.TAG_ERROR, e.getMessage());
+                }
+            }else IO.logAndAlert("Session Expired", "Active session has expired.", IO.TAG_ERROR);
+        }else IO.logAndAlert("Session Expired", "No active sessions.", IO.TAG_ERROR);
     }
 }

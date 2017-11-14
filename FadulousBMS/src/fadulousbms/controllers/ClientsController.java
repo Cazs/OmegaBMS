@@ -6,7 +6,6 @@
 package fadulousbms.controllers;
 
 import fadulousbms.auxilary.IO;
-import fadulousbms.auxilary.Screen;
 import fadulousbms.managers.*;
 import fadulousbms.model.*;
 import javafx.application.Platform;
@@ -30,7 +29,7 @@ import java.util.ResourceBundle;
  *
  * @author ghost
  */
-public class ClientsController extends Screen implements Initializable
+public class ClientsController extends ScreenController implements Initializable
 {
     @FXML
     private TableView<Client>    tblClients;

@@ -8,30 +8,20 @@ package fadulousbms;
 import com.sun.javafx.application.LauncherImpl;
 import fadulousbms.auxilary.Globals;
 import fadulousbms.auxilary.IO;
-import fadulousbms.auxilary.Screen;
-import fadulousbms.auxilary.Session;
-import fadulousbms.controllers.HomescreenController;
+import fadulousbms.controllers.ScreenController;
 import fadulousbms.managers.ScreenManager;
-import fadulousbms.managers.SessionManager;
 import fadulousbms.model.Screens;
 import javafx.application.Application;
-import javafx.embed.swing.SwingFXUtils;
-import javafx.event.EventHandler;
 import javafx.scene.Scene;
-import javafx.scene.image.*;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
 import javafx.stage.Stage;
-import javafx.stage.WindowEvent;
-import jdk.nashorn.internal.objects.Global;
 
 import javax.imageio.ImageIO;
 import javax.swing.*;
 import java.awt.*;
 import java.io.File;
 import java.io.IOException;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 /**
  *
@@ -113,10 +103,9 @@ public class FadulousBMS extends Application
         ScreenManager screen_mgr = ScreenManager.getInstance();//new ScreenManager();
         IO.getInstance().init(screen_mgr);
 
-
         try
         {
-            Screen.defaultProfileImage = ImageIO.read(new File("images/profile.png"));
+            ScreenController.defaultProfileImage = ImageIO.read(new File("images/profile.png"));
         }catch (IOException ex)
         {
             IO.log(getClass().getName(), ex.getMessage(), IO.TAG_ERROR);

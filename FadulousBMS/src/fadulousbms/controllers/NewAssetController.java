@@ -2,7 +2,6 @@ package fadulousbms.controllers;
 
 import fadulousbms.auxilary.IO;
 import fadulousbms.auxilary.RemoteComms;
-import fadulousbms.auxilary.Screen;
 import fadulousbms.auxilary.Validators;
 import fadulousbms.managers.*;
 import fadulousbms.model.*;
@@ -13,7 +12,6 @@ import javafx.fxml.Initializable;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.DatePicker;
 import javafx.scene.control.TextField;
-import javafx.util.Callback;
 
 import java.io.IOException;
 import java.net.HttpURLConnection;
@@ -28,7 +26,7 @@ import java.util.ResourceBundle;
  *
  * @author ghost
  */
-public class NewAssetController extends Screen implements Initializable
+public class NewAssetController extends ScreenController implements Initializable
 {
     private boolean itemsModified;
     @FXML

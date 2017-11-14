@@ -7,27 +7,18 @@ package fadulousbms.controllers;
 
 import fadulousbms.auxilary.IO;
 import fadulousbms.auxilary.RemoteComms;
-import fadulousbms.auxilary.Screen;
-import fadulousbms.auxilary.Session;
-import fadulousbms.exceptions.LoginException;
-import fadulousbms.managers.ScreenManager;
 import fadulousbms.managers.SessionManager;
 import fadulousbms.model.Employee;
-import fadulousbms.model.Screens;
 import javafx.embed.swing.SwingFXUtils;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
-import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
-import javafx.scene.image.ImageView;
 
 import javax.imageio.ImageIO;
-import javax.swing.*;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
-import java.net.ConnectException;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.AbstractMap;
@@ -39,7 +30,7 @@ import java.util.ResourceBundle;
  *
  * @author ghost
  */
-public class ResetPwdController extends Screen implements Initializable
+public class ResetPwdController extends ScreenController implements Initializable
 {
     @FXML
     private TextField txtUsr,txtPwd,txtCode;

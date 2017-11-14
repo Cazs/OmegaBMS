@@ -3,7 +3,6 @@ package fadulousbms.controllers;
 import fadulousbms.auxilary.Globals;
 import fadulousbms.auxilary.IO;
 import fadulousbms.auxilary.PDF;
-import fadulousbms.auxilary.Screen;
 import fadulousbms.managers.AssetManager;
 import fadulousbms.managers.ResourceManager;
 import fadulousbms.managers.ScreenManager;
@@ -34,15 +33,11 @@ import java.util.ResourceBundle;
 /**
  * Created by ghost on 2017/02/02.
  */
-public class AccountingController extends Screen implements Initializable
+public class AccountingController extends ScreenController implements Initializable
 {
     @Override
     public void refreshView()
     {
-        Employee e = SessionManager.getInstance().getActiveEmployee();
-        if(e!=null)
-            this.getUserNameLabel().setText(e.getFirstname() + " " + e.getLastname());
-        else IO.log(getClass().getName(), IO.TAG_ERROR, "No active sessions.");
     }
 
     @Override
@@ -56,17 +51,6 @@ public class AccountingController extends Screen implements Initializable
     @Override
     public void initialize(URL url, ResourceBundle rb)
     {
-        try
-        {
-            AssetManager.getInstance().initialize();
-            defaultProfileImage = ImageIO.read(new File("images/profile.png"));
-            Image image = SwingFXUtils.toFXImage(defaultProfileImage, null);
-            this.getProfileImageView().setImage(image);
-        }catch (IOException e)
-        {
-            IO.log(getClass().getName(), IO.TAG_ERROR, e.getMessage());
-        }
-        //refreshView();
     }
 
     @FXML

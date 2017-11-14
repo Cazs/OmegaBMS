@@ -19,6 +19,8 @@ import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLEncoder;
+import java.nio.file.Files;
+import java.nio.file.StandardCopyOption;
 import java.util.AbstractMap;
 import java.util.ArrayList;
 
@@ -144,12 +146,31 @@ public class RemoteComms
 
     public static byte[] sendFileRequest(String filename, ArrayList<AbstractMap.SimpleEntry<String,String>> headers) throws IOException
     {
-        IO.log(TAG, IO.TAG_INFO, String.format("\nGET %s HTTP/1.1\nFilename: %s", filename, host));
+        IO.log(TAG, IO.TAG_INFO, String.format("\nGET %s HTTP/1.1",  "/api/file/"+filename));
 
         URL urlConn = new URL(host + "/api/file/"+filename);
-        HttpURLConnection httpConn =  (HttpURLConnection)urlConn.openConnection();
+        //URL urlConn = new URL("http://127.0.0.1:9000/api/file/inspection/3-demolition.pdf");
+        try(InputStream in = urlConn.openStream())
+        {
+            //Files.copy(in, new File("download.pdf").toPath(), StandardCopyOption.REPLACE_EXISTING);
+            //DataInputStream dataInputStream = new DataInputStream(in);
+
+            ByteArrayOutputStream outbytes = new ByteArrayOutputStream();
+            byte[] buffer = new byte[1024];
+            int read=0;
+            while ((read=in.read(buffer, 0, buffer.length))>0)
+                outbytes.write(buffer, 0, read);
+            outbytes.flush();
+            in.close();
+            IO.log(TAG, IO.TAG_INFO, "GET received file> " + filename + " " + outbytes.toByteArray().length + "bytes.\n");
+            return outbytes.toByteArray();
+        }
+        //URL urlConn = new URL(host);
+        /*HttpURLConnection httpConn =  (HttpURLConnection)urlConn.openConnection();
+
         for(AbstractMap.SimpleEntry<String,String> header:headers)
             httpConn.setRequestProperty(header.getKey() , header.getValue());
+
 
         String response = null;
         if(httpConn.getResponseCode() == HttpURLConnection.HTTP_OK)
@@ -172,7 +193,7 @@ public class RemoteComms
         {
             IO.log(TAG, IO.TAG_ERROR, IO.readStream(httpConn.getErrorStream()));
             return null;
-        }
+        }*/
     }
     
     public static HttpURLConnection postData(String function, ArrayList<AbstractMap.SimpleEntry<String,String>> params, ArrayList<AbstractMap.SimpleEntry<String,String>> headers) throws IOException

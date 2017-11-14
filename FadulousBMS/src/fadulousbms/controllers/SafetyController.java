@@ -6,68 +6,35 @@
 package fadulousbms.controllers;
 
 import fadulousbms.auxilary.IO;
-import fadulousbms.auxilary.Screen;
 import fadulousbms.managers.*;
 import fadulousbms.model.Employee;
 import fadulousbms.model.Screens;
 import javafx.embed.swing.SwingFXUtils;
-import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
-import javafx.scene.Group;
-import javafx.scene.Scene;
-import javafx.scene.control.Label;
 import javafx.scene.image.Image;
-import javafx.scene.image.ImageView;
-import javafx.stage.Stage;
 
 import javax.imageio.ImageIO;
-import javax.swing.*;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 /**
  * views Controller class
  *
  * @author ghost
  */
-public class SafetyController extends Screen implements Initializable
+public class SafetyController extends ScreenController implements Initializable
 {
     @Override
     public void refreshView()
     {
-        Employee e = SessionManager.getInstance().getActiveEmployee();
-        if(e!=null)
-            this.getUserNameLabel().setText(e.getFirstname() + " " + e.getLastname());
-        else IO.log(getClass().getName(), IO.TAG_ERROR, "No active sessions.");
-
-        try
-        {
-            //Set default profile photo
-            BufferedImage bufferedImage;
-            bufferedImage = ImageIO.read(new File("images/profile.png"));
-            Image image = SwingFXUtils.toFXImage(bufferedImage, null);
-            this.getProfileImageView().setImage(image);
-
-            //Set current logged in employee
-            //Employee e = SessionManager.getInstance().getActiveEmployee();
-            if(e!=null)
-                this.getUserNameLabel().setText(e.getFirstname() + " " + e.getLastname());
-
-        }catch (IOException ex)
-        {
-            IO.log(getClass().getName(), IO.TAG_ERROR, ex.getMessage());
-        }
     }
 
     @Override
     public void refreshModel()
     {
-
     }
 
     /**

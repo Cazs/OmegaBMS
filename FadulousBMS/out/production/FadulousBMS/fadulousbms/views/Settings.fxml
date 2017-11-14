@@ -82,48 +82,7 @@
       </StackPane>
    </center>
    <top>
-      <BorderPane styleClass="sys-nav" BorderPane.alignment="CENTER">
-         <top>
-            <Label text="Airotek BMS" BorderPane.alignment="CENTER">
-               <font>
-                  <Font size="38.0" />
-               </font>
-            </Label>
-         </top>
-         <bottom>
-            <BorderPane style="-fx-border-color: #343434; -fx-border-insets: -50 -10 0 -10;" BorderPane.alignment="CENTER">
-               <left>
-                  <HBox alignment="CENTER_LEFT" BorderPane.alignment="CENTER">
-                     <children>
-                        <ImageView fx:id="img_profile" fitHeight="60.0" fitWidth="60.0" pickOnBounds="true" preserveRatio="true">
-                           <image>
-                              <Image url="@../../../images/profile.png" />
-                           </image></ImageView>
-                        <Label fx:id="user_name" text="not signed in" HBox.hgrow="ALWAYS">
-                           <font>
-                              <Font size="20.0" />
-                           </font>
-                        </Label>
-                     </children>
-                  </HBox>
-               </left>
-               <center>
-                  <Label text="Settings" BorderPane.alignment="CENTER">
-                     <font>
-                        <Font size="30.0" />
-                     </font>
-                  </Label>
-               </center>
-               <right>
-                  <HBox alignment="CENTER_RIGHT" prefHeight="100.0" prefWidth="200.0" BorderPane.alignment="CENTER">
-                     <children>
-                        <Button fx:id="btnHome" alignment="CENTER" contentDisplay="CENTER" minHeight="35.0" minWidth="70.0" mnemonicParsing="false" onMouseClicked="#showMain" styleClass="btnDefault" stylesheets="@../styles/home.css" text="home" />
-                     </children>
-                  </HBox>
-               </right>
-            </BorderPane>
-         </bottom>
-      </BorderPane>
+      <fx:include source="SystemNav.fxml"/>
    </top>
    <bottom>
       <HBox BorderPane.alignment="CENTER">

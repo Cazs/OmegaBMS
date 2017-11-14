@@ -6,8 +6,6 @@
 package fadulousbms.controllers;
 
 import fadulousbms.auxilary.IO;
-import fadulousbms.auxilary.Screen;
-import fadulousbms.managers.AssetManager;
 import fadulousbms.managers.ResourceManager;
 import fadulousbms.managers.ScreenManager;
 import fadulousbms.model.*;
@@ -32,7 +30,7 @@ import java.util.ResourceBundle;
  *
  * @author ghost
  */
-public class ResourcesController extends Screen implements Initializable
+public class ResourcesController extends ScreenController implements Initializable
 {
     @FXML
     private TableView<Resource> tblResources;

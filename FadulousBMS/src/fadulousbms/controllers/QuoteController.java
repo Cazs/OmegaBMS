@@ -28,7 +28,6 @@ import java.io.IOException;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.time.DateTimeException;
 import java.util.*;
 
 /**
@@ -36,7 +35,7 @@ import java.util.*;
  *
  * @author ghost
  */
-public abstract class QuoteController extends Screen implements Initializable
+public abstract class QuoteController extends ScreenController implements Initializable
 {
     protected boolean itemsModified;
 

@@ -6,17 +6,12 @@
 package fadulousbms.controllers;
 
 import fadulousbms.auxilary.*;
-import fadulousbms.managers.SafetyManager;
 import fadulousbms.managers.ScreenManager;
 import fadulousbms.managers.SessionManager;
 import fadulousbms.model.Employee;
 import fadulousbms.model.Screens;
 
-import java.awt.*;
-import java.awt.image.BufferedImage;
-import java.io.File;
 import java.io.IOException;
-import java.net.MalformedURLException;
 
 import javafx.application.Platform;
 import javafx.embed.swing.SwingFXUtils;
@@ -30,25 +25,14 @@ import javafx.animation.Interpolator;
 import javafx.animation.KeyFrame;
 import javafx.animation.KeyValue;
 import javafx.animation.Timeline;
-import javafx.event.EventHandler;
 import javafx.fxml.Initializable;
-import javafx.scene.Group;
-import javafx.scene.Scene;
 import javafx.scene.control.Button;
-import javafx.scene.control.ComboBox;
-import javafx.scene.control.Label;
 import javafx.scene.effect.ColorAdjust;
 import javafx.scene.image.Image;
-import javafx.scene.image.ImageView;
-import javafx.scene.layout.BorderPane;
-import javafx.scene.layout.TilePane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
-import javafx.stage.Stage;
-import javafx.stage.WindowEvent;
 import javafx.util.Duration;
 
-import javax.imageio.ImageIO;
 import javax.swing.*;
 
 /**
@@ -56,35 +40,15 @@ import javax.swing.*;
  *
  * @author ghost
  */
-public class HomescreenController extends Screen implements Initializable
+public class HomescreenController extends ScreenController implements Initializable
 {
     @FXML
     private Button btnCreateAccount;
-
     private ColorAdjust colorAdjust = new ColorAdjust();
 
     @Override
     public void refreshView()
     {
-        //this.getLoadingPane().setVisible(true);
-
-        Employee e = SessionManager.getInstance().getActiveEmployee();
-        if(e!=null)
-        {
-            this.getUserNameLabel().setText(e.getFirstname() + " " + e.getLastname());
-            /*if(e.getAccessLevel() >= AccessLevels.ADMIN.getLevel())
-            {
-                IO.log(getClass().getName(), IO.TAG_INFO, "enabling account creation button.");
-                btnCreateAccount.setDisable(false);
-            }*/
-        }
-        else IO.log(getClass().getName(), IO.TAG_ERROR, "No active sessions.");
-
-        //defaultProfileImage = ImageIO.read(new File("images/profile.png"));
-        Image image = SwingFXUtils.toFXImage(defaultProfileImage, null);
-        this.getProfileImageView().setImage(image);
-        //img_profile.setImage(new Image("dist/profile.png"));
-        colorAdjust.setBrightness(0.0);
         IO.log(getClass().getName(), IO.TAG_INFO, "reloading homescreen view..");
     }
 
@@ -134,6 +98,7 @@ public class HomescreenController extends Screen implements Initializable
                     } catch (IOException e)
                     {
                         IO.log(getClass().getName(), IO.TAG_ERROR, e.getMessage());
+                        e.printStackTrace();
                     }
                 }
             }).start();

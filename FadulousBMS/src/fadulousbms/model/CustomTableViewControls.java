@@ -511,15 +511,18 @@ public class CustomTableViewControls
                                     PDFViewer pdfViewer = PDFViewer.getInstance();
                                     pdfViewer.setVisible(true);
 
-                                    FileOutputStream out = new FileOutputStream(new File("out/temp.pdf"));
+                                    String local_filename = filename.substring(filename.lastIndexOf('/')+1);
+                                    if(new File("out/"+local_filename).exists())
+                                        Files.delete(new File("out/"+local_filename).toPath());
+                                    FileOutputStream out = new FileOutputStream(new File("out/"+local_filename));
                                     out.write(file, 0, file.length);
                                     out.flush();
                                     out.close();
 
                                     //pdfViewer.doOpen("bin/" + filename + ".bin");
-                                    pdfViewer.doOpen("out/temp.pdf");
+                                    pdfViewer.doOpen("out/"+local_filename);
                                     //Clean up
-                                    Files.delete(Paths.get("out/temp.pdf"));
+                                    Files.delete(Paths.get("out/"+local_filename));
                                 } else
                                 {
                                     IO.logAndAlert("File Downloader", "File '" + filename + "' could not be downloaded.", IO.TAG_ERROR);
@@ -528,7 +531,7 @@ public class CustomTableViewControls
                         } else IO.showMessage("Session Expired", "No active sessions.", IO.TAG_ERROR);
                     }catch (IOException e)
                     {
-                        IO.logAndAlert(TAG, e.getMessage(), IO.TAG_ERROR);
+                        IO.log(TAG, IO.TAG_ERROR, e.getMessage());
                     }
 
                     /*try

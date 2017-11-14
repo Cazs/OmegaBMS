@@ -73,7 +73,11 @@ public class SafetyManager extends BusinessObjectManager
                     //System.out.println("\n\n>>>>>Documents successfully loaded, size: " + documents.length + "<<<<<\n\n");
 
                     //Sort array in ascending order
-                    FileMetadata.quickSort(documents, 0, documents.length-1);
+                    if(documents!=null)
+                        if(documents.length>0)
+                            FileMetadata.quickSort(documents, 0, documents.length-1);
+                        else IO.log("No documents found", IO.TAG_ERROR, "No safety documents were found in the database.");
+                    else IO.log("No documents found", IO.TAG_ERROR, "No safety documents were found in the database.");
 
                 } else IO.logAndAlert("Session Expired", "Active session has expired.", IO.TAG_ERROR);
             } else IO.logAndAlert("Session Expired", "No active sessions.", IO.TAG_ERROR);
@@ -187,7 +191,7 @@ public class SafetyManager extends BusinessObjectManager
 
                 //Menu - File
                 MenuItem new_item = new MenuItem("New safety document reference");
-                new_item.setOnAction(event -> handleNewSafetyDocumentReference(stage));
+                new_item.setOnAction(event -> newSafetyDocumentReference(stage));
                 MenuItem upload = new MenuItem("Upload");
                 upload.setOnAction(event->
                 {
@@ -275,7 +279,7 @@ public class SafetyManager extends BusinessObjectManager
         }else IO.showMessage("Session Expired", "No active sessions.", IO.TAG_ERROR);
     }
 
-    private static void addToJobCatalogue(Stage parentStage, TableView tblSafety)
+    public static void addToJobCatalogue(Stage parentStage, TableView tblSafety)
     {
         int selected = tblSafety.getSelectionModel().selectedIndexProperty().get();
         if(selected<0 || selected>documents.length)
@@ -406,14 +410,15 @@ public class SafetyManager extends BusinessObjectManager
         stage.setResizable(true);
     }
 
-    private static void handleNewSafetyDocumentReference(Stage parentStage)
+    public static void newSafetyDocumentReference(Stage parentStage)
     {
-        parentStage.setAlwaysOnTop(false);
         Stage stage = new Stage();
-        stage.setTitle(Globals.APP_NAME.getValue() + " - Add New Safety Document Reference");
-        stage.setMinWidth(320);
+        stage.setTitle(Globals.APP_NAME.getValue() + " - Create New Safety Document Reference");
+        stage.setMinWidth(380);
         stage.setMinHeight(200);
-        //stage.setAlwaysOnTop(true);
+        stage.setAlwaysOnTop(true);
+        stage.setResizable(false);
+        stage.centerOnScreen();
 
         VBox vbox = new VBox(10);
 
@@ -438,19 +443,19 @@ public class SafetyManager extends BusinessObjectManager
         {
             if(!Validators.isValidNode(txt_index, txt_index.getText(), 1, "(\\d+|\\d+\\.\\d+)"))
             {
-                JOptionPane.showMessageDialog(null, "Please make sure that the index number is valid.", "Error", JOptionPane.ERROR_MESSAGE);
+                IO.logAndAlert("Error", "Please make sure that the index number is valid.", IO.TAG_ERROR);
                 return;
             }
 
             if(!Validators.isValidNode(txt_label, txt_label.getText(), 1, ".+"))
             {
-                JOptionPane.showMessageDialog(null, "Please make sure that the label is not empty.", "Error", JOptionPane.ERROR_MESSAGE);
+                IO.logAndAlert("Error", "Please make sure that the label field is not empty.", IO.TAG_ERROR);
                 return;
             }
 
             if(!Validators.isValidNode(txt_path, txt_path.getText(), 1, ".+"))
             {
-                JOptionPane.showMessageDialog(null, "Please make sure that the file path is not empty.", "Error", JOptionPane.ERROR_MESSAGE);
+                IO.logAndAlert("Error", "Please make sure that the file path field is not empty.", IO.TAG_ERROR);
                 return;
             }
 
@@ -471,7 +476,7 @@ public class SafetyManager extends BusinessObjectManager
                     headers.add(new AbstractMap.SimpleEntry<>("Cookie", SessionManager.getInstance().getActive().getSessionId()));
                 else
                 {
-                    JOptionPane.showMessageDialog(null, "No active sessions.", "Session expired", JOptionPane.ERROR_MESSAGE);
+                    IO.logAndAlert("Session expired", "No active sessions.", IO.TAG_ERROR);
                     return;
                 }
 
@@ -480,10 +485,10 @@ public class SafetyManager extends BusinessObjectManager
                 {
                     if(connection.getResponseCode()==HttpURLConnection.HTTP_OK)
                     {
-                        JOptionPane.showMessageDialog(null, "Successfully added new safety document reference!", "Success", JOptionPane.INFORMATION_MESSAGE);
+                        IO.logAndAlert("Success", "Successfully added new safety document reference!", IO.TAG_INFO);
                     }else{
                         String msg = IO.readStream(connection.getErrorStream());
-                        JOptionPane.showMessageDialog(null, msg, "Error " + connection.getResponseCode(), JOptionPane.ERROR_MESSAGE);
+                        IO.logAndAlert("Error " + connection.getResponseCode(), msg, IO.TAG_ERROR);
                     }
                     connection.disconnect();
                 }
@@ -510,7 +515,5 @@ public class SafetyManager extends BusinessObjectManager
 
         stage.setScene(scene);
         stage.show();
-        stage.centerOnScreen();
-        stage.setResizable(true);
     }
 }

@@ -7,9 +7,7 @@ package fadulousbms.controllers;
 
 import fadulousbms.auxilary.IO;
 import fadulousbms.auxilary.PDF;
-import fadulousbms.auxilary.Screen;
 import fadulousbms.managers.PurchaseOrderManager;
-import fadulousbms.managers.QuoteManager;
 import fadulousbms.managers.ScreenManager;
 import fadulousbms.managers.SupplierManager;
 import fadulousbms.model.*;
@@ -37,7 +35,7 @@ import java.util.ResourceBundle;
  *
  * @author ghost
  */
-public class PurchaseOrdersController extends Screen implements Initializable
+public class PurchaseOrdersController extends ScreenController implements Initializable
 {
     @FXML
     private TableView tblPurchaseOrders;

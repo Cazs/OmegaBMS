@@ -256,13 +256,13 @@ public class QuoteItem implements BusinessObject, Serializable
                         if (str_cost.contains("="))
                         {
                             //retrieve cost and markup
-                            String add_cost = str_cost.split("=")[1];
+                            String add_cost = str_cost.split("=")[1];//the cost value is [1] (the cost name is [0])
 
-                            double cost=0,add_cost_markup=0;
-                            if(add_cost.contains("*"))
+                            double cost,add_cost_markup=0;
+                            if(add_cost.contains("*"))//if(in the form cost*markup)
                             {
-                                cost = Double.parseDouble(getAdditional_costs().split("=")[1].split("\\*")[0]);
-                                add_cost_markup = Double.parseDouble(getAdditional_costs().split("=")[1].split("\\*")[1]);
+                                cost = Double.parseDouble(add_cost.split("\\*")[0]);
+                                add_cost_markup = Double.parseDouble(add_cost.split("\\*")[1]);
                             }else cost = Double.parseDouble(add_cost);
 
                             //add marked up additional cost to total

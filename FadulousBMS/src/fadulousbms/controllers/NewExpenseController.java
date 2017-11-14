@@ -7,7 +7,6 @@ package fadulousbms.controllers;
 
 import fadulousbms.auxilary.IO;
 import fadulousbms.auxilary.RemoteComms;
-import fadulousbms.auxilary.Screen;
 import fadulousbms.auxilary.Validators;
 import fadulousbms.managers.*;
 import fadulousbms.model.*;
@@ -27,7 +26,7 @@ import java.util.*;
  *
  * @author ghost
  */
-public class NewExpenseController extends Screen implements Initializable
+public class NewExpenseController extends ScreenController implements Initializable
 {
     private boolean itemsModified;
     private Date date_generated;

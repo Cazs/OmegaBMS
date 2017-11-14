@@ -95,7 +95,13 @@ public class ViewPurchaseOrderController extends OperationsController implements
         txtAccount.setText(PurchaseOrderManager.getInstance().getSelected().getAccount());
         txtNumber.setText(PurchaseOrderManager.getInstance().getSelected().getNumber());
         txtCreator.setText(PurchaseOrderManager.getInstance().getSelected().getCreator().toString());
-        txtStatus.setText(String.valueOf(PurchaseOrderManager.getInstance().getSelected().getStatus()));
+        String status;
+        if(PurchaseOrderManager.getInstance().getSelected().getStatus()==0)
+            status="PENDING";
+        else if(PurchaseOrderManager.getInstance().getSelected().getStatus()==1)
+            status="APPROVED";
+        else status = "ARCHIVED";
+        txtStatus.setText(status);
 
         //set up PurchaseOrderItems table
         colId.setCellValueFactory(new PropertyValueFactory<>("_id"));
@@ -418,6 +424,11 @@ public class ViewPurchaseOrderController extends OperationsController implements
             IO.logAndAlert(getClass().getName(), "selected purchase order is invalid.", IO.TAG_ERROR);
             return;
         }
+        if(purchaseOrder.getStatus()>0)
+        {
+            IO.logAndAlert(getClass().getName(), "selected purchase order has already been approved and can no longer be edited.", IO.TAG_ERROR);
+            return;
+        }
 
         cbxSuppliers.getStylesheets().add(this.getClass().getResource("../styles/home.css").toExternalForm());
         if (cbxSuppliers.getValue() == null)
@@ -728,7 +739,9 @@ public class ViewPurchaseOrderController extends OperationsController implements
             {
                 // set PO status and update it on server.
                 PurchaseOrderManager.getInstance().getSelected().setStatus(PurchaseOrderManager.PO_STATUS_APPROVED);
-                updatePurchaseOrder();
+                RemoteComms.updateBusinessObjectOnServer(PurchaseOrderManager.getInstance().getSelected(), "/api/purchaseorder", "status");
+                //updatePurchaseOrder();
+                //System.out.println("Status::::::::: " + PurchaseOrderManager.getInstance().getSelected().getStatus());
 
                 // Update date_acquired attribute of PurchaseOrderItems.
                 // - making them visible in their respective viewers, i.e Resources.fxml, Assets.fxml etc.
@@ -775,7 +788,7 @@ public class ViewPurchaseOrderController extends OperationsController implements
                     if(connection!=null)
                         connection.disconnect();
 
-                    IO.logAndAlert("Success", "Successfully updated purchase order and its associated items.", IO.TAG_INFO);
+                    IO.logAndAlert("Success", "Successfully approved purchase order.", IO.TAG_INFO);
                     new Thread(() ->
                     {
                         refreshModel();

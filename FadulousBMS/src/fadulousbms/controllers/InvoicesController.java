@@ -7,14 +7,11 @@ package fadulousbms.controllers;
 
 import fadulousbms.auxilary.IO;
 import fadulousbms.auxilary.PDF;
-import fadulousbms.auxilary.Screen;
 import fadulousbms.managers.*;
 import fadulousbms.model.*;
 import javafx.application.Platform;
-import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-import javafx.embed.swing.SwingFXUtils;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
@@ -23,7 +20,6 @@ import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.control.cell.TextFieldTableCell;
-import javafx.scene.image.Image;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
 import javafx.util.Callback;
@@ -37,7 +33,7 @@ import java.util.ResourceBundle;
  *
  * @author ghost
  */
-public class InvoicesController extends Screen implements Initializable
+public class InvoicesController extends ScreenController implements Initializable
 {
     @FXML
     private TableView<Invoice>    tblInvoices;

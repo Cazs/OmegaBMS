@@ -299,7 +299,7 @@ public class PDFViewer extends JFrame implements KeyListener, TreeSelectionListe
                     if(raf!=null)
                         raf.close();
 
-                    new File(filename).delete();
+                    //new File(filename).delete();
                 } catch (IOException e)
                 {
                     IO.log(getClass().getName(), IO.TAG_ERROR, e.getMessage());

@@ -6,18 +6,14 @@
 package fadulousbms.controllers;
 
 import fadulousbms.auxilary.*;
-import fadulousbms.exceptions.LoginException;
-import fadulousbms.managers.ScreenManager;
 import fadulousbms.managers.SessionManager;
 import fadulousbms.model.Employee;
-import fadulousbms.model.Screens;
 import javafx.collections.FXCollections;
 import javafx.embed.swing.SwingFXUtils;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.*;
 import javafx.scene.image.Image;
-import javafx.scene.image.ImageView;
 
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
@@ -34,7 +30,7 @@ import java.util.ResourceBundle;
  *
  * @author ghost
  */
-public class CreateAccountController extends Screen implements Initializable
+public class CreateAccountController extends ScreenController implements Initializable
 {
     @FXML
     private TextField txtUsername;

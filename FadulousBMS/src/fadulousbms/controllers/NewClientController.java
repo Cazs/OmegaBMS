@@ -2,15 +2,12 @@ package fadulousbms.controllers;
 
 import fadulousbms.auxilary.IO;
 import fadulousbms.auxilary.RemoteComms;
-import fadulousbms.auxilary.Screen;
 import fadulousbms.auxilary.Validators;
 import fadulousbms.managers.ClientManager;
 import fadulousbms.managers.ScreenManager;
 import fadulousbms.managers.SessionManager;
-import fadulousbms.managers.SupplierManager;
 import fadulousbms.model.Client;
 import fadulousbms.model.Screens;
-import fadulousbms.model.Supplier;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.CheckBox;
@@ -32,7 +29,7 @@ import java.util.ResourceBundle;
  *
  * @author ghost
  */
-public class NewClientController extends Screen implements Initializable
+public class NewClientController extends ScreenController implements Initializable
 {
     private boolean itemsModified;
     @FXML

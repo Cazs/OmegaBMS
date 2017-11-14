@@ -1,7 +1,6 @@
 package fadulousbms.controllers;
 
 import fadulousbms.auxilary.IO;
-import fadulousbms.auxilary.Screen;
 import fadulousbms.managers.*;
 import fadulousbms.model.Employee;
 import javafx.embed.swing.SwingFXUtils;
@@ -17,7 +16,7 @@ import java.util.ResourceBundle;
 /**
  * Created by ghost on 2017/02/02.
  */
-public class FacilitiesController extends Screen implements Initializable
+public class FacilitiesController extends ScreenController implements Initializable
 {
     @Override
     public void refreshView()

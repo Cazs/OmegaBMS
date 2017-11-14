@@ -6,10 +6,7 @@
 package fadulousbms.controllers;
 
 import fadulousbms.auxilary.IO;
-import fadulousbms.auxilary.Screen;
 import fadulousbms.managers.AssetManager;
-import fadulousbms.managers.EmployeeManager;
-import fadulousbms.managers.ScreenManager;
 import fadulousbms.model.*;
 import javafx.application.Platform;
 import javafx.collections.FXCollections;
@@ -26,7 +23,6 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
 import javafx.util.Callback;
 
-import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
 
@@ -35,7 +31,7 @@ import java.util.ResourceBundle;
  *
  * @author ghost
  */
-public class AssetsController extends Screen implements Initializable
+public class AssetsController extends ScreenController implements Initializable
 {
     @FXML
     private TableView<Asset> tblAssets;

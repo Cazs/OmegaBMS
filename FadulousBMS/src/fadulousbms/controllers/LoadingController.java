@@ -6,30 +6,15 @@
 package fadulousbms.controllers;
 
 import fadulousbms.auxilary.IO;
-import fadulousbms.auxilary.RemoteComms;
-import fadulousbms.auxilary.Screen;
-import fadulousbms.auxilary.Session;
-import fadulousbms.exceptions.LoginException;
-import fadulousbms.managers.ScreenManager;
 import fadulousbms.managers.SessionManager;
 import fadulousbms.model.Employee;
-import fadulousbms.model.Screens;
 import javafx.application.Platform;
 import javafx.embed.swing.SwingFXUtils;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Label;
-import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
-import javafx.scene.image.ImageView;
-import javafx.scene.web.WebView;
 
-import javax.imageio.ImageIO;
-import javax.swing.*;
-import java.awt.image.BufferedImage;
-import java.io.File;
-import java.io.IOException;
-import java.net.ConnectException;
 import java.net.URL;
 import java.util.ResourceBundle;
 
@@ -38,7 +23,7 @@ import java.util.ResourceBundle;
  *
  * @author ghost
  */
-public class LoadingController extends Screen implements Initializable
+public class LoadingController extends ScreenController implements Initializable
 {
     @FXML
     private Label lblLoading;
@@ -51,9 +36,9 @@ public class LoadingController extends Screen implements Initializable
             this.getUserNameLabel().setText(e.toString());
         else IO.log(getClass().getName(), IO.TAG_ERROR, "No active sessions.");
         //Set default profile photo
-        if(Screen.defaultProfileImage!=null)
+        if(ScreenController.defaultProfileImage!=null)
         {
-            Image image = SwingFXUtils.toFXImage(Screen.defaultProfileImage, null);
+            Image image = SwingFXUtils.toFXImage(ScreenController.defaultProfileImage, null);
             this.getProfileImageView().setImage(image);
         }else IO.log("LoadingController", "default profile image is null.", IO.TAG_ERROR);
     }
@@ -91,9 +76,9 @@ public class LoadingController extends Screen implements Initializable
         });
         t.start();
         //Set default profile photo
-        if(Screen.defaultProfileImage!=null)
+        if(ScreenController.defaultProfileImage!=null)
         {
-            Image image = SwingFXUtils.toFXImage(Screen.defaultProfileImage, null);
+            Image image = SwingFXUtils.toFXImage(ScreenController.defaultProfileImage, null);
             this.getProfileImageView().setImage(image);
         }else IO.log("LoadingController", "default profile image is null.", IO.TAG_ERROR);
     }

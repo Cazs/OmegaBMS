@@ -3,6 +3,7 @@ package fadulousbms.auxilary;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonSyntaxException;
+import fadulousbms.controllers.ScreenController;
 import fadulousbms.managers.ScreenManager;
 import fadulousbms.managers.SessionManager;
 import fadulousbms.model.FileMetadata;
@@ -12,11 +13,9 @@ import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.layout.BorderPane;
-import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 
 import javax.print.PrintException;
-import javax.swing.*;
 import java.io.*;
 import java.util.AbstractMap;
 import java.util.ArrayList;
@@ -50,7 +49,7 @@ public class IO
     {
         if(screenManager!=null)
         {
-            Screen current_screen = screenManager.getFocused();
+            ScreenController current_screen = screenManager.getFocused();
             if(current_screen!=null)
             {
                 if (src.contains("."))

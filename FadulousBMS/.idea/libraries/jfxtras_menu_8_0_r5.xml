@@ -1,0 +1,9 @@
+<component name="libraryTable">
+  <library name="jfxtras-menu-8.0-r5">
+    <CLASSES>
+      <root url="jar://$PROJECT_DIR$/lib/jfxtras-menu-8.0-r5.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES />
+  </library>
+</component>

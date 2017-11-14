@@ -11,5 +11,7 @@
     <orderEntry type="library" name="lib2" level="project" />
     <orderEntry type="library" name="ext" level="project" />
     <orderEntry type="library" name="lib" level="project" />
+    <orderEntry type="library" name="jfxtras-menu-8.0-r5" level="project" />
+    <orderEntry type="library" name="jfxtras-labs-8.0-r5" level="project" />
   </component>
 </module>

@@ -9,11 +9,8 @@ import fadulousbms.auxilary.*;
 import fadulousbms.managers.*;
 import fadulousbms.model.*;
 
-import java.awt.image.BufferedImage;
-import java.io.File;
 import java.io.IOException;
 import java.net.URL;
-import java.util.List;
 import java.util.ResourceBundle;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -22,26 +19,15 @@ import javafx.application.Platform;
 import javafx.embed.swing.SwingFXUtils;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
-import javafx.scene.Group;
-import javafx.scene.Node;
-import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.image.Image;
-import javafx.scene.image.ImageView;
-import javafx.scene.layout.BorderPane;
-import javafx.scene.layout.StackPane;
-import javafx.stage.Stage;
-import javafx.util.Callback;
-
-import javax.imageio.ImageIO;
-import javax.swing.*;
 
 /**
  * views Controller class
  *
  * @author ghost
  */
-public class OperationsController extends Screen implements Initializable
+public class OperationsController extends ScreenController implements Initializable
 {
     @FXML
     private TabPane tabs;
@@ -58,33 +44,35 @@ public class OperationsController extends Screen implements Initializable
     @Override
     public void initialize(URL url, ResourceBundle rb)
     {
-        if (SessionManager.getInstance().getActive() != null)
+        /*if (SessionManager.getInstance().getActive() != null)
         {
             if (!SessionManager.getInstance().getActive().isExpired())
             {
-                    //Set default profile photo
-                    if(HomescreenController.defaultProfileImage!=null)
-                    {
-                        Image image = SwingFXUtils.toFXImage(HomescreenController.defaultProfileImage, null);
-                        this.getProfileImageView().setImage(image);
-                    }else IO.log(TAG, "default profile image is null.", IO.TAG_ERROR);
-            }else{
-                JOptionPane.showMessageDialog(null, "No active sessions!", "Session expired", JOptionPane.ERROR_MESSAGE);
+                //Set default profile photo
+                if(HomescreenController.defaultProfileImage!=null)
+                {
+                    Image image = SwingFXUtils.toFXImage(HomescreenController.defaultProfileImage, null);
+                    super.getProfileImageView().setImage(image);
+                }else IO.log(getClass().getName(), "default profile image is null.", IO.TAG_ERROR);
+            }else
+            {
+                IO.logAndAlert("Session expired","No active sessions!", IO.TAG_ERROR);
                 return;
             }
-        }else{
-            JOptionPane.showMessageDialog(null, "No active sessions!", "Session expired", JOptionPane.ERROR_MESSAGE);
+        }else {
+            IO.logAndAlert("Session expired","No active sessions!", IO.TAG_ERROR);
             return;
-        }
+        }*/
     }
 
     @Override
     public void refreshView()
     {
-        Employee e = SessionManager.getInstance().getActiveEmployee();
+        /*Employee e = SessionManager.getInstance().getActiveEmployee();
         if(e!=null)
             this.getUserNameLabel().setText(e.toString());
-        else IO.log(getClass().getName(), IO.TAG_ERROR, "No active sessions.");
+        else IO.log(getClass().getName(), IO.TAG_ERROR, "No active sessions.");*/
+        System.out.println("Focused: "+ScreenManager.getInstance().getFocused_id());
     }
 
     @Override

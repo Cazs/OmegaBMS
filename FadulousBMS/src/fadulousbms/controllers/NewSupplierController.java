@@ -2,7 +2,6 @@ package fadulousbms.controllers;
 
 import fadulousbms.auxilary.IO;
 import fadulousbms.auxilary.RemoteComms;
-import fadulousbms.auxilary.Screen;
 import fadulousbms.auxilary.Validators;
 import fadulousbms.managers.*;
 import fadulousbms.model.*;
@@ -20,7 +19,7 @@ import java.util.*;
  *
  * @author ghost
  */
-public class NewSupplierController extends Screen implements Initializable
+public class NewSupplierController extends ScreenController implements Initializable
 {
     private boolean itemsModified;
     @FXML

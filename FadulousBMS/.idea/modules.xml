@@ -6,7 +6,6 @@
       <module fileurl="file://$PROJECT_DIR$/lib/ImageJ/macros/Examples/Examples.iml" filepath="$PROJECT_DIR$/lib/ImageJ/macros/Examples/Examples.iml" />
       <module fileurl="file://$PROJECT_DIR$/../../FXRibbon/FXRibbon.iml" filepath="$PROJECT_DIR$/../../FXRibbon/FXRibbon.iml" />
       <module fileurl="file://$PROJECT_DIR$/FadulousBMS.iml" filepath="$PROJECT_DIR$/FadulousBMS.iml" />
-      <module fileurl="file://$PROJECT_DIR$/../../FXRibbon/fxribbon/fxribbon.iml" filepath="$PROJECT_DIR$/../../FXRibbon/fxribbon/fxribbon.iml" />
       <module fileurl="file://$PROJECT_DIR$/lib/ImageJ/plugins/plugins.iml" filepath="$PROJECT_DIR$/lib/ImageJ/plugins/plugins.iml" />
     </modules>
   </component>

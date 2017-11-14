@@ -7,7 +7,6 @@ package fadulousbms.controllers;
 
 import fadulousbms.auxilary.IO;
 import fadulousbms.auxilary.RemoteComms;
-import fadulousbms.auxilary.Screen;
 import fadulousbms.managers.*;
 import fadulousbms.auxilary.Session;
 import fadulousbms.exceptions.LoginException;
@@ -20,19 +19,12 @@ import java.io.IOException;
 import java.net.ConnectException;
 import java.net.URL;
 import java.util.ResourceBundle;
-import java.util.concurrent.TimeoutException;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
-import javafx.application.Platform;
 import javafx.embed.swing.SwingFXUtils;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
-import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
-import javafx.scene.image.ImageView;
-import javafx.stage.Stage;
 
 import javax.imageio.ImageIO;
 import javax.swing.JOptionPane;
@@ -42,39 +34,19 @@ import javax.swing.JOptionPane;
  *
  * @author ghost
  */
-public class LoginController extends Screen implements Initializable
+public class LoginController extends ScreenController implements Initializable
 {
     @FXML
-    private TextField txtUsr = new TextField();
+    private TextField txtUsr;
     @FXML
-    private TextField txtPwd = new TextField();
+    private TextField txtPwd;
 
     @Override
     public void refreshView()
     {
-        Employee e = SessionManager.getInstance().getActiveEmployee();
-        if(e!=null)
-            this.getUserNameLabel().setText(e.getFirstname() + " " + e.getLastname());
-        else IO.log(getClass().getName(), IO.TAG_ERROR, "No active sessions.");
-
-        //this.getLoadingPane().setVisible(false);
         //TODO
-        txtUsr.setText("caspr");
+        txtUsr.setText("ghost");
         txtPwd.setText("12345678");
-
-        try
-        {
-            BufferedImage bufferedImage;
-            bufferedImage = ImageIO.read(new File("images/profile.png"));
-            Image image = SwingFXUtils.toFXImage(bufferedImage, null);
-            this.getProfileImageView().setImage(image);
-
-            /*for(int i=0;i<30;i++)
-                news_feed_tiles.getChildren().add(createTile());*/
-        }catch (IOException ex)
-        {
-            IO.log(getClass().getName(), IO.TAG_ERROR, ex.getMessage());
-        }
     }
 
     @Override
@@ -88,6 +60,7 @@ public class LoginController extends Screen implements Initializable
     @Override
     public void initialize(URL url, ResourceBundle rb) 
     {
+        refreshView();
     }
 
     @FXML

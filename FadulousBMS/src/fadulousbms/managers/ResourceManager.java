@@ -193,7 +193,7 @@ public class ResourceManager extends BusinessObjectManager
                     if (all_resources != null)
                     {
                         for (Resource resource : all_resources.values())
-                            if (resource.getDate_acquired() > 0)
+                            if(resource.getDate_acquired() > 0)
                                 resources.put(resource.get_id(), resource);
                     } else IO.log(getClass().getName(), IO.TAG_ERROR, "serialized materials are null.");
                 }

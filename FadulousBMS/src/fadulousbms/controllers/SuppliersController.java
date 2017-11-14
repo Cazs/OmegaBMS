@@ -6,7 +6,6 @@
 package fadulousbms.controllers;
 
 import fadulousbms.auxilary.IO;
-import fadulousbms.auxilary.Screen;
 import fadulousbms.managers.ScreenManager;
 import fadulousbms.managers.SupplierManager;
 import fadulousbms.model.*;
@@ -31,7 +30,7 @@ import java.util.ResourceBundle;
  *
  * @author ghost
  */
-public class SuppliersController extends Screen implements Initializable
+public class SuppliersController extends ScreenController implements Initializable
 {
     @FXML
     private TableView<Supplier>    tblSuppliers;
